@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Quản Lý & Chăm Sóc Cho Thuê Căn Hộ / Phòng Trọ - Nguyên Bảo</title>
+    <!-- Tailwind CSS & FontAwesome Icons -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans text-gray-800 min-h-screen pb-12">
+
+    <!-- Header chính tích hợp Thanh Chuyển Tab -->
+    <header class="bg-indigo-700 text-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-building-circle-check text-2xl text-amber-300"></i>
+                <div>
+                    <h1 class="text-lg md:text-xl font-bold leading-tight">Hệ Thống Quản Lý & Chăm Sóc Phòng Trọ All-In-One</h1>
+                    <p class="text-xs text-indigo-200">Phát triển bởi Nguyên Bảo</p>
+                </div>
+            </div>
+
+            <!-- Thanh Tab Navigation -->
+            <nav class="flex bg-indigo-800/60 p-1 rounded-xl gap-1 border border-indigo-500/30">
+                <button onclick="switchTab('tab-inventory')" id="nav-inventory" class="tab-btn px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 bg-white text-indigo-900 shadow">
+                    <i class="fa-solid fa-boxes-stacked"></i> Quản Lý Kho Phòng
+                </button>
+                <button onclick="switchTab('tab-poster')" id="nav-poster" class="tab-btn px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 text-indigo-200 hover:text-white hover:bg-indigo-700/50">
+                    <i class="fa-solid fa-pen-to-square"></i> Tạo Bài Đăng Tự Động
+                </button>
+                <button onclick="switchTab('tab-crm')" id="nav-crm" class="tab-btn px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 text-indigo-200 hover:text-white hover:bg-indigo-700/50">
+                    <i class="fa-solid fa-comments"></i> CRM & Kịch Bản Giữ Chân
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- NỘI DUNG CÁC TAB -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+
+        <!-- TAB 1: QUẢN LÝ KHO PHÒNG (Như nào Pro) -->
+        <div id="tab-inventory" class="tab-content space-y-6">
+            <!-- Top Action bar -->
+            <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex-wrap gap-3">
+                <div>
+                    <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-building-user text-indigo-600"></i> Check Rổ Hàng Căn Hộ / Phòng Trọ
+                    </h2>
+                    <p class="text-xs text-slate-500">Quản lý trạng thái, hình ảnh và xuất thông tin gửi khách hàng nhanh chóng</p>
+                </div>
+                <button onclick="openModal()" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-semibold px-4 py-2 rounded-lg transition shadow flex items-center gap-2 text-sm">
+                    <i class="fa-solid fa-plus"></i> Thêm Phòng Mới
+                </button>
+            </div>
+
+            <!-- Bộ Lọc Tìm Kiếm Nhanh -->
+            <section class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-filter text-indigo-600"></i> Bộ Lọc Tìm Kiếm Nhanh
+                    </h3>
+                    <button onclick="resetFilters()" class="text-xs text-indigo-600 hover:underline">Đặt lại bộ lọc</button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+                    <div class="lg:col-span-2">
+                        <input type="text" id="filterKeyword" oninput="filterRooms()" placeholder="Tìm theo Mã phòng, Địa chỉ, Tiện ích..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <select id="filterDistrict" onchange="filterRooms()" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <option value="">Tất cả Quận/Khu vực</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="filterPrice" onchange="filterRooms()" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <option value="">Tất cả mức giá</option>
+                            <option value="under3">Dưới 3 triệu</option>
+                            <option value="3to5">3 - 5 triệu</option>
+                            <option value="5to8">5 - 8 triệu</option>
+                            <option value="over8">Trên 8 triệu</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="filterStatus" onchange="filterRooms()" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <option value="">Tất cả trạng thái</option>
+                            <option value="Còn trống">🟢 Còn trống</option>
+                            <option value="Sắp trống">🟡 Sắp trống</option>
+                            <option value="Đã thuê">🔴 Đã thuê</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Thống kê & Danh sách -->
+            <section>
+                <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                    <p class="text-sm text-slate-600">Hiển thị <span id="roomCount" class="font-bold text-indigo-600">0</span> phòng phù hợp</p>
+                    <div class="flex gap-2 flex-wrap">
+                        <button onclick="clearAllData()" class="text-xs bg-rose-100 hover:bg-rose-200 text-rose-700 px-3 py-1.5 rounded-lg">
+                            <i class="fa-solid fa-broom"></i> Xóa dữ liệu
+                        </button>
+                        <button onclick="document.getElementById('importFileInput').click()" class="text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-800 px-3 py-1.5 rounded-lg flex items-center gap-1 font-medium">
+                            <i class="fa-solid fa-upload"></i> Nhập dữ liệu (Import JSON)
+                        </button>
+                        <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importData(event)">
+                        
+                        <button onclick="exportData()" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg flex items-center gap-1">
+                            <i class="fa-solid fa-download"></i> Tải dữ liệu (Backup)
+                        </button>
+                    </div>
+                </div>
+
+                <div id="roomList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <!-- Render từ JS -->
+                </div>
+            </section>
+        </div>
+
+
+        <!-- TAB 2: TẠO BÀI ĐĂNG TỰ ĐỘNG (Data đăng bài) -->
+        <div id="tab-poster" class="tab-content hidden space-y-6">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-base font-bold text-indigo-900 flex items-center gap-2">
+                    <i class="fa-solid fa-house-signal text-indigo-600"></i> Công Cụ Tạo Bài Đăng Quảng Cáo Phòng Trọ / Căn Hộ
+                </h2>
+                <p class="text-xs text-slate-500 mt-1">Điền thông tin phòng và nhấn tạo bài để tự động tổng hợp nội dung đăng Zalo/Facebook thu hút khách hàng.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- NHẬP THÔNG TIN -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                    <h3 class="text-sm font-bold text-slate-800 border-b pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-pen-to-square text-indigo-600"></i> Nhập Thông Tin Chi Tiết
+                    </h3>
+
+                    <form id="infoForm" class="space-y-3 text-sm">
+                        <div>
+                            <label class="block font-semibold text-gray-600 text-xs mb-1">Loại phòng & Vị trí</label>
+                            <input type="text" id="location" placeholder="Căn hộ Studio / P. Trọ - Đường Lê Hồng Phong, Q.10" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-xs">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block font-semibold text-gray-600 text-xs mb-1">Giá thuê/tháng</label>
+                                <input type="text" id="price" placeholder="3.5 Triệu" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-xs">
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-gray-600 text-xs mb-1">Gần địa điểm lớn</label>
+                                <input type="text" id="nearBy" placeholder="ĐH Bách Khoa, Chợ Mới" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-xs">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-gray-600 text-xs mb-1">Nội thất có sẵn</label>
+                            <input type="text" id="furniture" placeholder="Máy lạnh, tủ lạnh, giường nệm, tủ quần áo, kệ bếp" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-xs">
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-gray-600 text-xs mb-1">Chi phí dịch vụ (Điện/Nước/DV)</label>
+                            <input type="text" id="services" placeholder="Điện 3.8k/kwh, Nước 100k/người, Wifi free" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-xs">
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-gray-600 text-xs mb-1">Tiện ích / Ưu điểm khác</label>
+                            <input type="text" id="amenities" placeholder="Giờ giấc tự do, khóa vân tay, có ban công, máy giặt chung" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-xs">
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-gray-600 text-xs mb-1">SĐT / Zalo liên hệ</label>
+                            <input type="text" id="contact" placeholder="090x.xxx.xxx (Em Nam)" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-xs">
+                        </div>
+
+                        <button type="button" onclick="generateRandomPost()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg text-xs shadow-md transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-shuffle"></i> TẠO BÀI ĐĂNG NGẪU NHIÊN
+                        </button>
+                    </form>
+                </div>
+
+                <!-- BÀI ĐĂNG HOÀN THÀNH -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between space-y-4">
+                    <div>
+                        <div class="flex justify-between items-center border-b pb-2 mb-3">
+                            <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-copy text-emerald-600"></i> Nội Dung Bài Đăng Mẫu
+                            </h3>
+                            <span id="patternBadge" class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded-full">Mẫu 1</span>
+                        </div>
+
+                        <textarea id="outputResult" rows="14" readonly class="w-full p-3 border border-gray-200 rounded-xl bg-slate-50 text-xs leading-relaxed focus:outline-none resize-none text-gray-800 font-mono"></textarea>
+                    </div>
+
+                    <div class="space-y-2">
+                        <button onclick="copyToClipboard()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg text-xs shadow-md transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-clipboard mr-1"></i> SAO CHÉP NỘI DUNG
+                        </button>
+                        <p id="copyToast" class="text-center text-xs font-semibold text-emerald-600 opacity-0 transition-opacity">
+                            <i class="fa-solid fa-check"></i> Đã sao chép vào bộ nhớ tạm!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- TAB 3: CRM & KỊCH BẢN CHĂM SÓC (CRM DATA) -->
+        <div id="tab-crm" class="tab-content hidden space-y-6">
+            <!-- Controls: Tìm kiếm & Lọc -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 grid grid-cols-1 md:grid-cols-12 gap-3">
+                <div class="md:col-span-6 relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-sm"></i>
+                    <input type="text" id="searchInput" onkeyup="filterCases()" 
+                        placeholder="Tìm kiếm tình huống (vd: chê giá cao, báo trả phòng, tiếng ồn...)..." 
+                        class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div class="md:col-span-3">
+                    <select id="categoryFilter" onchange="filterCases()" class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="ALL">-- Tất cả nhóm tình huống --</option>
+                        <option value="XU_LY_TU_CHOI">1. Xử lý từ chối khi tư vấn (Giá/Vị trí/Ảnh)</option>
+                        <option value="DANG_XEM_PHONG">2. Dẫn xem phòng & Đàm phán chốt cọc</option>
+                        <option value="SUDUNG_SUCO">3. Giải quyết sự cố khi đang ở (Đồ đạc/Hàng xóm)</option>
+                        <option value="GIU_CHAN_TRA_PHONG">4. Giữ chân khách đòi trả phòng / Tăng giá</option>
+                        <option value="CHAMSOC_DINHKY">5. Chăm sóc định kỳ & Xin phản hồi / Khách giới thiệu</option>
+                    </select>
+                </div>
+                <div class="md:col-span-3">
+                    <select id="tagFilter" onchange="filterCases()" class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="ALL">-- Đối tượng khách --</option>
+                        <option value="Sinh viên">Sinh viên / Người trẻ</option>
+                        <option value="Người đi làm">Người đi làm / Văn phòng</option>
+                        <option value="Vợ chồng trẻ">Vợ chồng / Gia đình nhỏ</option>
+                        <option value="Tất cả">Mọi đối tượng</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Dashboard Layout Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Danh sách Kịch bản -->
+                <section class="lg:col-span-7 bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col h-[700px]">
+                    <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-xl">
+                        <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-indigo-600"></i> Danh Sách Tình Huống Thực Tế (<span id="totalCasesCount">1000</span>)
+                        </h3>
+                        <span id="showingCount" class="text-xs bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full font-semibold">Đang hiện: 0</span>
+                    </div>
+
+                    <div id="caseListContainer" class="divide-y divide-slate-100 overflow-y-auto custom-scrollbar flex-1">
+                        <!-- Javascript renders cards here -->
+                    </div>
+                </section>
+
+                <!-- Chi tiết Kịch bản & Mẫu Phản Hồi -->
+                <section class="lg:col-span-5 bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col h-[700px] sticky top-20">
+                    <div class="p-4 border-b border-slate-100 bg-indigo-50/50 rounded-t-xl flex justify-between items-center">
+                        <h3 class="font-bold text-indigo-900 text-xs uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-comments text-indigo-600"></i> Chi Tiết Kịch Bản & Phản Hồi
+                        </h3>
+                        <span class="text-[11px] text-indigo-600 font-semibold bg-indigo-100 px-2 py-0.5 rounded">Mẫu chuẩn</span>
+                    </div>
+
+                    <div id="detailView" class="p-5 overflow-y-auto custom-scrollbar flex-1 space-y-4">
+                        <div class="text-center py-20 text-slate-400 space-y-2">
+                            <i class="fa-solid fa-hand-pointer text-3xl mb-2 text-slate-300"></i>
+                            <p class="text-sm">Vui lòng chọn 1 tình huống ở danh sách bên trái để xem phương án giải quyết và mẫu tin nhắn phản hồi.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODALS & TOAST NOTIFICATIONS -->
+
+    <!-- Modal Thêm/Sửa Phòng -->
+    <div id="roomModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10">
+                <h3 id="modalTitle" class="text-lg font-bold text-slate-800">Thêm Căn Hộ / Phòng Trọ Mới</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <form id="roomForm" onsubmit="saveRoom(event)" class="p-5 space-y-4">
+                <input type="hidden" id="roomId">
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Mã/Tên Phòng *</label>
+                        <input type="text" id="code" required placeholder="VD: P.301 - CHDV" class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Giá Thuê (Triệu/tháng) *</label>
+                        <input type="number" step="0.1" id="price" required placeholder="VD: 4.5" class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Quận / Khu vực *</label>
+                        <input type="text" id="district" required placeholder="VD: Quận 10, Tân Bình..." class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Trạng Thái *</label>
+                        <select id="status" class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                            <option value="Còn trống">🟢 Còn trống</option>
+                            <option value="Sắp trống">🟡 Sắp trống</option>
+                            <option value="Đã thuê">🔴 Đã thuê</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Địa chỉ chính xác</label>
+                    <input type="text" id="address" placeholder="Số nhà, tên đường, phường..." class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tiện ích / Nội thất</label>
+                    <input type="text" id="amenities" placeholder="VD: Máy lạnh, ban công, thang máy, nuôi pet..." class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+
+                <!-- Dán & Thêm Hình Ảnh -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Hình ảnh căn hộ (Không giới hạn số lượng)</label>
+                    <div id="dropZone" tabIndex="0" class="border-2 border-dashed border-indigo-300 hover:border-indigo-500 bg-indigo-50/50 hover:bg-indigo-50 rounded-xl p-4 text-center cursor-pointer transition flex flex-col items-center justify-center outline-none focus:ring-2 focus:ring-indigo-500">
+                        <i class="fa-regular fa-image text-3xl text-indigo-500 mb-2"></i>
+                        <p class="text-xs font-medium text-slate-700">Click vào đây rồi bấm <span class="bg-indigo-600 text-white px-1.5 py-0.5 rounded font-mono text-[11px]">Ctrl + V</span> để DÁN ẢNH TỪ ZALO</p>
+                        <p class="text-[11px] text-slate-400 mt-1">Hoặc bấm chọn tệp / kéo thả ảnh vào đây</p>
+                        <input type="file" id="fileInput" multiple accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+                    </div>
+
+                    <div id="compressingStatus" class="hidden text-xs text-indigo-600 font-semibold mt-2 items-center gap-1">
+                        <i class="fa-solid fa-spinner fa-spin"></i> Đang tối ưu hình ảnh...
+                    </div>
+
+                    <div id="imagePreviewContainer" class="grid grid-cols-4 gap-2 mt-3"></div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Link Ảnh/Video bổ sung (Google Drive / TikTok / Zalo nếu có)</label>
+                    <input type="url" id="mediaUrl" placeholder="https://..." class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Ghi chú riêng (SĐT chủ nhà, hoa hồng, phí điện nước...)</label>
+                    <textarea id="note" rows="2" placeholder="Chủ nhà: 090x..., Điện 4k, Nước 100k..." class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
+                </div>
+
+                <div class="pt-3 border-t flex justify-end gap-2">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded-lg text-sm text-slate-600 hover:bg-slate-50">Hủy</button>
+                    <button type="submit" id="btnSave" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg text-sm">Lưu Dữ Liệu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Xem Ảnh Kích Thước Lớn -->
+    <div id="imageViewerModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50 p-4" onclick="closeImageViewer()">
+        <div class="relative max-w-4xl max-h-[90vh] flex flex-col items-center">
+            <img id="viewerImage" src="" class="max-w-full max-h-[80vh] rounded-lg shadow-2xl object-contain">
+            <p class="text-white text-xs mt-3 opacity-80">Click bất kỳ đâu để đóng</p>
+        </div>
+    </div>
+
+    <!-- Toast Notification Chung -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-2.5 rounded-lg text-sm shadow-xl opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2 z-50">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toastMsg">Đã sao chép!</span>
+    </div>
+
+
+    <!-- JAVASCRIPT HỢP NHẤT TOÀN BỘ CHỨC NĂNG -->
+    <script>
+        // =========================================================================
+        // 1. TAB NAVIGATION SYSTEM
+        // =========================================================================
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Reset tab button styles
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = 'tab-btn px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 text-indigo-200 hover:text-white hover:bg-indigo-700/50';
+            });
+
+            // Show selected tab content
+            document.getElementById(tabId).classList.remove('hidden');
+
+            // Active button style
+            const activeNav = document.getElementById('nav-' + tabId.replace('tab-', ''));
+            if (activeNav) {
+                activeNav.className = 'tab-btn px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 bg-white text-indigo-900 shadow';
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            toastMsg.innerText = message;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2000);
+        }
+
+        // =========================================================================
+        // 2. KHO PHÒNG - INDEXEDDB & ROOM MANAGEMENT LOGIC
+        // =========================================================================
+        let rooms = [];
+        let currentImages = [];
+        let db;
+
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open("RoomManagerDB", 1);
+                request.onupgradeneeded = (e) => {
+                    db = e.target.result;
+                    if (!db.objectStoreNames.contains("rooms")) {
+                        db.createObjectStore("rooms", { keyPath: "id" });
+                    }
+                };
+                request.onsuccess = (e) => {
+                    db = e.target.result;
+                    resolve(db);
+                };
+                request.onerror = (e) => reject(e);
+            });
+        }
+
+        async function loadRoomsFromDB() {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readonly");
+                const store = tx.objectStore("rooms");
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result || []);
+                request.onerror = (e) => reject(e);
+            });
+        }
+
+        async function saveRoomToDB(roomData) {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+                const request = store.put(roomData);
+                request.onsuccess = () => resolve(true);
+                request.onerror = (e) => reject(e);
+            });
+        }
+
+        async function deleteRoomFromDB(id) {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+                const request = store.delete(id);
+                request.onsuccess = () => resolve(true);
+                request.onerror = (e) => reject(e);
+            });
+        }
+
+        async function clearAllFromDB() {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+                const request = store.clear();
+                request.onsuccess = () => resolve(true);
+                request.onerror = (e) => reject(e);
+            });
+        }
+
+        function setupPasteAndDragEvents() {
+            const dropZone = document.getElementById('dropZone');
+            if(!dropZone) return;
+
+            dropZone.addEventListener('click', () => {
+                document.getElementById('fileInput').click();
+            });
+
+            window.addEventListener('paste', (e) => {
+                if (document.getElementById('roomModal').classList.contains('hidden')) return;
+
+                const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+                for (let item of items) {
+                    if (item.type.indexOf('image') !== -1) {
+                        const file = item.getAsFile();
+                        processAndCompressImage(file);
+                    }
+                }
+            });
+
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('border-indigo-600', 'bg-indigo-100');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('border-indigo-600', 'bg-indigo-100');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('border-indigo-600', 'bg-indigo-100');
+                const files = e.dataTransfer.files;
+                for (let file of files) {
+                    if (file.type.startsWith('image/')) {
+                        processAndCompressImage(file);
+                    }
+                }
+            });
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            for (let file of files) {
+                processAndCompressImage(file);
+            }
+        }
+
+        function processAndCompressImage(file) {
+            const statusElem = document.getElementById('compressingStatus');
+            statusElem.classList.remove('hidden');
+            statusElem.classList.add('flex');
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    const MAX_SIZE = 1200;
+                    if (width > height) {
+                        if (width > MAX_SIZE) {
+                            height *= MAX_SIZE / width;
+                            width = MAX_SIZE;
+                        }
+                    } else {
+                        if (height > MAX_SIZE) {
+                            width *= MAX_SIZE / height;
+                            height = MAX_SIZE;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+                    currentImages.push(compressedBase64);
+                    
+                    statusElem.classList.add('hidden');
+                    statusElem.classList.remove('flex');
+                    renderImagePreviews();
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function renderImagePreviews() {
+            const container = document.getElementById('imagePreviewContainer');
+            container.innerHTML = currentImages.map((imgSrc, index) => `
+                <div class="relative group aspect-square rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
+                    <img src="${imgSrc}" class="w-full h-full object-cover">
+                    <button type="button" onclick="removeImage(${index})" class="absolute top-1 right-1 bg-rose-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-80 hover:opacity-100 transition">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function removeImage(index) {
+            currentImages.splice(index, 1);
+            renderImagePreviews();
+        }
+
+        function renderDistrictOptions() {
+            const districtSelect = document.getElementById('filterDistrict');
+            const currentValue = districtSelect.value;
+            const districts = [...new Set(rooms.map(r => r.district ? r.district.trim() : ''))].filter(Boolean);
+
+            districtSelect.innerHTML = '<option value="">Tất cả Quận/Khu vực</option>';
+            districts.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d;
+                opt.textContent = d;
+                districtSelect.appendChild(opt);
+            });
+            districtSelect.value = currentValue;
+        }
+
+        function filterRooms() {
+            const keyword = document.getElementById('filterKeyword').value.toLowerCase();
+            const district = document.getElementById('filterDistrict').value;
+            const price = document.getElementById('filterPrice').value;
+            const status = document.getElementById('filterStatus').value;
+
+            const filtered = rooms.filter(room => {
+                const matchKeyword = (room.code && room.code.toLowerCase().includes(keyword)) || 
+                                     (room.address && room.address.toLowerCase().includes(keyword)) || 
+                                     (room.amenities && room.amenities.toLowerCase().includes(keyword));
+                
+                const matchDistrict = district === '' || room.district === district;
+                const matchStatus = status === '' || room.status === status;
+
+                let matchPrice = true;
+                const p = parseFloat(room.price);
+                if (price === 'under3') matchPrice = p < 3;
+                else if (price === '3to5') matchPrice = p >= 3 && p <= 5;
+                else if (price === '5to8') matchPrice = p > 5 && p <= 8;
+                else if (price === 'over8') matchPrice = p > 8;
+
+                return matchKeyword && matchDistrict && matchStatus && matchPrice;
+            });
+
+            renderRooms(filtered);
+        }
+
+        function renderRooms(data) {
+            const container = document.getElementById('roomList');
+            document.getElementById('roomCount').textContent = data.length;
+
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-slate-400">
+                        <i class="fa-regular fa-folder-open text-4xl mb-2"></i>
+                        <p>Không tìm thấy phòng phù hợp.</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = data.map(room => {
+                let statusBg = "bg-emerald-100 text-emerald-800 border-emerald-200";
+                if(room.status === 'Sắp trống') statusBg = "bg-amber-100 text-amber-800 border-amber-200";
+                if(room.status === 'Đã thuê') statusBg = "bg-rose-100 text-rose-800 border-rose-200";
+
+                const hasImages = room.images && room.images.length > 0;
+                const coverImage = hasImages ? room.images[0] : null;
+
+                return `
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col justify-between">
+                    <div>
+                        ${coverImage ? `
+                            <div class="relative h-48 bg-slate-100 overflow-hidden group cursor-pointer" onclick="viewImage('${coverImage}')">
+                                <img src="${coverImage}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                <span class="absolute bottom-2 right-2 bg-black/60 text-white text-[11px] px-2 py-0.5 rounded-full backdrop-blur-sm">
+                                    <i class="fa-regular fa-image mr-1"></i> ${room.images.length} ảnh
+                                </span>
+                            </div>
+                        ` : ''}
+
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${statusBg}">${room.status}</span>
+                                    <h3 class="text-lg font-bold text-slate-800 mt-2">${room.code}</h3>
+                                </div>
+                                <span class="text-xl font-extrabold text-indigo-600">${room.price} <span class="text-xs font-normal text-slate-500">Tr/tháng</span></span>
+                            </div>
+
+                            <p class="text-xs text-slate-500 mb-3"><i class="fa-solid fa-location-dot text-rose-500 mr-1"></i> ${room.address || 'Chưa cập nhật địa chỉ'} (${room.district})</p>
+
+                            ${hasImages && room.images.length > 1 ? `
+                                <div class="flex gap-1.5 overflow-x-auto mb-3 pb-1">
+                                    ${room.images.map(img => `
+                                        <img src="${img}" onclick="viewImage('${img}')" class="w-10 h-10 object-cover rounded cursor-pointer border border-slate-200 hover:opacity-80">
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+
+                            <div class="bg-slate-50 p-3 rounded-lg text-xs space-y-1 text-slate-600 mb-3">
+                                <p><strong><i class="fa-solid fa-list-check text-indigo-500 mr-1"></i> Tiện ích:</strong> ${room.amenities || 'Chưa thông tin'}</p>
+                                ${room.note ? `<p class="text-amber-700"><strong><i class="fa-solid fa-note-sticky mr-1"></i> Ghi chú:</strong> ${room.note}</p>` : ''}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 px-5 py-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                        <div>
+                            ${room.mediaUrl ? `<a href="${room.mediaUrl}" target="_blank" class="text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1"><i class="fa-solid fa-link"></i> Link Video/Driver</a>` : '<span class="text-slate-400">Không có link</span>'}
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="copyInfo('${room.id}')" title="Copy thông tin gửi khách" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-2.5 py-1.5 rounded font-medium transition flex items-center gap-1">
+                                <i class="fa-regular fa-copy"></i> Copy gửi khách
+                            </button>
+                            <button onclick="editRoom('${room.id}')" class="text-slate-500 hover:text-indigo-600 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="deleteRoom('${room.id}')" class="text-slate-500 hover:text-rose-600 p-1"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        function copyInfo(id) {
+            const room = rooms.find(r => r.id === id);
+            if (!room) return;
+
+            const textToCopy = 
+`🏡 [${room.code.toUpperCase()}] - KHU VỰC ${room.district.toUpperCase()}
+💰 Giá: ${room.price} Triệu/tháng
+📍 Địa chỉ: ${room.address}
+✨ Tiện ích: ${room.amenities}
+${room.mediaUrl ? `📸 Link video/ảnh: ${room.mediaUrl}` : ''}
+
+Nhắn mình ngay để xem phòng trực tiếp nhé!`;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast('Đã copy thông tin căn hộ gửi khách!');
+            });
+        }
+
+        function openModal(isEdit = false) {
+            document.getElementById('modalTitle').textContent = isEdit ? 'Chỉnh Sửa Thông Tin Phòng' : 'Thêm Căn Hộ / Phòng Trọ Mới';
+            document.getElementById('roomModal').classList.remove('hidden');
+            document.getElementById('roomModal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('roomModal').classList.add('hidden');
+            document.getElementById('roomModal').classList.remove('flex');
+            document.getElementById('roomForm').reset();
+            document.getElementById('roomId').value = '';
+            currentImages = [];
+            renderImagePreviews();
+        }
+
+        async function saveRoom(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('roomId').value;
+            const roomData = {
+                id: id || Date.now().toString(),
+                code: document.getElementById('code').value,
+                price: document.getElementById('price').value,
+                district: document.getElementById('district').value,
+                status: document.getElementById('status').value,
+                address: document.getElementById('address').value,
+                amenities: document.getElementById('amenities').value,
+                mediaUrl: document.getElementById('mediaUrl').value,
+                note: document.getElementById('note').value,
+                images: [...currentImages],
+                updatedAt: new Date().toISOString()
+            };
+
+            await saveRoomToDB(roomData);
+            rooms = await loadRoomsFromDB();
+            renderDistrictOptions();
+            filterRooms();
+            closeModal();
+            showToast('Đã lưu thông tin phòng thành công!');
+        }
+
+        function editRoom(id) {
+            const room = rooms.find(r => r.id === id);
+            if (!room) return;
+
+            document.getElementById('roomId').value = room.id;
+            document.getElementById('code').value = room.code;
+            document.getElementById('price').value = room.price;
+            document.getElementById('district').value = room.district;
+            document.getElementById('status').value = room.status;
+            document.getElementById('address').value = room.address || '';
+            document.getElementById('amenities').value = room.amenities || '';
+            document.getElementById('mediaUrl').value = room.mediaUrl || '';
+            document.getElementById('note').value = room.note || '';
+            
+            currentImages = room.images ? [...room.images] : [];
+            renderImagePreviews();
+
+            openModal(true);
+        }
+
+        async function deleteRoom(id) {
+            if (confirm('Bạn có chắc muốn xóa phòng này khỏi hệ thống?')) {
+                await deleteRoomFromDB(id);
+                rooms = await loadRoomsFromDB();
+                renderDistrictOptions();
+                filterRooms();
+                showToast('Đã xóa phòng thành công!');
+            }
+        }
+
+        function resetFilters() {
+            document.getElementById('filterKeyword').value = '';
+            document.getElementById('filterDistrict').value = '';
+            document.getElementById('filterPrice').value = '';
+            document.getElementById('filterStatus').value = '';
+            filterRooms();
+        }
+
+        function viewImage(url) {
+            document.getElementById('viewerImage').src = url;
+            document.getElementById('imageViewerModal').classList.remove('hidden');
+            document.getElementById('imageViewerModal').classList.add('flex');
+        }
+
+        function closeImageViewer() {
+            document.getElementById('imageViewerModal').classList.add('hidden');
+            document.getElementById('imageViewerModal').classList.remove('flex');
+        }
+
+        async function clearAllData() {
+            if (confirm('Lưu ý: Hành động này sẽ xóa toàn bộ danh sách phòng hiện tại. Hãy bấm "Tải dữ liệu" trước nếu muốn lưu lại nhé!')) {
+                await clearAllFromDB();
+                rooms = await loadRoomsFromDB();
+                renderDistrictOptions();
+                filterRooms();
+                showToast('Đã xóa toàn bộ dữ liệu!');
+            }
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(rooms));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `backup_kho_phong_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const importedRooms = JSON.parse(e.target.result);
+                    if (Array.isArray(importedRooms)) {
+                        for (let room of importedRooms) {
+                            if (!room.id) room.id = Date.now().toString() + Math.random().toString(36).substr(2, 4);
+                            await saveRoomToDB(room);
+                        }
+                        rooms = await loadRoomsFromDB();
+                        renderDistrictOptions();
+                        filterRooms();
+                        showToast(`Đã nhập ${importedRooms.length} phòng vào hệ thống!`);
+                    } else {
+                        alert('File JSON không hợp lệ!');
+                    }
+                } catch (err) {
+                    alert('Lỗi đọc file JSON: ' + err.message);
+                }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        }
+
+
+        // =========================================================================
+        // 3. TẠO BÀI ĐĂNG TỰ ĐỘNG LOGIC
+        // =========================================================================
+        const hooks = [
+            "🔥 [TRỐNG SẴN XINH XẮN] CĂN HỘ / PHÒNG TRỌ XIN XÒ GIÁ RẺ!",
+            "💥 CHÍNH CHỦ CHO THUÊ - PHÒNG ĐẸP GIÁ TỐT KHU VỰC ĐẮC ĐỊA",
+            "🏡 CHỈ CẦN XÁCH VALI VÀO Ở - PHÒNG FULL NỘI THẤT CỰC CHẤT",
+            "🚀 BÁN KÍNH DƯỚI 5P ĐẾN TRƯỜNG/CÔNG TY - PHÒNG MỚI COONG!",
+            "✨ CĂN HỘ MINI BAN CÔNG THOẢI MÁI - GIỜ GIẤC TỰ DO 100%",
+            "⚡ PHÒNG MỚI KHAI TRƯƠNG - GIÁ CHỈ TỪ TIỂU HỌC, ĐẸP NHƯ KHÁCH SẠN",
+            "🌿 KHÔNG KHANH TRỌ TRỐNG - CÓ NGAY PHÒNG ĐẸP LONG LÃNH!",
+            "🎯 CHỐT NHANH KẺO HẾT - CĂN HỘ DỊCH VỤ GIÁ SIÊU UY THIỆN"
+        ];
+
+        const intros = [
+            "Bên em vừa trống lại 1 phòng cực thoáng mát, góc siêu xinh.",
+            "Anh/Chị/Bạn nào đang tìm phòng sạch sẽ, an ninh thì xem ngay căn này nhé.",
+            "Phòng thiết kế tối ưu diện tích, sạch sẽ ngăn nắp, dọn vào ở ngay.",
+            "Vị trí cực kỳ thuận tiện đi lại, xung quanh đầy đủ tiện ích không thiếu thứ gì.",
+            "Căn hộ mini an ninh 24/7, phù hợp cho sinh viên và dân văn phòng."
+        ];
+
+        const formatStyles = [
+            (d) => `${d.hook}\n\n${d.intro}\n\n📍 Vị trí: ${d.location}\n💰 Giá thuê: ${d.price}\n🏫 Gần ngay: ${d.nearBy}\n🛋️ Nội thất: ${d.furniture}\n⚡ Chi phí: ${d.services}\n🌟 Tiện ích: ${d.amenities}\n\n📞 Liên hệ/Zalo ngay: ${d.contact} (Xem phòng miễn phí)`,
+            (d) => `${d.hook}\n\nChính chủ cho thuê ${d.location}.\n👉 Giá siêu mềm: ${d.price}\n👉 Vị trí vàng: ${d.nearBy}\n\n✨ Trang bị sẵn: ${d.furniture}.\n✨ Phí dịch vụ: ${d.services}.\n✨ Điểm cộng: ${d.amenities}.\n\n📲 Nhắn Zalo/Gọi em liền: ${d.contact}`,
+            (d) => `${d.hook}\n\n• Địa chỉ: ${d.location}\n• Giá phòng: ${d.price}\n• Khu vực gần: ${d.nearBy}\n• Đồ đạc có sẵn: ${d.furniture}\n• Phí sinh hoạt: ${d.services}\n• Đặc điểm: ${d.amenities}\n\n☎️ HOTLINE XEM PHÒNG: ${d.contact}`,
+            (d) => `${d.hook}\n\n${d.intro}\n- Vị trí khu vực: ${d.location} (${d.nearBy})\n- Mức giá: ${d.price}\n- Nội thất đi kèm: ${d.furniture}\n- Bảng phí chi tiết: ${d.services}\n- Cam kết: ${d.amenities}\n\n👉 Nhanh tay liên hệ Zalo: ${d.contact} để nhận clip quay phòng thực tế!`
+        ];
+
+        const ctas = [
+            "Hỗ trợ xem phòng trực tiếp 24/7!",
+            "Nhắn Zalo em gửi ngay video quay chi tiết phòng nhé!",
+            "Số lượng có hạn, ưu tiên các bạn chốt sớm trong tuần!",
+            "Cam kết phòng thật - ảnh thật 100%!"
+        ];
+
+        function getRandomItem(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function generateRandomPost() {
+            const data = {
+                location: document.getElementById('location').value || "[Địa chỉ/Quận]",
+                price: document.getElementById('price').value || "[Mức giá]",
+                nearBy: document.getElementById('nearBy').value || "[Trường học/Chợ/Đường lớn]",
+                furniture: document.getElementById('furniture').value || "[Danh sách nội thất]",
+                services: document.getElementById('services').value || "[Giá Điện/Nước]",
+                amenities: document.getElementById('amenities').value || "[Giờ giấc/An ninh]",
+                contact: document.getElementById('contact').value || "[SĐT/Zalo]",
+                hook: getRandomItem(hooks),
+                intro: getRandomItem(intros)
+            };
+
+            const selectedStyle = getRandomItem(formatStyles);
+            const selectedCTA = getRandomItem(ctas);
+
+            const fullPost = `${selectedStyle(data)}\n💡 ${selectedCTA}`;
+            document.getElementById('outputResult').value = fullPost;
+            document.getElementById('patternBadge').innerText = `Mẫu biến thể #${Math.floor(Math.random() * 100) + 1}`;
+        }
+
+        function copyToClipboard() {
+            const textarea = document.getElementById('outputResult');
+            if (!textarea.value) return;
+
+            textarea.select();
+            document.execCommand('copy');
+
+            const toast = document.getElementById('copyToast');
+            toast.classList.remove('opacity-0');
+            setTimeout(() => toast.classList.add('opacity-0'), 2000);
+        }
+
+
+        // =========================================================================
+        // 4. CRM KỊCH BẢN CHĂM SÓC LOGIC
+        // =========================================================================
+        const coreCategories = {
+            "XU_LY_TU_CHOI": "Xử lý từ chối khi tư vấn",
+            "DANG_XEM_PHONG": "Dẫn xem phòng & Đàm phán",
+            "SUDUNG_SUCO": "Giải quyết sự cố khi ở",
+            "GIU_CHAN_TRA_PHONG": "Giữ chân khách đòi trả phòng",
+            "CHAMSOC_DINHKY": "Chăm sóc & Giới thiệu"
+        };
+
+        const topics = [
+            { cat: "XU_LY_TU_CHOI", issue: "Khách chê giá thuê cao hơn {n}k so với phòng khác cùng khu vực", type: "Giá cả", action: "Không giảm giá trực tiếp. Phân tích giá trị cộng thêm: An ninh, giờ tự do, máy giặt riêng, hỗ trợ kĩ thuật 24/7.", msg: "Chào {x}, tiền nào của nấy ạ! Mức giá bên em đã bao gồm [dịch vụ X, Y]. Đặc biệt bên em cam kết không phát sinh phí ẩn và hỗ trợ kỹ thuật trong 2h. Nếu anh/chị chốt trong hôm nay em xin giảm ngay {n2}k tiền phòng tháng đầu nhé!" },
+            { cat: "XU_LY_TU_CHOI", issue: "Khách phàn nàn phòng diện tích hơi nhỏ ({n}m2)", type: "Diện tích", action: "Hướng dẫn bố trí nội thất thông minh, nhấn mạnh không gian tối ưu cho 1-2 người ở.", msg: "Em chào {x}, phòng thiết kế chuẩn tối ưu không gian nên rất gọn gàng ạ. Khách đang ở phản hồi căn này vừa ấm cúng lại rất dễ dọn dẹp. Em hỗ trợ tặng thêm kệ treo tường/móc đồ thông minh nếu {x} cọc sớm nha!" },
+            { cat: "XU_LY_TU_CHOI", issue: "Khách đòi bớt tiền cọc (Chỉ muốn cọc {n}k thay vì 1 tháng)", type: "Tiền cọc", action: "Giữ vững nguyên tắc an toàn tài chính, linh hoạt chia làm 2 đợt đóng cọc.", msg: "Dạ {x} ơi, quy định cọc 1 tháng là để đảm bảo quyền lợi đồ đạc cho cả 2 bên ạ. Nhưng em có thể hỗ trợ {x} đóng trước 50% tiền cọc để giữ phòng, 50% còn lại đóng cùng tiền nhà tháng đầu tiên nhé!" },
+            { cat: "XU_LY_TU_CHOI", issue: "Khách ngại ngõ/hẻm đi vào hơi sâu khoảng {n}m", type: "Vị trí", action: "Biến nhược điểm thành ưu điểm: Hẻm yên tĩnh, không ồn ào khói bụi, ngõ an ninh có camera.", msg: "Dạ đúng là hẻm vào tầm {n}m nhưng bù lại hẻm cực kỳ an ninh, yên tĩnh ban đêm giúp {x} ngủ ngon giấc, không bị tiếng còi xe làm phiền ạ!" },
+            { cat: "DANG_XEM_PHONG", issue: "Khách xem phòng xong im lặng, nhắn tin không phản hồi sau {n} giờ", type: "Chăm sóc sau xem", action: "Tạo độ khan hiếm (Urgency) khéo léo, hỏi thăm nhẹ nhàng.", msg: "Hi {x}! Căn hộ hôm qua {x} xem đang có 1 bạn hẹn chiều nay qua đặt cọc. Em nhớ {x} rất thích góc ban công nên ưu tiên nhắn hỏi {x} trước, {x} có quyết định giữ căn này luôn không ạ?" },
+            { cat: "DANG_XEM_PHONG", issue: "Khách đòi dẫn thêm {n} người bạn/người thân qua xem lại lần 2", type: "Xem lại", action: "Nhiệt tình hỗ trợ, chuẩn bị không gian sạch sẽ, bật sẵn điều hòa tạo thiện cảm.", msg: "Dạ thoải mái luôn {x} ơi! Mấy giờ {x} và bạn qua ạ? Em sẽ qua mở cửa bật sẵn máy lạnh cho thoáng mát để mọi người xem cho thoải mái nhé!" },
+            { cat: "SUDUNG_SUCO", issue: "Khách báo máy lạnh kêu to / không lạnh sau {n} tháng ở", type: "Sự cố kỹ thuật", action: "Phản hồi tốc độ cao, cử thợ bảo trì trong ngày, thể hiện sự trách nhiệm.", msg: "Dạ em nhận thông tin rồi ạ! Em đã báo thợ kỹ thuật, khoảng {n2} phút nữa thợ sẽ qua kiểm tra và bảo trì ngay cho {x}. Rất xin lỗi {x} vì sự bất tiện này ạ!" },
+            { cat: "SUDUNG_SUCO", issue: "Khách hàng xóm tầng {n} ca thán vì tiếng ồn sau 23h", type: "Xung đột hàng xóm", action: "Làm việc tinh tế, nhắc nhở chung quy định tòa nhà, bảo vệ riêng tư 2 bên.", msg: "Chào {x}, bên quản lý có nhận phản hồi nhỏ về tiếng động hơi lớn sau 23h ở khu vực tầng mình. {x} hỗ trợ vặn nhỏ âm thanh/đi nhẹ nói khẽ giúp em để đảm bảo giấc ngủ chung cho cả tòa nhà nhé. Cảm ơn {x} nhiều ạ!" },
+            { cat: "GIU_CHAN_TRA_PHONG", issue: "Khách báo trả phòng vì công ty/trường học chuyển chỗ cách {n}km", type: "Giữ chân / Giảm giá", action: "Đề xuất đổi sang phòng thuộc chuỗi/hệ thống khác gần chỗ mới hoặc giảm giá thuê hỗ trợ.", msg: "Em rất tiếc khi nghe tin {x} sắp chuyển đi. Bên hệ thống em có 2 tòa nhà khác ngay gần chỗ làm mới của {x} luôn đó! Em hỗ trợ chuyển cọc sang bên đó hoàn toàn miễn phí + giảm {n2}% tiền thuê tháng đầu cho {x} nha!" },
+            { cat: "GIU_CHAN_TRA_PHONG", issue: "Chủ nhà bắt tăng giá thuê lên {n}k, khách dọa trả phòng", type: "Tăng giá", action: "Đàm phán bù đắp bằng quà tặng/tiện ích hoặc chia nhỏ mức tăng.", msg: "Em rất hiểu cảm giác của {x}. Do chi phí vận hành chung tăng nên chủ nhà mới điều chỉnh ạ. Để hỗ trợ {x}, em đã xin chủ hỗ trợ tặng {x} voucher tiền điện/dịch vụ {n2}k mỗi tháng để bù vào tiền phòng ạ!" },
+            { cat: "CHAMSOC_DINHKY", issue: "Chăm sóc khách đã ở được {n} tháng (Hỏi thăm định kỳ)", type: "Chăm sóc", action: "Tạo mối quan hệ thân thiết, chủ động hỏi thăm đồ đạc có hỏng hóc gì không.", msg: "Hi {x}! {x} ở phòng được {n} tháng rồi, mọi thứ vẫn tốt chứ ạ? Đồ đạc thiết bị có cần em hỗ trợ bảo trì gì không {x} cứ báo em thoải mái nha!" },
+            { cat: "CHAMSOC_DINHKY", issue: "Xin giới thiệu (Referral): Khách cũ giới thiệu bạn bè nhận hoa hồng {n}k", type: "Khách giới thiệu", action: "Kích hoạt mạng lưới giới thiệu nhờ quà tặng tiền mặt hoặc trừ tiền phòng.", msg: "Chào {x}! Bên em đang có chương trình tri ân: Nếu {x} giới thiệu bạn bè/đồng nghiệp thuê phòng bên em thì em xin gửi tặng {x} ngay {n2}k tiền mặt (hoặc trừ thẳng vào tiền nhà tháng sau) nhé!" }
+        ];
+
+        const targetAudience = ["Sinh viên", "Người đi làm", "Vợ chồng trẻ", "Tất cả"];
+        const names = ["Anh Nam", "Chị Hoa", "Bạn Tuấn", "Chị Linh", "Anh Đức", "Bạn Trang", "Anh Huy"];
+
+        let dbCases = [];
+
+        function generate1000Cases() {
+            let id = 1;
+            for (let i = 0; i < 84; i++) {
+                topics.forEach(t => {
+                    const randomDist = Math.floor(Math.random() * 15) + 1;
+                    const randomMoneySmall = (Math.floor(Math.random() * 5) + 1) * 50;
+                    const name = names[Math.floor(Math.random() * names.length)];
+                    const tag = targetAudience[Math.floor(Math.random() * targetAudience.length)];
+
+                    let title = t.issue.replace("{n}", randomDist);
+                    let msg = t.msg.replace(/{x}/g, name).replace("{n}", randomDist).replace("{n2}", randomMoneySmall);
+
+                    dbCases.push({
+                        id: id++,
+                        category: t.cat,
+                        categoryName: coreCategories[t.cat],
+                        type: t.type,
+                        title: `[TH-${id}] ${title}`,
+                        tag: tag,
+                        actionPlan: t.action,
+                        responseTemplate: msg
+                    });
+                });
+            }
+        }
+
+        let currentFilteredData = [];
+
+        function renderCaseList(data) {
+            const container = document.getElementById('caseListContainer');
+            document.getElementById('showingCount').innerText = `Đang hiện: ${data.length}`;
+            
+            if (data.length === 0) {
+                container.innerHTML = `<div class="p-8 text-center text-slate-400 text-sm">Không tìm thấy tình huống phù hợp</div>`;
+                return;
+            }
+
+            const limitData = data.slice(0, 120);
+            container.innerHTML = limitData.map(c => `
+                <div onclick="selectCase(${c.id})" class="p-3.5 hover:bg-slate-50 cursor-pointer transition border-l-4 border-transparent hover:border-indigo-600 space-y-1">
+                    <div class="flex justify-between items-start gap-2">
+                        <span class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">${c.type}</span>
+                        <span class="text-[11px] text-slate-400 font-medium">${c.tag}</span>
+                    </div>
+                    <h4 class="text-xs font-semibold text-slate-800 line-clamp-2 leading-relaxed">${c.title}</h4>
+                    <p class="text-[11px] text-slate-500 truncate"><i class="fa-regular fa-comment-dots mr-1"></i>${c.responseTemplate}</p>
+                </div>
+            `).join('');
+        }
+
+        function selectCase(id) {
+            const item = dbCases.find(c => c.id === id);
+            if (!item) return;
+
+            const detailView = document.getElementById('detailView');
+            detailView.innerHTML = `
+                <div class="space-y-4">
+                    <div>
+                        <span class="text-xs font-bold text-indigo-600 bg-indigo-100 px-2.5 py-1 rounded-full">${item.categoryName}</span>
+                        <h2 class="text-base font-bold text-slate-800 mt-2 leading-snug">${item.title}</h2>
+                        <div class="flex items-center gap-2 mt-2 text-xs text-slate-500">
+                            <span><i class="fa-solid fa-tag text-slate-400"></i> Dạng vấn đề: <strong>${item.type}</strong></span> | 
+                            <span><i class="fa-solid fa-user-group text-slate-400"></i> Đối tượng: <strong>${item.tag}</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="bg-amber-50/80 border border-amber-200 p-3.5 rounded-xl space-y-1">
+                        <h4 class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
+                            <i class="fa-solid fa-lightbulb text-amber-600"></i> Hướng Xử Lý Tâm Lý & Đàm Phán:
+                        </h4>
+                        <p class="text-xs text-amber-900 leading-relaxed">${item.actionPlan}</p>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label class="text-xs font-bold text-slate-700 flex items-center gap-1">
+                                <i class="fa-solid fa-paper-plane text-indigo-600"></i> Mẫu Tin Nhắn Phản Hồi Trực Tiếp (Zalo/SMS):
+                            </label>
+                            <button onclick="copyResponseText()" class="text-xs text-indigo-600 font-semibold hover:text-indigo-800 flex items-center gap-1 bg-indigo-50 px-2 py-1 rounded transition">
+                                <i class="fa-regular fa-copy"></i> Sao chép
+                            </button>
+                        </div>
+                        <textarea id="responseBox" rows="6" class="w-full p-3 text-xs border border-slate-300 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none leading-relaxed text-slate-800 font-mono">${item.responseTemplate}</textarea>
+                    </div>
+
+                    <div class="pt-2">
+                        <button onclick="copyResponseText()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-share-from-square"></i> SAO CHÉP MẪU PHẢN HỒI NÀY
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function filterCases() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const cat = document.getElementById('categoryFilter').value;
+            const tag = document.getElementById('tagFilter').value;
+
+            currentFilteredData = dbCases.filter(item => {
+                const matchSearch = item.title.toLowerCase().includes(search) || 
+                                    item.responseTemplate.toLowerCase().includes(search) ||
+                                    item.actionPlan.toLowerCase().includes(search);
+                const matchCat = (cat === "ALL") || (item.category === cat);
+                const matchTag = (tag === "ALL") || (item.tag === tag || item.tag === "Tất cả");
+
+                return matchSearch && matchCat && matchTag;
+            });
+
+            renderCaseList(currentFilteredData);
+            if (currentFilteredData.length > 0) {
+                selectCase(currentFilteredData[0].id);
+            } else {
+                document.getElementById('detailView').innerHTML = `<div class="text-center py-20 text-slate-400 text-sm">Không có dữ liệu chi tiết</div>`;
+            }
+        }
+
+        function copyResponseText() {
+            const box = document.getElementById('responseBox');
+            if (!box) return;
+            box.select();
+            document.execCommand('copy');
+            showToast('Đã sao chép kịch bản!');
+        }
+
+
+        // =========================================================================
+        // INITIALIZATION
+        // =========================================================================
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Khởi tạo Database Kho Phòng
+            await initDB();
+            
+            // Backup cũ nếu có
+            const oldData = localStorage.getItem('my_room_data_v2');
+            if (oldData) {
+                try {
+                    const parsed = JSON.parse(oldData);
+                    for (let r of parsed) {
+                        await saveRoomToDB(r);
+                    }
+                    localStorage.removeItem('my_room_data_v2');
+                } catch(e){}
+            }
+
+            rooms = await loadRoomsFromDB();
+            renderDistrictOptions();
+            filterRooms();
+            setupPasteAndDragEvents();
+
+            // Khởi tạo Công cụ Tạo bài đăng
+            generateRandomPost();
+
+            // Khởi tạo CRM 1,000 cases
+            generate1000Cases();
+            document.getElementById('totalCasesCount').innerText = dbCases.length.toLocaleString();
+            currentFilteredData = [...dbCases];
+            renderCaseList(dbCases);
+            selectCase(1);
+        });
+    </script>
+</body>
+</html>
