@@ -1125,5 +1125,64 @@ Nhắn mình ngay để xem phòng trực tiếp nhé!`;
             selectCase(1);
         });
     </script>
+    <!-- 1. Nhúng các thư viện Firebase SDK qua CDN -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+  // 2. Cấu hình Firebase của bạn
+  const firebaseConfig = {
+    apiKey: "AIzaSyD8Wh8pia8fTC20OVz66stBUEnIGSWpN1Y",
+    authDomain: "quan-ly-phong-tro-8e0f3.firebaseapp.com",
+    databaseURL: "https://quan-ly-phong-tro-8e0f3-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "quan-ly-phong-tro-8e0f3",
+    storageBucket: "quan-ly-phong-tro-8e0f3.firebasestorage.app",
+    messagingSenderId: "750295715649",
+    appId: "1:750295715649:web:fa13d6bb7ba9461ee85bc0",
+    measurementId: "G-V9EMTQN2WH"
+  };
+
+  // 3. Khởi tạo Firebase và kết nối Database
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const roomsRef = db.ref('rooms');
+
+  // 4. LẮNG NGHE ĐỒNG BỘ THỜI GIAN THỰC (Realtime Listener)
+  // Mỗi khi trên máy tính hoặc điện thoại có thay đổi, hàm này tự chạy để vẽ lại giao diện
+  roomsRef.on('value', (snapshot) => {
+    const data = snapshot.val();
+    const roomList = [];
+    
+    if (data) {
+      Object.keys(data).forEach(key => {
+        roomList.push({ id: key, ...data[key] });
+      });
+    }
+
+    // Cập nhật biến dữ liệu trong script của bạn và vẽ lại giao diện
+    window.allRoomsData = roomList; 
+    if (typeof renderUI === 'function') {
+      renderUI(roomList); // Thay 'renderUI' bằng tên hàm hiển thị danh sách phòng hiện tại của bạn
+    }
+  });
+
+  // 5. HÀM LƯU PHÒNG (Thêm mới hoặc Cập nhật)
+  function saveRoomToFirebase(roomObject) {
+    if (roomObject.id) {
+      // Nếu đã có ID -> Cập nhật phòng cũ
+      return db.ref('rooms/' + roomObject.id).update(roomObject);
+    } else {
+      // Chưa có ID -> Thêm phòng mới
+      const newRef = roomsRef.push();
+      roomObject.id = newRef.key;
+      return newRef.set(roomObject);
+    }
+  }
+
+  // 6. HÀM XÓA PHÒNG
+  function deleteRoomFromFirebase(roomId) {
+    return db.ref('rooms/' + roomId).remove();
+  }
+</script>
 </body>
 </html>
