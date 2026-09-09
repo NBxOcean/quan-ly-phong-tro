@@ -12,150 +12,168 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         
         .fade-in {
-            animation: fadeIn 0.4s ease-in-out forwards;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(12px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .glow-orange {
+            box-shadow: 0 10px 30px -10px rgba(249, 115, 22, 0.4);
         }
     </style>
 </head>
-<body class="bg-slate-100 font-sans text-gray-800 min-h-screen pb-12">
+<body class="bg-slate-50 font-sans text-slate-800 min-h-screen pb-12 antialiased">
 
-    <!-- 0. MÀN HÌNH ĐĂNG NHẬP & ĐĂNG KÝ -->
-    <div id="authScreen" class="fixed inset-0 z-50 bg-slate-900 flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900 via-slate-900 to-black">
-        <div class="bg-white/95 backdrop-blur-md w-full max-w-md rounded-2xl shadow-2xl border border-white/20 p-8 fade-in relative overflow-hidden">
-            <div class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl"></div>
-            <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl"></div>
+    <!-- 0. MÀN HÌNH ĐĂNG NHẬP & ĐĂNG KÝ (STYLE GEN Z + REAL ESTATE SALE) -->
+    <div id="authScreen" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4 overflow-hidden">
+        <!-- Background Ambient Glows -->
+        <div class="absolute -top-24 -left-24 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl pointer-events-none animate-pulse"></div>
+        <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl pointer-events-none animate-pulse" style="animation-delay: 1s;"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-            <div class="text-center mb-6 relative z-10">
-                <div class="inline-flex items-center justify-center w-14 h-14 bg-indigo-600 text-amber-300 rounded-2xl shadow-lg mb-3">
-                    <i class="fa-solid fa-building-circle-check text-2xl"></i>
+        <div class="bg-slate-900/80 backdrop-blur-xl w-full max-w-md rounded-3xl shadow-2xl border border-slate-800/80 p-8 fade-in relative z-10 overflow-hidden">
+            <!-- Header Logo & Tagline -->
+            <div class="text-center mb-8 relative">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-orange-500 to-amber-400 text-white rounded-2xl shadow-lg shadow-orange-500/30 mb-4 transform hover:scale-105 transition duration-300">
+                    <i class="fa-solid fa-house-fire text-3xl"></i>
                 </div>
-                <h2 id="authTitle" class="text-2xl font-bold text-slate-800 tracking-tight">Hệ Thống Quản Lý</h2>
-                <p class="text-xs text-slate-500 mt-1 font-medium">Phòng Trọ & Cho Thuê Căn Hộ - Nguyên Bảo</p>
+                <h2 id="authTitle" class="text-2xl font-extrabold text-white tracking-tight">Căn Hộ & Phòng Trọ <span class="bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">Genz Sale</span></h2>
+                <p class="text-xs text-slate-400 mt-1.5 font-medium">Hệ Thống Chốt Đơn Chuyên Nghiệp • Nguyên Bảo Manager</p>
             </div>
 
             <!-- FORM ĐĂNG NHẬP -->
-            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4 relative z-10">
+            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Tài khoản</label>
+                    <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-2">Tên tài khoản</label>
                     <div class="relative">
-                        <i class="fa-solid fa-user absolute left-3.5 top-3 text-slate-400 text-sm"></i>
-                        <input type="text" id="loginUsername" required placeholder="Nhập tên tài khoản" 
-                            class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                        <i class="fa-solid fa-user-astronaut absolute left-4 top-3.5 text-slate-500 text-sm"></i>
+                        <input type="text" id="loginUsername" required placeholder="Nhập username..." 
+                            class="w-full pl-11 pr-4 py-3 bg-slate-800/60 border border-slate-700/80 rounded-2xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Mật khẩu</label>
+                    <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-2">Mật khẩu</label>
                     <div class="relative">
-                        <i class="fa-solid fa-lock absolute left-3.5 top-3 text-slate-400 text-sm"></i>
-                        <input type="password" id="loginPassword" required placeholder="Nhập mật khẩu" 
-                            class="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                        <button type="button" onclick="togglePasswordVisibility('loginPassword', 'eyeIcon')" class="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600">
+                        <i class="fa-solid fa-key absolute left-4 top-3.5 text-slate-500 text-sm"></i>
+                        <input type="password" id="loginPassword" required placeholder="Nhập mật khẩu..." 
+                            class="w-full pl-11 pr-11 py-3 bg-slate-800/60 border border-slate-700/80 rounded-2xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition">
+                        <button type="button" onclick="togglePasswordVisibility('loginPassword', 'eyeIcon')" class="absolute right-4 top-3.5 text-slate-500 hover:text-slate-300 transition">
                             <i id="eyeIcon" class="fa-solid fa-eye text-sm"></i>
                         </button>
                     </div>
                 </div>
 
-                <div class="flex items-center justify-between text-xs">
-                    <label class="flex items-center text-slate-600 cursor-pointer">
-                        <input type="checkbox" id="rememberMe" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 mr-2">
+                <div class="flex items-center justify-between text-xs pt-1">
+                    <label class="flex items-center text-slate-400 cursor-pointer select-none">
+                        <input type="checkbox" id="rememberMe" class="rounded border-slate-700 bg-slate-800 text-orange-500 focus:ring-orange-500/30 mr-2">
                         Ghi nhớ đăng nhập
                     </label>
-                    <a href="#" onclick="alert('Vui lòng liên hệ Admin Nguyên Bảo để khôi phục mật khẩu!'); return false;" class="text-indigo-600 font-semibold hover:underline">Quên mật khẩu?</a>
+                    <a href="#" onclick="alert('Vui lòng liên hệ Admin Nguyên Bảo để khôi phục mật khẩu!'); return false;" class="text-orange-400 font-semibold hover:text-orange-300 transition">Quên mật khẩu?</a>
                 </div>
 
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-sm shadow-lg shadow-indigo-600/30 transition duration-200 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-right-to-bracket"></i> ĐĂNG NHẬP HỆ THỐNG
+                <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3.5 rounded-2xl text-sm shadow-lg glow-orange transition duration-200 flex items-center justify-center gap-2 mt-2">
+                    <i class="fa-solid fa-bolt text-amber-200"></i> ĐĂNG NHẬP NGAY
                 </button>
 
-                <div class="text-center pt-2">
-                    <p class="text-xs text-slate-500">Chưa có tài khoản nhân viên? <a href="#" onclick="toggleAuthMode('register'); return false;" class="text-indigo-600 font-bold hover:underline">Đăng ký ngay</a></p>
+                <div class="text-center pt-3">
+                    <p class="text-xs text-slate-400">Bạn là Sale mới? <a href="#" onclick="toggleAuthMode('register'); return false;" class="text-amber-400 font-bold hover:underline">Tạo tài khoản ngay ✨</a></p>
                 </div>
             </form>
 
             <!-- FORM ĐĂNG KÝ -->
-            <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-3 relative z-10 hidden">
+            <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-3.5 hidden">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Tên tài khoản (Viết liền, không dấu) *</label>
-                    <input type="text" id="regUsername" required placeholder="VD: nhanvien1" 
-                        class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                    <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">Tên tài khoản (Viết liền) *</label>
+                    <input type="text" id="regUsername" required placeholder="VD: sales_nam" 
+                        class="w-full px-4 py-2.5 bg-slate-800/60 border border-slate-700/80 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 transition">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Họ và Tên nhân viên *</label>
-                    <input type="text" id="regFullName" required placeholder="VD: Nguyễn Văn A" 
-                        class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                    <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">Họ và Tên Sale *</label>
+                    <input type="text" id="regFullName" required placeholder="VD: Nguyễn Văn Nam" 
+                        class="w-full px-4 py-2.5 bg-slate-800/60 border border-slate-700/80 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 transition">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Mật khẩu *</label>
-                    <input type="password" id="regPassword" required placeholder="Nhập mật khẩu" 
-                        class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                    <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">Mật khẩu *</label>
+                    <input type="password" id="regPassword" required placeholder="Tạo mật khẩu..." 
+                        class="w-full px-4 py-2.5 bg-slate-800/60 border border-slate-700/80 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 transition">
                 </div>
 
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-sm shadow-lg shadow-emerald-600/30 transition duration-200 flex items-center justify-center gap-2 mt-2">
+                <div class="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-[11px] text-amber-300 flex items-start gap-2">
+                    <i class="fa-solid fa-shield-cat text-amber-400 text-sm mt-0.5"></i>
+                    <span>Tài khoản mới tạo sẽ mặc định ở quyền <strong>Nhân viên Sale</strong>. Bạn có thể xem kho phòng và lấy mẫu kịch bản chốt khách.</span>
+                </div>
+
+                <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-2xl text-sm shadow-lg shadow-emerald-500/20 transition duration-200 flex items-center justify-center gap-2">
                     <i class="fa-solid fa-user-plus"></i> ĐĂNG KÝ TÀI KHOẢN
                 </button>
 
                 <div class="text-center pt-2">
-                    <p class="text-xs text-slate-500">Đã có tài khoản? <a href="#" onclick="toggleAuthMode('login'); return false;" class="text-indigo-600 font-bold hover:underline">Đăng nhập ngay</a></p>
+                    <p class="text-xs text-slate-400">Đã có tài khoản? <a href="#" onclick="toggleAuthMode('login'); return false;" class="text-orange-400 font-bold hover:underline">Quay lại đăng nhập</a></p>
                 </div>
             </form>
 
-            <div class="mt-6 pt-4 border-t border-slate-100 text-center text-xs text-slate-400">
-                <p>© 2026 Bản quyền thuộc về Nguyên Bảo System</p>
+            <div class="mt-8 pt-4 border-t border-slate-800/60 text-center text-[11px] text-slate-500">
+                <p>© 2026 Nguyên Bảo Real Estate System • GenZ Power 🚀</p>
             </div>
         </div>
     </div>
 
     <!-- MAIN APP CONTAINER -->
     <div id="mainApp" class="hidden">
-        <header class="bg-indigo-700 text-white shadow-md sticky top-0 z-40">
+        <header class="bg-slate-900 text-white shadow-xl sticky top-0 z-40 border-b border-slate-800">
             <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
                 <div class="flex items-center space-x-3">
-                    <i class="fa-solid fa-building-circle-check text-2xl text-amber-300"></i>
+                    <div class="w-10 h-10 bg-gradient-to-tr from-orange-500 to-amber-400 rounded-xl flex items-center justify-center text-white shadow-md">
+                        <i class="fa-solid fa-house-fire text-lg"></i>
+                    </div>
                     <div>
-                        <h1 class="text-lg md:text-xl font-bold leading-tight">Hệ Thống Quản Lý & Chăm Sóc Phòng Trọ All-In-One</h1>
-                        <p class="text-xs text-indigo-200">Phát triển bởi Nguyên Bảo</p>
+                        <h1 class="text-base md:text-lg font-bold leading-tight flex items-center gap-2">
+                            Quản Lý Cho Thuê Căn Hộ
+                            <span id="roleBadgeHeader" class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30">SALE</span>
+                        </h1>
+                        <p class="text-[11px] text-slate-400">Hệ thống đồng bộ dữ liệu • Nguyên Bảo</p>
                     </div>
                 </div>
 
                 <div class="flex items-center gap-3 flex-wrap">
-                    <nav class="flex bg-indigo-800/60 p-1 rounded-xl gap-1 border border-indigo-500/30">
-                        <button onclick="switchTab('tab-inventory')" id="nav-inventory" class="tab-btn px-3 py-1.5 rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 bg-white text-indigo-900 shadow">
+                    <nav class="flex bg-slate-800/80 p-1 rounded-2xl gap-1 border border-slate-700/60">
+                        <button onclick="switchTab('tab-inventory')" id="nav-inventory" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 bg-orange-500 text-white shadow">
                             <i class="fa-solid fa-boxes-stacked"></i> Kho Phòng
                         </button>
-                        <button onclick="switchTab('tab-poster')" id="nav-poster" class="tab-btn px-3 py-1.5 rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 text-indigo-200 hover:text-white hover:bg-indigo-700/50">
-                            <i class="fa-solid fa-pen-to-square"></i> Tạo Bài Đăng
+                        <button onclick="switchTab('tab-poster')" id="nav-poster" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-700/50">
+                            <i class="fa-solid fa-pen-to-square"></i> Mẫu Marketing
                         </button>
-                        <button onclick="switchTab('tab-crm')" id="nav-crm" class="tab-btn px-3 py-1.5 rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 text-indigo-200 hover:text-white hover:bg-indigo-700/50">
+                        <button onclick="switchTab('tab-crm')" id="nav-crm" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-700/50">
                             <i class="fa-solid fa-comments"></i> Kịch Bản CRM
                         </button>
                         <!-- TAB DÀNH RIÊNG CHO ADMIN -->
-                        <button onclick="switchTab('tab-users')" id="nav-users" class="tab-btn hidden px-3 py-1.5 rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 text-amber-300 hover:text-white hover:bg-indigo-700/50">
+                        <button onclick="switchTab('tab-users')" id="nav-users" class="tab-btn hidden px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-amber-300 hover:text-white hover:bg-slate-700/50">
                             <i class="fa-solid fa-users-gear"></i> Quản Lý Tài Khoản
                         </button>
                     </nav>
 
-                    <div class="flex items-center gap-2 bg-indigo-900/80 px-3 py-1.5 rounded-xl border border-indigo-500/40">
-                        <div class="w-7 h-7 rounded-full bg-amber-400 text-indigo-900 font-bold flex items-center justify-center text-xs">
+                    <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-2xl border border-slate-700">
+                        <div class="w-7 h-7 rounded-full bg-gradient-to-r from-orange-400 to-amber-400 text-slate-900 font-bold flex items-center justify-center text-xs">
                             <i class="fa-solid fa-user-shield"></i>
                         </div>
                         <div class="hidden sm:block text-left pr-1">
                             <p id="currentUserDisplay" class="text-xs font-bold leading-tight text-white">Admin</p>
-                            <p id="currentUserRole" class="text-[10px] text-indigo-200 leading-tight">Quản trị viên</p>
+                            <p id="currentUserRole" class="text-[10px] text-amber-400 font-medium leading-tight">Quản trị viên</p>
                         </div>
-                        <button onclick="handleLogout()" title="Đăng xuất" class="text-indigo-200 hover:text-rose-300 p-1 transition ml-1">
+                        <button onclick="handleLogout()" title="Đăng xuất" class="text-slate-400 hover:text-rose-400 p-1 transition ml-1">
                             <i class="fa-solid fa-power-off text-sm"></i>
                         </button>
                     </div>
@@ -166,37 +184,39 @@
         <main class="max-w-7xl mx-auto px-4 py-6">
             <!-- TAB 1: QUẢN LÝ KHO PHÒNG -->
             <div id="tab-inventory" class="tab-content space-y-6">
-                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex-wrap gap-3">
+                <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex-wrap gap-3">
                     <div>
                         <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                            <i class="fa-solid fa-building-user text-indigo-600"></i> Check Rổ Hàng Căn Hộ / Phòng Trọ
+                            <i class="fa-solid fa-building-user text-orange-500"></i> Rổ Hàng Căn Hộ / Phòng Trọ
                         </h2>
-                        <p class="text-xs text-slate-500">Quản lý trạng thái, hình ảnh và xuất thông tin gửi khách hàng nhanh chóng</p>
+                        <p class="text-xs text-slate-500">Xem nhanh phòng trống, hình ảnh và sao chép thông tin gửi khách</p>
                     </div>
-                    <button onclick="openModal()" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-semibold px-4 py-2 rounded-lg transition shadow flex items-center gap-2 text-sm">
-                        <i class="fa-solid fa-plus"></i> Thêm Phòng Mới
+                    
+                    <!-- Nút Thêm phòng chỉ hiển thị cho Admin -->
+                    <button id="adminAddRoomBtn" onclick="openModal()" class="hidden bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold px-4 py-2 rounded-xl transition shadow flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-plus"></i> Thêm Phòng Mới (Admin)
                     </button>
                 </div>
 
-                <section class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <section class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
                     <div class="flex items-center justify-between mb-3">
                         <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-filter text-indigo-600"></i> Bộ Lọc Tìm Kiếm Nhanh
+                            <i class="fa-solid fa-filter text-orange-500"></i> Bộ Lọc Tìm Kiếm Nhanh
                         </h3>
-                        <button onclick="resetFilters()" class="text-xs text-indigo-600 hover:underline">Đặt lại bộ lọc</button>
+                        <button onclick="resetFilters()" class="text-xs text-orange-600 font-semibold hover:underline">Đặt lại bộ lọc</button>
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
                         <div class="lg:col-span-2">
-                            <input type="text" id="filterKeyword" oninput="filterRooms()" placeholder="Tìm theo Mã phòng, Địa chỉ, Tiện ích..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="text" id="filterKeyword" oninput="filterRooms()" placeholder="Tìm theo Mã phòng, Địa chỉ, Tiện ích..." class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none bg-slate-50">
                         </div>
                         <div>
-                            <select id="filterDistrict" onchange="filterRooms()" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <select id="filterDistrict" onchange="filterRooms()" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none bg-slate-50">
                                 <option value="">Tất cả Quận/Khu vực</option>
                             </select>
                         </div>
                         <div>
-                            <select id="filterPrice" onchange="filterRooms()" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <select id="filterPrice" onchange="filterRooms()" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none bg-slate-50">
                                 <option value="">Tất cả mức giá</option>
                                 <option value="under3">Dưới 3 triệu</option>
                                 <option value="3to5">3 - 5 triệu</option>
@@ -205,7 +225,7 @@
                             </select>
                         </div>
                         <div>
-                            <select id="filterStatus" onchange="filterRooms()" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <select id="filterStatus" onchange="filterRooms()" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none bg-slate-50">
                                 <option value="">Tất cả trạng thái</option>
                                 <option value="Còn trống">🟢 Còn trống</option>
                                 <option value="Sắp trống">🟡 Sắp trống</option>
@@ -217,9 +237,11 @@
 
                 <section>
                     <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-                        <p class="text-sm text-slate-600">Hiển thị <span id="roomCount" class="font-bold text-indigo-600">0</span> phòng phù hợp</p>
-                        <div class="flex gap-2 flex-wrap">
-                            <button onclick="clearAllData()" class="text-xs bg-rose-100 hover:bg-rose-200 text-rose-700 px-3 py-1.5 rounded-lg">
+                        <p class="text-sm text-slate-600">Hiển thị <span id="roomCount" class="font-bold text-orange-600">0</span> phòng phù hợp</p>
+                        
+                        <!-- Tính năng quản trị dữ liệu chỉ lộ ra cho ADMIN -->
+                        <div id="adminDataControls" class="hidden flex gap-2 flex-wrap">
+                            <button onclick="clearAllData()" class="text-xs bg-rose-100 hover:bg-rose-200 text-rose-700 px-3 py-1.5 rounded-lg font-medium">
                                 <i class="fa-solid fa-broom"></i> Xóa dữ liệu
                             </button>
                             <button onclick="document.getElementById('importFileInput').click()" class="text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-800 px-3 py-1.5 rounded-lg flex items-center gap-1 font-medium">
@@ -227,7 +249,7 @@
                             </button>
                             <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importData(event)">
                             
-                            <button onclick="exportData()" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg flex items-center gap-1">
+                            <button onclick="exportData()" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg flex items-center gap-1 font-medium">
                                 <i class="fa-solid fa-download"></i> Tải dữ liệu (Backup)
                             </button>
                         </div>
@@ -239,58 +261,58 @@
 
             <!-- TAB 2: TẠO BÀI ĐĂNG TỰ ĐỘNG -->
             <div id="tab-poster" class="tab-content hidden space-y-6">
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-                    <h2 class="text-base font-bold text-indigo-900 flex items-center gap-2">
-                        <i class="fa-solid fa-house-signal text-indigo-600"></i> Công Cụ Tạo Bài Đăng Quảng Cáo Phòng Trọ / Căn Hộ
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+                    <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-bullhorn text-orange-500"></i> Công Cụ Mẫu Bài Đăng Quảng Cáo Phòng Trọ / Căn Hộ
                     </h2>
-                    <p class="text-xs text-slate-500 mt-1">Điền thông tin phòng và nhấn tạo bài để tự động tổng hợp nội dung đăng Zalo/Facebook thu hút khách hàng.</p>
+                    <p class="text-xs text-slate-500 mt-1">Nhân viên chỉ cần copy bài mẫu hoặc thay đổi nhanh thông tin để đăng Zalo/Facebook thu hút khách hàng.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                         <h3 class="text-sm font-bold text-slate-800 border-b pb-2 flex items-center gap-2">
-                            <i class="fa-solid fa-pen-to-square text-indigo-600"></i> Nhập Thông Tin Chi Tiết
+                            <i class="fa-solid fa-pen-to-square text-orange-500"></i> Nhập / Tùy Chỉnh Thông Tin
                         </h3>
 
                         <form id="infoForm" class="space-y-3 text-sm">
                             <div>
                                 <label class="block font-semibold text-gray-600 text-xs mb-1">Loại phòng & Vị trí</label>
-                                <input type="text" id="location" placeholder="Căn hộ Studio / P. Trọ - Đường Lê Hồng Phong, Q.10" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-xs">
+                                <input type="text" id="location" placeholder="Căn hộ Studio / P. Trọ - Đường Lê Hồng Phong, Q.10" class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50">
                             </div>
 
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
                                     <label class="block font-semibold text-gray-600 text-xs mb-1">Giá thuê/tháng</label>
-                                    <input type="text" id="price" placeholder="3.5 Triệu" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-xs">
+                                    <input type="text" id="price" placeholder="3.5 Triệu" class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50">
                                 </div>
                                 <div>
                                     <label class="block font-semibold text-gray-600 text-xs mb-1">Gần địa điểm lớn</label>
-                                    <input type="text" id="nearBy" placeholder="ĐH Bách Khoa, Chợ Mới" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-xs">
+                                    <input type="text" id="nearBy" placeholder="ĐH Bách Khoa, Chợ Mới" class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50">
                                 </div>
                             </div>
 
                             <div>
                                 <label class="block font-semibold text-gray-600 text-xs mb-1">Nội thất có sẵn</label>
-                                <input type="text" id="furniture" placeholder="Máy lạnh, tủ lạnh, giường nệm, tủ quần áo, kệ bếp" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-xs">
+                                <input type="text" id="furniture" placeholder="Máy lạnh, tủ lạnh, giường nệm, tủ quần áo, kệ bếp" class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50">
                             </div>
 
                             <div>
                                 <label class="block font-semibold text-gray-600 text-xs mb-1">Chi phí dịch vụ (Điện/Nước/DV)</label>
-                                <input type="text" id="services" placeholder="Điện 3.8k/kwh, Nước 100k/người, Wifi free" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-xs">
+                                <input type="text" id="services" placeholder="Điện 3.8k/kwh, Nước 100k/người, Wifi free" class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50">
                             </div>
 
                             <div>
                                 <label class="block font-semibold text-gray-600 text-xs mb-1">Tiện ích / Ưu điểm khác</label>
-                                <input type="text" id="amenities" placeholder="Giờ giấc tự do, khóa vân tay, có ban công, máy giặt chung" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-xs">
+                                <input type="text" id="amenities" placeholder="Giờ giấc tự do, khóa vân tay, có ban công, máy giặt chung" class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50">
                             </div>
 
                             <div>
                                 <label class="block font-semibold text-gray-600 text-xs mb-1">SĐT / Zalo liên hệ</label>
-                                <input type="text" id="contact" placeholder="090x.xxx.xxx (Em Nam)" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-xs">
+                                <input type="text" id="contact" placeholder="090x.xxx.xxx (Em Nam)" class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50">
                             </div>
 
-                            <button type="button" onclick="generateRandomPost()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg text-xs shadow-md transition flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-shuffle"></i> TẠO BÀI ĐĂNG NGẪU NHIÊN
+                            <button type="button" onclick="generateRandomPost()" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3 rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-shuffle"></i> BẤM TẠO NỘI DUNG MỚI
                             </button>
                         </form>
                     </div>
@@ -299,16 +321,16 @@
                         <div>
                             <div class="flex justify-between items-center border-b pb-2 mb-3">
                                 <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                                    <i class="fa-solid fa-copy text-emerald-600"></i> Nội Dung Bài Đăng Mẫu
+                                    <i class="fa-solid fa-copy text-emerald-600"></i> Nội Dung Bài Đăng Mẫu (Copy Dùng Ngay)
                                 </h3>
-                                <span id="patternBadge" class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded-full">Mẫu 1</span>
+                                <span id="patternBadge" class="text-[10px] bg-orange-100 text-orange-700 font-bold px-2 py-0.5 rounded-full">Mẫu 1</span>
                             </div>
 
-                            <textarea id="outputResult" rows="14" readonly class="w-full p-3 border border-gray-200 rounded-xl bg-slate-50 text-xs leading-relaxed focus:outline-none resize-none text-gray-800 font-mono"></textarea>
+                            <textarea id="outputResult" rows="14" readonly class="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 text-xs leading-relaxed focus:outline-none resize-none text-slate-800 font-mono"></textarea>
                         </div>
 
                         <div class="space-y-2">
-                            <button onclick="copyToClipboard()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg text-xs shadow-md transition flex items-center justify-center gap-2">
+                            <button onclick="copyToClipboard()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-clipboard mr-1"></i> SAO CHÉP NỘI DUNG
                             </button>
                             <p id="copyToast" class="text-center text-xs font-semibold text-emerald-600 opacity-0 transition-opacity">
@@ -321,15 +343,15 @@
 
             <!-- TAB 3: CRM & KỊCH BẢN CHĂM SÓC -->
             <div id="tab-crm" class="tab-content hidden space-y-6">
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 grid grid-cols-1 md:grid-cols-12 gap-3">
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 grid grid-cols-1 md:grid-cols-12 gap-3">
                     <div class="md:col-span-6 relative">
                         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-sm"></i>
                         <input type="text" id="searchInput" onkeyup="filterCases()" 
-                            placeholder="Tìm kiếm tình huống (vd: chê giá cao, báo trả phòng, tiếng ồn...)..." 
-                            class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            placeholder="Tìm kiếm kịch bản (chê giá cao, đòi cọc, ồn ào...)..." 
+                            class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 bg-slate-50">
                     </div>
                     <div class="md:col-span-3">
-                        <select id="categoryFilter" onchange="filterCases()" class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <select id="categoryFilter" onchange="filterCases()" class="w-full py-2 px-3 border border-slate-200 rounded-xl text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-orange-500">
                             <option value="ALL">-- Tất cả nhóm tình huống --</option>
                             <option value="XU_LY_TU_CHOI">1. Xử lý từ chối khi tư vấn (Giá/Vị trí/Ảnh)</option>
                             <option value="DANG_XEM_PHONG">2. Dẫn xem phòng & Đàm phán chốt cọc</option>
@@ -339,7 +361,7 @@
                         </select>
                     </div>
                     <div class="md:col-span-3">
-                        <select id="tagFilter" onchange="filterCases()" class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <select id="tagFilter" onchange="filterCases()" class="w-full py-2 px-3 border border-slate-200 rounded-xl text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-orange-500">
                             <option value="ALL">-- Đối tượng khách --</option>
                             <option value="Sinh viên">Sinh viên / Người trẻ</option>
                             <option value="Người đi làm">Người đi làm / Văn phòng</option>
@@ -350,10 +372,10 @@
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <section class="lg:col-span-7 bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col h-[700px]">
-                        <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-xl">
+                    <section class="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col h-[700px]">
+                        <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-2xl">
                             <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-list-check text-indigo-600"></i> Danh Sách Tình Huống Thực Tế (<span id="totalCasesCount">1000</span>)
+                                <i class="fa-solid fa-list-check text-orange-500"></i> Mẫu Kịch Bản Chuẩn CRM (<span id="totalCasesCount">1000</span>)
                             </h3>
                             <span id="showingCount" class="text-xs bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full font-semibold">Đang hiện: 0</span>
                         </div>
@@ -361,18 +383,18 @@
                         <div id="caseListContainer" class="divide-y divide-slate-100 overflow-y-auto custom-scrollbar flex-1"></div>
                     </section>
 
-                    <section class="lg:col-span-5 bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col h-[700px] sticky top-20">
-                        <div class="p-4 border-b border-slate-100 bg-indigo-50/50 rounded-t-xl flex justify-between items-center">
-                            <h3 class="font-bold text-indigo-900 text-xs uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-comments text-indigo-600"></i> Chi Tiết Kịch Bản & Phản Hồi
+                    <section class="lg:col-span-5 bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col h-[700px] sticky top-20">
+                        <div class="p-4 border-b border-slate-100 bg-orange-50/50 rounded-t-2xl flex justify-between items-center">
+                            <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-comments text-orange-500"></i> Chi Tiết Hướng Xử Lý & Mẫu Tin Nhắn
                             </h3>
-                            <span class="text-[11px] text-indigo-600 font-semibold bg-indigo-100 px-2 py-0.5 rounded">Mẫu chuẩn</span>
+                            <span class="text-[11px] text-orange-700 font-semibold bg-orange-100 px-2 py-0.5 rounded">Mẫu chuẩn</span>
                         </div>
 
                         <div id="detailView" class="p-5 overflow-y-auto custom-scrollbar flex-1 space-y-4">
                             <div class="text-center py-20 text-slate-400 space-y-2">
                                 <i class="fa-solid fa-hand-pointer text-3xl mb-2 text-slate-300"></i>
-                                <p class="text-sm">Vui lòng chọn 1 tình huống ở danh sách bên trái để xem phương án giải quyết và mẫu tin nhắn phản hồi.</p>
+                                <p class="text-sm">Vui lòng chọn 1 kịch bản ở danh sách bên trái để xem cách tư vấn và copy mẫu phản hồi.</p>
                             </div>
                         </div>
                     </section>
@@ -381,31 +403,31 @@
 
             <!-- TAB 4: QUẢN LÝ TÀI KHOẢN (CHỈ DÀNH CHO ADMIN) -->
             <div id="tab-users" class="tab-content hidden space-y-6">
-                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex-wrap gap-3">
+                <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex-wrap gap-3">
                     <div>
                         <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                            <i class="fa-solid fa-users-gear text-indigo-600"></i> Quản Lý Tài Khoản Nhân Viên
+                            <i class="fa-solid fa-users-gear text-orange-500"></i> Quản Lý Tài Khoản Nhân Viên Sale
                         </h2>
-                        <p class="text-xs text-slate-500">Tạo tài khoản mới, phân quyền hoặc thay đổi mật khẩu nhân viên hệ thống</p>
+                        <p class="text-xs text-slate-500">Tạo tài khoản mới, phân quyền Admin/Nhiên viên hoặc đổi mật khẩu</p>
                     </div>
-                    <button onclick="openUserModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg transition shadow flex items-center gap-2 text-sm">
+                    <button onclick="openUserModal()" class="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold px-4 py-2 rounded-xl transition shadow flex items-center gap-2 text-sm">
                         <i class="fa-solid fa-user-plus"></i> Thêm Tài Khoản Mới
                     </button>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 text-xs uppercase font-bold">
                                 <th class="p-3.5">Tên Đăng Nhập</th>
-                                <th class="p-3.5">Họ và Tên</th>
+                                <th class="p-3.5">Họ và Tên Nhân Viên</th>
                                 <th class="p-3.5">Mật Khẩu</th>
-                                <th class="p-3.5">Chức Vụ / Quyền</th>
-                                <th class="p-3.5 text-right">Thao Tác</th>
+                                <th class="p-3.5">Chức Vụ / Quyền Hạn</th>
+                                <th class="p-3.5 text-right">Thao Tác Admin</th>
                             </tr>
                         </thead>
                         <tbody id="userTableBody" class="divide-y divide-slate-100 text-sm">
-                            <!-- Danh sách tài khoản sẽ render ở đây -->
+                            <!-- Danh sách tài khoản -->
                         </tbody>
                     </table>
                 </div>
@@ -413,9 +435,9 @@
         </main>
     </div>
 
-    <!-- MODAL THÊM / SỬA PHÒNG -->
-    <div id="roomModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-2xl shadow-xl max-w-xl w-full max-h-[90vh] overflow-y-auto">
+    <!-- MODAL THÊM / SỬA PHÒNG (CHỈ ADMIN THỰC HIỆN) -->
+    <div id="roomModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto border border-slate-100">
             <div class="p-5 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10">
                 <h3 id="modalTitle" class="text-lg font-bold text-slate-800">Thêm Căn Hộ / Phòng Trọ Mới</h3>
                 <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -427,22 +449,22 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Mã/Tên Phòng *</label>
-                        <input type="text" id="code" required placeholder="VD: P.301 - CHDV" class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <input type="text" id="code" required placeholder="VD: P.301 - CHDV" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Giá Thuê (Triệu/tháng) *</label>
-                        <input type="number" step="0.1" id="roomPrice" required placeholder="VD: 4.5" class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <input type="number" step="0.1" id="roomPrice" required placeholder="VD: 4.5" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Quận / Khu vực *</label>
-                        <input type="text" id="district" required placeholder="VD: Quận 10, Tân Bình..." class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <input type="text" id="district" required placeholder="VD: Quận 10, Tân Bình..." class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Trạng Thái *</label>
-                        <select id="status" class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <select id="status" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
                             <option value="Còn trống">🟢 Còn trống</option>
                             <option value="Sắp trống">🟡 Sắp trống</option>
                             <option value="Đã thuê">🔴 Đã thuê</option>
@@ -452,51 +474,51 @@
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Địa chỉ chính xác</label>
-                    <input type="text" id="address" placeholder="Số nhà, tên đường, phường..." class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                    <input type="text" id="address" placeholder="Số nhà, tên đường, phường..." class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Tiện ích / Nội thất</label>
-                    <input type="text" id="roomAmenities" placeholder="VD: Máy lạnh, ban công, thang máy, nuôi pet..." class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                    <input type="text" id="roomAmenities" placeholder="VD: Máy lạnh, ban công, thang máy, nuôi pet..." class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Hình ảnh căn hộ (Không giới hạn số lượng)</label>
-                    <div id="dropZone" tabIndex="0" class="border-2 border-dashed border-indigo-300 hover:border-indigo-500 bg-indigo-50/50 hover:bg-indigo-50 rounded-xl p-4 text-center cursor-pointer transition flex flex-col items-center justify-center outline-none focus:ring-2 focus:ring-indigo-500">
-                        <i class="fa-regular fa-image text-3xl text-indigo-500 mb-2"></i>
-                        <p class="text-xs font-medium text-slate-700">Click vào đây rồi bấm <span class="bg-indigo-600 text-white px-1.5 py-0.5 rounded font-mono text-[11px]">Ctrl + V</span> để DÁN ẢNH TỪ ZALO</p>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Hình ảnh căn hộ (Dán ảnh từ Zalo hoặc Chọn tệp)</label>
+                    <div id="dropZone" tabIndex="0" class="border-2 border-dashed border-orange-300 hover:border-orange-500 bg-orange-50/30 hover:bg-orange-50/60 rounded-2xl p-4 text-center cursor-pointer transition flex flex-col items-center justify-center outline-none focus:ring-2 focus:ring-orange-500">
+                        <i class="fa-regular fa-image text-3xl text-orange-500 mb-2"></i>
+                        <p class="text-xs font-medium text-slate-700">Click vào đây rồi bấm <span class="bg-orange-500 text-white px-2 py-0.5 rounded-lg font-mono text-[11px]">Ctrl + V</span> để DÁN ẢNH TỪ ZALO</p>
                         <p class="text-[11px] text-slate-400 mt-1">Hoặc bấm chọn tệp / kéo thả ảnh vào đây</p>
                         <input type="file" id="fileInput" multiple accept="image/*" class="hidden" onchange="handleFileSelect(event)">
                     </div>
 
-                    <div id="compressingStatus" class="hidden text-xs text-indigo-600 font-semibold mt-2 items-center gap-1">
-                        <i class="fa-solid fa-spinner fa-spin"></i> Đang tải ảnh lên Supabase Storage...
+                    <div id="compressingStatus" class="hidden text-xs text-orange-600 font-semibold mt-2 items-center gap-1">
+                        <i class="fa-solid fa-spinner fa-spin"></i> Đang tối ưu hình ảnh...
                     </div>
 
                     <div id="imagePreviewContainer" class="grid grid-cols-4 gap-2 mt-3"></div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Link Ảnh/Video bổ sung (Google Drive / TikTok / Zalo nếu có)</label>
-                    <input type="url" id="mediaUrl" placeholder="https://..." class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Link Ảnh/Video bổ sung (Google Drive / Zalo nếu có)</label>
+                    <input type="url" id="mediaUrl" placeholder="https://..." class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Ghi chú riêng (SĐT chủ nhà, hoa hồng, phí điện nước...)</label>
-                    <textarea id="note" rows="2" placeholder="Chủ nhà: 090x..., Điện 4k, Nước 100k..." class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Ghi chú nội bộ (SĐT chủ nhà, hoa hồng sale...)</label>
+                    <textarea id="note" rows="2" placeholder="Chủ nhà: 090x..., Phí HH 50%..." class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50"></textarea>
                 </div>
 
                 <div class="pt-3 border-t flex justify-end gap-2">
-                    <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded-lg text-sm text-slate-600 hover:bg-slate-50">Hủy</button>
-                    <button type="submit" id="btnSave" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg text-sm">Lưu Dữ Liệu</button>
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded-xl text-sm text-slate-600 hover:bg-slate-50">Hủy</button>
+                    <button type="submit" id="btnSave" class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-xl text-sm shadow">Lưu Dữ Liệu</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL THÊM / SỬA TÀI KHOẢN (ADMIN) -->
-    <div id="userModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden">
+    <!-- MODAL THÊM / SỬA TÀI KHOẢN (CHỈ ADMIN) -->
+    <div id="userModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-100">
             <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
                 <h3 id="userModalTitle" class="text-base font-bold text-slate-800">Thêm Tài Khoản Mới</h3>
                 <button onclick="closeUserModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -507,50 +529,50 @@
                 
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Tên Đăng Nhập (Username) *</label>
-                    <input type="text" id="accUsername" required placeholder="nhanvien1" class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                    <input type="text" id="accUsername" required placeholder="nhanvien1" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Họ và Tên Nhân Viên *</label>
-                    <input type="text" id="accFullName" required placeholder="Nguyễn Văn A" class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                    <input type="text" id="accFullName" required placeholder="Nguyễn Văn A" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Mật Khẩu *</label>
-                    <input type="text" id="accPassword" required placeholder="123456" class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                    <input type="text" id="accPassword" required placeholder="123456" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Chức Vụ / Phân Quyền *</label>
-                    <select id="accRole" class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
-                        <option value="Nhân viên Sale">Nhân viên Sale</option>
-                        <option value="Quản trị viên">Quản trị viên (Admin)</option>
+                    <select id="accRole" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
+                        <option value="Nhân viên Sale">Nhân viên Sale (Chỉ xem/copy)</option>
+                        <option value="Quản trị viên">Quản trị viên (Admin - Full Quyền)</option>
                     </select>
                 </div>
 
                 <div class="pt-3 border-t flex justify-end gap-2">
-                    <button type="button" onclick="closeUserModal()" class="px-4 py-2 border rounded-lg text-sm text-slate-600 hover:bg-slate-50">Hủy</button>
-                    <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg text-sm">Lưu Tài Khoản</button>
+                    <button type="button" onclick="closeUserModal()" class="px-4 py-2 border rounded-xl text-sm text-slate-600 hover:bg-slate-50">Hủy</button>
+                    <button type="submit" class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-xl text-sm shadow">Lưu Tài Khoản</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Modal Xem Ảnh Kích Thước Lớn -->
-    <div id="imageViewerModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50 p-4" onclick="closeImageViewer()">
+    <div id="imageViewerModal" class="fixed inset-0 bg-black/85 hidden items-center justify-center z-50 p-4" onclick="closeImageViewer()">
         <div class="relative max-w-4xl max-h-[90vh] flex flex-col items-center">
-            <img id="viewerImage" src="" class="max-w-full max-h-[80vh] rounded-lg shadow-2xl object-contain">
+            <img id="viewerImage" src="" class="max-w-full max-h-[80vh] rounded-2xl shadow-2xl object-contain">
             <p class="text-white text-xs mt-3 opacity-80">Click bất kỳ đâu để đóng</p>
         </div>
     </div>
 
-    <!-- Toast Notification Chung -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-2.5 rounded-lg text-sm shadow-xl opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2 z-50">
-        <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400"></i>
-        <span id="toastMsg">Đã sao chép!</span>
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-2xl text-sm shadow-2xl opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2.5 z-50 border border-slate-800">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+        <span id="toastMsg">Đã thao tác thành công!</span>
     </div>
 
-    <!-- JAVASCRIPT HỢP NHẤT -->
+    <!-- JAVASCRIPT HỢP NHẤT & KIỂM SOÁT PHÂN QUYỀN STUCT -->
     <script>
         const SUPABASE_URL = 'https://yhkblcdvpcvjbxwfnqac.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_pK0cLrfth79Gj5OyPUDIwg_ohhag-Ld';
@@ -562,7 +584,6 @@
         let currentUser = null;
         let db;
 
-        // DANH SÁCH TÀI KHOẢN MẶC ĐỊNH LẦN ĐẦU KHI CHƯA CÓ DB
         const DEFAULT_USERS = [
             { id: '1', user: 'admin', pass: '123456', name: 'Nguyên Bảo (Admin)', role: 'Quản trị viên' },
             { id: '2', user: 'nhanvien1', pass: '123456', name: 'Nguyễn Văn A', role: 'Nhân viên Sale' }
@@ -641,11 +662,11 @@
             if (mode === 'register') {
                 document.getElementById('loginForm').classList.add('hidden');
                 document.getElementById('registerForm').classList.remove('hidden');
-                document.getElementById('authTitle').innerText = 'Đăng Ký Tài Khoản';
+                document.getElementById('authTitle').innerHTML = 'Đăng Ký Tài Khoản <span class="text-orange-400">Sale</span>';
             } else {
                 document.getElementById('registerForm').classList.add('hidden');
                 document.getElementById('loginForm').classList.remove('hidden');
-                document.getElementById('authTitle').innerText = 'Hệ Thống Quản Lý';
+                document.getElementById('authTitle').innerHTML = 'Căn Hộ & Phòng Trọ <span class="bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">Genz Sale</span>';
             }
         }
 
@@ -681,7 +702,7 @@
                 showToast(`Xin chào ${foundUser.name}!`, 'success');
                 showApp();
             } else {
-                showToast('Tài khoản hoặc mật khẩu không chính xác!', 'error');
+                showToast('Tài khoản hoặc mật khẩu không đúng!', 'error');
             }
         }
 
@@ -692,7 +713,7 @@
             const passVal = document.getElementById('regPassword').value.trim();
 
             if (users.some(u => u.user.toLowerCase() === userVal)) {
-                showToast('Tên tài khoản này đã tồn tại!', 'error');
+                showToast('Tên tài khoản này đã được tạo!', 'error');
                 return;
             }
 
@@ -707,7 +728,7 @@
             await saveUserToDB(newUser);
             users = await loadUsersFromDB();
 
-            showToast('Đăng ký tài khoản thành công! Vui lòng đăng nhập.');
+            showToast('Đăng ký tài khoản Sale thành công! Đăng nhập ngay.');
             toggleAuthMode('login');
             document.getElementById('loginUsername').value = userVal;
             document.getElementById('loginPassword').value = passVal;
@@ -715,29 +736,46 @@
         }
 
         function handleLogout() {
-            if (confirm('Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?')) {
+            if (confirm('Bạn muốn đăng xuất khỏi hệ thống?')) {
                 localStorage.removeItem(AUTH_KEY);
                 sessionStorage.removeItem(AUTH_KEY);
                 currentUser = null;
                 showLogin();
-                showToast('Đã đăng xuất tài khoản!');
+                showToast('Đã đăng xuất!');
             }
         }
 
+        /* --- CẤU HÌNH PHÂN QUYỀN TRÊN GIAO DIỆN --- */
         function showApp() {
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
             document.getElementById('currentUserDisplay').innerText = currentUser.name;
             document.getElementById('currentUserRole').innerText = currentUser.role;
 
+            const isAdmin = (currentUser.role === 'Quản trị viên');
+            
+            // Xử lý các UI chỉ Admin mới có
             const navUsersBtn = document.getElementById('nav-users');
-            if (currentUser.role === 'Quản trị viên') {
+            const adminAddRoomBtn = document.getElementById('adminAddRoomBtn');
+            const adminDataControls = document.getElementById('adminDataControls');
+            const roleBadgeHeader = document.getElementById('roleBadgeHeader');
+
+            if (isAdmin) {
                 navUsersBtn.classList.remove('hidden');
+                adminAddRoomBtn.classList.remove('hidden');
+                adminDataControls.classList.remove('hidden');
+                roleBadgeHeader.innerText = 'ADMIN';
+                roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30';
             } else {
                 navUsersBtn.classList.add('hidden');
+                adminAddRoomBtn.classList.add('hidden');
+                adminDataControls.classList.add('hidden');
+                roleBadgeHeader.innerText = 'SALE';
+                roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30';
             }
 
             renderUsersTable();
+            filterRooms();
         }
 
         function showLogin() {
@@ -752,9 +790,9 @@
             
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 if(btn.id === 'nav-users') {
-                    btn.className = 'tab-btn px-3 py-1.5 rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 text-amber-300 hover:text-white hover:bg-indigo-700/50';
+                    btn.className = 'tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-amber-300 hover:text-white hover:bg-slate-700/50';
                 } else {
-                    btn.className = 'tab-btn px-3 py-1.5 rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 text-indigo-200 hover:text-white hover:bg-indigo-700/50';
+                    btn.className = 'tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-700/50';
                 }
             });
 
@@ -762,11 +800,15 @@
 
             const activeNav = document.getElementById('nav-' + tabId.replace('tab-', ''));
             if (activeNav) {
-                activeNav.className = 'tab-btn px-3 py-1.5 rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-2 bg-white text-indigo-900 shadow';
+                activeNav.className = 'tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 bg-orange-500 text-white shadow';
             }
         }
 
         function openUserModal(editId = null) {
+            if (currentUser.role !== 'Quản trị viên') {
+                showToast('Chỉ Admin mới có quyền quản lý tài khoản!', 'error');
+                return;
+            }
             document.getElementById('userModalTitle').innerText = editId ? 'Chỉnh Sửa Tài Khoản' : 'Thêm Tài Khoản Mới';
             document.getElementById('userModal').classList.remove('hidden');
             document.getElementById('userModal').classList.add('flex');
@@ -794,6 +836,11 @@
 
         async function saveUser(e) {
             e.preventDefault();
+            if (currentUser.role !== 'Quản trị viên') {
+                showToast('Bạn không có quyền thực hiện thao tác này!', 'error');
+                return;
+            }
+
             const editId = document.getElementById('editUserId').value;
             const userVal = document.getElementById('accUsername').value.trim().toLowerCase();
             const nameVal = document.getElementById('accFullName').value.trim();
@@ -817,23 +864,27 @@
             users = await loadUsersFromDB();
             renderUsersTable();
             closeUserModal();
-            showToast('Đã lưu thông tin tài khoản thành công!');
+            showToast('Đã lưu tài khoản!');
         }
 
         async function deleteUser(id) {
+            if (currentUser.role !== 'Quản trị viên') {
+                showToast('Bạn không có quyền xóa tài khoản!', 'error');
+                return;
+            }
             const u = users.find(x => x.id === id);
             if (!u) return;
 
             if (u.user === 'admin') {
-                showToast('Không thể xóa tài khoản Admin mặc định!', 'error');
+                showToast('Không thể xóa tài khoản Admin hệ thống!', 'error');
                 return;
             }
 
-            if (confirm(`Bạn có chắc muốn xóa tài khoản "${u.user}" (${u.name})?`)) {
+            if (confirm(`Xóa tài khoản "${u.user}" (${u.name})?`)) {
                 await deleteUserFromDB(id);
                 users = await loadUsersFromDB();
                 renderUsersTable();
-                showToast('Đã xóa tài khoản thành công!');
+                showToast('Đã xóa tài khoản!');
             }
         }
 
@@ -843,7 +894,7 @@
 
             tbody.innerHTML = users.map(u => `
                 <tr class="hover:bg-slate-50 transition">
-                    <td class="p-3.5 font-bold text-indigo-700">${u.user}</td>
+                    <td class="p-3.5 font-bold text-orange-600">${u.user}</td>
                     <td class="p-3.5 font-medium">${u.name}</td>
                     <td class="p-3.5 font-mono text-slate-500">${u.pass}</td>
                     <td class="p-3.5">
@@ -852,7 +903,7 @@
                         </span>
                     </td>
                     <td class="p-3.5 text-right space-x-2">
-                        <button onclick="openUserModal('${u.id}')" class="text-indigo-600 hover:text-indigo-800 font-medium text-xs"><i class="fa-solid fa-pen-to-square"></i> Sửa</button>
+                        <button onclick="openUserModal('${u.id}')" class="text-orange-600 hover:text-orange-800 font-medium text-xs"><i class="fa-solid fa-pen-to-square"></i> Sửa</button>
                         ${u.user !== 'admin' ? `<button onclick="deleteUser('${u.id}')" class="text-rose-600 hover:text-rose-800 font-medium text-xs"><i class="fa-solid fa-trash"></i> Xóa</button>` : ''}
                     </td>
                 </tr>
@@ -866,9 +917,9 @@
 
             toastMsg.innerText = message;
             if (type === 'error') {
-                toastIcon.className = 'fa-solid fa-circle-xmark text-rose-400';
+                toastIcon.className = 'fa-solid fa-circle-xmark text-rose-400 text-base';
             } else {
-                toastIcon.className = 'fa-solid fa-circle-check text-emerald-400';
+                toastIcon.className = 'fa-solid fa-circle-check text-emerald-400 text-base';
             }
 
             toast.classList.remove('opacity-0', 'pointer-events-none');
@@ -935,27 +986,27 @@
                 for (let item of items) {
                     if (item.type.indexOf('image') !== -1) {
                         const file = item.getAsFile();
-                        processAndUploadImage(file);
+                        processAndCompressImage(file);
                     }
                 }
             });
 
             dropZone.addEventListener('dragover', (e) => {
                 e.preventDefault();
-                dropZone.classList.add('border-indigo-600', 'bg-indigo-100');
+                dropZone.classList.add('border-orange-500', 'bg-orange-100');
             });
 
             dropZone.addEventListener('dragleave', () => {
-                dropZone.classList.remove('border-indigo-600', 'bg-indigo-100');
+                dropZone.classList.remove('border-orange-500', 'bg-orange-100');
             });
 
             dropZone.addEventListener('drop', (e) => {
                 e.preventDefault();
-                dropZone.classList.remove('border-indigo-600', 'bg-indigo-100');
+                dropZone.classList.remove('border-orange-500', 'bg-orange-100');
                 const files = e.dataTransfer.files;
                 for (let file of files) {
                     if (file.type.startsWith('image/')) {
-                        processAndUploadImage(file);
+                        processAndCompressImage(file);
                     }
                 }
             });
@@ -964,26 +1015,11 @@
         function handleFileSelect(e) {
             const files = e.target.files;
             for (let file of files) {
-                processAndUploadImage(file);
+                processAndCompressImage(file);
             }
         }
 
-        async function uploadFileToSupabase(file) {
-            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.jpg`;
-            const { data, error } = await supabaseClient.storage
-                .from('room-images')
-                .upload(fileName, file, { contentType: 'image/jpeg' });
-
-            if (error) throw error;
-
-            const { data: publicUrlData } = supabaseClient.storage
-                .from('room-images')
-                .getPublicUrl(fileName);
-
-            return publicUrlData.publicUrl;
-        }
-
-        function processAndUploadImage(file) {
+        function processAndCompressImage(file) {
             const statusElem = document.getElementById('compressingStatus');
             statusElem.classList.remove('hidden');
             statusElem.classList.add('flex');
@@ -1016,19 +1052,12 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    canvas.toBlob(async (blob) => {
-                        try {
-                            const publicUrl = await uploadFileToSupabase(blob);
-                            currentImages.push(publicUrl);
-                            renderImagePreviews();
-                        } catch (err) {
-                            console.error('Upload Error:', err);
-                            showToast('Lỗi tải ảnh lên Supabase: ' + err.message, 'error');
-                        } finally {
-                            statusElem.classList.add('hidden');
-                            statusElem.classList.remove('flex');
-                        }
-                    }, 'image/jpeg', 0.8);
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+                    currentImages.push(compressedBase64);
+                    
+                    statusElem.classList.add('hidden');
+                    statusElem.classList.remove('flex');
+                    renderImagePreviews();
                 }
             };
             reader.readAsDataURL(file);
@@ -1037,7 +1066,7 @@
         function renderImagePreviews() {
             const container = document.getElementById('imagePreviewContainer');
             container.innerHTML = currentImages.map((imgSrc, index) => `
-                <div class="relative group aspect-square rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
+                <div class="relative group aspect-square rounded-xl overflow-hidden border border-slate-200 bg-slate-100">
                     <img src="${imgSrc}" class="w-full h-full object-cover">
                     <button type="button" onclick="removeImage(${index})" class="absolute top-1 right-1 bg-rose-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-80 hover:opacity-100 transition">
                         <i class="fa-solid fa-xmark"></i>
@@ -1101,10 +1130,12 @@
                 container.innerHTML = `
                     <div class="col-span-full py-12 text-center text-slate-400">
                         <i class="fa-regular fa-folder-open text-4xl mb-2"></i>
-                        <p>Không tìm thấy phòng phù hợp.</p>
+                        <p>Không tìm thấy căn hộ phù hợp.</p>
                     </div>`;
                 return;
             }
+
+            const isAdmin = currentUser && (currentUser.role === 'Quản trị viên');
 
             container.innerHTML = data.map(room => {
                 let statusBg = "bg-emerald-100 text-emerald-800 border-emerald-200";
@@ -1115,7 +1146,7 @@
                 const coverImage = hasImages ? room.images[0] : null;
 
                 return `
-                <div class="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col justify-between">
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col justify-between">
                     <div>
                         ${coverImage ? `
                             <div class="relative h-48 bg-slate-100 overflow-hidden group cursor-pointer" onclick="viewImage('${coverImage}')">
@@ -1132,7 +1163,7 @@
                                     <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${statusBg}">${room.status}</span>
                                     <h3 class="text-lg font-bold text-slate-800 mt-2">${room.code}</h3>
                                 </div>
-                                <span class="text-xl font-extrabold text-indigo-600">${room.price} <span class="text-xs font-normal text-slate-500">Tr/tháng</span></span>
+                                <span class="text-xl font-extrabold text-orange-600">${room.price} <span class="text-xs font-normal text-slate-500">Tr/tháng</span></span>
                             </div>
 
                             <p class="text-xs text-slate-500 mb-3"><i class="fa-solid fa-location-dot text-rose-500 mr-1"></i> ${room.address || 'Chưa cập nhật địa chỉ'} (${room.district})</p>
@@ -1140,13 +1171,13 @@
                             ${hasImages && room.images.length > 1 ? `
                                 <div class="flex gap-1.5 overflow-x-auto mb-3 pb-1">
                                     ${room.images.map(img => `
-                                        <img src="${img}" onclick="viewImage('${img}')" class="w-10 h-10 object-cover rounded cursor-pointer border border-slate-200 hover:opacity-80">
+                                        <img src="${img}" onclick="viewImage('${img}')" class="w-10 h-10 object-cover rounded-lg cursor-pointer border border-slate-200 hover:opacity-80">
                                     `).join('')}
                                 </div>
                             ` : ''}
 
-                            <div class="bg-slate-50 p-3 rounded-lg text-xs space-y-1 text-slate-600 mb-3">
-                                <p><strong><i class="fa-solid fa-list-check text-indigo-500 mr-1"></i> Tiện ích:</strong> ${room.amenities || 'Chưa thông tin'}</p>
+                            <div class="bg-slate-50 p-3 rounded-xl text-xs space-y-1 text-slate-600 mb-3">
+                                <p><strong><i class="fa-solid fa-list-check text-orange-500 mr-1"></i> Tiện ích:</strong> ${room.amenities || 'Chưa thông tin'}</p>
                                 ${room.note ? `<p class="text-amber-700"><strong><i class="fa-solid fa-note-sticky mr-1"></i> Ghi chú:</strong> ${room.note}</p>` : ''}
                             </div>
                         </div>
@@ -1154,14 +1185,18 @@
 
                     <div class="bg-slate-50 px-5 py-3 border-t border-slate-100 flex items-center justify-between text-xs">
                         <div>
-                            ${room.mediaUrl ? `<a href="${room.mediaUrl}" target="_blank" class="text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1"><i class="fa-solid fa-link"></i> Link Video/Driver</a>` : '<span class="text-slate-400">Không có link</span>'}
+                            ${room.mediaUrl ? `<a href="${room.mediaUrl}" target="_blank" class="text-orange-600 hover:underline font-semibold flex items-center gap-1"><i class="fa-solid fa-link"></i> Media Ảnh/Video</a>` : '<span class="text-slate-400">Không có link</span>'}
                         </div>
                         <div class="flex items-center gap-2">
-                            <button onclick="copyInfo('${room.id}')" title="Copy thông tin gửi khách" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-2.5 py-1.5 rounded font-medium transition flex items-center gap-1">
+                            <button onclick="copyInfo('${room.id}')" title="Copy thông tin gửi khách" class="bg-orange-50 hover:bg-orange-100 text-orange-700 px-2.5 py-1.5 rounded-xl font-semibold transition flex items-center gap-1">
                                 <i class="fa-regular fa-copy"></i> Copy gửi khách
                             </button>
-                            <button onclick="editRoom('${room.id}')" class="text-slate-500 hover:text-indigo-600 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button onclick="deleteRoom('${room.id}')" class="text-slate-500 hover:text-rose-600 p-1"><i class="fa-solid fa-trash"></i></button>
+                            
+                            <!-- Nút Sửa / Xóa chỉ cho Admin -->
+                            ${isAdmin ? `
+                                <button onclick="editRoom('${room.id}')" title="Sửa thông tin" class="text-slate-400 hover:text-orange-600 p-1 transition"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button onclick="deleteRoom('${room.id}')" title="Xóa phòng" class="text-slate-400 hover:text-rose-600 p-1 transition"><i class="fa-solid fa-trash"></i></button>
+                            ` : ''}
                         </div>
                     </div>
                 </div>
@@ -1175,12 +1210,12 @@
 
             const textToCopy = 
 `🏡 [${room.code.toUpperCase()}] - KHU VỰC ${room.district.toUpperCase()}
-💰 Giá: ${room.price} Triệu/tháng
+💰 Giá thuê: ${room.price} Triệu/tháng
 📍 Địa chỉ: ${room.address}
-✨ Tiện ích: ${room.amenities}
-${room.mediaUrl ? `📸 Link video/ảnh: ${room.mediaUrl}` : ''}
+✨ Nội thất & Tiện ích: ${room.amenities}
+${room.mediaUrl ? `📸 Xem clip/ảnh chi tiết: ${room.mediaUrl}` : ''}
 
-Nhắn mình ngay để xem phòng trực tiếp nhé!`;
+Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
 
             navigator.clipboard.writeText(textToCopy).then(() => {
                 showToast('Đã copy thông tin căn hộ gửi khách!');
@@ -1188,6 +1223,10 @@ Nhắn mình ngay để xem phòng trực tiếp nhé!`;
         }
 
         function openModal(isEdit = false) {
+            if (currentUser.role !== 'Quản trị viên') {
+                showToast('Chỉ Admin mới có quyền thêm/sửa phòng!', 'error');
+                return;
+            }
             document.getElementById('modalTitle').textContent = isEdit ? 'Chỉnh Sửa Thông Tin Phòng' : 'Thêm Căn Hộ / Phòng Trọ Mới';
             document.getElementById('roomModal').classList.remove('hidden');
             document.getElementById('roomModal').classList.add('flex');
@@ -1204,6 +1243,10 @@ Nhắn mình ngay để xem phòng trực tiếp nhé!`;
 
         async function saveRoom(e) {
             e.preventDefault();
+            if (currentUser.role !== 'Quản trị viên') {
+                showToast('Chỉ Admin mới có quyền lưu dữ liệu phòng!', 'error');
+                return;
+            }
             
             const id = document.getElementById('roomId').value;
             const roomData = {
@@ -1225,10 +1268,14 @@ Nhắn mình ngay để xem phòng trực tiếp nhé!`;
             renderDistrictOptions();
             filterRooms();
             closeModal();
-            showToast('Đã lưu thông tin phòng thành công!');
+            showToast('Đã lưu thông tin phòng!');
         }
 
         function editRoom(id) {
+            if (currentUser.role !== 'Quản trị viên') {
+                showToast('Chỉ Admin mới có quyền sửa phòng!', 'error');
+                return;
+            }
             const room = rooms.find(r => r.id === id);
             if (!room) return;
 
@@ -1249,12 +1296,16 @@ Nhắn mình ngay để xem phòng trực tiếp nhé!`;
         }
 
         async function deleteRoom(id) {
-            if (confirm('Bạn có chắc muốn xóa phòng này khỏi hệ thống?')) {
+            if (currentUser.role !== 'Quản trị viên') {
+                showToast('Chỉ Admin mới có quyền xóa phòng!', 'error');
+                return;
+            }
+            if (confirm('Bạn có chắc muốn xóa phòng này?')) {
                 await deleteRoomFromDB(id);
                 rooms = await loadRoomsFromDB();
                 renderDistrictOptions();
                 filterRooms();
-                showToast('Đã xóa phòng thành công!');
+                showToast('Đã xóa phòng!');
             }
         }
 
@@ -1278,12 +1329,16 @@ Nhắn mình ngay để xem phòng trực tiếp nhé!`;
         }
 
         async function clearAllData() {
-            if (confirm('Lưu ý: Hành động này sẽ xóa toàn bộ danh sách phòng hiện tại. Hãy bấm "Tải dữ liệu" trước nếu muốn lưu lại nhé!')) {
+            if (currentUser.role !== 'Quản trị viên') {
+                showToast('Chỉ Admin mới có quyền xóa toàn bộ kho phòng!', 'error');
+                return;
+            }
+            if (confirm('Lưu ý: Xóa toàn bộ danh sách phòng trong kho!')) {
                 await clearAllFromDB();
                 rooms = await loadRoomsFromDB();
                 renderDistrictOptions();
                 filterRooms();
-                showToast('Đã xóa toàn bộ dữ liệu!');
+                showToast('Đã dọn sạch kho dữ liệu!');
             }
         }
 
@@ -1298,6 +1353,10 @@ Nhắn mình ngay để xem phòng trực tiếp nhé!`;
         }
 
         function importData(event) {
+            if (currentUser.role !== 'Quản trị viên') {
+                showToast('Chỉ Admin mới có quyền Import dữ liệu!', 'error');
+                return;
+            }
             const file = event.target.files[0];
             if (!file) return;
 
@@ -1326,26 +1385,26 @@ Nhắn mình ngay để xem phòng trực tiếp nhé!`;
         }
 
         const hooks = [
-            "🔥 [TRỐNG SẴN XINH XẮN] CĂN HỘ / PHÒNG TRỌ XIN XÒ GIÁ RẺ!",
-            "💥 CHÍNH CHỦ CHO THUÊ - PHÒNG ĐẸP GIÁ TỐT KHU VỰC ĐẮC ĐỊA",
-            "🏡 CHỈ CẦN XÁCH VALI VÀO Ở - PHÒNG FULL NỘI THẤT CỰC CHẤT",
-            "🚀 BÁN KÍNH DƯỚI 5P ĐẾN TRƯỜNG/CÔNG TY - PHÒNG MỚI COONG!",
-            "✨ CĂN HỘ MINI BAN CÔNG THOẢI MÁI - GIỜ GIẤC TỰ DO 100%",
-            "⚡ PHÒNG MỚI KHAI TRƯƠNG - GIÁ CHỈ TỪ TIỂU HỌC, ĐẸP NHƯ KHÁCH SẠN",
-            "🌿 KHÔNG KHANH TRỌ TRỐNG - CÓ NGAY PHÒNG ĐẸP LONG LÃNH!",
-            "🎯 CHỐT NHANH KẺO HẾT - CĂN HỘ DỊCH VỤ GIÁ SIÊU UY THIỆN"
+            "🔥 [CĂN HỘ HOT GENZ] PHÒNG TRỌ BAN CÔNG SIÊU MỚI TẠI TRUNG TÂM!",
+            "💥 CHÍNH CHỦ CHO THUÊ - PHÒNG ĐẸP GIÁ CỰC TỐT CHO SALE VÀ BẠN TRẺ",
+            "🏡 CHỈ CẦN XÁCH VALI VÀO Ở - PHÒNG FULL NỘI THẤT SANG XIN CHẤT",
+            "🚀 VỊ TRÍ VÀNG BAN KÍNH 5P ĐẾN TRƯỜNG/CÔNG TY - PHÒNG MỚI KHANG TRANG",
+            "✨ CĂN HỘ MINI BAN CÔNG THOẢI MÁI - GIỜ GIẤC TỰ DO 24/7",
+            "⚡ PHÒNG MỚI KHAI TRƯƠNG - GIÁ CHỈ TỪ TIỂU HỌC, SẠCH SẼ NHƯ KHÁCH SẠN",
+            "🌿 CẦN TÌM PHÒNG GẤP? CÓ NGAY CĂN HỘ BAN CÔNG XINH XẮN!",
+            "🎯 CHỐT NHANH KẺO HẾT - CĂN HỘ DỊCH VỤ GIÁ SIÊU ƯU ĐÃI"
         ];
 
         const intros = [
-            "Bên em vừa trống lại 1 phòng cực thoáng mát, góc siêu xinh.",
-            "Anh/Chị/Bạn nào đang tìm phòng sạch sẽ, an ninh thì xem ngay căn này nhé.",
-            "Phòng thiết kế tối ưu diện tích, sạch sẽ ngăn nắp, dọn vào ở ngay.",
-            "Vị trí cực kỳ thuận tiện đi lại, xung quanh đầy đủ tiện ích không thiếu thứ gì.",
-            "Căn hộ mini an ninh 24/7, phù hợp cho sinh viên và dân văn phòng."
+            "Bên em vừa trống lại 1 phòng cực thoáng mát, góc chill xinh xắn.",
+            "Các bạn trẻ đang tìm phòng sạch sẽ, an ninh thì xem ngay căn này nhé.",
+            "Phòng thiết kế tối ưu diện tích, ngăn nắp sạch sẽ, dọn vào ở ngay.",
+            "Vị trí cực kỳ thuận tiện đi lại, xung quanh đầy đủ tiện ích ăn uống.",
+            "Căn hộ an ninh 24/7, rất hợp cho sinh viên và dân văn phòng."
         ];
 
         const formatStyles = [
-            (d) => `${d.hook}\n\n${d.intro}\n\n📍 Vị trí: ${d.location}\n💰 Giá thuê: ${d.price}\n🏫 Gần ngay: ${d.nearBy}\n🛋️ Nội thất: ${d.furniture}\n⚡ Chi phí: ${d.services}\n🌟 Tiện ích: ${d.amenities}\n\n📞 Liên hệ/Zalo ngay: ${d.contact} (Xem phòng miễn phí)`,
+            (d) => `${d.hook}\n\n${d.intro}\n\n📍 Vị trí: ${d.location}\n💰 Giá thuê: ${d.price}\n🏫 Gần ngay: ${d.nearBy}\n🛋️ Nội thất: ${d.furniture}\n⚡ Chi phí: ${d.services}\n🌟 Tiện ích: ${d.amenities}\n\n📞 Liên hệ/Zalo ngay: ${d.contact} (Hỗ trợ xem phòng trực tiếp)`,
             (d) => `${d.hook}\n\nChính chủ cho thuê ${d.location}.\n👉 Giá siêu mềm: ${d.price}\n👉 Vị trí vàng: ${d.nearBy}\n\n✨ Trang bị sẵn: ${d.furniture}.\n✨ Phí dịch vụ: ${d.services}.\n✨ Điểm cộng: ${d.amenities}.\n\n📲 Nhắn Zalo/Gọi em liền: ${d.contact}`,
             (d) => `${d.hook}\n\n• Địa chỉ: ${d.location}\n• Giá phòng: ${d.price}\n• Khu vực gần: ${d.nearBy}\n• Đồ đạc có sẵn: ${d.furniture}\n• Phí sinh hoạt: ${d.services}\n• Đặc điểm: ${d.amenities}\n\n☎️ HOTLINE XEM PHÒNG: ${d.contact}`,
             (d) => `${d.hook}\n\n${d.intro}\n- Vị trí khu vực: ${d.location} (${d.nearBy})\n- Mức giá: ${d.price}\n- Nội thất đi kèm: ${d.furniture}\n- Bảng phí chi tiết: ${d.services}\n- Cam kết: ${d.amenities}\n\n👉 Nhanh tay liên hệ Zalo: ${d.contact} để nhận clip quay phòng thực tế!`
@@ -1404,18 +1463,10 @@ Nhắn mình ngay để xem phòng trực tiếp nhé!`;
         };
 
         const topics = [
-            { cat: "XU_LY_TU_CHOI", issue: "Khách chê giá thuê cao hơn {n}k so với phòng khác cùng khu vực", type: "Giá cả", action: "Không giảm giá trực tiếp. Phân tích giá trị cộng thêm: An ninh, giờ tự do, máy giặt riêng, hỗ trợ kĩ thuật 24/7.", msg: "Chào {x}, tiền nào của nấy ạ! Mức giá bên em đã bao gồm [dịch vụ X, Y]. Đặc biệt bên em cam kết không phát sinh phí ẩn và hỗ trợ kỹ thuật trong 2h. Nếu anh/chị chốt trong hôm nay em xin giảm ngay {n2}k tiền phòng tháng đầu nhé!" },
-            { cat: "XU_LY_TU_CHOI", issue: "Khách phàn nàn phòng diện tích hơi nhỏ ({n}m2)", type: "Diện tích", action: "Hướng dẫn bố trí nội thất thông minh, nhấn mạnh không gian tối ưu cho 1-2 người ở.", msg: "Em chào {x}, phòng thiết kế chuẩn tối ưu không gian nên rất gọn gàng ạ. Khách đang ở phản hồi căn này vừa ấm cúng lại rất dễ dọn dẹp. Em hỗ trợ tặng thêm kệ treo tường/móc đồ thông minh nếu {x} cọc sớm nha!" },
-            { cat: "XU_LY_TU_CHOI", issue: "Khách đòi bớt tiền cọc (Chỉ muốn cọc {n}k thay vì 1 tháng)", type: "Tiền cọc", action: "Giữ vững nguyên tắc an toàn tài chính, linh hoạt chia làm 2 đợt đóng cọc.", msg: "Dạ {x} ơi, quy định cọc 1 tháng là để đảm bảo quyền lợi đồ đạc cho cả 2 bên ạ. Nhưng em có thể hỗ trợ {x} đóng trước 50% tiền cọc để giữ phòng, 50% còn lại đóng cùng tiền nhà tháng đầu tiên nhé!" },
-            { cat: "XU_LY_TU_CHOI", issue: "Khách ngại ngõ/hẻm đi vào hơi sâu khoảng {n}m", type: "Vị trí", action: "Biến nhược điểm thành ưu điểm: Hẻm yên tĩnh, không ồn ào khói bụi, ngõ an ninh có camera.", msg: "Dạ đúng là hẻm vào tầm {n}m nhưng bù lại hẻm cực kỳ an ninh, yên tĩnh ban đêm giúp {x} ngủ ngon giấc, không bị tiếng còi xe làm phiền ạ!" },
-            { cat: "DANG_XEM_PHONG", issue: "Khách xem phòng xong im lặng, nhắn tin không phản hồi sau {n} giờ", type: "Chăm sóc sau xem", action: "Tạo độ khan hiếm (Urgency) khéo léo, hỏi thăm nhẹ nhàng.", msg: "Hi {x}! Căn hộ hôm qua {x} xem đang có 1 bạn hẹn chiều nay qua đặt cọc. Em nhớ {x} rất thích góc ban công nên ưu tiên nhắn hỏi {x} trước, {x} có quyết định giữ căn này luôn không ạ?" },
-            { cat: "DANG_XEM_PHONG", issue: "Khách đòi dẫn thêm {n} người bạn/người thân qua xem lại lần 2", type: "Xem lại", action: "Nhiệt tình hỗ trợ, chuẩn bị không gian sạch sẽ, bật sẵn điều hòa tạo thiện cảm.", msg: "Dạ thoải mái luôn {x} ơi! Mấy giờ {x} và bạn qua ạ? Em sẽ qua mở cửa bật sẵn máy lạnh cho thoáng mát để mọi người xem cho thoải mái nhé!" },
-            { cat: "SUDUNG_SUCO", issue: "Khách báo máy lạnh kêu to / không lạnh sau {n} tháng ở", type: "Sự cố kỹ thuật", action: "Phản hồi tốc độ cao, cử thợ bảo trì trong ngày, thể hiện sự trách nhiệm.", msg: "Dạ em nhận thông tin rồi ạ! Em đã báo thợ kỹ thuật, khoảng {n2} phút nữa thợ sẽ qua kiểm tra và bảo trì ngay cho {x}. Rất xin lỗi {x} vì sự bất tiện này ạ!" },
-            { cat: "SUDUNG_SUCO", issue: "Khách hàng xóm tầng {n} ca thán vì tiếng ồn sau 23h", type: "Xung đột hàng xóm", action: "Làm việc tinh tế, nhắc nhở chung quy định tòa nhà, bảo vệ riêng tư 2 bên.", msg: "Chào {x}, bên quản lý có nhận phản hồi nhỏ về tiếng động hơi lớn sau 23h ở khu vực tầng mình. {x} hỗ trợ vặn nhỏ âm thanh/đi nhẹ nói khẽ giúp em để đảm bảo giấc ngủ chung cho cả tòa nhà nhé. Cảm ơn {x} nhiều ạ!" },
-            { cat: "GIU_CHAN_TRA_PHONG", issue: "Khách báo trả phòng vì công ty/trường học chuyển chỗ cách {n}km", type: "Giữ chân / Giảm giá", action: "Đề xuất đổi sang phòng thuộc chuỗi/hệ thống khác gần chỗ mới hoặc giảm giá thuê hỗ trợ.", msg: "Em rất tiếc khi nghe tin {x} sắp chuyển đi. Bên hệ thống em có 2 tòa nhà khác ngay gần chỗ làm mới của {x} luôn đó! Em hỗ trợ chuyển cọc sang bên đó hoàn toàn miễn phí + giảm {n2}% tiền thuê tháng đầu cho {x} nha!" },
-            { cat: "GIU_CHAN_TRA_PHONG", issue: "Chủ nhà bắt tăng giá thuê lên {n}k, khách dọa trả phòng", type: "Tăng giá", action: "Đàm phán bù đắp bằng quà tặng/tiện ích hoặc chia nhỏ mức tăng.", msg: "Em rất hiểu cảm giác của {x}. Do chi phí vận hành chung tăng nên chủ nhà mới điều chỉnh ạ. Để hỗ trợ {x}, em đã xin chủ hỗ trợ tặng {x} voucher tiền điện/dịch vụ {n2}k mỗi tháng để bù vào tiền phòng ạ!" },
-            { cat: "CHAMSOC_DINHKY", issue: "Chăm sóc khách đã ở được {n} tháng (Hỏi thăm định kỳ)", type: "Chăm sóc", action: "Tạo mối quan hệ thân thiết, chủ động hỏi thăm đồ đạc có hỏng hóc gì không.", msg: "Hi {x}! {x} ở phòng được {n} tháng rồi, mọi thứ vẫn tốt chứ ạ? Đồ đạc thiết bị có cần em hỗ trợ bảo trì gì không {x} cứ báo em thoải mái nha!" },
-            { cat: "CHAMSOC_DINHKY", issue: "Xin giới thiệu (Referral): Khách cũ giới thiệu bạn bè nhận hoa hồng {n}k", type: "Khách giới thiệu", action: "Kích hoạt mạng lưới giới thiệu nhờ quà tặng tiền mặt hoặc trừ tiền phòng.", msg: "Chào {x}! Bên em đang có chương trình tri ân: Nếu {x} giới thiệu bạn bè/đồng nghiệp thuê phòng bên em thì em xin gửi tặng {x} ngay {n2}k tiền mặt (hoặc trừ thẳng vào tiền nhà tháng sau) nhé!" }
+            { cat: "XU_LY_TU_CHOI", issue: "Khách chê giá thuê cao hơn {n}k so với phòng khác cùng khu vực", type: "Giá cả", action: "Phân tích giá trị cộng thêm: An ninh, giờ tự do, máy giặt riêng, hỗ trợ kĩ thuật 24/7.", msg: "Chào {x}, tiền nào của nấy ạ! Mức giá bên em đã bao gồm dịch vụ an ninh và hỗ trợ kỹ thuật 24/7. Nếu bạn chốt giữ phòng hôm nay em xin ưu đãi hỗ trợ giảm ngay {n2}k tiền phòng tháng đầu nhé!" },
+            { cat: "XU_LY_TU_CHOI", issue: "Khách phàn nàn phòng diện tích hơi nhỏ ({n}m2)", type: "Diện tích", action: "Hướng dẫn bố trí nội thất thông minh, nhấn mạnh không gian tối ưu cho 1-2 người ở.", msg: "Em chào {x}, phòng thiết kế chuẩn tối ưu không gian nên rất gọn gàng ạ. Khách đang ở phản hồi căn này vừa ấm cúng lại rất dễ dọn dẹp ngăn nắp ạ!" },
+            { cat: "XU_LY_TU_CHOI", issue: "Khách đòi bớt tiền cọc (Chỉ muốn cọc {n}k thay vì 1 tháng)", type: "Tiền cọc", action: "Giữ vững nguyên tắc an toàn, linh hoạt chia làm 2 đợt đóng cọc.", msg: "Dạ {x} ơi, quy định cọc 1 tháng là để đảm bảo quyền lợi cho cả 2 bên. Nhưng em hỗ trợ bạn đóng trước 50% cọc để giữ phòng, 50% còn lại đóng khi nhận phòng nhé!" },
+            { cat: "DANG_XEM_PHONG", issue: "Khách xem phòng xong im lặng, nhắn tin không phản hồi sau {n} giờ", type: "Chăm sóc sau xem", action: "Tạo độ khan hiếm khéo léo, hỏi thăm nhẹ nhàng.", msg: "Hi {x}! Căn hộ hôm qua bạn xem đang có 1 khách hẹn chiều nay qua đặt cọc. Em nhớ bạn rất thích phòng này nên nhắn hỏi ưu tiên {x} trước, bạn quyết định giữ căn này luôn không ạ?" }
         ];
 
         const targetAudience = ["Sinh viên", "Người đi làm", "Vợ chồng trẻ", "Tất cả"];
@@ -1425,7 +1476,7 @@ Nhắn mình ngay để xem phòng trực tiếp nhé!`;
 
         function generate1000Cases() {
             let id = 1;
-            for (let i = 0; i < 84; i++) {
+            for (let i = 0; i < 250; i++) {
                 topics.forEach(t => {
                     const randomDist = Math.floor(Math.random() * 15) + 1;
                     const randomMoneySmall = (Math.floor(Math.random() * 5) + 1) * 50;
@@ -1440,7 +1491,7 @@ Nhắn mình ngay để xem phòng trực tiếp nhé!`;
                         category: t.cat,
                         categoryName: coreCategories[t.cat],
                         type: t.type,
-                        title: `[TH-${id}] ${title}`,
+                        title: `[KỊCH BẢN-${id}] ${title}`,
                         tag: tag,
                         actionPlan: t.action,
                         responseTemplate: msg
@@ -1456,15 +1507,15 @@ Nhắn mình ngay để xem phòng trực tiếp nhé!`;
             document.getElementById('showingCount').innerText = `Đang hiện: ${data.length}`;
             
             if (data.length === 0) {
-                container.innerHTML = `<div class="p-8 text-center text-slate-400 text-sm">Không tìm thấy tình huống phù hợp</div>`;
+                container.innerHTML = `<div class="p-8 text-center text-slate-400 text-sm">Không tìm thấy kịch bản phù hợp</div>`;
                 return;
             }
 
             const limitData = data.slice(0, 120);
             container.innerHTML = limitData.map(c => `
-                <div onclick="selectCase(${c.id})" class="p-3.5 hover:bg-slate-50 cursor-pointer transition border-l-4 border-transparent hover:border-indigo-600 space-y-1">
+                <div onclick="selectCase(${c.id})" class="p-3.5 hover:bg-slate-50 cursor-pointer transition border-l-4 border-transparent hover:border-orange-500 space-y-1">
                     <div class="flex justify-between items-start gap-2">
-                        <span class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">${c.type}</span>
+                        <span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-lg">${c.type}</span>
                         <span class="text-[11px] text-slate-400 font-medium">${c.tag}</span>
                     </div>
                     <h4 class="text-xs font-semibold text-slate-800 line-clamp-2 leading-relaxed">${c.title}</h4>
@@ -1481,7 +1532,7 @@ Nhắn mình ngay để xem phòng trực tiếp nhé!`;
             detailView.innerHTML = `
                 <div class="space-y-4">
                     <div>
-                        <span class="text-xs font-bold text-indigo-600 bg-indigo-100 px-2.5 py-1 rounded-full">${item.categoryName}</span>
+                        <span class="text-xs font-bold text-orange-600 bg-orange-100 px-2.5 py-1 rounded-full">${item.categoryName}</span>
                         <h2 class="text-base font-bold text-slate-800 mt-2 leading-snug">${item.title}</h2>
                         <div class="flex items-center gap-2 mt-2 text-xs text-slate-500">
                             <span><i class="fa-solid fa-tag text-slate-400"></i> Dạng vấn đề: <strong>${item.type}</strong></span> | 
@@ -1489,9 +1540,9 @@ Nhắn mình ngay để xem phòng trực tiếp nhé!`;
                         </div>
                     </div>
 
-                    <div class="bg-amber-50/80 border border-amber-200 p-3.5 rounded-xl space-y-1">
+                    <div class="bg-amber-50/80 border border-amber-200 p-3.5 rounded-2xl space-y-1">
                         <h4 class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
-                            <i class="fa-solid fa-lightbulb text-amber-600"></i> Hướng Xử Lý Tâm Lý & Đàm Phán:
+                            <i class="fa-solid fa-lightbulb text-amber-600"></i> Hướng Xử Lý Tư Vấn:
                         </h4>
                         <p class="text-xs text-amber-900 leading-relaxed">${item.actionPlan}</p>
                     </div>
@@ -1499,17 +1550,17 @@ Nhắn mình ngay để xem phòng trực tiếp nhé!`;
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">
                             <label class="text-xs font-bold text-slate-700 flex items-center gap-1">
-                                <i class="fa-solid fa-paper-plane text-indigo-600"></i> Mẫu Tin Nhắn Phản Hồi Trực Tiếp (Zalo/SMS):
+                                <i class="fa-solid fa-paper-plane text-orange-500"></i> Mẫu Tin Nhắn Phản Hồi (Zalo/Messenger):
                             </label>
-                            <button onclick="copyResponseText()" class="text-xs text-indigo-600 font-semibold hover:text-indigo-800 flex items-center gap-1 bg-indigo-50 px-2 py-1 rounded transition">
+                            <button onclick="copyResponseText()" class="text-xs text-orange-600 font-semibold hover:text-orange-800 flex items-center gap-1 bg-orange-50 px-2 py-1 rounded-lg transition">
                                 <i class="fa-regular fa-copy"></i> Sao chép
                             </button>
                         </div>
-                        <textarea id="responseBox" rows="6" class="w-full p-3 text-xs border border-slate-300 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none leading-relaxed text-slate-800 font-mono">${item.responseTemplate}</textarea>
+                        <textarea id="responseBox" rows="6" readonly class="w-full p-3 text-xs border border-slate-200 rounded-2xl bg-slate-50 leading-relaxed text-slate-800 font-mono resize-none">${item.responseTemplate}</textarea>
                     </div>
 
                     <div class="pt-2">
-                        <button onclick="copyResponseText()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2">
+                        <button onclick="copyResponseText()" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3 rounded-2xl text-xs shadow-md transition flex items-center justify-center gap-2">
                             <i class="fa-solid fa-share-from-square"></i> SAO CHÉP MẪU PHẢN HỒI NÀY
                         </button>
                     </div>
