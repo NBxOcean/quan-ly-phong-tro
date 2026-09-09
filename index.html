@@ -1,48 +1,30 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hệ Thống Quản Lý & Chăm Sóc Cho Thuê Căn Hộ / Phòng Trọ - Nguyên Bảo</title>
     <!-- Tailwind CSS & FontAwesome Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <!-- Supabase JS Client Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
-        body {
-            font-family: "Plus Jakarta Sans", sans-serif;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
         .fade-in {
             animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(12px) scale(0.98);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            from { opacity: 0; transform: translateY(12px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .glow-orange {
@@ -51,130 +33,62 @@
     </style>
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 min-h-screen pb-12 antialiased">
-    <!-- 0. MÀN HÌNH ĐĂNG NHẬP -->
-    <div
-        id="authScreen"
-        class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4 overflow-hidden"
-    >
-        <div
-            class="absolute -top-24 -left-24 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl pointer-events-none animate-pulse"
-        ></div>
-        <div
-            class="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl pointer-events-none animate-pulse"
-            style="animation-delay: 1s"
-        ></div>
-        <div
-            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-rose-500/10 rounded-full blur-3xl pointer-events-none"
-        ></div>
 
-        <div
-            class="bg-slate-900/80 backdrop-blur-xl w-full max-w-md rounded-3xl shadow-2xl border border-slate-800/80 p-8 fade-in relative z-10 overflow-hidden"
-        >
+    <!-- 0. MÀN HÌNH ĐĂNG NHẬP -->
+    <div id="authScreen" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4 overflow-hidden">
+        <div class="absolute -top-24 -left-24 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl pointer-events-none animate-pulse"></div>
+        <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl pointer-events-none animate-pulse" style="animation-delay: 1s;"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="bg-slate-900/80 backdrop-blur-xl w-full max-w-md rounded-3xl shadow-2xl border border-slate-800/80 p-8 fade-in relative z-10 overflow-hidden">
             <div class="text-center mb-8 relative">
-                <div
-                    class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-orange-500 to-amber-400 text-white rounded-2xl shadow-lg shadow-orange-500/30 mb-4 transform hover:scale-105 transition duration-300"
-                >
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-orange-500 to-amber-400 text-white rounded-2xl shadow-lg shadow-orange-500/30 mb-4 transform hover:scale-105 transition duration-300">
                     <i class="fa-solid fa-house-fire text-3xl"></i>
                 </div>
-                <h2
-                    id="authTitle"
-                    class="text-2xl font-extrabold text-white tracking-tight"
-                >
-                    Căn Hộ & Phòng Trọ
-                    <span
-                        class="bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent"
-                        >Genz Sale</span
-                    >
-                </h2>
-                <p class="text-xs text-slate-400 mt-1.5 font-medium">
-                    Hệ Thống Chốt Đơn Chuyên Nghiệp • Nguyên Bảo Manager
-                </p>
+                <h2 id="authTitle" class="text-2xl font-extrabold text-white tracking-tight">Căn Hộ & Phòng Trọ <span class="bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">Genz Sale</span></h2>
+                <p class="text-xs text-slate-400 mt-1.5 font-medium">Hệ Thống Chốt Đơn Chuyên Nghiệp • Nguyên Bảo Manager</p>
             </div>
 
             <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
-                    <label
-                        class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-2"
-                        >Tên tài khoản</label
-                    >
+                    <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-2">Tên tài khoản</label>
                     <div class="relative">
-                        <i
-                            class="fa-solid fa-user-astronaut absolute left-4 top-3.5 text-slate-500 text-sm"
-                        ></i>
-                        <input
-                            type="text"
-                            id="loginUsername"
-                            required
-                            placeholder="Nhập username..."
-                            class="w-full pl-11 pr-4 py-3 bg-slate-800/60 border border-slate-700/80 rounded-2xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition"
-                        />
+                        <i class="fa-solid fa-user-astronaut absolute left-4 top-3.5 text-slate-500 text-sm"></i>
+                        <input type="text" id="loginUsername" required placeholder="Nhập username..." 
+                            class="w-full pl-11 pr-4 py-3 bg-slate-800/60 border border-slate-700/80 rounded-2xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition">
                     </div>
                 </div>
 
                 <div>
-                    <label
-                        class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-2"
-                        >Mật khẩu</label
-                    >
+                    <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-2">Mật khẩu</label>
                     <div class="relative">
-                        <i
-                            class="fa-solid fa-key absolute left-4 top-3.5 text-slate-500 text-sm"
-                        ></i>
-                        <input
-                            type="password"
-                            id="loginPassword"
-                            required
-                            placeholder="Nhập mật khẩu..."
-                            class="w-full pl-11 pr-11 py-3 bg-slate-800/60 border border-slate-700/80 rounded-2xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition"
-                        />
-                        <button
-                            type="button"
-                            onclick="togglePasswordVisibility('loginPassword', 'eyeIcon')"
-                            class="absolute right-4 top-3.5 text-slate-500 hover:text-slate-300 transition"
-                        >
+                        <i class="fa-solid fa-key absolute left-4 top-3.5 text-slate-500 text-sm"></i>
+                        <input type="password" id="loginPassword" required placeholder="Nhập mật khẩu..." 
+                            class="w-full pl-11 pr-11 py-3 bg-slate-800/60 border border-slate-700/80 rounded-2xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition">
+                        <button type="button" onclick="togglePasswordVisibility('loginPassword', 'eyeIcon')" class="absolute right-4 top-3.5 text-slate-500 hover:text-slate-300 transition">
                             <i id="eyeIcon" class="fa-solid fa-eye text-sm"></i>
                         </button>
                     </div>
                 </div>
 
                 <div class="flex items-center justify-between text-xs pt-1">
-                    <label
-                        class="flex items-center text-slate-400 cursor-pointer select-none"
-                    >
-                        <input
-                            type="checkbox"
-                            id="rememberMe"
-                            class="rounded border-slate-700 bg-slate-800 text-orange-500 focus:ring-orange-500/30 mr-2"
-                        />
+                    <label class="flex items-center text-slate-400 cursor-pointer select-none">
+                        <input type="checkbox" id="rememberMe" class="rounded border-slate-700 bg-slate-800 text-orange-500 focus:ring-orange-500/30 mr-2">
                         Ghi nhớ đăng nhập
                     </label>
-                    <a
-                        href="#"
-                        onclick="alert('Vui lòng liên hệ Admin Nguyên Bảo để cấp lại mật khẩu!'); return false;"
-                        class="text-orange-400 font-semibold hover:text-orange-300 transition"
-                        >Quên mật khẩu?</a
-                    >
+                    <a href="#" onclick="alert('Vui lòng liên hệ Admin Nguyên Bảo để cấp lại mật khẩu!'); return false;" class="text-orange-400 font-semibold hover:text-orange-300 transition">Quên mật khẩu?</a>
                 </div>
 
-                <button
-                    type="submit"
-                    class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3.5 rounded-2xl text-sm shadow-lg glow-orange transition duration-200 flex items-center justify-center gap-2 mt-2"
-                >
+                <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3.5 rounded-2xl text-sm shadow-lg glow-orange transition duration-200 flex items-center justify-center gap-2 mt-2">
                     <i class="fa-solid fa-bolt text-amber-200"></i> ĐĂNG NHẬP NGAY
                 </button>
 
-                <div
-                    class="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-[11px] text-amber-300 text-center mt-3"
-                >
-                    <span
-                        >Tài khoản nhân viên mới do <strong>Admin</strong> cấp trực tiếp.</span
-                    >
+                <div class="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-[11px] text-amber-300 text-center mt-3">
+                    <span>Tài khoản nhân viên mới do <strong>Admin</strong> cấp trực tiếp.</span>
                 </div>
             </form>
 
-            <div
-                class="mt-8 pt-4 border-t border-slate-800/60 text-center text-[11px] text-slate-500"
-            >
+            <div class="mt-8 pt-4 border-t border-slate-800/60 text-center text-[11px] text-slate-500">
                 <p>© 2026 Nguyên Bảo Real Estate System • GenZ Power 🚀</p>
             </div>
         </div>
@@ -182,96 +96,46 @@
 
     <!-- MAIN APP CONTAINER -->
     <div id="mainApp" class="hidden">
-        <header
-            class="bg-slate-900 text-white shadow-xl sticky top-0 z-40 border-b border-slate-800"
-        >
-            <div
-                class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3"
-            >
+        <header class="bg-slate-900 text-white shadow-xl sticky top-0 z-40 border-b border-slate-800">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
                 <div class="flex items-center space-x-3">
-                    <div
-                        class="w-10 h-10 bg-gradient-to-tr from-orange-500 to-amber-400 rounded-xl flex items-center justify-center text-white shadow-md"
-                    >
+                    <div class="w-10 h-10 bg-gradient-to-tr from-orange-500 to-amber-400 rounded-xl flex items-center justify-center text-white shadow-md">
                         <i class="fa-solid fa-house-fire text-lg"></i>
                     </div>
                     <div>
-                        <h1
-                            class="text-base md:text-lg font-bold leading-tight flex items-center gap-2"
-                        >
+                        <h1 class="text-base md:text-lg font-bold leading-tight flex items-center gap-2">
                             Quản Lý Cho Thuê Căn Hộ
-                            <span
-                                id="roleBadgeHeader"
-                                class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30"
-                                >SALE</span
-                            >
+                            <span id="roleBadgeHeader" class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30">SALE</span>
                         </h1>
-                        <p class="text-[11px] text-slate-400">
-                            Hệ thống đồng bộ dữ liệu • Nguyên Bảo
-                        </p>
+                        <p class="text-[11px] text-slate-400">Hệ thống đồng bộ dữ liệu • Nguyên Bảo</p>
                     </div>
                 </div>
 
                 <div class="flex items-center gap-3 flex-wrap">
-                    <nav
-                        class="flex bg-slate-800/80 p-1 rounded-2xl gap-1 border border-slate-700/60"
-                    >
-                        <button
-                            onclick="switchTab('tab-inventory')"
-                            id="nav-inventory"
-                            class="tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 bg-orange-500 text-white shadow"
-                        >
+                    <nav class="flex bg-slate-800/80 p-1 rounded-2xl gap-1 border border-slate-700/60">
+                        <button onclick="switchTab('tab-inventory')" id="nav-inventory" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 bg-orange-500 text-white shadow">
                             <i class="fa-solid fa-boxes-stacked"></i> Kho Phòng
                         </button>
-                        <button
-                            onclick="switchTab('tab-poster')"
-                            id="nav-poster"
-                            class="tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-700/50"
-                        >
+                        <button onclick="switchTab('tab-poster')" id="nav-poster" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-700/50">
                             <i class="fa-solid fa-pen-to-square"></i> Mẫu Marketing
                         </button>
-                        <button
-                            onclick="switchTab('tab-crm')"
-                            id="nav-crm"
-                            class="tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-700/50"
-                        >
+                        <button onclick="switchTab('tab-crm')" id="nav-crm" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-700/50">
                             <i class="fa-solid fa-comments"></i> Kịch Bản CRM
                         </button>
-                        <button
-                            onclick="switchTab('tab-users')"
-                            id="nav-users"
-                            class="tab-btn hidden px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-amber-300 hover:text-white hover:bg-slate-700/50"
-                        >
+                        <button onclick="switchTab('tab-users')" id="nav-users" class="tab-btn hidden px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-amber-300 hover:text-white hover:bg-slate-700/50">
                             <i class="fa-solid fa-users-gear"></i> Quản Lý Tài Khoản
                         </button>
                     </nav>
 
-                    <div
-                        class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-2xl border border-slate-700"
-                    >
-                        <div
-                            class="w-7 h-7 rounded-full bg-gradient-to-r from-orange-400 to-amber-400 text-slate-900 font-bold flex items-center justify-center text-xs"
-                        >
+                    <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-2xl border border-slate-700">
+                        <div class="w-7 h-7 rounded-full bg-gradient-to-r from-orange-400 to-amber-400 text-slate-900 font-bold flex items-center justify-center text-xs">
                             <i class="fa-solid fa-user-shield"></i>
                         </div>
                         <div class="hidden sm:block text-left pr-1">
-                            <p
-                                id="currentUserDisplay"
-                                class="text-xs font-bold leading-tight text-white"
-                            >
-                                Admin
-                            </p>
-                            <p
-                                id="currentUserRole"
-                                class="text-[10px] text-amber-400 font-medium leading-tight"
-                            >
-                                Quản trị viên
-                            </p>
+                            <p id="currentUserDisplay" class="text-xs font-bold leading-tight text-white">Admin</p>
+                            <p id="currentUserRole" class="text-[10px] text-amber-400 font-medium leading-tight">Quản trị viên</p>
                         </div>
-                        <button
-                            onclick="handleLogout()"
-                            title="Đăng xuất"
-                            class="text-slate-400 hover:text-rose-400 p-1 transition ml-1"
-                        >
+                        <button onclick="handleLogout()" title="Đăng xuất" class="text-slate-400 hover:text-rose-400 p-1 transition ml-1">
                             <i class="fa-solid fa-power-off text-sm"></i>
                         </button>
                     </div>
@@ -282,74 +146,38 @@
         <main class="max-w-7xl mx-auto px-4 py-6">
             <!-- TAB 1: KHO PHÒNG -->
             <div id="tab-inventory" class="tab-content space-y-6">
-                <div
-                    class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex-wrap gap-3"
-                >
+                <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex-wrap gap-3">
                     <div>
-                        <h2
-                            class="text-base font-bold text-slate-800 flex items-center gap-2"
-                        >
-                            <i class="fa-solid fa-building-user text-orange-500"></i>
-                            Rổ Hàng Căn Hộ / Phòng Trọ
+                        <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-building-user text-orange-500"></i> Rổ Hàng Căn Hộ / Phòng Trọ
                         </h2>
-                        <p class="text-xs text-slate-500">
-                            Xem nhanh phòng trống, hình ảnh và sao chép thông tin gửi
-                            khách
-                        </p>
+                        <p class="text-xs text-slate-500">Xem nhanh phòng trống, hình ảnh và sao chép thông tin gửi khách</p>
                     </div>
-
-                    <button
-                        id="adminAddRoomBtn"
-                        onclick="openModal()"
-                        class="hidden bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold px-4 py-2 rounded-xl transition shadow flex items-center gap-2 text-sm"
-                    >
+                    
+                    <button id="adminAddRoomBtn" onclick="openModal()" class="hidden bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold px-4 py-2 rounded-xl transition shadow flex items-center gap-2 text-sm">
                         <i class="fa-solid fa-plus"></i> Thêm Phòng Mới (Admin)
                     </button>
                 </div>
 
-                <section
-                    class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200"
-                >
+                <section class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
                     <div class="flex items-center justify-between mb-3">
-                        <h3
-                            class="text-xs font-bold text-slate-600 uppercase tracking-wider flex items-center gap-2"
-                        >
-                            <i class="fa-solid fa-filter text-orange-500"></i> Bộ Lọc Tìm
-                            Kiếm Nhanh
+                        <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-filter text-orange-500"></i> Bộ Lọc Tìm Kiếm Nhanh
                         </h3>
-                        <button
-                            onclick="resetFilters()"
-                            class="text-xs text-orange-600 font-semibold hover:underline"
-                        >
-                            Đặt lại bộ lọc
-                        </button>
+                        <button onclick="resetFilters()" class="text-xs text-orange-600 font-semibold hover:underline">Đặt lại bộ lọc</button>
                     </div>
-
+                    
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
                         <div class="lg:col-span-2">
-                            <input
-                                type="text"
-                                id="filterKeyword"
-                                oninput="filterRooms()"
-                                placeholder="Tìm theo Mã phòng, Địa chỉ, Tiện ích..."
-                                class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none bg-slate-50"
-                            />
+                            <input type="text" id="filterKeyword" oninput="filterRooms()" placeholder="Tìm theo Mã phòng, Địa chỉ, Tiện ích..." class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none bg-slate-50">
                         </div>
                         <div>
-                            <select
-                                id="filterDistrict"
-                                onchange="filterRooms()"
-                                class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none bg-slate-50"
-                            >
+                            <select id="filterDistrict" onchange="filterRooms()" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none bg-slate-50">
                                 <option value="">Tất cả Quận/Khu vực</option>
                             </select>
                         </div>
                         <div>
-                            <select
-                                id="filterPrice"
-                                onchange="filterRooms()"
-                                class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none bg-slate-50"
-                            >
+                            <select id="filterPrice" onchange="filterRooms()" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none bg-slate-50">
                                 <option value="">Tất cả mức giá</option>
                                 <option value="under3">Dưới 3 triệu</option>
                                 <option value="3to5">3 - 5 triệu</option>
@@ -358,11 +186,7 @@
                             </select>
                         </div>
                         <div>
-                            <select
-                                id="filterStatus"
-                                onchange="filterRooms()"
-                                class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none bg-slate-50"
-                            >
+                            <select id="filterStatus" onchange="filterRooms()" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none bg-slate-50">
                                 <option value="">Tất cả trạng thái</option>
                                 <option value="Còn trống">🟢 Còn trống</option>
                                 <option value="Sắp trống">🟡 Sắp trống</option>
@@ -373,230 +197,104 @@
                 </section>
 
                 <section>
-                    <div
-                        class="flex justify-between items-center mb-4 flex-wrap gap-2"
-                    >
-                        <p class="text-sm text-slate-600">
-                            Hiển thị
-                            <span id="roomCount" class="font-bold text-orange-600">0</span>
-                            phòng phù hợp
-                        </p>
-
+                    <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                        <p class="text-sm text-slate-600">Hiển thị <span id="roomCount" class="font-bold text-orange-600">0</span> phòng phù hợp</p>
+                        
                         <div id="adminDataControls" class="hidden flex gap-2 flex-wrap">
-                            <button
-                                onclick="clearAllData()"
-                                class="text-xs bg-rose-100 hover:bg-rose-200 text-rose-700 px-3 py-1.5 rounded-lg font-medium"
-                            >
+                            <button onclick="clearAllData()" class="text-xs bg-rose-100 hover:bg-rose-200 text-rose-700 px-3 py-1.5 rounded-lg font-medium">
                                 <i class="fa-solid fa-broom"></i> Xóa dữ liệu
                             </button>
-                            <button
-                                onclick="
-                                    document.getElementById('importFileInput').click()
-                                "
-                                class="text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-800 px-3 py-1.5 rounded-lg flex items-center gap-1 font-medium"
-                            >
-                                <i class="fa-solid fa-upload"></i> Nhập dữ liệu (Import
-                                JSON)
+                            <button onclick="document.getElementById('importFileInput').click()" class="text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-800 px-3 py-1.5 rounded-lg flex items-center gap-1 font-medium">
+                                <i class="fa-solid fa-upload"></i> Nhập dữ liệu (Import JSON)
                             </button>
-                            <input
-                                type="file"
-                                id="importFileInput"
-                                accept=".json"
-                                class="hidden"
-                                onchange="importData(event)"
-                            />
-
-                            <button
-                                onclick="exportData()"
-                                class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg flex items-center gap-1 font-medium"
-                            >
+                            <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importData(event)">
+                            
+                            <button onclick="exportData()" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg flex items-center gap-1 font-medium">
                                 <i class="fa-solid fa-download"></i> Tải dữ liệu (Backup)
                             </button>
                         </div>
                     </div>
 
-                    <div
-                        id="roomList"
-                        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
-                    ></div>
+                    <div id="roomList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
                 </section>
             </div>
 
             <!-- TAB 2: TẠO BÀI ĐĂNG TỰ ĐỘNG -->
             <div id="tab-poster" class="tab-content hidden space-y-6">
-                <div
-                    class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200"
-                >
-                    <h2
-                        class="text-base font-bold text-slate-800 flex items-center gap-2"
-                    >
-                        <i class="fa-solid fa-bullhorn text-orange-500"></i> Công Cụ Mẫu
-                        Bài Đăng Quảng Cáo Phòng Trọ / Căn Hộ
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+                    <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-bullhorn text-orange-500"></i> Công Cụ Mẫu Bài Đăng Quảng Cáo Phòng Trọ / Căn Hộ
                     </h2>
-                    <p class="text-xs text-slate-500 mt-1">
-                        Nhân viên chỉ cần copy bài mẫu hoặc thay đổi nhanh thông tin để
-                        đăng Zalo/Facebook thu hút khách hàng.
-                    </p>
+                    <p class="text-xs text-slate-500 mt-1">Nhân viên chỉ cần copy bài mẫu hoặc thay đổi nhanh thông tin để đăng Zalo/Facebook thu hút khách hàng.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div
-                        class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4"
-                    >
-                        <h3
-                            class="text-sm font-bold text-slate-800 border-b pb-2 flex items-center gap-2"
-                        >
-                            <i class="fa-solid fa-pen-to-square text-orange-500"></i> Nhập
-                            / Tùy Chỉnh Thông Tin
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                        <h3 class="text-sm font-bold text-slate-800 border-b pb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-pen-to-square text-orange-500"></i> Nhập / Tùy Chỉnh Thông Tin
                         </h3>
 
                         <form id="infoForm" class="space-y-3 text-sm">
                             <div>
-                                <label
-                                    class="block font-semibold text-gray-600 text-xs mb-1"
-                                    >Loại phòng & Vị trí</label
-                                >
-                                <input
-                                    type="text"
-                                    id="location"
-                                    placeholder="Căn hộ Studio / P. Trọ - Đường Lê Hồng Phong, Q.10"
-                                    class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50"
-                                />
+                                <label class="block font-semibold text-gray-600 text-xs mb-1">Loại phòng & Vị trí</label>
+                                <input type="text" id="location" placeholder="Căn hộ Studio / P. Trọ - Đường Lê Hồng Phong, Q.10" class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50">
                             </div>
 
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
-                                    <label
-                                        class="block font-semibold text-gray-600 text-xs mb-1"
-                                        >Giá thuê/tháng</label
-                                    >
-                                    <input
-                                        type="text"
-                                        id="price"
-                                        placeholder="3.5 Triệu"
-                                        class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50"
-                                    />
+                                    <label class="block font-semibold text-gray-600 text-xs mb-1">Giá thuê/tháng</label>
+                                    <input type="text" id="price" placeholder="3.5 Triệu" class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50">
                                 </div>
                                 <div>
-                                    <label
-                                        class="block font-semibold text-gray-600 text-xs mb-1"
-                                        >Gần địa điểm lớn</label
-                                    >
-                                    <input
-                                        type="text"
-                                        id="nearBy"
-                                        placeholder="ĐH Bách Khoa, Chợ Mới"
-                                        class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50"
-                                    />
+                                    <label class="block font-semibold text-gray-600 text-xs mb-1">Gần địa điểm lớn</label>
+                                    <input type="text" id="nearBy" placeholder="ĐH Bách Khoa, Chợ Mới" class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50">
                                 </div>
                             </div>
 
                             <div>
-                                <label
-                                    class="block font-semibold text-gray-600 text-xs mb-1"
-                                    >Nội thất có sẵn</label
-                                >
-                                <input
-                                    type="text"
-                                    id="furniture"
-                                    placeholder="Máy lạnh, tủ lạnh, giường nệm, tủ quần áo, kệ bếp"
-                                    class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50"
-                                />
+                                <label class="block font-semibold text-gray-600 text-xs mb-1">Nội thất có sẵn</label>
+                                <input type="text" id="furniture" placeholder="Máy lạnh, tủ lạnh, giường nệm, tủ quần áo, kệ bếp" class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50">
                             </div>
 
                             <div>
-                                <label
-                                    class="block font-semibold text-gray-600 text-xs mb-1"
-                                    >Chi phí dịch vụ (Điện/Nước/DV)</label
-                                >
-                                <input
-                                    type="text"
-                                    id="services"
-                                    placeholder="Điện 3.8k/kwh, Nước 100k/người, Wifi free"
-                                    class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50"
-                                />
+                                <label class="block font-semibold text-gray-600 text-xs mb-1">Chi phí dịch vụ (Điện/Nước/DV)</label>
+                                <input type="text" id="services" placeholder="Điện 3.8k/kwh, Nước 100k/người, Wifi free" class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50">
                             </div>
 
                             <div>
-                                <label
-                                    class="block font-semibold text-gray-600 text-xs mb-1"
-                                    >Tiện ích / Ưu điểm khác</label
-                                >
-                                <input
-                                    type="text"
-                                    id="amenities"
-                                    placeholder="Giờ giấc tự do, khóa vân tay, có ban công, máy giặt chung"
-                                    class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50"
-                                />
+                                <label class="block font-semibold text-gray-600 text-xs mb-1">Tiện ích / Ưu điểm khác</label>
+                                <input type="text" id="amenities" placeholder="Giờ giấc tự do, khóa vân tay, có ban công, máy giặt chung" class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50">
                             </div>
 
                             <div>
-                                <label
-                                    class="block font-semibold text-gray-600 text-xs mb-1"
-                                    >SĐT / Zalo liên hệ</label
-                                >
-                                <input
-                                    type="text"
-                                    id="contact"
-                                    placeholder="090x.xxx.xxx (Em Nam)"
-                                    class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50"
-                                />
+                                <label class="block font-semibold text-gray-600 text-xs mb-1">SĐT / Zalo liên hệ</label>
+                                <input type="text" id="contact" placeholder="090x.xxx.xxx (Em Nam)" class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-xs bg-slate-50">
                             </div>
 
-                            <button
-                                type="button"
-                                onclick="generateRandomPost()"
-                                class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3 rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2"
-                            >
+                            <button type="button" onclick="generateRandomPost()" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3 rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-shuffle"></i> BẤM TẠO NỘI DUNG MỚI
                             </button>
                         </form>
                     </div>
 
-                    <div
-                        class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between space-y-4"
-                    >
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between space-y-4">
                         <div>
-                            <div
-                                class="flex justify-between items-center border-b pb-2 mb-3"
-                            >
-                                <h3
-                                    class="text-sm font-bold text-slate-800 flex items-center gap-2"
-                                >
-                                    <i
-                                        class="fa-solid fa-copy text-emerald-600"
-                                    ></i>
-                                    Nội Dung Bài Đăng Mẫu (Copy Dùng Ngay)
+                            <div class="flex justify-between items-center border-b pb-2 mb-3">
+                                <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                                    <i class="fa-solid fa-copy text-emerald-600"></i> Nội Dung Bài Đăng Mẫu (Copy Dùng Ngay)
                                 </h3>
-                                <span
-                                    id="patternBadge"
-                                    class="text-[10px] bg-orange-100 text-orange-700 font-bold px-2 py-0.5 rounded-full"
-                                    >Mẫu 1</span
-                                >
+                                <span id="patternBadge" class="text-[10px] bg-orange-100 text-orange-700 font-bold px-2 py-0.5 rounded-full">Mẫu 1</span>
                             </div>
 
-                            <textarea
-                                id="outputResult"
-                                rows="14"
-                                readonly
-                                class="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 text-xs leading-relaxed focus:outline-none resize-none text-slate-800 font-mono"
-                            ></textarea>
+                            <textarea id="outputResult" rows="14" readonly class="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 text-xs leading-relaxed focus:outline-none resize-none text-slate-800 font-mono"></textarea>
                         </div>
 
                         <div class="space-y-2">
-                            <button
-                                onclick="copyToClipboard()"
-                                class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2"
-                            >
-                                <i class="fa-solid fa-clipboard mr-1"></i> SAO CHÉP NỘI
-                                DUNG
+                            <button onclick="copyToClipboard()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-clipboard mr-1"></i> SAO CHÉP NỘI DUNG
                             </button>
-                            <p
-                                id="copyToast"
-                                class="text-center text-xs font-semibold text-emerald-600 opacity-0 transition-opacity"
-                            >
-                                <i class="fa-solid fa-check"></i> Đã sao chép vào bộ nhớ
-                                tạm!
+                            <p id="copyToast" class="text-center text-xs font-semibold text-emerald-600 opacity-0 transition-opacity">
+                                <i class="fa-solid fa-check"></i> Đã sao chép vào bộ nhớ tạm!
                             </p>
                         </div>
                     </div>
@@ -605,51 +303,25 @@
 
             <!-- TAB 3: CRM & KỊCH BẢN CHĂM SÓC -->
             <div id="tab-crm" class="tab-content hidden space-y-6">
-                <div
-                    class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 grid grid-cols-1 md:grid-cols-12 gap-3"
-                >
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 grid grid-cols-1 md:grid-cols-12 gap-3">
                     <div class="md:col-span-6 relative">
-                        <i
-                            class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-sm"
-                        ></i>
-                        <input
-                            type="text"
-                            id="searchInput"
-                            onkeyup="filterCases()"
-                            placeholder="Tìm kiếm kịch bản (chê giá cao, đòi cọc, ồn ào...)..."
-                            class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 bg-slate-50"
-                        />
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-sm"></i>
+                        <input type="text" id="searchInput" onkeyup="filterCases()" 
+                            placeholder="Tìm kiếm kịch bản (chê giá cao, đòi cọc, ồn ào...)..." 
+                            class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 bg-slate-50">
                     </div>
                     <div class="md:col-span-3">
-                        <select
-                            id="categoryFilter"
-                            onchange="filterCases()"
-                            class="w-full py-2 px-3 border border-slate-200 rounded-xl text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                        >
+                        <select id="categoryFilter" onchange="filterCases()" class="w-full py-2 px-3 border border-slate-200 rounded-xl text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-orange-500">
                             <option value="ALL">-- Tất cả nhóm tình huống --</option>
-                            <option value="XU_LY_TU_CHOI"
-                                >1. Xử lý từ chối khi tư vấn (Giá/Vị trí/Ảnh)</option
-                            >
-                            <option value="DANG_XEM_PHONG"
-                                >2. Dẫn xem phòng & Đàm phán chốt cọc</option
-                            >
-                            <option value="SUDUNG_SUCO"
-                                >3. Giải quyết sự cố khi đang ở (Đồ đạc/Hàng xóm)</option
-                            >
-                            <option value="GIU_CHAN_TRA_PHONG"
-                                >4. Giữ chân khách đòi trả phòng / Tăng giá</option
-                            >
-                            <option value="CHAMSOC_DINHKY"
-                                >5. Chăm sóc định kỳ & Xin phản hồi / Khách giới thiệu</option
-                            >
+                            <option value="XU_LY_TU_CHOI">1. Xử lý từ chối khi tư vấn (Giá/Vị trí/Ảnh)</option>
+                            <option value="DANG_XEM_PHONG">2. Dẫn xem phòng & Đàm phán chốt cọc</option>
+                            <option value="SUDUNG_SUCO">3. Giải quyết sự cố khi đang ở (Đồ đạc/Hàng xóm)</option>
+                            <option value="GIU_CHAN_TRA_PHONG">4. Giữ chân khách đòi trả phòng / Tăng giá</option>
+                            <option value="CHAMSOC_DINHKY">5. Chăm sóc định kỳ & Xin phản hồi / Khách giới thiệu</option>
                         </select>
                     </div>
                     <div class="md:col-span-3">
-                        <select
-                            id="tagFilter"
-                            onchange="filterCases()"
-                            class="w-full py-2 px-3 border border-slate-200 rounded-xl text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                        >
+                        <select id="tagFilter" onchange="filterCases()" class="w-full py-2 px-3 border border-slate-200 rounded-xl text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-orange-500">
                             <option value="ALL">-- Đối tượng khách --</option>
                             <option value="Sinh viên">Sinh viên / Người trẻ</option>
                             <option value="Người đi làm">Người đi làm / Văn phòng</option>
@@ -660,70 +332,29 @@
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <section
-                        class="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col h-[700px]"
-                    >
-                        <div
-                            class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-2xl"
-                        >
-                            <h3
-                                class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-2"
-                            >
-                                <i class="fa-solid fa-list-check text-orange-500"></i> Mẫu
-                                Kịch Bản Chuẩn CRM (<span id="totalCasesCount">1000</span>)
+                    <section class="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col h-[700px]">
+                        <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-2xl">
+                            <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-list-check text-orange-500"></i> Mẫu Kịch Bản Chuẩn CRM (<span id="totalCasesCount">1000</span>)
                             </h3>
-                            <div>
-                                <button
-                                    id="btnAddCase"
-                                    onclick="openCaseModal()"
-                                    class="hidden bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1"
-                                >
-                                    <i class="fa-solid fa-plus"></i> Thêm Kịch Bản
-                                </button>
-                            </div>
-                            <span
-                                id="showingCount"
-                                class="text-xs bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full font-semibold"
-                                >Đang hiện: 0</span
-                            >
+                            <span id="showingCount" class="text-xs bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full font-semibold">Đang hiện: 0</span>
                         </div>
 
-                        <div
-                            id="caseListContainer"
-                            class="divide-y divide-slate-100 overflow-y-auto custom-scrollbar flex-1"
-                        ></div>
+                        <div id="caseListContainer" class="divide-y divide-slate-100 overflow-y-auto custom-scrollbar flex-1"></div>
                     </section>
 
-                    <section
-                        class="lg:col-span-5 bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col h-[700px] sticky top-20"
-                    >
-                        <div
-                            class="p-4 border-b border-slate-100 bg-orange-50/50 rounded-t-2xl flex justify-between items-center"
-                        >
-                            <h3
-                                class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-2"
-                            >
-                                <i class="fa-solid fa-comments text-orange-500"></i> Chi Tiết
-                                Hướng Xử Lý & Mẫu Tin Nhắn
+                    <section class="lg:col-span-5 bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col h-[700px] sticky top-20">
+                        <div class="p-4 border-b border-slate-100 bg-orange-50/50 rounded-t-2xl flex justify-between items-center">
+                            <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-comments text-orange-500"></i> Chi Tiết Hướng Xử Lý & Mẫu Tin Nhắn
                             </h3>
-                            <span
-                                class="text-[11px] text-orange-700 font-semibold bg-orange-100 px-2 py-0.5 rounded"
-                                >Mẫu chuẩn</span
-                            >
+                            <span class="text-[11px] text-orange-700 font-semibold bg-orange-100 px-2 py-0.5 rounded">Mẫu chuẩn</span>
                         </div>
 
-                        <div
-                            id="detailView"
-                            class="p-5 overflow-y-auto custom-scrollbar flex-1 space-y-4"
-                        >
-                            <div
-                                class="text-center py-20 text-slate-400 space-y-2"
-                            >
+                        <div id="detailView" class="p-5 overflow-y-auto custom-scrollbar flex-1 space-y-4">
+                            <div class="text-center py-20 text-slate-400 space-y-2">
                                 <i class="fa-solid fa-hand-pointer text-3xl mb-2 text-slate-300"></i>
-                                <p class="text-sm">
-                                    Vui lòng chọn 1 kịch bản ở danh sách bên trái để xem
-                                    cách tư vấn và copy mẫu phản hồi.
-                                </p>
+                                <p class="text-sm">Vui lòng chọn 1 kịch bản ở danh sách bên trái để xem cách tư vấn và copy mẫu phản hồi.</p>
                             </div>
                         </div>
                     </section>
@@ -732,37 +363,22 @@
 
             <!-- TAB 4: QUẢN LÝ TÀI KHOẢN (CHỈ DÀNH CHO ADMIN) -->
             <div id="tab-users" class="tab-content hidden space-y-6">
-                <div
-                    class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex-wrap gap-3"
-                >
+                <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex-wrap gap-3">
                     <div>
-                        <h2
-                            class="text-base font-bold text-slate-800 flex items-center gap-2"
-                        >
-                            <i class="fa-solid fa-users-gear text-orange-500"></i> Quản Lý
-                            Tài Khoản Nhân Viên Sale
+                        <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-users-gear text-orange-500"></i> Quản Lý Tài Khoản Nhân Viên Sale
                         </h2>
-                        <p class="text-xs text-slate-500">
-                            Tạo tài khoản mới, phân quyền Admin/Nhiên viên hoặc đổi mật
-                            khẩu
-                        </p>
+                        <p class="text-xs text-slate-500">Tạo tài khoản mới, phân quyền Admin/Nhiên viên hoặc đổi mật khẩu</p>
                     </div>
-                    <button
-                        onclick="openUserModal()"
-                        class="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold px-4 py-2 rounded-xl transition shadow flex items-center gap-2 text-sm"
-                    >
+                    <button onclick="openUserModal()" class="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold px-4 py-2 rounded-xl transition shadow flex items-center gap-2 text-sm">
                         <i class="fa-solid fa-user-plus"></i> Thêm Tài Khoản Mới
                     </button>
                 </div>
 
-                <div
-                    class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"
-                >
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr
-                                class="bg-slate-50 border-b border-slate-200 text-slate-600 text-xs uppercase font-bold"
-                            >
+                            <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 text-xs uppercase font-bold">
                                 <th class="p-3.5">Tên Đăng Nhập</th>
                                 <th class="p-3.5">Họ và Tên Nhân Viên</th>
                                 <th class="p-3.5">Mật Khẩu</th>
@@ -778,184 +394,150 @@
     </div>
 
     <!-- MODAL THÊM / SỬA PHÒNG -->
-    <div
-        id="roomModal"
-        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4"
-    >
-        <!-- content như cũ -->
+    <div id="roomModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto border border-slate-100">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10">
+                <h3 id="modalTitle" class="text-lg font-bold text-slate-800">Thêm Căn Hộ / Phòng Trọ Mới</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <form id="roomForm" onsubmit="saveRoom(event)" class="p-5 space-y-4">
+                <input type="hidden" id="roomId">
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Mã/Tên Phòng *</label>
+                        <input type="text" id="code" required placeholder="VD: P.301 - CHDV" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Giá Thuê (Triệu/tháng) *</label>
+                        <input type="number" step="0.1" id="roomPrice" required placeholder="VD: 4.5" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Quận / Khu vực *</label>
+                        <input type="text" id="district" required placeholder="VD: Quận 10, Tân Bình..." class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Trạng Thái *</label>
+                        <select id="status" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
+                            <option value="Còn trống">🟢 Còn trống</option>
+                            <option value="Sắp trống">🟡 Sắp trống</option>
+                            <option value="Đã thuê">🔴 Đã thuê</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Địa chỉ chính xác</label>
+                    <input type="text" id="address" placeholder="Số nhà, tên đường, phường..." class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tiện ích / Nội thất</label>
+                    <input type="text" id="roomAmenities" placeholder="VD: Máy lạnh, ban công, thang máy, nuôi pet..." class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Hình ảnh căn hộ (Dán ảnh từ Zalo hoặc Chọn tệp)</label>
+                    <div id="dropZone" tabIndex="0" class="border-2 border-dashed border-orange-300 hover:border-orange-500 bg-orange-50/30 hover:bg-orange-50/60 rounded-2xl p-4 text-center cursor-pointer transition flex flex-col items-center justify-center outline-none focus:ring-2 focus:ring-orange-500">
+                        <i class="fa-regular fa-image text-3xl text-orange-500 mb-2"></i>
+                        <p class="text-xs font-medium text-slate-700">Click vào đây rồi bấm <span class="bg-orange-500 text-white px-2 py-0.5 rounded-lg font-mono text-[11px]">Ctrl + V</span> để DÁN ẢNH TỪ ZALO</p>
+                        <p class="text-[11px] text-slate-400 mt-1">Hoặc bấm chọn tệp / kéo thả ảnh vào đây</p>
+                        <input type="file" id="fileInput" multiple accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+                    </div>
+
+                    <div id="compressingStatus" class="hidden text-xs text-orange-600 font-semibold mt-2 items-center gap-1">
+                        <i class="fa-solid fa-spinner fa-spin"></i> Đang tối ưu hình ảnh...
+                    </div>
+
+                    <div id="imagePreviewContainer" class="grid grid-cols-4 gap-2 mt-3"></div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Link Ảnh/Video bổ sung (Google Drive / Zalo nếu có)</label>
+                    <input type="url" id="mediaUrl" placeholder="https://..." class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Ghi chú nội bộ (SĐT chủ nhà, hoa hồng sale...)</label>
+                    <textarea id="note" rows="2" placeholder="Chủ nhà: 090x..., Phí HH 50%..." class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50"></textarea>
+                </div>
+
+                <div class="pt-3 border-t flex justify-end gap-2">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded-xl text-sm text-slate-600 hover:bg-slate-50">Hủy</button>
+                    <button type="submit" id="btnSave" class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-xl text-sm shadow">Lưu Dữ Liệu</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- MODAL THÊM / SỬA TÀI KHOẢN -->
-    <div
-        id="userModal"
-        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4"
-    >
-        <!-- content như cũ -->
-    </div>
-
-    <!-- MODAL THÊM / SỬA KỊCH BẢN CRM -->
-    <div
-        id="caseModal"
-        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4"
-    >
-        <div
-            class="bg-white rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-100"
-        >
-            <div
-                class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50"
-            >
-                <h3 id="caseModalTitle" class="text-base font-bold text-slate-800">
-                    Thêm Kịch Bản Mới
-                </h3>
-                <button
-                    onclick="closeCaseModal()"
-                    class="text-slate-400 hover:text-slate-600"
-                >
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
+    <div id="userModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-100">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 id="userModalTitle" class="text-base font-bold text-slate-800">Thêm Tài Khoản Mới</h3>
+                <button onclick="closeUserModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            <form id="caseForm" onsubmit="saveCase(event)" class="p-5 space-y-3.5">
-                <input type="hidden" id="editCaseId" />
+            
+            <form id="userForm" onsubmit="saveUser(event)" class="p-5 space-y-3.5">
+                <input type="hidden" id="editUserId">
+                
                 <div>
-                    <label
-                        class="block text-xs font-semibold text-slate-600 mb-1"
-                        >Nhóm tình huống *</label
-                    >
-                    <select
-                        id="caseCategory"
-                        required
-                        class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50"
-                    >
-                        <option value="" disabled selected>-- Chọn nhóm --</option>
-                        <option value="XU_LY_TU_CHOI"
-                            >Xử lý từ chối khi tư vấn</option
-                        >
-                        <option value="DANG_XEM_PHONG">Dẫn xem phòng & Đàm phán chốt cọc</option>
-                        <option value="SUDUNG_SUCO">Giải quyết sự cố khi đang ở</option>
-                        <option value="GIU_CHAN_TRA_PHONG">
-                            Giữ chân khách đòi trả phòng / Tăng giá
-                        </option>
-                        <option value="CHAMSOC_DINHKY">Chăm sóc định kỳ & Xin phản hồi</option>
-                    </select>
-                </div>
-                <div>
-                    <label
-                        class="block text-xs font-semibold text-slate-600 mb-1"
-                        >Đối tượng khách *</label
-                    >
-                    <select
-                        id="caseTag"
-                        required
-                        class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50"
-                    >
-                        <option value="" disabled selected>-- Chọn đối tượng --</option>
-                        <option value="Sinh viên">Sinh viên / Người trẻ</option>
-                        <option value="Người đi làm">Người đi làm / Văn phòng</option>
-                        <option value="Vợ chồng trẻ">Vợ chồng / Gia đình nhỏ</option>
-                        <option value="Tất cả">Mọi đối tượng</option>
-                    </select>
-                </div>
-                <div>
-                    <label
-                        class="block text-xs font-semibold text-slate-600 mb-1"
-                        >Tiêu đề kịch bản *</label
-                    >
-                    <input
-                        id="caseTitle"
-                        type="text"
-                        required
-                        placeholder="Tiêu đề kịch bản"
-                        class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50"
-                    />
-                </div>
-                <div>
-                    <label
-                        class="block text-xs font-semibold text-slate-600 mb-1"
-                        >Hướng xử lý *</label
-                    >
-                    <textarea
-                        id="caseActionPlan"
-                        rows="3"
-                        required
-                        placeholder="Hướng xử lý tư vấn"
-                        class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50"
-                    ></textarea>
-                </div>
-                <div>
-                    <label
-                        class="block text-xs font-semibold text-slate-600 mb-1"
-                        >Mẫu tin nhắn phản hồi *</label
-                    >
-                    <textarea
-                        id="caseResponseTemplate"
-                        rows="4"
-                        required
-                        placeholder="Mẫu tin nhắn trả lời"
-                        class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50"
-                    ></textarea>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tên Đăng Nhập (Username) *</label>
+                    <input type="text" id="accUsername" required placeholder="nhanvien1" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
                 </div>
 
-                <div
-                    class="pt-3 border-t flex justify-end gap-2"
-                >
-                    <button
-                        type="button"
-                        onclick="closeCaseModal()"
-                        class="px-4 py-2 border rounded-xl text-sm text-slate-600 hover:bg-slate-50"
-                    >
-                        Hủy
-                    </button>
-                    <button
-                        type="submit"
-                        class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-xl text-sm shadow"
-                    >
-                        Lưu Kịch Bản
-                    </button>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Họ và Tên Nhân Viên *</label>
+                    <input type="text" id="accFullName" required placeholder="Nguyễn Văn A" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Mật Khẩu *</label>
+                    <input type="text" id="accPassword" required placeholder="123456" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Chức Vụ / Phân Quyền *</label>
+                    <select id="accRole" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
+                        <option value="Nhân viên Sale" selected>Nhân viên Sale (Mặc định - Chỉ xem/copy)</option>
+                        <option value="Quản trị viên">Quản trị viên (Admin - Full Quyền)</option>
+                    </select>
+                </div>
+
+                <div class="pt-3 border-t flex justify-end gap-2">
+                    <button type="button" onclick="closeUserModal()" class="px-4 py-2 border rounded-xl text-sm text-slate-600 hover:bg-slate-50">Hủy</button>
+                    <button type="submit" class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-xl text-sm shadow">Lưu Tài Khoản</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Modal Xem Ảnh Lớn -->
-    <div
-        id="imageViewerModal"
-        class="fixed inset-0 bg-black/85 hidden items-center justify-center z-50 p-4"
-        onclick="closeImageViewer()"
-    >
-        <div
-            class="relative max-w-4xl max-h-[90vh] flex flex-col items-center"
-        >
-            <img
-                id="viewerImage"
-                src=""
-                class="max-w-full max-h-[80vh] rounded-2xl shadow-2xl object-contain"
-            />
-            <p class="text-white text-xs mt-3 opacity-80">
-                Click bất kỳ đâu để đóng
-            </p>
+    <div id="imageViewerModal" class="fixed inset-0 bg-black/85 hidden items-center justify-center z-50 p-4" onclick="closeImageViewer()">
+        <div class="relative max-w-4xl max-h-[90vh] flex flex-col items-center">
+            <img id="viewerImage" src="" class="max-w-full max-h-[80vh] rounded-2xl shadow-2xl object-contain">
+            <p class="text-white text-xs mt-3 opacity-80">Click bất kỳ đâu để đóng</p>
         </div>
     </div>
 
     <!-- Toast Notification -->
-    <div
-        id="toast"
-        class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-2xl text-sm shadow-2xl opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2.5 z-50 border border-slate-800"
-    >
-        <i
-            id="toastIcon"
-            class="fa-solid fa-circle-check text-emerald-400 text-base"
-        ></i>
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-2xl text-sm shadow-2xl opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2.5 z-50 border border-slate-800">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
         <span id="toastMsg">Đã thao tác thành công!</span>
     </div>
 
     <!-- JAVASCRIPT HỢP NHẤT KHÔNG TRÙNG LẶP -->
     <script>
-        const SUPABASE_URL = "https://yhkblcdvpcvjbxwfnqac.supabase.co";
-        const SUPABASE_KEY =
-            "sb_publishable_pK0cLrfth79Gj5OyPUDIwg_ohhag-Ld";
+        // Cấu hình hằng số & Khởi tạo
+        const SUPABASE_URL = 'https://yhkblcdvpcvjbxwfnqac.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_pK0cLrfth79Gj5OyPUDIwg_ohhag-Ld';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        const AUTH_KEY = "app_logged_in_user_data";
+        const AUTH_KEY = 'app_logged_in_user_data';
 
         let users = [];
         let currentUser = null;
@@ -966,56 +548,48 @@
         let currentFilteredData = [];
 
         const DEFAULT_USERS = [
-            {
-                id: "1",
-                user: "admin",
-                pass: "123456",
-                name: "Nguyên Bảo (Admin)",
-                role: "Quản trị viên",
-            },
-            { id: "2", user: "nhanvien1", pass: "123456", name: "Nguyễn Văn A", role: "Nhân viên Sale" },
+            { id: '1', user: 'admin', pass: '123456', name: 'Nguyên Bảo (Admin)', role: 'Quản trị viên' },
+            { id: '2', user: 'nhanvien1', pass: '123456', name: 'Nguyễn Văn A', role: 'Nhân viên Sale' }
         ];
 
         const DEFAULT_ROOMS = [
             {
-                id: "room_01",
-                code: "P.301 - Studio Ban Công",
-                price: "4.5",
-                district: "Quận 10",
-                status: "Còn trống",
-                address: "123 Lê Hồng Phong, Phường 2",
-                amenities:
-                    "Máy lạnh, tủ lạnh, giường nệm, ban công thoáng, khóa vân tay, máy giặt chung",
-                mediaUrl: "https://zalo.me",
-                note: "Chủ nhà vui vẻ: 0901234567. Phí hoa hồng 50%",
+                id: 'room_01',
+                code: 'P.301 - Studio Ban Công',
+                price: '4.5',
+                district: 'Quận 10',
+                status: 'Còn trống',
+                address: '123 Lê Hồng Phong, Phường 2',
+                amenities: 'Máy lạnh, tủ lạnh, giường nệm, ban công thoáng, khóa vân tay, máy giặt chung',
+                mediaUrl: 'https://zalo.me',
+                note: 'Chủ nhà vui vẻ: 0901234567. Phí hoa hồng 50%',
                 images: [
-                    "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80",
-                    "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80",
+                    'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80'
                 ],
-                updatedAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
             },
             {
-                id: "room_02",
-                code: "P.102 - Căn Hộ Mini 1PN",
-                price: "6.2",
-                district: "Tân Bình",
-                status: "Sắp trống",
-                address: "45 Cộng Hòa, Phường 4",
-                amenities:
-                    "Full nội thất cao cấp, thang máy, bãi xe rộng, giờ giấc tự do 24/7",
-                mediaUrl: "",
-                note: "Khách sắp trả phòng ngày 15 tới.",
+                id: 'room_02',
+                code: 'P.102 - Căn Hộ Mini 1PN',
+                price: '6.2',
+                district: 'Tân Bình',
+                status: 'Sắp trống',
+                address: '45 Cộng Hòa, Phường 4',
+                amenities: 'Full nội thất cao cấp, thang máy, bãi xe rộng, giờ giấc tự do 24/7',
+                mediaUrl: '',
+                note: 'Khách sắp trả phòng ngày 15 tới.',
                 images: [
-                    "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80",
+                    'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80'
                 ],
-                updatedAt: new Date().toISOString(),
-            },
+                updatedAt: new Date().toISOString()
+            }
         ];
 
-        // Khởi tạo IndexedDB với cập nhật thêm objectStore cases
+        // 1. INDEXED DB DRIVER
         function initDB() {
             return new Promise((resolve, reject) => {
-                const request = indexedDB.open("RoomManagerDB", 3);
+                const request = indexedDB.open("RoomManagerDB", 2);
                 request.onupgradeneeded = (e) => {
                     db = e.target.result;
                     if (!db.objectStoreNames.contains("rooms")) {
@@ -1023,9 +597,6 @@
                     }
                     if (!db.objectStoreNames.contains("users")) {
                         db.createObjectStore("users", { keyPath: "id" });
-                    }
-                    if (!db.objectStoreNames.contains("cases")) {
-                        db.createObjectStore("cases", { keyPath: "id" });
                     }
                 };
                 request.onsuccess = (e) => {
@@ -1065,6 +636,16 @@
             });
         }
 
+        async function deleteUserFromDB(id) {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("users", "readwrite");
+                const store = tx.objectStore("users");
+                const request = store.delete(id);
+                request.onsuccess = () => resolve(true);
+                request.onerror = (e) => reject(e);
+            });
+        }
+
         async function loadRoomsFromDB() {
             return new Promise((resolve, reject) => {
                 const tx = db.transaction("rooms", "readonly");
@@ -1094,229 +675,906 @@
             });
         }
 
-        // Các hàm lưu và xóa phòng, người dùng ... giữ nguyên
-
-        // Lấy hoặc lưu cases CRM
-        async function loadCasesFromDB() {
+        async function deleteRoomFromDB(id) {
             return new Promise((resolve, reject) => {
-                const tx = db.transaction("cases", "readonly");
-                const store = tx.objectStore("cases");
-                const request = store.getAll();
-                request.onsuccess = () => resolve(request.result || []);
-                request.onerror = (e) => reject(e);
-            });
-        }
-
-        async function saveCaseToDB(caseData) {
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction("cases", "readwrite");
-                const store = tx.objectStore("cases");
-                const request = store.put(caseData);
-                request.onsuccess = () => resolve(true);
-                request.onerror = (e) => reject(e);
-            });
-        }
-
-        async function deleteCaseFromDB(id) {
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction("cases", "readwrite");
-                const store = tx.objectStore("cases");
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
                 const request = store.delete(id);
                 request.onsuccess = () => resolve(true);
                 request.onerror = (e) => reject(e);
             });
         }
 
-        // Các hàm hiện và xử lý giao diện, phân quyền cho CRM mở rộng
+        async function clearAllFromDB() {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+                const request = store.clear();
+                request.onsuccess = () => resolve(true);
+                request.onerror = (e) => reject(e);
+            });
+        }
 
-        // Mở modal thêm/sửa kịch bản CRM
-        function openCaseModal(editId = null) {
-            if (currentUser.role !== "Quản trị viên") {
-                showToast("Chỉ Admin mới có quyền thêm/sửa kịch bản!", "error");
+        // 2. AUTH & PHÂN QUYỀN
+        function checkAuth() {
+            const savedUserData = localStorage.getItem(AUTH_KEY) || sessionStorage.getItem(AUTH_KEY);
+            if (savedUserData) {
+                currentUser = JSON.parse(savedUserData);
+                showApp();
+            } else {
+                showLogin();
+            }
+        }
+
+        function togglePasswordVisibility(inputId, iconId) {
+            const pwdInput = document.getElementById(inputId);
+            const eyeIcon = document.getElementById(iconId);
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                pwdInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const userVal = document.getElementById('loginUsername').value.trim().toLowerCase();
+            const passVal = document.getElementById('loginPassword').value.trim();
+            const remember = document.getElementById('rememberMe').checked;
+
+            const foundUser = users.find(u => u.user.toLowerCase() === userVal && u.pass === passVal);
+
+            if (foundUser) {
+                currentUser = foundUser;
+                if (remember) {
+                    localStorage.setItem(AUTH_KEY, JSON.stringify(foundUser));
+                } else {
+                    sessionStorage.setItem(AUTH_KEY, JSON.stringify(foundUser));
+                }
+                showToast(`Xin chào ${foundUser.name}!`, 'success');
+                showApp();
+            } else {
+                showToast('Tài khoản hoặc mật khẩu không đúng!', 'error');
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Bạn muốn đăng xuất khỏi hệ thống?')) {
+                localStorage.removeItem(AUTH_KEY);
+                sessionStorage.removeItem(AUTH_KEY);
+                currentUser = null;
+                showLogin();
+                showToast('Đã đăng xuất!');
+            }
+        }
+
+        function showApp() {
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('currentUserDisplay').innerText = currentUser.name;
+            document.getElementById('currentUserRole').innerText = currentUser.role;
+
+            const isAdmin = (currentUser.role === 'Quản trị viên');
+            
+            const navUsersBtn = document.getElementById('nav-users');
+            const adminAddRoomBtn = document.getElementById('adminAddRoomBtn');
+            const adminDataControls = document.getElementById('adminDataControls');
+            const roleBadgeHeader = document.getElementById('roleBadgeHeader');
+
+            if (isAdmin) {
+                navUsersBtn.classList.remove('hidden');
+                adminAddRoomBtn.classList.remove('hidden');
+                adminDataControls.classList.remove('hidden');
+                roleBadgeHeader.innerText = 'ADMIN';
+                roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30';
+                renderUsersTable();
+            } else {
+                navUsersBtn.classList.add('hidden');
+                adminAddRoomBtn.classList.add('hidden');
+                adminDataControls.classList.add('hidden');
+                roleBadgeHeader.innerText = 'SALE';
+                roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30';
+                
+                if (!document.getElementById('tab-users').classList.contains('hidden')) {
+                    switchTab('tab-inventory');
+                }
+            }
+
+            filterRooms();
+        }
+
+        function showLogin() {
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('authScreen').classList.remove('hidden');
+            document.getElementById('loginForm').reset();
+        }
+
+        function switchTab(tabId) {
+            if (tabId === 'tab-users' && currentUser.role !== 'Quản trị viên') {
+                showToast('Chỉ Quản trị viên mới có quyền truy cập trang này!', 'error');
                 return;
             }
-            document.getElementById("caseModalTitle").innerText = editId
-                ? "Chỉnh sửa kịch bản"
-                : "Thêm kịch bản mới";
-            document.getElementById("caseModal").classList.remove("hidden");
-            document.getElementById("caseModal").classList.add("flex");
+
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                if(btn.id === 'nav-users') {
+                    btn.className = 'tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-amber-300 hover:text-white hover:bg-slate-700/50';
+                } else {
+                    btn.className = 'tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-700/50';
+                }
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+
+            const activeNav = document.getElementById('nav-' + tabId.replace('tab-', ''));
+            if (activeNav) {
+                activeNav.className = 'tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 bg-orange-500 text-white shadow';
+            }
+        }
+
+        // 3. QUẢN LÝ TÀI KHOẢN
+        function openUserModal(editId = null) {
+            if (currentUser.role !== 'Quản trị viên') {
+                showToast('Chỉ Admin mới có quyền quản lý tài khoản!', 'error');
+                return;
+            }
+            document.getElementById('userModalTitle').innerText = editId ? 'Chỉnh Sửa Tài Khoản' : 'Thêm Tài Khoản Mới';
+            document.getElementById('userModal').classList.remove('hidden');
+            document.getElementById('userModal').classList.add('flex');
 
             if (editId) {
-                const c = dbCases.find((x) => x.id === editId);
-                if (c) {
-                    document.getElementById("editCaseId").value = c.id;
-                    document.getElementById("caseCategory").value = c.category;
-                    document.getElementById("caseTag").value = c.tag;
-                    document.getElementById("caseTitle").value = c.title;
-                    document.getElementById("caseActionPlan").value = c.actionPlan;
-                    document.getElementById("caseResponseTemplate").value =
-                        c.responseTemplate;
+                const u = users.find(x => x.id === editId);
+                if (u) {
+                    document.getElementById('editUserId').value = u.id;
+                    document.getElementById('accUsername').value = u.user;
+                    document.getElementById('accFullName').value = u.name;
+                    document.getElementById('accPassword').value = u.pass;
+                    document.getElementById('accRole').value = u.role;
                 }
             } else {
-                document.getElementById("caseForm").reset();
-                document.getElementById("editCaseId").value = "";
+                document.getElementById('userForm').reset();
+                document.getElementById('editUserId').value = '';
+                document.getElementById('accRole').value = 'Nhân viên Sale';
             }
         }
-        function closeCaseModal() {
-            document.getElementById("caseModal").classList.add("hidden");
-            document.getElementById("caseModal").classList.remove("flex");
-            document.getElementById("caseForm").reset();
+
+        function closeUserModal() {
+            document.getElementById('userModal').classList.add('hidden');
+            document.getElementById('userModal').classList.remove('flex');
+            document.getElementById('userForm').reset();
         }
 
-        async function saveCase(e) {
+        async function saveUser(e) {
             e.preventDefault();
-            if (currentUser.role !== "Quản trị viên") {
-                showToast("Bạn không có quyền thực hiện thao tác này!", "error");
+            if (currentUser.role !== 'Quản trị viên') {
+                showToast('Bạn không có quyền thực hiện thao tác này!', 'error');
                 return;
             }
 
-            const editId = document.getElementById("editCaseId").value;
-            const category = document.getElementById("caseCategory").value;
-            const tag = document.getElementById("caseTag").value;
-            const title = document.getElementById("caseTitle").value.trim();
-            const actionPlan = document.getElementById("caseActionPlan").value.trim();
-            const responseTemplate = document
-                .getElementById("caseResponseTemplate")
-                .value.trim();
+            const editId = document.getElementById('editUserId').value;
+            const userVal = document.getElementById('accUsername').value.trim().toLowerCase();
+            const nameVal = document.getElementById('accFullName').value.trim();
+            const passVal = document.getElementById('accPassword').value.trim();
+            const roleVal = document.getElementById('accRole').value;
 
-            if (!category || !tag || !title || !actionPlan || !responseTemplate) {
-                showToast("Vui lòng điền đầy đủ thông tin!", "error");
+            if (!editId && users.some(u => u.user.toLowerCase() === userVal)) {
+                showToast('Tên tài khoản trùng lặp!', 'error');
                 return;
             }
 
-            const newCase = {
+            const userData = {
                 id: editId || Date.now().toString(),
-                category: category,
-                categoryName: coreCategories[category] || "",
-                tag: tag,
-                type: "",
-                title: title,
-                actionPlan: actionPlan,
-                responseTemplate: responseTemplate,
+                user: userVal,
+                name: nameVal,
+                pass: passVal,
+                role: roleVal
             };
 
-            await saveCaseToDB(newCase);
-
-            dbCases = await loadCasesFromDB();
-            currentFilteredData = [...dbCases];
-            renderCaseList(currentFilteredData);
-
-            if (dbCases.length > 0) selectCase(dbCases[0].id);
-
-            closeCaseModal();
-            showToast("Đã lưu kịch bản!");
+            await saveUserToDB(userData);
+            users = await loadUsersFromDB();
+            renderUsersTable();
+            closeUserModal();
+            showToast('Đã lưu tài khoản!');
         }
 
-        async function deleteCase(id) {
-            if (currentUser.role !== "Quản trị viên") {
-                showToast("Bạn không có quyền xóa kịch bản!", "error");
+        async function deleteUser(id) {
+            if (currentUser.role !== 'Quản trị viên') {
+                showToast('Bạn không có quyền xóa tài khoản!', 'error');
+                return;
+            }
+            const u = users.find(x => x.id === id);
+            if (!u) return;
+
+            if (u.user === 'admin') {
+                showToast('Không thể xóa tài khoản Admin hệ thống!', 'error');
                 return;
             }
 
-            if (confirm("Bạn chắc chắn muốn xóa kịch bản này?")) {
-                await deleteCaseFromDB(id);
-                dbCases = await loadCasesFromDB();
-                currentFilteredData = [...dbCases];
-                renderCaseList(currentFilteredData);
+            if (confirm(`Xóa tài khoản "${u.user}" (${u.name})?`)) {
+                await deleteUserFromDB(id);
+                users = await loadUsersFromDB();
+                renderUsersTable();
+                showToast('Đã xóa tài khoản!');
+            }
+        }
 
-                if (currentFilteredData.length > 0)
-                    selectCase(currentFilteredData[0].id);
-                else
-                    (document.getElementById("detailView").innerHTML = `<div class="text-center py-20 text-slate-400 text-sm">Không có dữ liệu chi tiết</div>`);
+        function renderUsersTable() {
+            const tbody = document.getElementById('userTableBody');
+            if(!tbody) return;
 
-                showToast("Đã xóa kịch bản!");
+            tbody.innerHTML = users.map(u => `
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="p-3.5 font-bold text-orange-600">${u.user}</td>
+                    <td class="p-3.5 font-medium">${u.name}</td>
+                    <td class="p-3.5 font-mono text-slate-500">${u.pass}</td>
+                    <td class="p-3.5">
+                        <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${u.role === 'Quản trị viên' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}">
+                            ${u.role}
+                        </span>
+                    </td>
+                    <td class="p-3.5 text-right space-x-2">
+                        <button onclick="openUserModal('${u.id}')" class="text-orange-600 hover:text-orange-800 font-medium text-xs"><i class="fa-solid fa-pen-to-square"></i> Sửa</button>
+                        ${u.user !== 'admin' ? `<button onclick="deleteUser('${u.id}')" class="text-rose-600 hover:text-rose-800 font-medium text-xs"><i class="fa-solid fa-trash"></i> Xóa</button>` : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 4. QUẢN LÝ KHO PHÒNG & XỬ LÝ HÌNH ẢNH
+        function setupPasteAndDragEvents() {
+            const dropZone = document.getElementById('dropZone');
+            if(!dropZone) return;
+
+            dropZone.addEventListener('click', () => {
+                document.getElementById('fileInput').click();
+            });
+
+            window.addEventListener('paste', (e) => {
+                if (document.getElementById('roomModal').classList.contains('hidden')) return;
+
+                const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+                for (let item of items) {
+                    if (item.type.indexOf('image') !== -1) {
+                        const file = item.getAsFile();
+                        processAndCompressImage(file);
+                    }
+                }
+            });
+
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('border-orange-500', 'bg-orange-100');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('border-orange-500', 'bg-orange-100');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('border-orange-500', 'bg-orange-100');
+                const files = e.dataTransfer.files;
+                for (let file of files) {
+                    if (file.type.startsWith('image/')) {
+                        processAndCompressImage(file);
+                    }
+                }
+            });
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            for (let file of files) {
+                processAndCompressImage(file);
+            }
+        }
+
+        function processAndCompressImage(file) {
+            const statusElem = document.getElementById('compressingStatus');
+            statusElem.classList.remove('hidden');
+            statusElem.classList.add('flex');
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    const MAX_SIZE = 1200;
+                    if (width > height) {
+                        if (width > MAX_SIZE) {
+                            height *= MAX_SIZE / width;
+                            width = MAX_SIZE;
+                        }
+                    } else {
+                        if (height > MAX_SIZE) {
+                            width *= MAX_SIZE / height;
+                            height = MAX_SIZE;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+                    currentImages.push(compressedBase64);
+                    
+                    statusElem.classList.add('hidden');
+                    statusElem.classList.remove('flex');
+                    renderImagePreviews();
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function renderImagePreviews() {
+            const container = document.getElementById('imagePreviewContainer');
+            container.innerHTML = currentImages.map((imgSrc, index) => `
+                <div class="relative group aspect-square rounded-xl overflow-hidden border border-slate-200 bg-slate-100">
+                    <img src="${imgSrc}" class="w-full h-full object-cover">
+                    <button type="button" onclick="removeImage(${index})" class="absolute top-1 right-1 bg-rose-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-80 hover:opacity-100 transition">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function removeImage(index) {
+            currentImages.splice(index, 1);
+            renderImagePreviews();
+        }
+
+        function renderDistrictOptions() {
+            const districtSelect = document.getElementById('filterDistrict');
+            const currentValue = districtSelect.value;
+            const districts = [...new Set(rooms.map(r => r.district ? r.district.trim() : ''))].filter(Boolean);
+
+            districtSelect.innerHTML = '<option value="">Tất cả Quận/Khu vực</option>';
+            districts.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d;
+                opt.textContent = d;
+                districtSelect.appendChild(opt);
+            });
+            districtSelect.value = currentValue;
+        }
+
+        function filterRooms() {
+            const keyword = document.getElementById('filterKeyword').value.toLowerCase();
+            const district = document.getElementById('filterDistrict').value;
+            const price = document.getElementById('filterPrice').value;
+            const status = document.getElementById('filterStatus').value;
+
+            const filtered = rooms.filter(room => {
+                const matchKeyword = (room.code && room.code.toLowerCase().includes(keyword)) || 
+                                     (room.address && room.address.toLowerCase().includes(keyword)) || 
+                                     (room.amenities && room.amenities.toLowerCase().includes(keyword));
+                
+                const matchDistrict = district === '' || room.district === district;
+                const matchStatus = status === '' || room.status === status;
+
+                let matchPrice = true;
+                const p = parseFloat(room.price);
+                if (price === 'under3') matchPrice = p < 3;
+                else if (price === '3to5') matchPrice = p >= 3 && p <= 5;
+                else if (price === '5to8') matchPrice = p > 5 && p <= 8;
+                else if (price === 'over8') matchPrice = p > 8;
+
+                return matchKeyword && matchDistrict && matchStatus && matchPrice;
+            });
+
+            renderRooms(filtered);
+        }
+
+        function renderRooms(data) {
+            const container = document.getElementById('roomList');
+            document.getElementById('roomCount').textContent = data.length;
+
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-slate-400">
+                        <i class="fa-regular fa-folder-open text-4xl mb-2"></i>
+                        <p>Không tìm thấy căn hộ phù hợp.</p>
+                    </div>`;
+                return;
+            }
+
+            const isAdmin = currentUser && (currentUser.role === 'Quản trị viên');
+
+            container.innerHTML = data.map(room => {
+                let statusBg = "bg-emerald-100 text-emerald-800 border-emerald-200";
+                if(room.status === 'Sắp trống') statusBg = "bg-amber-100 text-amber-800 border-amber-200";
+                if(room.status === 'Đã thuê') statusBg = "bg-rose-100 text-rose-800 border-rose-200";
+
+                const hasImages = room.images && room.images.length > 0;
+                const coverImage = hasImages ? room.images[0] : null;
+
+                return `
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col justify-between">
+                    <div>
+                        ${coverImage ? `
+                            <div class="relative h-48 bg-slate-100 overflow-hidden group cursor-pointer" onclick="viewImage('${coverImage}')">
+                                <img src="${coverImage}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                <span class="absolute bottom-2 right-2 bg-black/60 text-white text-[11px] px-2 py-0.5 rounded-full backdrop-blur-sm">
+                                    <i class="fa-regular fa-image mr-1"></i> ${room.images.length} ảnh
+                                </span>
+                            </div>
+                        ` : ''}
+
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${statusBg}">${room.status}</span>
+                                    <h3 class="text-lg font-bold text-slate-800 mt-2">${room.code}</h3>
+                                </div>
+                                <span class="text-xl font-extrabold text-orange-600">${room.price} <span class="text-xs font-normal text-slate-500">Tr/tháng</span></span>
+                            </div>
+
+                            <p class="text-xs text-slate-500 mb-3"><i class="fa-solid fa-location-dot text-rose-500 mr-1"></i> ${room.address || 'Chưa cập nhật địa chỉ'} (${room.district})</p>
+
+                            ${hasImages && room.images.length > 1 ? `
+                                <div class="flex gap-1.5 overflow-x-auto mb-3 pb-1">
+                                    ${room.images.map(img => `
+                                        <img src="${img}" onclick="viewImage('${img}')" class="w-10 h-10 object-cover rounded-lg cursor-pointer border border-slate-200 hover:opacity-80">
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+
+                            <div class="bg-slate-50 p-3 rounded-xl text-xs space-y-1 text-slate-600 mb-3">
+                                <p><strong><i class="fa-solid fa-list-check text-orange-500 mr-1"></i> Tiện ích:</strong> ${room.amenities || 'Chưa thông tin'}</p>
+                                ${room.note ? `<p class="text-amber-700"><strong><i class="fa-solid fa-note-sticky mr-1"></i> Ghi chú:</strong> ${room.note}</p>` : ''}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 px-5 py-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                        <div>
+                            ${room.mediaUrl ? `<a href="${room.mediaUrl}" target="_blank" class="text-orange-600 hover:underline font-semibold flex items-center gap-1"><i class="fa-solid fa-link"></i> Media Ảnh/Video</a>` : '<span class="text-slate-400">Không có link</span>'}
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="copyInfo('${room.id}')" title="Copy thông tin gửi khách" class="bg-orange-50 hover:bg-orange-100 text-orange-700 px-2.5 py-1.5 rounded-xl font-semibold transition flex items-center gap-1">
+                                <i class="fa-regular fa-copy"></i> Copy gửi khách
+                            </button>
+                            
+                            ${isAdmin ? `
+                                <button onclick="editRoom('${room.id}')" title="Sửa thông tin" class="text-slate-400 hover:text-orange-600 p-1 transition"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button onclick="deleteRoom('${room.id}')" title="Xóa phòng" class="text-slate-400 hover:text-rose-600 p-1 transition"><i class="fa-solid fa-trash"></i></button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        function copyInfo(id) {
+            const room = rooms.find(r => r.id === id);
+            if (!room) return;
+
+            const textToCopy = 
+`🏡 [${room.code.toUpperCase()}] - KHU VỰC ${room.district.toUpperCase()}
+💰 Giá thuê: ${room.price} Triệu/tháng
+📍 Địa chỉ: ${room.address}
+✨ Nội thất & Tiện ích: ${room.amenities}
+${room.mediaUrl ? `📸 Xem clip/ảnh chi tiết: ${room.mediaUrl}` : ''}
+
+Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast('Đã copy thông tin căn hộ gửi khách!');
+            });
+        }
+
+        function openModal(isEdit = false) {
+            if (currentUser.role !== 'Quản trị viên') {
+                showToast('Chỉ Admin mới có quyền thêm/sửa phòng!', 'error');
+                return;
+            }
+            document.getElementById('modalTitle').textContent = isEdit ? 'Chỉnh Sửa Thông Tin Phòng' : 'Thêm Căn Hộ / Phòng Trọ Mới';
+            document.getElementById('roomModal').classList.remove('hidden');
+            document.getElementById('roomModal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('roomModal').classList.add('hidden');
+            document.getElementById('roomModal').classList.remove('flex');
+            document.getElementById('roomForm').reset();
+            document.getElementById('roomId').value = '';
+            currentImages = [];
+            renderImagePreviews();
+        }
+
+        async function saveRoom(e) {
+            e.preventDefault();
+            if (currentUser.role !== 'Quản trị viên') {
+                showToast('Chỉ Admin mới có quyền lưu dữ liệu phòng!', 'error');
+                return;
+            }
+            
+            const id = document.getElementById('roomId').value;
+            const roomData = {
+                id: id || Date.now().toString(),
+                code: document.getElementById('code').value,
+                price: document.getElementById('roomPrice').value,
+                district: document.getElementById('district').value,
+                status: document.getElementById('status').value,
+                address: document.getElementById('address').value,
+                amenities: document.getElementById('roomAmenities').value,
+                mediaUrl: document.getElementById('mediaUrl').value,
+                note: document.getElementById('note').value,
+                images: [...currentImages],
+                updatedAt: new Date().toISOString()
+            };
+
+            await saveRoomToDB(roomData);
+            rooms = await loadRoomsFromDB();
+            renderDistrictOptions();
+            filterRooms();
+            closeModal();
+            showToast('Đã lưu thông tin phòng!');
+        }
+
+        function editRoom(id) {
+            if (currentUser.role !== 'Quản trị viên') {
+                showToast('Chỉ Admin mới có quyền sửa phòng!', 'error');
+                return;
+            }
+            const room = rooms.find(r => r.id === id);
+            if (!room) return;
+
+            document.getElementById('roomId').value = room.id;
+            document.getElementById('code').value = room.code;
+            document.getElementById('roomPrice').value = room.price;
+            document.getElementById('district').value = room.district;
+            document.getElementById('status').value = room.status;
+            document.getElementById('address').value = room.address || '';
+            document.getElementById('roomAmenities').value = room.amenities || '';
+            document.getElementById('mediaUrl').value = room.mediaUrl || '';
+            document.getElementById('note').value = room.note || '';
+            
+            currentImages = room.images ? [...room.images] : [];
+            renderImagePreviews();
+
+            openModal(true);
+        }
+
+        async function deleteRoom(id) {
+            if (currentUser.role !== 'Quản trị viên') {
+                showToast('Chỉ Admin mới có quyền xóa phòng!', 'error');
+                return;
+            }
+            if (confirm('Bạn có chắc muốn xóa phòng này?')) {
+                await deleteRoomFromDB(id);
+                rooms = await loadRoomsFromDB();
+                renderDistrictOptions();
+                filterRooms();
+                showToast('Đã xóa phòng!');
+            }
+        }
+
+        function resetFilters() {
+            document.getElementById('filterKeyword').value = '';
+            document.getElementById('filterDistrict').value = '';
+            document.getElementById('filterPrice').value = '';
+            document.getElementById('filterStatus').value = '';
+            filterRooms();
+        }
+
+        function viewImage(url) {
+            document.getElementById('viewerImage').src = url;
+            document.getElementById('imageViewerModal').classList.remove('hidden');
+            document.getElementById('imageViewerModal').classList.add('flex');
+        }
+
+        function closeImageViewer() {
+            document.getElementById('imageViewerModal').classList.add('hidden');
+            document.getElementById('imageViewerModal').classList.remove('flex');
+        }
+
+        async function clearAllData() {
+            if (currentUser.role !== 'Quản trị viên') {
+                showToast('Chỉ Admin mới có quyền xóa toàn bộ kho phòng!', 'error');
+                return;
+            }
+            if (confirm('Lưu ý: Xóa toàn bộ danh sách phòng trong kho!')) {
+                await clearAllFromDB();
+                rooms = await loadRoomsFromDB();
+                renderDistrictOptions();
+                filterRooms();
+                showToast('Đã dọn sạch kho dữ liệu!');
+            }
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(rooms));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `backup_kho_phong_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importData(event) {
+            if (currentUser.role !== 'Quản trị viên') {
+                showToast('Chỉ Admin mới có quyền Import dữ liệu!', 'error');
+                return;
+            }
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const importedRooms = JSON.parse(e.target.result);
+                    if (Array.isArray(importedRooms)) {
+                        for (let room of importedRooms) {
+                            if (!room.id) room.id = Date.now().toString() + Math.random().toString(36).substr(2, 4);
+                            await saveRoomToDB(room);
+                        }
+                        rooms = await loadRoomsFromDB();
+                        renderDistrictOptions();
+                        filterRooms();
+                        showToast(`Đã nhập ${importedRooms.length} phòng vào hệ thống!`);
+                    } else {
+                        alert('File JSON không hợp lệ!');
+                    }
+                } catch (err) {
+                    alert('Lỗi đọc file JSON: ' + err.message);
+                }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        }
+
+        // 5. TẠO NỘI DUNG MARKETING
+        const hooks = [
+            "🔥 [CĂN HỘ HOT GENZ] PHÒNG TRỌ BAN CÔNG SIÊU MỚI TẠI TRUNG TÂM!",
+            "💥 CHÍNH CHỦ CHO THUÊ - PHÒNG ĐẸP GIÁ CỰC TỐT CHO SALE VÀ BẠN TRẺ",
+            "🏡 CHỈ CẦN XÁCH VALI VÀO Ở - PHÒNG FULL NỘI THẤT SANG XIN CHẤT",
+            "🚀 VỊ TRÍ VÀNG BAN KÍNH 5P ĐẾN TRƯỜNG/CÔNG TY - PHÒNG MỚI KHANG TRANG",
+            "✨ CĂN HỘ MINI BAN CÔNG THOẢI MÁI - GIỜ GIẤC TỰ DO 24/7",
+            "⚡ PHÒNG MỚI KHAI TRƯƠNG - GIÁ CHỈ TỪ TIỂU HỌC, SẠCH SẼ NHƯ KHÁCH SẠN",
+            "🌿 CẦN TÌM PHÒNG GẤP? CÓ NGAY CĂN HỘ BAN CÔNG XINH XẮN!",
+            "🎯 CHỐT NHANH KẺO HẾT - CĂN HỘ DỊCH VỤ GIÁ SIÊU ƯU ĐÃI"
+        ];
+
+        const intros = [
+            "Bên em vừa trống lại 1 phòng cực thoáng mát, góc chill xinh xắn.",
+            "Các bạn trẻ đang tìm phòng sạch sẽ, an ninh thì xem ngay căn này nhé.",
+            "Phòng thiết kế tối ưu diện tích, ngăn nắp sạch sẽ, dọn vào ở ngay.",
+            "Vị trí cực kỳ thuận tiện đi lại, xung quanh đầy đủ tiện ích ăn uống.",
+            "Căn hộ an ninh 24/7, rất hợp cho sinh viên và dân văn phòng."
+        ];
+
+        const formatStyles = [
+            (d) => `${d.hook}\n\n${d.intro}\n\n📍 Vị trí: ${d.location}\n💰 Giá thuê: ${d.price}\n🏫 Gần ngay: ${d.nearBy}\n🛋️ Nội thất: ${d.furniture}\n⚡ Chi phí: ${d.services}\n🌟 Tiện ích: ${d.amenities}\n\n📞 Liên hệ/Zalo ngay: ${d.contact} (Hỗ trợ xem phòng trực tiếp)`,
+            (d) => `${d.hook}\n\nChính chủ cho thuê ${d.location}.\n👉 Giá siêu mềm: ${d.price}\n👉 Vị trí vàng: ${d.nearBy}\n\n✨ Trang bị sẵn: ${d.furniture}.\n✨ Phí dịch vụ: ${d.services}.\n✨ Điểm cộng: ${d.amenities}.\n\n📲 Nhắn Zalo/Gọi em liền: ${d.contact}`,
+            (d) => `${d.hook}\n\n• Địa chỉ: ${d.location}\n• Giá phòng: ${d.price}\n• Khu vực gần: ${d.nearBy}\n• Đồ đạc có sẵn: ${d.furniture}\n• Phí sinh hoạt: ${d.services}\n• Đặc điểm: ${d.amenities}\n\n☎️ HOTLINE XEM PHÒNG: ${d.contact}`,
+            (d) => `${d.hook}\n\n${d.intro}\n- Vị trí khu vực: ${d.location} (${d.nearBy})\n- Mức giá: ${d.price}\n- Nội thất đi kèm: ${d.furniture}\n- Bảng phí chi tiết: ${d.services}\n- Cam kết: ${d.amenities}\n\n👉 Nhanh tay liên hệ Zalo: ${d.contact} để nhận clip quay phòng thực tế!`
+        ];
+
+        const ctas = [
+            "Hỗ trợ xem phòng trực tiếp 24/7!",
+            "Nhắn Zalo em gửi ngay video quay chi tiết phòng nhé!",
+            "Số lượng có hạn, ưu tiên các bạn chốt sớm trong tuần!",
+            "Cam kết phòng thật - ảnh thật 100%!"
+        ];
+
+        function getRandomItem(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function generateRandomPost() {
+            const data = {
+                location: document.getElementById('location').value || "[Địa chỉ/Quận]",
+                price: document.getElementById('price').value || "[Mức giá]",
+                nearBy: document.getElementById('nearBy').value || "[Trường học/Chợ/Đường lớn]",
+                furniture: document.getElementById('furniture').value || "[Danh sách nội thất]",
+                services: document.getElementById('services').value || "[Giá Điện/Nước]",
+                amenities: document.getElementById('amenities').value || "[Giờ giấc/An ninh]",
+                contact: document.getElementById('contact').value || "[SĐT/Zalo]",
+                hook: getRandomItem(hooks),
+                intro: getRandomItem(intros)
+            };
+
+            const selectedStyle = getRandomItem(formatStyles);
+            const selectedCTA = getRandomItem(ctas);
+
+            const fullPost = `${selectedStyle(data)}\n💡 ${selectedCTA}`;
+            document.getElementById('outputResult').value = fullPost;
+            document.getElementById('patternBadge').innerText = `Mẫu biến thể #${Math.floor(Math.random() * 100) + 1}`;
+        }
+
+        function copyToClipboard() {
+            const textarea = document.getElementById('outputResult');
+            if (!textarea.value) return;
+
+            textarea.select();
+            document.execCommand('copy');
+
+            const toast = document.getElementById('copyToast');
+            toast.classList.remove('opacity-0');
+            setTimeout(() => toast.classList.add('opacity-0'), 2000);
+        }
+
+        // 6. CRM & KỊCH BẢN TƯ VẤN
+        const coreCategories = {
+            "XU_LY_TU_CHOI": "Xử lý từ chối khi tư vấn",
+            "DANG_XEM_PHONG": "Dẫn xem phòng & Đàm phán",
+            "SUDUNG_SUCO": "Giải quyết sự cố khi ở",
+            "GIU_CHAN_TRA_PHONG": "Giữ chân khách đòi trả phòng",
+            "CHAMSOC_DINHKY": "Chăm sóc & Giới thiệu"
+        };
+
+        const topics = [
+            { cat: "XU_LY_TU_CHOI", issue: "Khách chê giá thuê cao hơn {n}k so với phòng khác cùng khu vực", type: "Giá cả", action: "Phân tích giá trị cộng thêm: An ninh, giờ tự do, máy giặt riêng, hỗ trợ kĩ thuật 24/7.", msg: "Chào {x}, tiền nào của nấy ạ! Mức giá bên em đã bao gồm dịch vụ an ninh và hỗ trợ kỹ thuật 24/7. Nếu bạn chốt giữ phòng hôm nay em xin ưu đãi hỗ trợ giảm ngay {n2}k tiền phòng tháng đầu nhé!" },
+            { cat: "XU_LY_TU_CHOI", issue: "Khách phàn nàn phòng diện tích hơi nhỏ ({n}m2)", type: "Diện tích", action: "Hướng dẫn bố trí nội thất thông minh, nhấn mạnh không gian tối ưu cho 1-2 người ở.", msg: "Em chào {x}, phòng thiết kế chuẩn tối ưu không gian nên rất gọn gàng ạ. Khách đang ở phản hồi căn này vừa ấm cúng lại rất dễ dọn dẹp ngăn nắp ạ!" },
+            { cat: "XU_LY_TU_CHOI", issue: "Khách đòi bớt tiền cọc (Chỉ muốn cọc {n}k thay vì 1 tháng)", type: "Tiền cọc", action: "Giữ vững nguyên tắc an toàn, linh hoạt chia làm 2 đợt đóng cọc.", msg: "Dạ {x} ơi, quy định cọc 1 tháng là để đảm bảo quyền lợi cho cả 2 bên. Nhưng em hỗ trợ bạn đóng trước 50% cọc để giữ phòng, 50% còn lại đóng khi nhận phòng nhé!" },
+            { cat: "DANG_XEM_PHONG", issue: "Khách xem phòng xong im lặng, nhắn tin không phản hồi sau {n} giờ", type: "Chăm sóc sau xem", action: "Tạo độ khan hiếm khéo léo, hỏi thăm nhẹ nhàng.", msg: "Hi {x}! Căn hộ hôm qua bạn xem đang có 1 khách hẹn chiều nay qua đặt cọc. Em nhớ bạn rất thích phòng này nên nhắn hỏi ưu tiên {x} trước, bạn quyết định giữ căn này luôn không ạ?" }
+        ];
+
+        const targetAudience = ["Sinh viên", "Người đi làm", "Vợ chồng trẻ", "Tất cả"];
+        const names = ["Anh Nam", "Chị Hoa", "Bạn Tuấn", "Chị Linh", "Anh Đức", "Bạn Trang", "Anh Huy"];
+
+        function generate1000Cases() {
+            dbCases = [];
+            let id = 1;
+            for (let i = 0; i < 250; i++) {
+                topics.forEach(t => {
+                    const randomDist = Math.floor(Math.random() * 15) + 1;
+                    const randomMoneySmall = (Math.floor(Math.random() * 5) + 1) * 50;
+                    const name = names[Math.floor(Math.random() * names.length)];
+                    const tag = targetAudience[Math.floor(Math.random() * targetAudience.length)];
+
+                    let title = t.issue.replace("{n}", randomDist);
+                    let msg = t.msg.replace(/{x}/g, name).replace("{n}", randomDist).replace("{n2}", randomMoneySmall);
+
+                    dbCases.push({
+                        id: id++,
+                        category: t.cat,
+                        categoryName: coreCategories[t.cat],
+                        type: t.type,
+                        title: `[KỊCH BẢN-${id}] ${title}`,
+                        tag: tag,
+                        actionPlan: t.action,
+                        responseTemplate: msg
+                    });
+                });
             }
         }
 
         function renderCaseList(data) {
-            const container = document.getElementById("caseListContainer");
-            document.getElementById("showingCount").innerText = `Đang hiện: ${data.length}`;
-
+            const container = document.getElementById('caseListContainer');
+            document.getElementById('showingCount').innerText = `Đang hiện: ${data.length}`;
+            
             if (data.length === 0) {
                 container.innerHTML = `<div class="p-8 text-center text-slate-400 text-sm">Không tìm thấy kịch bản phù hợp</div>`;
                 return;
             }
 
             const limitData = data.slice(0, 120);
-            container.innerHTML = limitData
-                .map(
-                    (c) => `
-                <div class="p-3.5 hover:bg-slate-50 cursor-pointer transition border-l-4 border-transparent hover:border-orange-500 space-y-1 relative">
-                    <div onclick="selectCase(${c.id})">
-                        <div class="flex justify-between items-start gap-2">
-                            <span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-lg">${c.type}</span>
-                            <span class="text-[11px] text-slate-400 font-medium">${c.tag}</span>
-                        </div>
-                        <h4 class="text-xs font-semibold text-slate-800 line-clamp-2 leading-relaxed">${c.title}</h4>
-                        <p class="text-[11px] text-slate-500 truncate"><i class="fa-regular fa-comment-dots mr-1"></i>${c.responseTemplate}</p>
+            container.innerHTML = limitData.map(c => `
+                <div onclick="selectCase(${c.id})" class="p-3.5 hover:bg-slate-50 cursor-pointer transition border-l-4 border-transparent hover:border-orange-500 space-y-1">
+                    <div class="flex justify-between items-start gap-2">
+                        <span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-lg">${c.type}</span>
+                        <span class="text-[11px] text-slate-400 font-medium">${c.tag}</span>
                     </div>
-                    ${
-                        currentUser.role === "Quản trị viên"
-                            ? `<button onclick="deleteCase(${c.id})" class="absolute top-2 right-2 text-rose-600 hover:text-rose-800 transition" title="Xóa kịch bản"><i class="fa-solid fa-trash"></i></button>`
-                            : ""
-                    }
-                </div>`
-                )
-                .join("");
+                    <h4 class="text-xs font-semibold text-slate-800 line-clamp-2 leading-relaxed">${c.title}</h4>
+                    <p class="text-[11px] text-slate-500 truncate"><i class="fa-regular fa-comment-dots mr-1"></i>${c.responseTemplate}</p>
+                </div>
+            `).join('');
         }
 
-        // Mở rộng showApp để hiển thị nút thêm kịch bản CRM
-        function showApp() {
-            document.getElementById("authScreen").classList.add("hidden");
-            document.getElementById("mainApp").classList.remove("hidden");
-            document.getElementById("currentUserDisplay").innerText = currentUser.name;
-            document.getElementById("currentUserRole").innerText = currentUser.role;
+        function selectCase(id) {
+            const item = dbCases.find(c => c.id === id);
+            if (!item) return;
 
-            const isAdmin = currentUser.role === "Quản trị viên";
+            const detailView = document.getElementById('detailView');
+            detailView.innerHTML = `
+                <div class="space-y-4">
+                    <div>
+                        <span class="text-xs font-bold text-orange-600 bg-orange-100 px-2.5 py-1 rounded-full">${item.categoryName}</span>
+                        <h2 class="text-base font-bold text-slate-800 mt-2 leading-snug">${item.title}</h2>
+                        <div class="flex items-center gap-2 mt-2 text-xs text-slate-500">
+                            <span><i class="fa-solid fa-tag text-slate-400"></i> Dạng vấn đề: <strong>${item.type}</strong></span> | 
+                            <span><i class="fa-solid fa-user-group text-slate-400"></i> Đối tượng: <strong>${item.tag}</strong></span>
+                        </div>
+                    </div>
 
-            const navUsersBtn = document.getElementById("nav-users");
-            const adminAddRoomBtn = document.getElementById("adminAddRoomBtn");
-            const adminDataControls = document.getElementById("adminDataControls");
-            const roleBadgeHeader = document.getElementById("roleBadgeHeader");
-            const btnAddCase = document.getElementById("btnAddCase");
+                    <div class="bg-amber-50/80 border border-amber-200 p-3.5 rounded-2xl space-y-1">
+                        <h4 class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
+                            <i class="fa-solid fa-lightbulb text-amber-600"></i> Hướng Xử Lý Tư Vấn:
+                        </h4>
+                        <p class="text-xs text-amber-900 leading-relaxed">${item.actionPlan}</p>
+                    </div>
 
-            if (isAdmin) {
-                navUsersBtn.classList.remove("hidden");
-                adminAddRoomBtn.classList.remove("hidden");
-                adminDataControls.classList.remove("hidden");
-                btnAddCase.classList.remove("hidden");
-                roleBadgeHeader.innerText = "ADMIN";
-                roleBadgeHeader.className =
-                    "text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30";
-                renderUsersTable();
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label class="text-xs font-bold text-slate-700 flex items-center gap-1">
+                                <i class="fa-solid fa-paper-plane text-orange-500"></i> Mẫu Tin Nhắn Phản Hồi (Zalo/Messenger):
+                            </label>
+                            <button onclick="copyResponseText()" class="text-xs text-orange-600 font-semibold hover:text-orange-800 flex items-center gap-1 bg-orange-50 px-2 py-1 rounded-lg transition">
+                                <i class="fa-regular fa-copy"></i> Sao chép
+                            </button>
+                        </div>
+                        <textarea id="responseBox" rows="6" readonly class="w-full p-3 text-xs border border-slate-200 rounded-2xl bg-slate-50 leading-relaxed text-slate-800 font-mono resize-none">${item.responseTemplate}</textarea>
+                    </div>
+
+                    <div class="pt-2">
+                        <button onclick="copyResponseText()" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3 rounded-2xl text-xs shadow-md transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-share-from-square"></i> SAO CHÉP MẪU PHẢN HỒI NÀY
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function filterCases() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const cat = document.getElementById('categoryFilter').value;
+            const tag = document.getElementById('tagFilter').value;
+
+            currentFilteredData = dbCases.filter(item => {
+                const matchSearch = item.title.toLowerCase().includes(search) || 
+                                    item.responseTemplate.toLowerCase().includes(search) ||
+                                    item.actionPlan.toLowerCase().includes(search);
+                const matchCat = (cat === "ALL") || (item.category === cat);
+                const matchTag = (tag === "ALL") || (item.tag === tag || item.tag === "Tất cả");
+
+                return matchSearch && matchCat && matchTag;
+            });
+
+            renderCaseList(currentFilteredData);
+            if (currentFilteredData.length > 0) {
+                selectCase(currentFilteredData[0].id);
             } else {
-                navUsersBtn.classList.add("hidden");
-                adminAddRoomBtn.classList.add("hidden");
-                adminDataControls.classList.add("hidden");
-                btnAddCase.classList.add("hidden");
-                roleBadgeHeader.innerText = "SALE";
-                roleBadgeHeader.className =
-                    "text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30";
-
-                if (!document.getElementById("tab-users").classList.contains("hidden")) {
-                    switchTab("tab-inventory");
-                }
+                document.getElementById('detailView').innerHTML = `<div class="text-center py-20 text-slate-400 text-sm">Không có dữ liệu chi tiết</div>`;
             }
-            filterRooms();
         }
 
-        // Các hàm còn lại giữ nguyên từ code gốc của bạn
+        function copyResponseText() {
+            const box = document.getElementById('responseBox');
+            if (!box) return;
+            box.select();
+            document.execCommand('copy');
+            showToast('Đã sao chép kịch bản!');
+        }
 
-        // KHỞI ĐỘNG ỨNG DỤNG
-        document.addEventListener("DOMContentLoaded", async () => {
-            await initDB();
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
 
-            users = await loadUsersFromDB();
-
-            dbCases = await loadCasesFromDB();
-            if (dbCases.length === 0) {
-                generate1000Cases(); // giữ để tạo mẫu ban đầu nếu muốn
-                for (const c of dbCases) {
-                    await saveCaseToDB(c);
-                }
-                dbCases = await loadCasesFromDB();
+            toastMsg.innerText = message;
+            if (type === 'error') {
+                toastIcon.className = 'fa-solid fa-circle-xmark text-rose-400 text-base';
+            } else {
+                toastIcon.className = 'fa-solid fa-circle-check text-emerald-400 text-base';
             }
 
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2500);
+        }
+
+        // 7. KHỞI CHẠY ỨNG DỤNG
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initDB();
+            users = await loadUsersFromDB();
+            
             checkAuth();
 
             rooms = await loadRoomsFromDB();
@@ -1326,12 +1584,12 @@
 
             generateRandomPost();
 
-            document.getElementById("totalCasesCount").innerText = dbCases.length.toLocaleString();
+            generate1000Cases();
+            document.getElementById('totalCasesCount').innerText = dbCases.length.toLocaleString();
             currentFilteredData = [...dbCases];
             renderCaseList(dbCases);
-            if (dbCases.length > 0) selectCase(dbCases[0].id);
+            selectCase(1);
         });
-
     </script>
 </body>
 </html>
