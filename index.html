@@ -36,13 +36,11 @@
 
     <!-- 0. MÀN HÌNH ĐĂNG NHẬP -->
     <div id="authScreen" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4 overflow-hidden">
-        <!-- Background Ambient Glows -->
         <div class="absolute -top-24 -left-24 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl pointer-events-none animate-pulse"></div>
         <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl pointer-events-none animate-pulse" style="animation-delay: 1s;"></div>
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div class="bg-slate-900/80 backdrop-blur-xl w-full max-w-md rounded-3xl shadow-2xl border border-slate-800/80 p-8 fade-in relative z-10 overflow-hidden">
-            <!-- Header Logo & Tagline -->
             <div class="text-center mb-8 relative">
                 <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-orange-500 to-amber-400 text-white rounded-2xl shadow-lg shadow-orange-500/30 mb-4 transform hover:scale-105 transition duration-300">
                     <i class="fa-solid fa-house-fire text-3xl"></i>
@@ -51,7 +49,6 @@
                 <p class="text-xs text-slate-400 mt-1.5 font-medium">Hệ Thống Chốt Đơn Chuyên Nghiệp • Nguyên Bảo Manager</p>
             </div>
 
-            <!-- FORM ĐĂNG NHẬP (KHÔNG CÒN ĐĂNG KÝ NGOÀI) -->
             <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-2">Tên tài khoản</label>
@@ -125,7 +122,6 @@
                         <button onclick="switchTab('tab-crm')" id="nav-crm" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-700/50">
                             <i class="fa-solid fa-comments"></i> Kịch Bản CRM
                         </button>
-                        <!-- TAB DÀNH RIÊNG CHO ADMIN -->
                         <button onclick="switchTab('tab-users')" id="nav-users" class="tab-btn hidden px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-amber-300 hover:text-white hover:bg-slate-700/50">
                             <i class="fa-solid fa-users-gear"></i> Quản Lý Tài Khoản
                         </button>
@@ -148,7 +144,7 @@
         </header>
 
         <main class="max-w-7xl mx-auto px-4 py-6">
-            <!-- TAB 1: QUẢN LÝ KHO PHÒNG -->
+            <!-- TAB 1: KHO PHÒNG -->
             <div id="tab-inventory" class="tab-content space-y-6">
                 <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex-wrap gap-3">
                     <div>
@@ -158,7 +154,6 @@
                         <p class="text-xs text-slate-500">Xem nhanh phòng trống, hình ảnh và sao chép thông tin gửi khách</p>
                     </div>
                     
-                    <!-- Nút Thêm phòng chỉ hiển thị cho Admin -->
                     <button id="adminAddRoomBtn" onclick="openModal()" class="hidden bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold px-4 py-2 rounded-xl transition shadow flex items-center gap-2 text-sm">
                         <i class="fa-solid fa-plus"></i> Thêm Phòng Mới (Admin)
                     </button>
@@ -205,7 +200,6 @@
                     <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
                         <p class="text-sm text-slate-600">Hiển thị <span id="roomCount" class="font-bold text-orange-600">0</span> phòng phù hợp</p>
                         
-                        <!-- Tính năng quản trị dữ liệu chỉ lộ ra cho ADMIN -->
                         <div id="adminDataControls" class="hidden flex gap-2 flex-wrap">
                             <button onclick="clearAllData()" class="text-xs bg-rose-100 hover:bg-rose-200 text-rose-700 px-3 py-1.5 rounded-lg font-medium">
                                 <i class="fa-solid fa-broom"></i> Xóa dữ liệu
@@ -392,16 +386,14 @@
                                 <th class="p-3.5 text-right">Thao Tác Admin</th>
                             </tr>
                         </thead>
-                        <tbody id="userTableBody" class="divide-y divide-slate-100 text-sm">
-                            <!-- Danh sách tài khoản -->
-                        </tbody>
+                        <tbody id="userTableBody" class="divide-y divide-slate-100 text-sm"></tbody>
                     </table>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- MODAL THÊM / SỬA PHÒNG (CHỈ ADMIN THỰC HIỆN) -->
+    <!-- MODAL THÊM / SỬA PHÒNG -->
     <div id="roomModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
         <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto border border-slate-100">
             <div class="p-5 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10">
@@ -482,7 +474,7 @@
         </div>
     </div>
 
-    <!-- MODAL THÊM / SỬA TÀI KHOẢN (CHỈ ADMIN) -->
+    <!-- MODAL THÊM / SỬA TÀI KHOẢN -->
     <div id="userModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
         <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-100">
             <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
@@ -524,7 +516,7 @@
         </div>
     </div>
 
-    <!-- Modal Xem Ảnh Kích Thước Lớn -->
+    <!-- Modal Xem Ảnh Lớn -->
     <div id="imageViewerModal" class="fixed inset-0 bg-black/85 hidden items-center justify-center z-50 p-4" onclick="closeImageViewer()">
         <div class="relative max-w-4xl max-h-[90vh] flex flex-col items-center">
             <img id="viewerImage" src="" class="max-w-full max-h-[80vh] rounded-2xl shadow-2xl object-contain">
@@ -538,8 +530,9 @@
         <span id="toastMsg">Đã thao tác thành công!</span>
     </div>
 
-    <!-- JAVASCRIPT HỢP NHẤT & KIỂM SOÁT PHÂN QUYỀN STUCT -->
+    <!-- JAVASCRIPT HỢP NHẤT KHÔNG TRÙNG LẶP -->
     <script>
+        // Cấu hình hằng số & Khởi tạo
         const SUPABASE_URL = 'https://yhkblcdvpcvjbxwfnqac.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_pK0cLrfth79Gj5OyPUDIwg_ohhag-Ld';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -548,7 +541,11 @@
 
         let users = [];
         let currentUser = null;
-        let db;
+        let db = null;
+        let rooms = [];
+        let currentImages = [];
+        let dbCases = [];
+        let currentFilteredData = [];
 
         const DEFAULT_USERS = [
             { id: '1', user: 'admin', pass: '123456', name: 'Nguyên Bảo (Admin)', role: 'Quản trị viên' },
@@ -589,6 +586,7 @@
             }
         ];
 
+        // 1. INDEXED DB DRIVER
         function initDB() {
             return new Promise((resolve, reject) => {
                 const request = indexedDB.open("RoomManagerDB", 2);
@@ -648,6 +646,56 @@
             });
         }
 
+        async function loadRoomsFromDB() {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readonly");
+                const store = tx.objectStore("rooms");
+                const request = store.getAll();
+                request.onsuccess = async () => {
+                    let result = request.result || [];
+                    if (result.length === 0) {
+                        for (let r of DEFAULT_ROOMS) {
+                            await saveRoomToDB(r);
+                        }
+                        result = DEFAULT_ROOMS;
+                    }
+                    resolve(result);
+                };
+                request.onerror = (e) => reject(e);
+            });
+        }
+
+        async function saveRoomToDB(roomData) {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+                const request = store.put(roomData);
+                request.onsuccess = () => resolve(true);
+                request.onerror = (e) => reject(e);
+            });
+        }
+
+        async function deleteRoomFromDB(id) {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+                const request = store.delete(id);
+                request.onsuccess = () => resolve(true);
+                request.onerror = (e) => reject(e);
+            });
+        }
+
+        async function clearAllFromDB() {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+                const request = store.clear();
+                request.onsuccess = () => resolve(true);
+                request.onerror = (e) => reject(e);
+            });
+        }
+
+        // 2. AUTH & PHÂN QUYỀN
         function checkAuth() {
             const savedUserData = localStorage.getItem(AUTH_KEY) || sessionStorage.getItem(AUTH_KEY);
             if (savedUserData) {
@@ -704,7 +752,6 @@
             }
         }
 
-        /* --- CẤU HÌNH PHÂN QUYỀN TRÊN GIAO DIỆN --- */
         function showApp() {
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
@@ -713,7 +760,6 @@
 
             const isAdmin = (currentUser.role === 'Quản trị viên');
             
-            // Xử lý các UI chỉ Admin mới có
             const navUsersBtn = document.getElementById('nav-users');
             const adminAddRoomBtn = document.getElementById('adminAddRoomBtn');
             const adminDataControls = document.getElementById('adminDataControls');
@@ -733,7 +779,6 @@
                 roleBadgeHeader.innerText = 'SALE';
                 roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30';
                 
-                // Nếu nhân viên lỡ đứng ở tab Quản lý tài khoản thì chuyển về Kho phòng
                 if (!document.getElementById('tab-users').classList.contains('hidden')) {
                     switchTab('tab-inventory');
                 }
@@ -749,7 +794,6 @@
         }
 
         function switchTab(tabId) {
-            // Chặn chuyển sang tab Quản lý tài khoản nếu không phải Admin
             if (tabId === 'tab-users' && currentUser.role !== 'Quản trị viên') {
                 showToast('Chỉ Quản trị viên mới có quyền truy cập trang này!', 'error');
                 return;
@@ -773,6 +817,7 @@
             }
         }
 
+        // 3. QUẢN LÝ TÀI KHOẢN
         function openUserModal(editId = null) {
             if (currentUser.role !== 'Quản trị viên') {
                 showToast('Chỉ Admin mới có quyền quản lý tài khoản!', 'error');
@@ -880,76 +925,7 @@
             `).join('');
         }
 
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toastMsg');
-            const toastIcon = document.getElementById('toastIcon');
-
-            toastMsg.innerText = message;
-            if (type === 'error') {
-                toastIcon.className = 'fa-solid fa-circle-xmark text-rose-400 text-base';
-            } else {
-                toastIcon.className = 'fa-solid fa-circle-check text-emerald-400 text-base';
-            }
-
-            toast.classList.remove('opacity-0', 'pointer-events-none');
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'pointer-events-none');
-            }, 2500);
-        }
-
-        let rooms = [];
-        let currentImages = [];
-
-        async function loadRoomsFromDB() {
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction("rooms", "readonly");
-                const store = tx.objectStore("rooms");
-                const request = store.getAll();
-                request.onsuccess = async () => {
-                    let result = request.result || [];
-                    if (result.length === 0) {
-                        for (let r of DEFAULT_ROOMS) {
-                            await saveRoomToDB(r);
-                        }
-                        result = DEFAULT_ROOMS;
-                    }
-                    resolve(result);
-                };
-                request.onerror = (e) => reject(e);
-            });
-        }
-
-        async function saveRoomToDB(roomData) {
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction("rooms", "readwrite");
-                const store = tx.objectStore("rooms");
-                const request = store.put(roomData);
-                request.onsuccess = () => resolve(true);
-                request.onerror = (e) => reject(e);
-            });
-        }
-
-        async function deleteRoomFromDB(id) {
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction("rooms", "readwrite");
-                const store = tx.objectStore("rooms");
-                const request = store.delete(id);
-                request.onsuccess = () => resolve(true);
-                request.onerror = (e) => reject(e);
-            });
-        }
-
-        async function clearAllFromDB() {
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction("rooms", "readwrite");
-                const store = tx.objectStore("rooms");
-                const request = store.clear();
-                request.onsuccess = () => resolve(true);
-                request.onerror = (e) => reject(e);
-            });
-        }
-
+        // 4. QUẢN LÝ KHO PHÒNG & XỬ LÝ HÌNH ẢNH
         function setupPasteAndDragEvents() {
             const dropZone = document.getElementById('dropZone');
             if(!dropZone) return;
@@ -1171,7 +1147,6 @@
                                 <i class="fa-regular fa-copy"></i> Copy gửi khách
                             </button>
                             
-                            <!-- Nút Sửa / Xóa chỉ cho Admin -->
                             ${isAdmin ? `
                                 <button onclick="editRoom('${room.id}')" title="Sửa thông tin" class="text-slate-400 hover:text-orange-600 p-1 transition"><i class="fa-solid fa-pen-to-square"></i></button>
                                 <button onclick="deleteRoom('${room.id}')" title="Xóa phòng" class="text-slate-400 hover:text-rose-600 p-1 transition"><i class="fa-solid fa-trash"></i></button>
@@ -1363,6 +1338,7 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
             reader.readAsText(file);
         }
 
+        // 5. TẠO NỘI DUNG MARKETING
         const hooks = [
             "🔥 [CĂN HỘ HOT GENZ] PHÒNG TRỌ BAN CÔNG SIÊU MỚI TẠI TRUNG TÂM!",
             "💥 CHÍNH CHỦ CHO THUÊ - PHÒNG ĐẸP GIÁ CỰC TỐT CHO SALE VÀ BẠN TRẺ",
@@ -1433,6 +1409,7 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
             setTimeout(() => toast.classList.add('opacity-0'), 2000);
         }
 
+        // 6. CRM & KỊCH BẢN TƯ VẤN
         const coreCategories = {
             "XU_LY_TU_CHOI": "Xử lý từ chối khi tư vấn",
             "DANG_XEM_PHONG": "Dẫn xem phòng & Đàm phán",
@@ -1451,9 +1428,8 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
         const targetAudience = ["Sinh viên", "Người đi làm", "Vợ chồng trẻ", "Tất cả"];
         const names = ["Anh Nam", "Chị Hoa", "Bạn Tuấn", "Chị Linh", "Anh Đức", "Bạn Trang", "Anh Huy"];
 
-        let dbCases = [];
-
         function generate1000Cases() {
+            dbCases = [];
             let id = 1;
             for (let i = 0; i < 250; i++) {
                 topics.forEach(t => {
@@ -1478,8 +1454,6 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
                 });
             }
         }
-
-        let currentFilteredData = [];
 
         function renderCaseList(data) {
             const container = document.getElementById('caseListContainer');
@@ -1578,6 +1552,25 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
             showToast('Đã sao chép kịch bản!');
         }
 
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMsg.innerText = message;
+            if (type === 'error') {
+                toastIcon.className = 'fa-solid fa-circle-xmark text-rose-400 text-base';
+            } else {
+                toastIcon.className = 'fa-solid fa-circle-check text-emerald-400 text-base';
+            }
+
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2500);
+        }
+
+        // 7. KHỞI CHẠY ỨNG DỤNG
         document.addEventListener('DOMContentLoaded', async () => {
             await initDB();
             users = await loadUsersFromDB();
