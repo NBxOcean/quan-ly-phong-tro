@@ -470,7 +470,7 @@
                     </div>
 
                     <div id="compressingStatus" class="hidden text-xs text-indigo-600 font-semibold mt-2 items-center gap-1">
-                        <i class="fa-solid fa-spinner fa-spin"></i> Đang tối ưu hình ảnh...
+                        <i class="fa-solid fa-spinner fa-spin"></i> Đang tải ảnh lên Supabase Storage...
                     </div>
 
                     <div id="imagePreviewContainer" class="grid grid-cols-4 gap-2 mt-3"></div>
@@ -935,7 +935,7 @@
                 for (let item of items) {
                     if (item.type.indexOf('image') !== -1) {
                         const file = item.getAsFile();
-                        processAndCompressImage(file);
+                        processAndUploadImage(file);
                     }
                 }
             });
@@ -955,7 +955,7 @@
                 const files = e.dataTransfer.files;
                 for (let file of files) {
                     if (file.type.startsWith('image/')) {
-                        processAndCompressImage(file);
+                        processAndUploadImage(file);
                     }
                 }
             });
@@ -964,11 +964,26 @@
         function handleFileSelect(e) {
             const files = e.target.files;
             for (let file of files) {
-                processAndCompressImage(file);
+                processAndUploadImage(file);
             }
         }
 
-        function processAndCompressImage(file) {
+        async function uploadFileToSupabase(file) {
+            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.jpg`;
+            const { data, error } = await supabaseClient.storage
+                .from('room-images')
+                .upload(fileName, file, { contentType: 'image/jpeg' });
+
+            if (error) throw error;
+
+            const { data: publicUrlData } = supabaseClient.storage
+                .from('room-images')
+                .getPublicUrl(fileName);
+
+            return publicUrlData.publicUrl;
+        }
+
+        function processAndUploadImage(file) {
             const statusElem = document.getElementById('compressingStatus');
             statusElem.classList.remove('hidden');
             statusElem.classList.add('flex');
@@ -1001,12 +1016,19 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
-                    currentImages.push(compressedBase64);
-                    
-                    statusElem.classList.add('hidden');
-                    statusElem.classList.remove('flex');
-                    renderImagePreviews();
+                    canvas.toBlob(async (blob) => {
+                        try {
+                            const publicUrl = await uploadFileToSupabase(blob);
+                            currentImages.push(publicUrl);
+                            renderImagePreviews();
+                        } catch (err) {
+                            console.error('Upload Error:', err);
+                            showToast('Lỗi tải ảnh lên Supabase: ' + err.message, 'error');
+                        } finally {
+                            statusElem.classList.add('hidden');
+                            statusElem.classList.remove('flex');
+                        }
+                    }, 'image/jpeg', 0.8);
                 }
             };
             reader.readAsDataURL(file);
