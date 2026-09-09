@@ -34,7 +34,7 @@
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 min-h-screen pb-12 antialiased">
 
-    <!-- 0. MÀN HÌNH ĐĂNG NHẬP & ĐĂNG KÝ (STYLE GEN Z + REAL ESTATE SALE) -->
+    <!-- 0. MÀN HÌNH ĐĂNG NHẬP -->
     <div id="authScreen" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4 overflow-hidden">
         <!-- Background Ambient Glows -->
         <div class="absolute -top-24 -left-24 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl pointer-events-none animate-pulse"></div>
@@ -51,7 +51,7 @@
                 <p class="text-xs text-slate-400 mt-1.5 font-medium">Hệ Thống Chốt Đơn Chuyên Nghiệp • Nguyên Bảo Manager</p>
             </div>
 
-            <!-- FORM ĐĂNG NHẬP -->
+            <!-- FORM ĐĂNG NHẬP (KHÔNG CÒN ĐĂNG KÝ NGOÀI) -->
             <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-2">Tên tài khoản</label>
@@ -79,49 +79,15 @@
                         <input type="checkbox" id="rememberMe" class="rounded border-slate-700 bg-slate-800 text-orange-500 focus:ring-orange-500/30 mr-2">
                         Ghi nhớ đăng nhập
                     </label>
-                    <a href="#" onclick="alert('Vui lòng liên hệ Admin Nguyên Bảo để khôi phục mật khẩu!'); return false;" class="text-orange-400 font-semibold hover:text-orange-300 transition">Quên mật khẩu?</a>
+                    <a href="#" onclick="alert('Vui lòng liên hệ Admin Nguyên Bảo để cấp lại mật khẩu!'); return false;" class="text-orange-400 font-semibold hover:text-orange-300 transition">Quên mật khẩu?</a>
                 </div>
 
                 <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3.5 rounded-2xl text-sm shadow-lg glow-orange transition duration-200 flex items-center justify-center gap-2 mt-2">
                     <i class="fa-solid fa-bolt text-amber-200"></i> ĐĂNG NHẬP NGAY
                 </button>
 
-                <div class="text-center pt-3">
-                    <p class="text-xs text-slate-400">Bạn là Sale mới? <a href="#" onclick="toggleAuthMode('register'); return false;" class="text-amber-400 font-bold hover:underline">Tạo tài khoản ngay ✨</a></p>
-                </div>
-            </form>
-
-            <!-- FORM ĐĂNG KÝ -->
-            <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-3.5 hidden">
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">Tên tài khoản (Viết liền) *</label>
-                    <input type="text" id="regUsername" required placeholder="VD: sales_nam" 
-                        class="w-full px-4 py-2.5 bg-slate-800/60 border border-slate-700/80 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 transition">
-                </div>
-
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">Họ và Tên Sale *</label>
-                    <input type="text" id="regFullName" required placeholder="VD: Nguyễn Văn Nam" 
-                        class="w-full px-4 py-2.5 bg-slate-800/60 border border-slate-700/80 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 transition">
-                </div>
-
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">Mật khẩu *</label>
-                    <input type="password" id="regPassword" required placeholder="Tạo mật khẩu..." 
-                        class="w-full px-4 py-2.5 bg-slate-800/60 border border-slate-700/80 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 transition">
-                </div>
-
-                <div class="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-[11px] text-amber-300 flex items-start gap-2">
-                    <i class="fa-solid fa-shield-cat text-amber-400 text-sm mt-0.5"></i>
-                    <span>Tài khoản mới tạo sẽ mặc định ở quyền <strong>Nhân viên Sale</strong>. Bạn có thể xem kho phòng và lấy mẫu kịch bản chốt khách.</span>
-                </div>
-
-                <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-2xl text-sm shadow-lg shadow-emerald-500/20 transition duration-200 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-user-plus"></i> ĐĂNG KÝ TÀI KHOẢN
-                </button>
-
-                <div class="text-center pt-2">
-                    <p class="text-xs text-slate-400">Đã có tài khoản? <a href="#" onclick="toggleAuthMode('login'); return false;" class="text-orange-400 font-bold hover:underline">Quay lại đăng nhập</a></p>
+                <div class="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-[11px] text-amber-300 text-center mt-3">
+                    <span>Tài khoản nhân viên mới do <strong>Admin</strong> cấp trực tiếp.</span>
                 </div>
             </form>
 
@@ -545,7 +511,7 @@
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Chức Vụ / Phân Quyền *</label>
                     <select id="accRole" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
-                        <option value="Nhân viên Sale">Nhân viên Sale (Chỉ xem/copy)</option>
+                        <option value="Nhân viên Sale" selected>Nhân viên Sale (Mặc định - Chỉ xem/copy)</option>
                         <option value="Quản trị viên">Quản trị viên (Admin - Full Quyền)</option>
                     </select>
                 </div>
@@ -692,18 +658,6 @@
             }
         }
 
-        function toggleAuthMode(mode) {
-            if (mode === 'register') {
-                document.getElementById('loginForm').classList.add('hidden');
-                document.getElementById('registerForm').classList.remove('hidden');
-                document.getElementById('authTitle').innerHTML = 'Đăng Ký Tài Khoản <span class="text-orange-400">Sale</span>';
-            } else {
-                document.getElementById('registerForm').classList.add('hidden');
-                document.getElementById('loginForm').classList.remove('hidden');
-                document.getElementById('authTitle').innerHTML = 'Căn Hộ & Phòng Trọ <span class="bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">Genz Sale</span>';
-            }
-        }
-
         function togglePasswordVisibility(inputId, iconId) {
             const pwdInput = document.getElementById(inputId);
             const eyeIcon = document.getElementById(iconId);
@@ -740,35 +694,6 @@
             }
         }
 
-        async function handleRegister(e) {
-            e.preventDefault();
-            const userVal = document.getElementById('regUsername').value.trim().toLowerCase();
-            const nameVal = document.getElementById('regFullName').value.trim();
-            const passVal = document.getElementById('regPassword').value.trim();
-
-            if (users.some(u => u.user.toLowerCase() === userVal)) {
-                showToast('Tên tài khoản này đã được tạo!', 'error');
-                return;
-            }
-
-            const newUser = {
-                id: Date.now().toString(),
-                user: userVal,
-                pass: passVal,
-                name: nameVal,
-                role: 'Nhân viên Sale'
-            };
-
-            await saveUserToDB(newUser);
-            users = await loadUsersFromDB();
-
-            showToast('Đăng ký tài khoản Sale thành công! Đăng nhập ngay.');
-            toggleAuthMode('login');
-            document.getElementById('loginUsername').value = userVal;
-            document.getElementById('loginPassword').value = passVal;
-            document.getElementById('registerForm').reset();
-        }
-
         function handleLogout() {
             if (confirm('Bạn muốn đăng xuất khỏi hệ thống?')) {
                 localStorage.removeItem(AUTH_KEY);
@@ -800,26 +725,36 @@
                 adminDataControls.classList.remove('hidden');
                 roleBadgeHeader.innerText = 'ADMIN';
                 roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30';
+                renderUsersTable();
             } else {
                 navUsersBtn.classList.add('hidden');
                 adminAddRoomBtn.classList.add('hidden');
                 adminDataControls.classList.add('hidden');
                 roleBadgeHeader.innerText = 'SALE';
                 roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30';
+                
+                // Nếu nhân viên lỡ đứng ở tab Quản lý tài khoản thì chuyển về Kho phòng
+                if (!document.getElementById('tab-users').classList.contains('hidden')) {
+                    switchTab('tab-inventory');
+                }
             }
 
-            renderUsersTable();
             filterRooms();
         }
 
         function showLogin() {
             document.getElementById('mainApp').classList.add('hidden');
             document.getElementById('authScreen').classList.remove('hidden');
-            toggleAuthMode('login');
             document.getElementById('loginForm').reset();
         }
 
         function switchTab(tabId) {
+            // Chặn chuyển sang tab Quản lý tài khoản nếu không phải Admin
+            if (tabId === 'tab-users' && currentUser.role !== 'Quản trị viên') {
+                showToast('Chỉ Quản trị viên mới có quyền truy cập trang này!', 'error');
+                return;
+            }
+
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             
             document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -859,6 +794,7 @@
             } else {
                 document.getElementById('userForm').reset();
                 document.getElementById('editUserId').value = '';
+                document.getElementById('accRole').value = 'Nhân viên Sale';
             }
         }
 
