@@ -125,6 +125,9 @@
                         <button onclick="switchTab('tab-appointments')" id="nav-appointments" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-cyan-200 bg-cyan-500/10 border border-cyan-400/20 hover:text-white hover:bg-cyan-500/20">
                             <i class="fa-solid fa-calendar-check"></i> Lịch Xem Phòng
                         </button>
+                        <button onclick="switchTab('tab-teams')" id="nav-teams" class="tab-btn hidden px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-violet-300 hover:text-white hover:bg-slate-700/50">
+                            <i class="fa-solid fa-people-group"></i> Quản Lý Team
+                        </button>
                         <button onclick="switchTab('tab-users')" id="nav-users" class="tab-btn hidden px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-amber-300 hover:text-white hover:bg-slate-700/50">
                             <i class="fa-solid fa-users-gear"></i> Quản Lý Tài Khoản
                         </button>
@@ -136,7 +139,7 @@
                         </div>
                         <div class="hidden sm:block text-left pr-1">
                             <p id="currentUserDisplay" class="text-xs font-bold leading-tight text-white">Admin</p>
-                            <p id="currentUserRole" class="text-[10px] text-amber-400 font-medium leading-tight">Quản trị viên</p>
+                            <p id="currentUserRole" class="text-[10px] text-amber-400 font-medium leading-tight">Admin</p>
                         </div>
                         <button onclick="handleLogout()" title="Đăng xuất" class="text-slate-400 hover:text-rose-400 p-1 transition ml-1">
                             <i class="fa-solid fa-power-off text-sm"></i>
@@ -145,6 +148,25 @@
                 </div>
             </div>
         </header>
+
+        <div id="teamContextBar" class="max-w-7xl mx-auto px-4 pt-4 hidden">
+            <div class="bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <span class="w-9 h-9 rounded-xl bg-violet-100 text-violet-700 flex items-center justify-center">
+                        <i class="fa-solid fa-people-group"></i>
+                    </span>
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Không gian làm việc</p>
+                        <p id="currentTeamLabel" class="text-sm font-extrabold text-slate-800">Đang tải team...</p>
+                    </div>
+                </div>
+                <div id="superTeamSelectorWrap" class="hidden min-w-[240px]">
+                    <select id="superTeamSelector" onchange="changeActiveTeam(this.value)" class="w-full border rounded-xl px-3 py-2 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-violet-500">
+                        <option value="">Tất cả team</option>
+                    </select>
+                </div>
+            </div>
+        </div>
 
         <div id="appointmentQuickAccess" class="max-w-7xl mx-auto px-4 pt-4">
             <button onclick="switchTab('tab-appointments')" class="w-full md:w-auto bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white rounded-2xl px-4 py-3 shadow-md flex items-center justify-between md:justify-start gap-3 transition">
@@ -469,6 +491,39 @@
                 </div>
             </div>
 
+
+            <!-- TAB V7: QUẢN LÝ TEAM -->
+            <div id="tab-teams" class="tab-content hidden space-y-5">
+                <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex-wrap gap-3">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-people-group text-violet-600"></i> Quản Lý Team
+                        </h2>
+                        <p class="text-xs text-slate-500 mt-1">Admin cao cấp tạo team, phân Admin Team và quản lý tài nguyên theo từng nhóm.</p>
+                    </div>
+                    <button onclick="openTeamModal()" class="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-semibold px-4 py-2 rounded-xl transition shadow flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-plus"></i> Tạo Team
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="bg-white rounded-2xl border border-slate-200 p-4">
+                        <p class="text-[11px] uppercase font-bold text-slate-400">Tổng team</p>
+                        <p id="teamTotalCount" class="text-2xl font-extrabold text-slate-800 mt-1">0</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-4">
+                        <p class="text-[11px] uppercase font-bold text-slate-400">Đang hoạt động</p>
+                        <p id="teamActiveCount" class="text-2xl font-extrabold text-emerald-600 mt-1">0</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-4">
+                        <p class="text-[11px] uppercase font-bold text-slate-400">Nhân sự đã phân team</p>
+                        <p id="teamMemberCount" class="text-2xl font-extrabold text-violet-600 mt-1">0</p>
+                    </div>
+                </div>
+
+                <div id="teamList" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
+            </div>
+
             <!-- TAB 4: QUẢN LÝ TÀI KHOẢN (CHỈ DÀNH CHO ADMIN) -->
             <div id="tab-users" class="tab-content hidden space-y-6">
                 <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex-wrap gap-3">
@@ -491,6 +546,7 @@
                                 <th class="p-3.5">Họ và Tên Nhân Viên</th>
                                 <th class="p-3.5">Mật Khẩu</th>
                                 <th class="p-3.5">Chức Vụ / Quyền Hạn</th>
+                                <th class="p-3.5">Team</th>
                                 <th class="p-3.5 text-right">Thao Tác Admin</th>
                             </tr>
                         </thead>
@@ -670,6 +726,43 @@
         </div>
     </div>
 
+
+    <!-- MODAL TEAM -->
+    <div id="teamModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm hidden items-center justify-center z-[70] p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full border border-slate-100 overflow-hidden">
+            <div class="p-5 border-b bg-slate-50 flex items-center justify-between">
+                <div>
+                    <h3 id="teamModalTitle" class="font-extrabold text-slate-800">Tạo Team Mới</h3>
+                    <p class="text-[11px] text-slate-500 mt-1">Mỗi team có kho tài nguyên và nhân sự riêng.</p>
+                </div>
+                <button onclick="closeTeamModal()" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <form id="teamForm" onsubmit="saveTeam(event)" class="p-5 space-y-4">
+                <input type="hidden" id="teamEditId">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tên Team *</label>
+                    <input id="teamName" required maxlength="100" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-violet-500" placeholder="VD: Team Bình Thạnh">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Mã Team *</label>
+                    <input id="teamCode" required maxlength="30" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-violet-500" placeholder="VD: BT01">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Mô tả</label>
+                    <textarea id="teamDescription" rows="3" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-violet-500" placeholder="Khu vực, nhiệm vụ hoặc ghi chú team..."></textarea>
+                </div>
+                <label class="flex items-center gap-2 text-sm text-slate-700">
+                    <input id="teamActive" type="checkbox" checked>
+                    Team đang hoạt động
+                </label>
+                <div class="pt-3 border-t flex justify-end gap-2">
+                    <button type="button" onclick="closeTeamModal()" class="px-4 py-2 border rounded-xl text-sm text-slate-600">Hủy</button>
+                    <button id="teamSaveBtn" type="submit" class="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-xl text-sm font-semibold shadow">Lưu Team</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL THÊM / SỬA TÀI KHOẢN -->
     <div id="userModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
         <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-100">
@@ -698,12 +791,20 @@
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Chức Vụ / Phân Quyền *</label>
-                    <select id="accRole" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
+                    <select id="accRole" onchange="syncUserTeamRequirement()" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
                         <option value="Nhân viên Sale" selected>Nhân viên Sale</option>
-                        <option value="Admin quản lý">Admin quản lý</option>
+                        <option value="Admin Team">Admin Team</option>
                         <option value="Admin cao cấp">Admin cao cấp nhất</option>
                     </select>
-                    <p class="text-[11px] text-slate-500 mt-1.5">Admin cao cấp có toàn quyền. Admin quản lý vận hành hệ thống và quản lý nhân viên. Nhân viên dùng quyền cơ bản.</p>
+                    <p class="text-[11px] text-slate-500 mt-1.5">Admin cao cấp quản lý toàn hệ thống. Admin Team chỉ quản lý nhân viên và tài nguyên thuộc team mình.</p>
+                </div>
+
+                <div id="accTeamWrap">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Team làm việc *</label>
+                    <select id="accTeamId" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-violet-500 outline-none bg-slate-50">
+                        <option value="">-- Chọn team --</option>
+                    </select>
+                    <p class="text-[11px] text-slate-500 mt-1.5">Admin cao cấp không bắt buộc thuộc team. Admin Team và Nhân viên phải được gán team.</p>
                 </div>
 
                 <div class="pt-3 border-t flex justify-end gap-2">
@@ -926,6 +1027,11 @@
         let filteredAppointments = [];
         let appointmentSaveInProgress = false;
 
+        // V7 Multi-Team
+        let teams = [];
+        let activeTeamId = '';
+        let teamSaveInProgress = false;
+
         const DEFAULT_USERS = [
             { id: '1', user: 'admin', pass: '123456', name: 'Nguyên Bảo (Admin)', role: 'Admin cao cấp' },
             { id: '2', user: 'nhanvien1', pass: '123456', name: 'Nguyễn Văn A', role: 'Nhân viên Sale' }
@@ -965,6 +1071,212 @@
             }
         ];
 
+
+        // V7.0 - TEAM
+        async function loadTeamsFromDB() {
+            if (!supabaseClient) return [];
+            try {
+                const tenantId = await getCurrentTenantId();
+                const { data, error } = await supabaseClient
+                    .from('teams')
+                    .select('id,tenant_id,name,code,description,is_active,created_at,updated_at')
+                    .eq('tenant_id', tenantId)
+                    .order('name', { ascending: true });
+                if (error) throw error;
+                return data || [];
+            } catch (err) {
+                console.error('Lỗi tải team:', err);
+                return [];
+            }
+        }
+
+        async function refreshTeams() {
+            teams = await loadTeamsFromDB();
+            renderTeamContext();
+            renderTeams();
+            populateUserTeamOptions();
+        }
+
+        function renderTeamContext() {
+            const bar = document.getElementById('teamContextBar');
+            if (!bar || !currentUser) return;
+            bar.classList.remove('hidden');
+            const label = document.getElementById('currentTeamLabel');
+            const wrap = document.getElementById('superTeamSelectorWrap');
+            const select = document.getElementById('superTeamSelector');
+
+            if (isSuperAdmin()) {
+                wrap?.classList.remove('hidden');
+                if (select) {
+                    const selected = activeTeamId;
+                    select.innerHTML = '<option value="">Tất cả team</option>' +
+                        teams.filter(t => t.is_active !== false).map(t => `<option value="${t.id}">${escapeHtml(t.name)} (${escapeHtml(t.code)})</option>`).join('');
+                    select.value = selected;
+                }
+                if (label) label.innerText = activeTeamId ? getTeamName(activeTeamId) : 'Toàn hệ thống • Tất cả team';
+            } else {
+                wrap?.classList.add('hidden');
+                if (label) label.innerText = currentUser.team_id ? getTeamName(currentUser.team_id) : 'Chưa được phân Team';
+            }
+        }
+
+        async function changeActiveTeam(teamId) {
+            if (!isSuperAdmin()) return;
+            activeTeamId = teamId || '';
+            renderTeamContext();
+            renderUsersTable();
+
+            roomPage = 1;
+            rooms = await loadRoomsPage(1);
+            renderDistrictOptions();
+            renderRooms(rooms);
+
+            dbCases = await loadCrmScriptsFromDB();
+            currentFilteredData = [...dbCases];
+            renderCaseList(dbCases);
+            if (dbCases.length) selectCase(dbCases[0].id);
+
+            await refreshAppointments();
+        }
+
+        function populateUserTeamOptions(selectedId = null) {
+            const select = document.getElementById('accTeamId');
+            if (!select) return;
+            const current = selectedId !== null ? selectedId : select.value;
+            select.innerHTML = '<option value="">-- Chọn team --</option>' +
+                teams.filter(t => t.is_active !== false).map(t => `<option value="${t.id}">${escapeHtml(t.name)} (${escapeHtml(t.code)})</option>`).join('');
+            if (current) select.value = String(current);
+        }
+
+        function syncUserTeamRequirement() {
+            const role = document.getElementById('accRole')?.value || 'Nhân viên Sale';
+            const wrap = document.getElementById('accTeamWrap');
+            const teamSelect = document.getElementById('accTeamId');
+            if (!wrap || !teamSelect) return;
+            const needsTeam = role !== 'Admin cao cấp';
+            wrap.classList.toggle('opacity-50', !needsTeam);
+            teamSelect.disabled = !needsTeam;
+            teamSelect.required = needsTeam;
+            if (!needsTeam) teamSelect.value = '';
+        }
+
+        function renderTeams() {
+            const list = document.getElementById('teamList');
+            if (!list) return;
+            const memberCount = users.filter(u => u.team_id).length;
+            document.getElementById('teamTotalCount').innerText = teams.length;
+            document.getElementById('teamActiveCount').innerText = teams.filter(t => t.is_active !== false).length;
+            document.getElementById('teamMemberCount').innerText = memberCount;
+
+            if (!teams.length) {
+                list.innerHTML = `<div class="lg:col-span-2 bg-white border border-slate-200 rounded-2xl p-10 text-center text-slate-400">
+                    <i class="fa-solid fa-people-group text-3xl mb-2"></i>
+                    <p class="text-sm">Chưa có team. Hãy tạo team đầu tiên.</p>
+                </div>`;
+                return;
+            }
+
+            list.innerHTML = teams.map(t => {
+                const members = users.filter(u => String(u.team_id || '') === String(t.id));
+                const admins = members.filter(u => u.role === 'Admin Team');
+                const sale = members.filter(u => u.role === 'Nhân viên Sale');
+                return `
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div class="p-4 border-b border-slate-100 flex justify-between gap-3">
+                            <div>
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <h3 class="font-extrabold text-slate-800">${escapeHtml(t.name)}</h3>
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${t.is_active !== false ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}">${t.is_active !== false ? 'ĐANG HOẠT ĐỘNG' : 'TẠM DỪNG'}</span>
+                                </div>
+                                <p class="text-[11px] text-violet-600 font-bold mt-1">${escapeHtml(t.code)}</p>
+                            </div>
+                            <button onclick="openTeamModal('${t.id}')" class="text-xs font-semibold text-violet-600 bg-violet-50 hover:bg-violet-100 rounded-lg px-2.5 py-1.5">
+                                <i class="fa-solid fa-pen mr-1"></i> Sửa
+                            </button>
+                        </div>
+                        <div class="p-4 space-y-3 text-xs">
+                            ${t.description ? `<p class="text-slate-600">${escapeHtml(t.description)}</p>` : ''}
+                            <div class="grid grid-cols-3 gap-2">
+                                <div class="bg-slate-50 rounded-xl p-3 text-center"><div class="text-lg font-extrabold text-slate-800">${members.length}</div><div class="text-[10px] text-slate-500">Nhân sự</div></div>
+                                <div class="bg-amber-50 rounded-xl p-3 text-center"><div class="text-lg font-extrabold text-amber-700">${admins.length}</div><div class="text-[10px] text-amber-700">Admin Team</div></div>
+                                <div class="bg-blue-50 rounded-xl p-3 text-center"><div class="text-lg font-extrabold text-blue-700">${sale.length}</div><div class="text-[10px] text-blue-700">Sale</div></div>
+                            </div>
+                            <div>
+                                <div class="text-[10px] uppercase font-bold text-slate-400 mb-1">Admin phụ trách</div>
+                                <div class="text-slate-700 font-semibold">${admins.length ? admins.map(a => escapeHtml(a.name)).join(', ') : 'Chưa phân Admin Team'}</div>
+                            </div>
+                            <button onclick="changeActiveTeam('${t.id}'); switchTab('tab-users')" class="w-full border border-violet-200 text-violet-700 hover:bg-violet-50 rounded-xl py-2 font-semibold">
+                                Xem nhân sự Team
+                            </button>
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+
+        function openTeamModal(id = null) {
+            if (!isSuperAdmin()) {
+                showToast('Chỉ Admin cao cấp mới được quản lý Team!', 'error');
+                return;
+            }
+            const item = id ? teams.find(t => String(t.id) === String(id)) : null;
+            document.getElementById('teamForm').reset();
+            document.getElementById('teamEditId').value = item?.id || '';
+            document.getElementById('teamModalTitle').innerText = item ? 'Chỉnh Sửa Team' : 'Tạo Team Mới';
+            document.getElementById('teamName').value = item?.name || '';
+            document.getElementById('teamCode').value = item?.code || '';
+            document.getElementById('teamDescription').value = item?.description || '';
+            document.getElementById('teamActive').checked = item ? item.is_active !== false : true;
+            const modal = document.getElementById('teamModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeTeamModal() {
+            const modal = document.getElementById('teamModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        async function saveTeam(e) {
+            e.preventDefault();
+            if (!isSuperAdmin() || teamSaveInProgress) return;
+            const id = document.getElementById('teamEditId').value.trim();
+            const tenantId = await getCurrentTenantId();
+            const row = {
+                tenant_id: tenantId,
+                name: document.getElementById('teamName').value.trim(),
+                code: document.getElementById('teamCode').value.trim().toUpperCase(),
+                description: document.getElementById('teamDescription').value.trim() || null,
+                is_active: document.getElementById('teamActive').checked
+            };
+            if (!row.name || !row.code) {
+                showToast('Vui lòng nhập tên và mã Team!', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('teamSaveBtn');
+            const old = btn.innerHTML;
+            teamSaveInProgress = true;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang lưu...';
+
+            try {
+                const response = id
+                    ? await supabaseClient.from('teams').update(row).eq('id', id).eq('tenant_id', tenantId).select('id').maybeSingle()
+                    : await supabaseClient.from('teams').insert([row]).select('id').single();
+                if (response.error) throw response.error;
+                closeTeamModal();
+                await refreshTeams();
+                showToast(id ? 'Đã cập nhật Team!' : 'Đã tạo Team mới!');
+            } catch (err) {
+                showToast('Không thể lưu Team: ' + (err?.message || err), 'error');
+            } finally {
+                teamSaveInProgress = false;
+                btn.disabled = false;
+                btn.innerHTML = old;
+            }
+        }
+
         // 1. ĐỒNG BỘ DỮ LIỆU TRÊN SUPABASE
         // Dữ liệu phòng và tài khoản được đồng bộ online thay cho IndexedDB.
         // Chuyển dữ liệu Supabase (username/password/full_name) về cấu trúc app (user/pass/name)
@@ -973,42 +1285,76 @@
             const rawRole = String(u.role || '').toLowerCase();
             let appRole = 'Nhân viên Sale';
             if (rawRole === 'owner' || rawRole === 'super_admin') appRole = 'Admin cao cấp';
-            else if (rawRole === 'parent' || rawRole === 'admin' || rawRole === 'manager') appRole = 'Admin quản lý';
+            else if (rawRole === 'parent' || rawRole === 'admin' || rawRole === 'manager' || rawRole === 'team_admin') appRole = 'Admin Team';
             else if (rawRole === 'child' || rawRole === 'staff' || rawRole === 'sale') appRole = 'Nhân viên Sale';
             return {
                 id: u.id,
                 user: typeof u.username === 'string' ? u.username : (u.user || ''),
                 pass: typeof u.password === 'string' ? u.password : (u.pass || ''),
                 name: typeof u.full_name === 'string' ? u.full_name : (u.name || ''),
-                role: appRole
+                role: appRole,
+                team_id: u.team_id || null
             };
         }
 
         function mapAppUserToDb(userData, includeId = false) {
             const appRole = userData.role || 'Nhân viên Sale';
-            const dbRole = appRole === 'Admin cao cấp' ? 'owner' : (appRole === 'Admin quản lý' ? 'parent' : 'child');
+            const dbRole = appRole === 'Admin cao cấp' ? 'owner' : (appRole === 'Admin Team' ? 'parent' : 'child');
             const row = {
                 username: String(userData.user || '').trim().toLowerCase(),
                 password: String(userData.pass || '').trim(),
                 full_name: String(userData.name || '').trim(),
-                role: dbRole
+                role: dbRole,
+                team_id: appRole === 'Admin cao cấp' ? null : (userData.team_id || null)
             };
-            if (includeId && userData.id !== undefined && userData.id !== null && userData.id !== '') {
-                row.id = Number(userData.id);
-            }
+            if (includeId && userData.id !== undefined && userData.id !== null && userData.id !== '') row.id = Number(userData.id);
             return row;
         }
 
         function isSuperAdmin() {
-            return currentUser && currentUser.role === 'Admin cao cấp';
+            return !!currentUser && currentUser.role === 'Admin cao cấp';
         }
 
         function isManagerAdmin() {
-            return currentUser && currentUser.role === 'Admin quản lý';
+            return !!currentUser && currentUser.role === 'Admin Team';
         }
 
         function hasAdminAccess() {
             return !!currentUser && (isSuperAdmin() || isManagerAdmin());
+        }
+
+        function getTeamName(teamId) {
+            if (!teamId) return 'Chưa phân team';
+            return teams.find(t => String(t.id) === String(teamId))?.name || 'Team không xác định';
+        }
+
+        function getEffectiveTeamId() {
+            if (!currentUser) return '';
+            return isSuperAdmin() ? (activeTeamId || '') : (currentUser.team_id || '');
+        }
+
+        function requireTeamForWrite() {
+            const teamId = getEffectiveTeamId();
+            if (!teamId) {
+                showToast('Hãy chọn một Team trước khi thêm hoặc chỉnh sửa tài nguyên!', 'error');
+                return null;
+            }
+            return teamId;
+        }
+
+        function getVisibleUsers() {
+            if (!currentUser) return [];
+            if (isSuperAdmin()) {
+                if (!activeTeamId) return users;
+                return users.filter(u => u.role === 'Admin cao cấp' || String(u.team_id || '') === String(activeTeamId));
+            }
+            if (isManagerAdmin()) {
+                return users.filter(u =>
+                    String(u.id) === String(currentUser.id) ||
+                    (u.role === 'Nhân viên Sale' && String(u.team_id || '') === String(currentUser.team_id || ''))
+                );
+            }
+            return users.filter(u => String(u.id) === String(currentUser.id));
         }
 
         // 1. ĐỒNG BỘ DỮ LIỆU TRÊN SUPABASE
@@ -1017,7 +1363,7 @@
             try {
                 const { data, error } = await supabaseClient
                     .from('users')
-                    .select('id, username, password, role, full_name, name, created_at');
+                    .select('id, username, password, role, full_name, name, team_id, created_at');
                 if (error) throw error;
 
                 const validUsers = (data || [])
@@ -1058,7 +1404,7 @@
                         .from('users')
                         .update(row)
                         .eq('id', Number(userData.id))
-                        .select('id, username, password, role, full_name')
+                        .select('id, username, password, role, full_name, team_id')
                         .maybeSingle();
 
                     if (error) throw error;
@@ -1166,6 +1512,7 @@
             return {
                 id: room.id,
                 tenant_id: room.tenant_id,
+                team_id: room.team_id || null,
                 code: room.code || '',
                 price: room.price ?? '',
                 district: room.district || '',
@@ -1186,6 +1533,7 @@
 
             const row = {
                 tenant_id: tenantId,
+                team_id: requireTeamForWrite(),
                 code: String(roomData.code || '').trim(),
                 price: numericPrice,
                 district: String(roomData.district || '').trim(),
@@ -1197,6 +1545,7 @@
                 // V6: ảnh nằm ở Storage + bảng room_images, không nhét Base64 vào rooms.
             };
 
+            if (!row.team_id) throw new Error('Chưa chọn Team để lưu phòng.');
             if (!row.code) throw new Error('Mã/Tên phòng không được để trống.');
             if (includeId) {
                 row.id = isUuid(roomData.id) ? roomData.id : makeUuid();
@@ -1220,8 +1569,11 @@
 
                 let query = supabaseClient
                     .from('rooms')
-                    .select('id,tenant_id,code,price,district,status,address,amenities,media_url,note,updated_at,room_images(id,image_url,storage_path,sort_order)', { count: 'exact' })
+                    .select('id,tenant_id,team_id,code,price,district,status,address,amenities,media_url,note,updated_at,room_images(id,image_url,storage_path,sort_order)', { count: 'exact' })
                     .eq('tenant_id', tenantId);
+
+                const teamId = getEffectiveTeamId();
+                if (teamId) query = query.eq('team_id', teamId);
 
                 if (keyword) {
                     const safe = keyword.replace(/[,%()]/g, ' ');
@@ -1443,7 +1795,12 @@
         function checkAuth() {
             const savedUserData = localStorage.getItem(AUTH_KEY) || sessionStorage.getItem(AUTH_KEY);
             if (savedUserData) {
-                currentUser = JSON.parse(savedUserData);
+                const saved = JSON.parse(savedUserData);
+                currentUser = users.find(u => String(u.id) === String(saved.id)) ||
+                              users.find(u => String(u.user).toLowerCase() === String(saved.user || '').toLowerCase()) ||
+                              saved;
+                const storage = localStorage.getItem(AUTH_KEY) ? localStorage : sessionStorage;
+                storage.setItem(AUTH_KEY, JSON.stringify(currentUser));
                 showApp();
             } else {
                 showLogin();
@@ -1510,6 +1867,10 @@
             const roleBadgeHeader = document.getElementById('roleBadgeHeader');
             const navAppointmentsBtn = document.getElementById('nav-appointments');
             const appointmentQuickAccess = document.getElementById('appointmentQuickAccess');
+            const navTeamsBtn = document.getElementById('nav-teams');
+
+            if (navTeamsBtn) navTeamsBtn.classList.toggle('hidden', !isSuperAdmin());
+            renderTeamContext();
 
             if (navAppointmentsBtn) navAppointmentsBtn.classList.remove('hidden');
             if (appointmentQuickAccess) appointmentQuickAccess.classList.remove('hidden');
@@ -1559,7 +1920,11 @@
 
         function switchTab(tabId) {
             if (tabId === 'tab-users' && !hasAdminAccess()) {
-                showToast('Chỉ Quản trị viên mới có quyền truy cập trang này!', 'error');
+                showToast('Chỉ Admin mới có quyền truy cập trang này!', 'error');
+                return;
+            }
+            if (tabId === 'tab-teams' && !isSuperAdmin()) {
+                showToast('Chỉ Admin cao cấp mới có quyền quản lý Team!', 'error');
                 return;
             }
 
@@ -1572,6 +1937,8 @@
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 if(btn.id === 'nav-users') {
                     btn.className = 'tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-amber-300 hover:text-white hover:bg-slate-700/50';
+                } else if (btn.id === 'nav-teams') {
+                    btn.className = 'tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-violet-300 hover:text-white hover:bg-slate-700/50';
                 } else if (btn.id === 'nav-appointments') {
                     btn.className = 'tab-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-cyan-200 bg-cyan-500/10 border border-cyan-400/20 hover:text-white hover:bg-cyan-500/20';
                 } else {
@@ -1628,12 +1995,15 @@
         async function loadAllRoomsForAppointmentSelect() {
             try {
                 const tenantId = await getCurrentTenantId();
-                const { data, error } = await supabaseClient
+                let query = supabaseClient
                     .from('rooms')
-                    .select('id,code,address,district,status,price')
-                    .eq('tenant_id', tenantId)
-                    .order('code', { ascending: true })
-                    .limit(2000);
+                    .select('id,team_id,code,address,district,status,price')
+                    .eq('tenant_id', tenantId);
+
+                const teamId = getEffectiveTeamId();
+                if (teamId) query = query.eq('team_id', teamId);
+
+                const { data, error } = await query.order('code', { ascending: true }).limit(2000);
                 if (error) throw error;
                 return data || [];
             } catch (err) {
@@ -1648,16 +2018,15 @@
                 const tenantId = await getCurrentTenantId();
                 let query = supabaseClient
                     .from('viewing_appointments')
-                    .select('id,tenant_id,room_id,sale_user_id,created_by,customer_name,customer_phone,appointment_at,meeting_point,status,note,created_at,updated_at')
-                    .eq('tenant_id', tenantId)
-                    .order('appointment_at', { ascending: true });
+                    .select('id,tenant_id,team_id,room_id,sale_user_id,created_by,customer_name,customer_phone,appointment_at,meeting_point,status,note,created_at,updated_at')
+                    .eq('tenant_id', tenantId);
 
-                // Sale chỉ tải lịch được phân cho chính mình ở giao diện hiện tại.
-                if (!hasAdminAccess()) {
-                    query = query.eq('sale_user_id', Number(currentUser.id));
-                }
+                const teamId = getEffectiveTeamId();
+                if (teamId) query = query.eq('team_id', teamId);
 
-                const { data, error } = await query;
+                if (!hasAdminAccess()) query = query.eq('sale_user_id', Number(currentUser.id));
+
+                const { data, error } = await query.order('appointment_at', { ascending: true });
                 if (error) throw error;
                 return data || [];
             } catch (err) {
@@ -1681,7 +2050,7 @@
                 saleFilterWrap?.classList.remove('hidden');
                 if (saleFilter) {
                     const previous = saleFilter.value;
-                    const saleUsers = users.filter(u => u.role === 'Nhân viên Sale');
+                    const saleUsers = getVisibleUsers().filter(u => u.role === 'Nhân viên Sale');
                     saleFilter.innerHTML = '<option value="">Tất cả nhân viên</option>' +
                         saleUsers.map(u => `<option value="${u.id}">${escapeHtml(u.name)} (${escapeHtml(u.user)})</option>`).join('');
                     saleFilter.value = previous;
@@ -1849,7 +2218,7 @@
                 allRooms.map(r => `<option value="${r.id}">${escapeHtml(r.code)} • ${escapeHtml(r.district || '')} • ${r.price || ''}tr</option>`).join('');
 
             const saleSelect = document.getElementById('apptSaleUserId');
-            const saleUsers = users.filter(u => u.role === 'Nhân viên Sale');
+            const saleUsers = getVisibleUsers().filter(u => u.role === 'Nhân viên Sale');
             if (hasAdminAccess()) {
                 saleSelect.innerHTML = saleUsers.map(u => `<option value="${u.id}">${escapeHtml(u.name)} (${escapeHtml(u.user)})</option>`).join('');
                 document.getElementById('apptAssignWrap').classList.remove('hidden');
@@ -1949,8 +2318,12 @@
                 return;
             }
 
+            const appointmentTeamId = requireTeamForWrite();
+            if (!appointmentTeamId) return;
+
             const row = {
                 tenant_id: await getCurrentTenantId(),
+                team_id: appointmentTeamId,
                 room_id: document.getElementById('apptRoomId').value,
                 sale_user_id: Number(saleUserId),
                 created_by: Number(currentUser.id),
@@ -2042,6 +2415,12 @@
                 return;
             }
             document.getElementById('userModalTitle').innerText = editId ? 'Chỉnh Sửa Tài Khoản' : 'Thêm Tài Khoản Mới';
+            populateUserTeamOptions();
+            const roleSelect = document.getElementById('accRole');
+            [...roleSelect.options].forEach(o => o.disabled = false);
+            if (!isSuperAdmin()) {
+                [...roleSelect.options].forEach(o => o.disabled = o.value !== 'Nhân viên Sale');
+            }
             document.getElementById('userModal').classList.remove('hidden');
             document.getElementById('userModal').classList.add('flex');
 
@@ -2050,7 +2429,12 @@
                 // Vì vậy phải so sánh theo String để lấy đúng tài khoản cần sửa.
                 const u = users.find(x => String(x.id) === String(editId));
                 if (u && u.role === 'Admin cao cấp' && !isSuperAdmin()) {
-                    showToast('Admin quản lý không được xem hoặc chỉnh sửa tài khoản Admin cao cấp!', 'error');
+                    showToast('Admin Team không được xem hoặc chỉnh sửa Admin cao cấp!', 'error');
+                    closeUserModal();
+                    return;
+                }
+                if (u && isManagerAdmin() && (u.role !== 'Nhân viên Sale' || String(u.team_id || '') !== String(currentUser.team_id || ''))) {
+                    showToast('Admin Team chỉ được quản lý nhân viên Sale thuộc team mình!', 'error');
                     closeUserModal();
                     return;
                 }
@@ -2060,6 +2444,9 @@
                     document.getElementById('accFullName').value = u.name || '';
                     document.getElementById('accPassword').value = u.pass || '';
                     document.getElementById('accRole').value = u.role || 'Nhân viên Sale';
+                    populateUserTeamOptions(u.team_id || '');
+                    document.getElementById('accTeamId').value = u.team_id || '';
+                    syncUserTeamRequirement();
                 } else {
                     showToast('Không tìm thấy tài khoản cần chỉnh sửa!', 'error');
                     closeUserModal();
@@ -2068,6 +2455,9 @@
                 document.getElementById('userForm').reset();
                 document.getElementById('editUserId').value = '';
                 document.getElementById('accRole').value = 'Nhân viên Sale';
+                populateUserTeamOptions(isManagerAdmin() ? currentUser.team_id : (activeTeamId || ''));
+                document.getElementById('accTeamId').value = isManagerAdmin() ? (currentUser.team_id || '') : (activeTeamId || '');
+                syncUserTeamRequirement();
             }
         }
 
@@ -2094,6 +2484,18 @@
             const nameVal = document.getElementById('accFullName').value.trim();
             const passVal = document.getElementById('accPassword').value.trim();
             const roleVal = document.getElementById('accRole').value;
+            const teamVal = roleVal === 'Admin cao cấp' ? null :
+                (isManagerAdmin() ? currentUser.team_id : document.getElementById('accTeamId').value);
+
+            if (!isSuperAdmin() && roleVal !== 'Nhân viên Sale') {
+                showToast('Admin Team chỉ được tạo hoặc chỉnh sửa nhân viên Sale!', 'error');
+                return;
+            }
+
+            if (roleVal !== 'Admin cao cấp' && !teamVal) {
+                showToast('Vui lòng chọn Team cho tài khoản này!', 'error');
+                return;
+            }
 
             if (roleVal === 'Admin cao cấp' && !isSuperAdmin()) {
                 showToast('Chỉ Admin cao cấp mới được cấp quyền Admin cao cấp!', 'error');
@@ -2101,6 +2503,11 @@
             }
 
             const editingOriginal = editId ? users.find(u => String(u.id) === String(editId)) : null;
+            if (editingOriginal && isManagerAdmin() &&
+                (editingOriginal.role !== 'Nhân viên Sale' || String(editingOriginal.team_id || '') !== String(currentUser.team_id || ''))) {
+                showToast('Admin Team chỉ được quản lý nhân viên thuộc team mình!', 'error');
+                return;
+            }
             if (editingOriginal?.role === 'Admin cao cấp' && !isSuperAdmin()) {
                 showToast('Bạn không có quyền chỉnh sửa Admin cao cấp!', 'error');
                 return;
@@ -2142,7 +2549,8 @@
                     user: userVal,
                     name: nameVal,
                     pass: passVal,
-                    role: roleVal
+                    role: roleVal,
+                    team_id: teamVal
                 };
 
                 const savedId = await saveUserToDB(userData);
@@ -2211,7 +2619,8 @@
             const tbody = document.getElementById('userTableBody');
             if(!tbody) return;
 
-            tbody.innerHTML = users.map(u => `
+            const visibleUsers = getVisibleUsers();
+            tbody.innerHTML = visibleUsers.map(u => `
                 <tr class="hover:bg-slate-50 transition">
                     <td class="p-3.5 font-bold text-orange-600">${u.user}</td>
                     <td class="p-3.5 font-medium">${u.name}</td>
@@ -2223,10 +2632,15 @@
                     <td class="p-3.5">
                         <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${
                             u.role === 'Admin cao cấp' ? 'bg-fuchsia-100 text-fuchsia-800' :
-                            u.role === 'Admin quản lý' ? 'bg-amber-100 text-amber-800' :
+                            u.role === 'Admin Team' ? 'bg-amber-100 text-amber-800' :
                             'bg-slate-100 text-slate-700'}">
                             ${u.role}
                         </span>
+                    </td>
+                    <td class="p-3.5">
+                        ${u.role === 'Admin cao cấp'
+                            ? '<span class="text-xs text-fuchsia-600 font-semibold">Toàn hệ thống</span>'
+                            : `<span class="text-xs font-semibold text-violet-700">${escapeHtml(getTeamName(u.team_id))}</span>`}
                     </td>
                     <td class="p-3.5 text-right space-x-2">
                         ${(!isSuperAdmin() && u.role === 'Admin cao cấp')
@@ -2417,6 +2831,7 @@
                             <div class="flex justify-between items-start mb-2">
                                 <div>
                                     <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${statusBg}">${room.status}</span>
+                                    ${isSuperAdmin() ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-100 text-violet-700">${escapeHtml(getTeamName(room.team_id))}</span>` : ''}
                                     <h3 class="text-lg font-bold text-slate-800 mt-2">${room.code}</h3>
                                 </div>
                                 <span class="text-xl font-extrabold text-orange-600">${room.price} <span class="text-xs font-normal text-slate-500">Tr/tháng</span></span>
@@ -3022,12 +3437,15 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
             if (!supabaseClient) return [];
             try {
                 const tenantId = await getCurrentTenantId();
-                const { data, error } = await supabaseClient
+                let query = supabaseClient
                     .from('crm_scripts')
-                    .select('id,tenant_id,category,type,title,tag,action_plan,response_template,created_at,updated_at')
-                    .eq('tenant_id', tenantId)
-                    .order('updated_at', { ascending: false });
+                    .select('id,tenant_id,team_id,category,type,title,tag,action_plan,response_template,created_at,updated_at')
+                    .eq('tenant_id', tenantId);
 
+                const teamId = getEffectiveTeamId();
+                if (teamId) query = query.eq('team_id', teamId);
+
+                const { data, error } = await query.order('updated_at', { ascending: false });
                 if (error) throw error;
                 return (data || []).map(mapDbCrmToApp);
             } catch (err) {
@@ -3046,6 +3464,7 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
             const tenantId = await getCurrentTenantId();
             const row = {
                 tenant_id: tenantId,
+                team_id: requireTeamForWrite(),
                 category: item.category,
                 type: item.type.trim(),
                 title: item.title.trim(),
@@ -3053,6 +3472,8 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
                 action_plan: item.actionPlan.trim(),
                 response_template: item.responseTemplate.trim()
             };
+
+            if (!row.team_id) return null;
 
             try {
                 if (item.id) {
@@ -3380,8 +3801,12 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
         // 7. KHỞI CHẠY ỨNG DỤNG
         document.addEventListener('DOMContentLoaded', async () => {
             users = await loadUsersFromDB();
-            
+            teams = await loadTeamsFromDB();
+
             checkAuth();
+            renderTeamContext();
+            renderTeams();
+            populateUserTeamOptions();
 
             roomPage = 1;
             rooms = await loadRoomsPage(1);
