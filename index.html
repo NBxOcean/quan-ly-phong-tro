@@ -605,16 +605,21 @@
                 user: typeof u.username === 'string' ? u.username : (u.user || ''),
                 pass: typeof u.password === 'string' ? u.password : (u.pass || ''),
                 name: typeof u.full_name === 'string' ? u.full_name : (u.name || ''),
-                role: u.role || 'Nhân viên Sale'
+                // Supabase đang có CHECK role chỉ cho phép: parent / child.
+                // App vẫn dùng tên tiếng Việt để hiển thị và phân quyền.
+                role: u.role === 'parent' ? 'Quản trị viên' :
+                      (u.role === 'child' ? 'Nhân viên Sale' : (u.role || 'Nhân viên Sale'))
             };
         }
 
         function mapAppUserToDb(userData, includeId = false) {
+            const appRole = userData.role || 'Nhân viên Sale';
+            const dbRole = appRole === 'Quản trị viên' ? 'parent' : 'child';
             const row = {
                 username: String(userData.user || '').trim().toLowerCase(),
                 password: String(userData.pass || '').trim(),
                 full_name: String(userData.name || '').trim(),
-                role: userData.role || 'Nhân viên Sale'
+                role: dbRole
             };
             if (includeId && userData.id !== undefined && userData.id !== null && userData.id !== '') {
                 row.id = Number(userData.id);
