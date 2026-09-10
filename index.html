@@ -308,6 +308,20 @@
 
             <!-- TAB 3: CRM & KỊCH BẢN CHĂM SÓC -->
             <div id="tab-crm" class="tab-content hidden space-y-6">
+                <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex-wrap gap-3">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-comments text-orange-500"></i> Thư Viện Kịch Bản CRM
+                        </h2>
+                        <p class="text-xs text-slate-500 mt-1">Admin được thêm/sửa/xóa. Nhân viên Sale chỉ được xem và sao chép mẫu trả lời.</p>
+                    </div>
+                    <div id="crmAdminControls" class="hidden">
+                        <button onclick="openCrmModal()" class="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold px-4 py-2 rounded-xl transition shadow flex items-center gap-2 text-sm">
+                            <i class="fa-solid fa-plus"></i> Thêm Kịch Bản
+                        </button>
+                    </div>
+                </div>
+
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 grid grid-cols-1 md:grid-cols-12 gap-3">
                     <div class="md:col-span-6 relative">
                         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-sm"></i>
@@ -340,7 +354,7 @@
                     <section class="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col h-[700px]">
                         <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-2xl">
                             <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-list-check text-orange-500"></i> Mẫu Kịch Bản Chuẩn CRM (<span id="totalCasesCount">1000</span>)
+                                <i class="fa-solid fa-list-check text-orange-500"></i> Kịch Bản CRM (<span id="totalCasesCount">0</span>)
                             </h3>
                             <span id="showingCount" class="text-xs bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full font-semibold">Đang hiện: 0</span>
                         </div>
@@ -521,6 +535,75 @@
         </div>
     </div>
 
+
+    <!-- MODAL THÊM / SỬA KỊCH BẢN CRM - CHỈ ADMIN -->
+    <div id="crmModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto border border-slate-100">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50 sticky top-0 z-10">
+                <div>
+                    <h3 id="crmModalTitle" class="text-base font-bold text-slate-800">Thêm Kịch Bản CRM</h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Nhập tình huống, hướng xử lý và câu trả lời mẫu.</p>
+                </div>
+                <button type="button" onclick="closeCrmModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <form id="crmForm" onsubmit="saveCrmScript(event)" class="p-5 space-y-4">
+                <input type="hidden" id="crmEditId">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nhóm tình huống *</label>
+                        <select id="crmCategory" required class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
+                            <option value="XU_LY_TU_CHOI">Xử lý từ chối khi tư vấn</option>
+                            <option value="DANG_XEM_PHONG">Dẫn xem phòng & Đàm phán</option>
+                            <option value="SUDUNG_SUCO">Giải quyết sự cố khi ở</option>
+                            <option value="GIU_CHAN_TRA_PHONG">Giữ chân khách đòi trả phòng</option>
+                            <option value="CHAMSOC_DINHKY">Chăm sóc & Giới thiệu</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Dạng vấn đề *</label>
+                        <input id="crmType" required placeholder="VD: Giá cả, Tiền cọc, Máy lạnh..." class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Đối tượng khách</label>
+                    <select id="crmTag" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
+                        <option value="Tất cả">Mọi đối tượng</option>
+                        <option value="Sinh viên">Sinh viên / Người trẻ</option>
+                        <option value="Người đi làm">Người đi làm / Văn phòng</option>
+                        <option value="Vợ chồng trẻ">Vợ chồng / Gia đình nhỏ</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tình huống thực tế *</label>
+                    <textarea id="crmTitle" required rows="2" placeholder="VD: Khách chê giá phòng cao hơn nơi khác 500.000đ/tháng..." class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Hướng xử lý / Chiến thuật *</label>
+                    <textarea id="crmActionPlan" required rows="4" placeholder="Mô tả sale nên hỏi gì, giải thích gì, nhấn mạnh điểm nào và tránh nói gì..." class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Mẫu trả lời cho khách *</label>
+                    <textarea id="crmResponseTemplate" required rows="6" placeholder="Viết mẫu tin nhắn có thể copy gửi Zalo/Messenger..." class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50 font-mono"></textarea>
+                </div>
+
+                <div class="pt-3 border-t flex justify-end gap-2">
+                    <button type="button" onclick="closeCrmModal()" class="px-4 py-2 border rounded-xl text-sm text-slate-600 hover:bg-slate-50">Hủy</button>
+                    <button type="submit" id="crmSaveBtn" class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-xl text-sm shadow">
+                        Lưu Kịch Bản
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Modal Xem Ảnh Lớn -->
     <div id="imageViewerModal" class="fixed inset-0 bg-black/85 hidden items-center justify-center z-50 p-4" onclick="closeImageViewer()">
         <div class="relative max-w-4xl max-h-[90vh] flex flex-col items-center">
@@ -566,6 +649,9 @@
         let roomSaveInProgress = false;
         // V6.2: khóa lưu tài khoản để tránh submit lặp / tạo trùng.
         let userSaveInProgress = false;
+        // V6.3 CRM Supabase
+        let crmSaveInProgress = false;
+        let selectedCrmId = null;
         let roomTotal = 0;
         let roomFilterTimer = null;
         let dbCases = [];
@@ -1138,12 +1224,14 @@
             const navUsersBtn = document.getElementById('nav-users');
             const adminAddRoomBtn = document.getElementById('adminAddRoomBtn');
             const adminDataControls = document.getElementById('adminDataControls');
+            const crmAdminControls = document.getElementById('crmAdminControls');
             const roleBadgeHeader = document.getElementById('roleBadgeHeader');
 
             if (isAdmin) {
                 navUsersBtn.classList.remove('hidden');
                 adminAddRoomBtn.classList.remove('hidden');
                 adminDataControls.classList.remove('hidden');
+                if (crmAdminControls) crmAdminControls.classList.remove('hidden');
                 roleBadgeHeader.innerText = 'ADMIN';
                 roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30';
                 renderUsersTable();
@@ -1151,6 +1239,7 @@
                 navUsersBtn.classList.add('hidden');
                 adminAddRoomBtn.classList.add('hidden');
                 adminDataControls.classList.add('hidden');
+                if (crmAdminControls) crmAdminControls.classList.add('hidden');
                 roleBadgeHeader.innerText = 'SALE';
                 roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30';
                 
@@ -1902,7 +1991,7 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
             setTimeout(() => toast.classList.add('opacity-0'), 2000);
         }
 
-        // 6. CRM & KỊCH BẢN TƯ VẤN
+        // 6. CRM & KỊCH BẢN TƯ VẤN - SUPABASE + PHÂN QUYỀN ADMIN/SALE
         const coreCategories = {
             "XU_LY_TU_CHOI": "Xử lý từ chối khi tư vấn",
             "DANG_XEM_PHONG": "Dẫn xem phòng & Đàm phán",
@@ -1911,138 +2000,374 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
             "CHAMSOC_DINHKY": "Chăm sóc & Giới thiệu"
         };
 
-        const topics = [
-            { cat: "XU_LY_TU_CHOI", issue: "Khách chê giá thuê cao hơn {n}k so với phòng khác cùng khu vực", type: "Giá cả", action: "Phân tích giá trị cộng thêm: An ninh, giờ tự do, máy giặt riêng, hỗ trợ kĩ thuật 24/7.", msg: "Chào {x}, tiền nào của nấy ạ! Mức giá bên em đã bao gồm dịch vụ an ninh và hỗ trợ kỹ thuật 24/7. Nếu bạn chốt giữ phòng hôm nay em xin ưu đãi hỗ trợ giảm ngay {n2}k tiền phòng tháng đầu nhé!" },
-            { cat: "XU_LY_TU_CHOI", issue: "Khách phàn nàn phòng diện tích hơi nhỏ ({n}m2)", type: "Diện tích", action: "Hướng dẫn bố trí nội thất thông minh, nhấn mạnh không gian tối ưu cho 1-2 người ở.", msg: "Em chào {x}, phòng thiết kế chuẩn tối ưu không gian nên rất gọn gàng ạ. Khách đang ở phản hồi căn này vừa ấm cúng lại rất dễ dọn dẹp ngăn nắp ạ!" },
-            { cat: "XU_LY_TU_CHOI", issue: "Khách đòi bớt tiền cọc (Chỉ muốn cọc {n}k thay vì 1 tháng)", type: "Tiền cọc", action: "Giữ vững nguyên tắc an toàn, linh hoạt chia làm 2 đợt đóng cọc.", msg: "Dạ {x} ơi, quy định cọc 1 tháng là để đảm bảo quyền lợi cho cả 2 bên. Nhưng em hỗ trợ bạn đóng trước 50% cọc để giữ phòng, 50% còn lại đóng khi nhận phòng nhé!" },
-            { cat: "DANG_XEM_PHONG", issue: "Khách xem phòng xong im lặng, nhắn tin không phản hồi sau {n} giờ", type: "Chăm sóc sau xem", action: "Tạo độ khan hiếm khéo léo, hỏi thăm nhẹ nhàng.", msg: "Hi {x}! Căn hộ hôm qua bạn xem đang có 1 khách hẹn chiều nay qua đặt cọc. Em nhớ bạn rất thích phòng này nên nhắn hỏi ưu tiên {x} trước, bạn quyết định giữ căn này luôn không ạ?" }
-        ];
+        function isCrmAdmin() {
+            return currentUser && currentUser.role === 'Quản trị viên';
+        }
 
-        const targetAudience = ["Sinh viên", "Người đi làm", "Vợ chồng trẻ", "Tất cả"];
-        const names = ["Anh Nam", "Chị Hoa", "Bạn Tuấn", "Chị Linh", "Anh Đức", "Bạn Trang", "Anh Huy"];
+        function escapeHtml(value = '') {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
 
-        function generate1000Cases() {
-            dbCases = [];
-            let id = 1;
-            for (let i = 0; i < 250; i++) {
-                topics.forEach(t => {
-                    const randomDist = Math.floor(Math.random() * 15) + 1;
-                    const randomMoneySmall = (Math.floor(Math.random() * 5) + 1) * 50;
-                    const name = names[Math.floor(Math.random() * names.length)];
-                    const tag = targetAudience[Math.floor(Math.random() * targetAudience.length)];
+        function mapDbCrmToApp(row) {
+            return {
+                id: row.id,
+                tenant_id: row.tenant_id,
+                category: row.category || 'XU_LY_TU_CHOI',
+                categoryName: coreCategories[row.category] || row.category || 'Khác',
+                type: row.type || 'Tình huống',
+                title: row.title || '',
+                tag: row.tag || 'Tất cả',
+                actionPlan: row.action_plan || '',
+                responseTemplate: row.response_template || '',
+                createdAt: row.created_at || '',
+                updatedAt: row.updated_at || ''
+            };
+        }
 
-                    let title = t.issue.replace("{n}", randomDist);
-                    let msg = t.msg.replace(/{x}/g, name).replace("{n}", randomDist).replace("{n2}", randomMoneySmall);
+        async function loadCrmScriptsFromDB() {
+            if (!supabaseClient) return [];
+            try {
+                const tenantId = await getCurrentTenantId();
+                const { data, error } = await supabaseClient
+                    .from('crm_scripts')
+                    .select('id,tenant_id,category,type,title,tag,action_plan,response_template,created_at,updated_at')
+                    .eq('tenant_id', tenantId)
+                    .order('updated_at', { ascending: false });
 
-                    dbCases.push({
-                        id: id++,
-                        category: t.cat,
-                        categoryName: coreCategories[t.cat],
-                        type: t.type,
-                        title: `[KỊCH BẢN-${id}] ${title}`,
-                        tag: tag,
-                        actionPlan: t.action,
-                        responseTemplate: msg
-                    });
-                });
+                if (error) throw error;
+                return (data || []).map(mapDbCrmToApp);
+            } catch (err) {
+                console.error('Lỗi tải CRM:', err);
+                showToast('Không tải được CRM: ' + (err?.message || err), 'error');
+                return [];
+            }
+        }
+
+        async function saveCrmScriptToDB(item) {
+            if (!isCrmAdmin()) {
+                showToast('Chỉ Admin mới được thêm hoặc chỉnh sửa kịch bản!', 'error');
+                return null;
+            }
+
+            const tenantId = await getCurrentTenantId();
+            const row = {
+                tenant_id: tenantId,
+                category: item.category,
+                type: item.type.trim(),
+                title: item.title.trim(),
+                tag: item.tag,
+                action_plan: item.actionPlan.trim(),
+                response_template: item.responseTemplate.trim()
+            };
+
+            try {
+                if (item.id) {
+                    const { data, error } = await supabaseClient
+                        .from('crm_scripts')
+                        .update(row)
+                        .eq('id', item.id)
+                        .eq('tenant_id', tenantId)
+                        .select('id')
+                        .maybeSingle();
+                    if (error) throw error;
+                    if (!data) throw new Error('Không tìm thấy kịch bản hoặc policy UPDATE đang chặn.');
+                    return data.id;
+                }
+
+                row.id = makeUuid();
+                const { data, error } = await supabaseClient
+                    .from('crm_scripts')
+                    .insert([row])
+                    .select('id')
+                    .single();
+                if (error) throw error;
+                return data?.id || null;
+            } catch (err) {
+                console.error('Lỗi lưu CRM:', err);
+                showToast('Không thể lưu kịch bản: ' + (err?.message || err?.details || err), 'error');
+                return null;
+            }
+        }
+
+        async function deleteCrmScriptFromDB(id) {
+            if (!isCrmAdmin()) {
+                showToast('Chỉ Admin mới được xóa kịch bản!', 'error');
+                return false;
+            }
+
+            try {
+                const tenantId = await getCurrentTenantId();
+                const { data, error } = await supabaseClient
+                    .from('crm_scripts')
+                    .delete()
+                    .eq('id', id)
+                    .eq('tenant_id', tenantId)
+                    .select('id');
+
+                if (error) throw error;
+                if (!data || data.length === 0) {
+                    throw new Error('Không tìm thấy kịch bản hoặc policy DELETE đang chặn.');
+                }
+                return true;
+            } catch (err) {
+                console.error('Lỗi xóa CRM:', err);
+                showToast('Không thể xóa kịch bản: ' + (err?.message || err?.details || err), 'error');
+                return false;
             }
         }
 
         function renderCaseList(data) {
             const container = document.getElementById('caseListContainer');
+            document.getElementById('totalCasesCount').innerText = dbCases.length.toLocaleString();
             document.getElementById('showingCount').innerText = `Đang hiện: ${data.length}`;
-            
+
             if (data.length === 0) {
-                container.innerHTML = `<div class="p-8 text-center text-slate-400 text-sm">Không tìm thấy kịch bản phù hợp</div>`;
+                container.innerHTML = `<div class="p-8 text-center text-slate-400 text-sm">
+                    <i class="fa-regular fa-folder-open text-2xl mb-2"></i>
+                    <p>Không tìm thấy kịch bản phù hợp.</p>
+                    ${isCrmAdmin() ? '<p class="mt-1 text-[11px]">Admin có thể bấm “Thêm Kịch Bản” để tạo tình huống mới.</p>' : ''}
+                </div>`;
                 return;
             }
 
-            const limitData = data.slice(0, 120);
-            container.innerHTML = limitData.map(c => `
-                <div onclick="selectCase(${c.id})" class="p-3.5 hover:bg-slate-50 cursor-pointer transition border-l-4 border-transparent hover:border-orange-500 space-y-1">
+            container.innerHTML = data.map(c => `
+                <div onclick="selectCase('${c.id}')" class="p-3.5 hover:bg-slate-50 cursor-pointer transition border-l-4 ${String(selectedCrmId) === String(c.id) ? 'border-orange-500 bg-orange-50/30' : 'border-transparent hover:border-orange-500'} space-y-1">
                     <div class="flex justify-between items-start gap-2">
-                        <span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-lg">${c.type}</span>
-                        <span class="text-[11px] text-slate-400 font-medium">${c.tag}</span>
+                        <span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-lg">${escapeHtml(c.type)}</span>
+                        <span class="text-[11px] text-slate-400 font-medium">${escapeHtml(c.tag)}</span>
                     </div>
-                    <h4 class="text-xs font-semibold text-slate-800 line-clamp-2 leading-relaxed">${c.title}</h4>
-                    <p class="text-[11px] text-slate-500 truncate"><i class="fa-regular fa-comment-dots mr-1"></i>${c.responseTemplate}</p>
+                    <h4 class="text-xs font-semibold text-slate-800 line-clamp-2 leading-relaxed">${escapeHtml(c.title)}</h4>
+                    <p class="text-[11px] text-slate-500 truncate"><i class="fa-regular fa-comment-dots mr-1"></i>${escapeHtml(c.responseTemplate)}</p>
                 </div>
             `).join('');
         }
 
         function selectCase(id) {
-            const item = dbCases.find(c => c.id === id);
+            const item = dbCases.find(c => String(c.id) === String(id));
             if (!item) return;
+
+            selectedCrmId = item.id;
+            renderCaseList(currentFilteredData.length ? currentFilteredData : dbCases);
+
+            const adminButtons = isCrmAdmin() ? `
+                <div class="flex gap-2">
+                    <button onclick="event.stopPropagation(); openCrmModal('${item.id}')" class="text-xs text-blue-600 font-semibold hover:bg-blue-50 px-2.5 py-1.5 rounded-lg transition border border-blue-100">
+                        <i class="fa-solid fa-pen-to-square mr-1"></i> Sửa
+                    </button>
+                    <button onclick="event.stopPropagation(); deleteCrmScript('${item.id}')" class="text-xs text-rose-600 font-semibold hover:bg-rose-50 px-2.5 py-1.5 rounded-lg transition border border-rose-100">
+                        <i class="fa-solid fa-trash mr-1"></i> Xóa
+                    </button>
+                </div>` : '';
 
             const detailView = document.getElementById('detailView');
             detailView.innerHTML = `
                 <div class="space-y-4">
-                    <div>
-                        <span class="text-xs font-bold text-orange-600 bg-orange-100 px-2.5 py-1 rounded-full">${item.categoryName}</span>
-                        <h2 class="text-base font-bold text-slate-800 mt-2 leading-snug">${item.title}</h2>
-                        <div class="flex items-center gap-2 mt-2 text-xs text-slate-500">
-                            <span><i class="fa-solid fa-tag text-slate-400"></i> Dạng vấn đề: <strong>${item.type}</strong></span> | 
-                            <span><i class="fa-solid fa-user-group text-slate-400"></i> Đối tượng: <strong>${item.tag}</strong></span>
+                    <div class="flex justify-between items-start gap-3">
+                        <div class="min-w-0">
+                            <span class="text-xs font-bold text-orange-600 bg-orange-100 px-2.5 py-1 rounded-full">${escapeHtml(item.categoryName)}</span>
+                            <h2 class="text-base font-bold text-slate-800 mt-2 leading-snug">${escapeHtml(item.title)}</h2>
                         </div>
+                        ${adminButtons}
+                    </div>
+
+                    <div class="flex items-center gap-2 mt-2 text-xs text-slate-500 flex-wrap">
+                        <span><i class="fa-solid fa-tag text-slate-400"></i> Dạng vấn đề: <strong>${escapeHtml(item.type)}</strong></span>
+                        <span>•</span>
+                        <span><i class="fa-solid fa-user-group text-slate-400"></i> Đối tượng: <strong>${escapeHtml(item.tag)}</strong></span>
+                    </div>
+
+                    <div class="bg-sky-50/80 border border-sky-200 p-3.5 rounded-2xl space-y-1">
+                        <h4 class="text-xs font-bold text-sky-900 flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-exclamation text-sky-600"></i> Tình Huống:
+                        </h4>
+                        <p class="text-xs text-sky-900 leading-relaxed">${escapeHtml(item.title)}</p>
                     </div>
 
                     <div class="bg-amber-50/80 border border-amber-200 p-3.5 rounded-2xl space-y-1">
                         <h4 class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
-                            <i class="fa-solid fa-lightbulb text-amber-600"></i> Hướng Xử Lý Tư Vấn:
+                            <i class="fa-solid fa-lightbulb text-amber-600"></i> Hướng Xử Lý:
                         </h4>
-                        <p class="text-xs text-amber-900 leading-relaxed">${item.actionPlan}</p>
+                        <p class="text-xs text-amber-900 leading-relaxed whitespace-pre-line">${escapeHtml(item.actionPlan)}</p>
                     </div>
 
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">
                             <label class="text-xs font-bold text-slate-700 flex items-center gap-1">
-                                <i class="fa-solid fa-paper-plane text-orange-500"></i> Mẫu Tin Nhắn Phản Hồi (Zalo/Messenger):
+                                <i class="fa-solid fa-paper-plane text-orange-500"></i> Cách Trả Lời / Tin Nhắn Mẫu:
                             </label>
                             <button onclick="copyResponseText()" class="text-xs text-orange-600 font-semibold hover:text-orange-800 flex items-center gap-1 bg-orange-50 px-2 py-1 rounded-lg transition">
                                 <i class="fa-regular fa-copy"></i> Sao chép
                             </button>
                         </div>
-                        <textarea id="responseBox" rows="6" readonly class="w-full p-3 text-xs border border-slate-200 rounded-2xl bg-slate-50 leading-relaxed text-slate-800 font-mono resize-none">${item.responseTemplate}</textarea>
+                        <textarea id="responseBox" rows="7" readonly class="w-full p-3 text-xs border border-slate-200 rounded-2xl bg-slate-50 leading-relaxed text-slate-800 font-mono resize-none">${escapeHtml(item.responseTemplate)}</textarea>
                     </div>
 
-                    <div class="pt-2">
-                        <button onclick="copyResponseText()" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3 rounded-2xl text-xs shadow-md transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-share-from-square"></i> SAO CHÉP MẪU PHẢN HỒI NÀY
-                        </button>
-                    </div>
+                    <button onclick="copyResponseText()" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3 rounded-2xl text-xs shadow-md transition flex items-center justify-center gap-2">
+                        <i class="fa-regular fa-copy"></i> SAO CHÉP CÂU TRẢ LỜI
+                    </button>
+
+                    ${!isCrmAdmin() ? `
+                    <div class="text-[11px] text-slate-500 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-center">
+                        <i class="fa-solid fa-lock mr-1"></i> Tài khoản Sale chỉ có quyền xem và sao chép kịch bản.
+                    </div>` : ''}
                 </div>
             `;
         }
 
         function filterCases() {
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            const cat = document.getElementById('categoryFilter').value;
-            const tag = document.getElementById('tagFilter').value;
+            const search = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
+            const cat = document.getElementById('categoryFilter')?.value || 'ALL';
+            const tag = document.getElementById('tagFilter')?.value || 'ALL';
 
             currentFilteredData = dbCases.filter(item => {
-                const matchSearch = item.title.toLowerCase().includes(search) || 
-                                    item.responseTemplate.toLowerCase().includes(search) ||
-                                    item.actionPlan.toLowerCase().includes(search);
-                const matchCat = (cat === "ALL") || (item.category === cat);
-                const matchTag = (tag === "ALL") || (item.tag === tag || item.tag === "Tất cả");
-
+                const matchSearch = !search ||
+                    item.title.toLowerCase().includes(search) ||
+                    item.type.toLowerCase().includes(search) ||
+                    item.responseTemplate.toLowerCase().includes(search) ||
+                    item.actionPlan.toLowerCase().includes(search);
+                const matchCat = cat === 'ALL' || item.category === cat;
+                const matchTag = tag === 'ALL' || item.tag === tag || item.tag === 'Tất cả';
                 return matchSearch && matchCat && matchTag;
             });
 
             renderCaseList(currentFilteredData);
-            if (currentFilteredData.length > 0) {
+            const selectedStillVisible = currentFilteredData.some(x => String(x.id) === String(selectedCrmId));
+            if (selectedStillVisible) {
+                selectCase(selectedCrmId);
+            } else if (currentFilteredData.length > 0) {
                 selectCase(currentFilteredData[0].id);
             } else {
-                document.getElementById('detailView').innerHTML = `<div class="text-center py-20 text-slate-400 text-sm">Không có dữ liệu chi tiết</div>`;
+                selectedCrmId = null;
+                document.getElementById('detailView').innerHTML =
+                    `<div class="text-center py-20 text-slate-400 text-sm">Không có dữ liệu chi tiết</div>`;
             }
+        }
+
+        function openCrmModal(id = null) {
+            if (!isCrmAdmin()) {
+                showToast('Chỉ Admin mới được quản lý kịch bản CRM!', 'error');
+                return;
+            }
+
+            const modal = document.getElementById('crmModal');
+            const item = id ? dbCases.find(x => String(x.id) === String(id)) : null;
+
+            document.getElementById('crmEditId').value = item?.id || '';
+            document.getElementById('crmModalTitle').innerText = item ? 'Chỉnh Sửa Kịch Bản CRM' : 'Thêm Kịch Bản CRM';
+            document.getElementById('crmCategory').value = item?.category || 'XU_LY_TU_CHOI';
+            document.getElementById('crmType').value = item?.type || '';
+            document.getElementById('crmTag').value = item?.tag || 'Tất cả';
+            document.getElementById('crmTitle').value = item?.title || '';
+            document.getElementById('crmActionPlan').value = item?.actionPlan || '';
+            document.getElementById('crmResponseTemplate').value = item?.responseTemplate || '';
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => document.getElementById('crmTitle')?.focus(), 100);
+        }
+
+        function closeCrmModal() {
+            const modal = document.getElementById('crmModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.getElementById('crmForm')?.reset();
+            document.getElementById('crmEditId').value = '';
+        }
+
+        async function saveCrmScript(e) {
+            e.preventDefault();
+
+            if (!isCrmAdmin()) {
+                showToast('Chỉ Admin mới được lưu kịch bản!', 'error');
+                return;
+            }
+            if (crmSaveInProgress) return;
+
+            const item = {
+                id: document.getElementById('crmEditId').value.trim() || null,
+                category: document.getElementById('crmCategory').value,
+                type: document.getElementById('crmType').value,
+                tag: document.getElementById('crmTag').value,
+                title: document.getElementById('crmTitle').value,
+                actionPlan: document.getElementById('crmActionPlan').value,
+                responseTemplate: document.getElementById('crmResponseTemplate').value
+            };
+
+            if (!item.type.trim() || !item.title.trim() || !item.actionPlan.trim() || !item.responseTemplate.trim()) {
+                showToast('Vui lòng nhập đầy đủ nội dung kịch bản!', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('crmSaveBtn');
+            crmSaveInProgress = true;
+            if (btn) {
+                btn.disabled = true;
+                btn.dataset.oldText = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang lưu...';
+            }
+
+            try {
+                const savedId = await saveCrmScriptToDB(item);
+                if (!savedId) return;
+
+                dbCases = await loadCrmScriptsFromDB();
+                currentFilteredData = [...dbCases];
+                closeCrmModal();
+                filterCases();
+                selectCase(savedId);
+                showToast(item.id ? 'Đã cập nhật kịch bản CRM!' : 'Đã thêm kịch bản CRM!');
+            } finally {
+                crmSaveInProgress = false;
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = btn.dataset.oldText || 'Lưu Kịch Bản';
+                }
+            }
+        }
+
+        async function deleteCrmScript(id) {
+            if (!isCrmAdmin()) {
+                showToast('Chỉ Admin mới được xóa kịch bản!', 'error');
+                return;
+            }
+
+            const item = dbCases.find(x => String(x.id) === String(id));
+            if (!item) return;
+
+            if (!confirm(`Xóa kịch bản "${item.title}"?\n\nThao tác này không thể hoàn tác.`)) return;
+
+            const ok = await deleteCrmScriptFromDB(id);
+            if (!ok) return;
+
+            dbCases = await loadCrmScriptsFromDB();
+            currentFilteredData = [...dbCases];
+            selectedCrmId = null;
+            filterCases();
+            showToast('Đã xóa kịch bản CRM!');
         }
 
         function copyResponseText() {
             const box = document.getElementById('responseBox');
             if (!box) return;
-            box.select();
-            document.execCommand('copy');
-            showToast('Đã sao chép kịch bản!');
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(box.value)
+                    .then(() => showToast('Đã sao chép câu trả lời!'))
+                    .catch(() => {
+                        box.select();
+                        document.execCommand('copy');
+                        showToast('Đã sao chép câu trả lời!');
+                    });
+            } else {
+                box.select();
+                document.execCommand('copy');
+                showToast('Đã sao chép câu trả lời!');
+            }
         }
 
         function showToast(message, type = 'success') {
@@ -2077,11 +2402,10 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
 
             generateRandomPost();
 
-            generate1000Cases();
-            document.getElementById('totalCasesCount').innerText = dbCases.length.toLocaleString();
+            dbCases = await loadCrmScriptsFromDB();
             currentFilteredData = [...dbCases];
             renderCaseList(dbCases);
-            selectCase(1);
+            if (dbCases.length > 0) selectCase(dbCases[0].id);
         });
     </script>
 </body>
