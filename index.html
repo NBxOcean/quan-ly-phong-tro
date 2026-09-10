@@ -664,11 +664,32 @@
         </div>
     </div>
 
-    <!-- Modal Xem Ảnh Lớn -->
-    <div id="imageViewerModal" class="fixed inset-0 bg-black/85 hidden items-center justify-center z-50 p-4" onclick="closeImageViewer()">
-        <div class="relative max-w-4xl max-h-[90vh] flex flex-col items-center">
-            <img id="viewerImage" src="" class="max-w-full max-h-[80vh] rounded-2xl shadow-2xl object-contain">
-            <p class="text-white text-xs mt-3 opacity-80">Click bất kỳ đâu để đóng</p>
+    <!-- Modal Xem Ảnh Lớn - Gallery vuốt ngang -->
+    <div id="imageViewerModal" class="fixed inset-0 bg-black/90 hidden items-center justify-center z-50 p-3 md:p-5" onclick="closeImageViewer(event)">
+        <div id="imageViewerContent" class="relative w-full max-w-5xl h-[92vh] flex flex-col items-center justify-center" onclick="event.stopPropagation()">
+
+            <button onclick="closeImageViewer()" class="absolute top-2 right-2 z-20 w-10 h-10 rounded-full bg-black/55 hover:bg-black/75 text-white flex items-center justify-center backdrop-blur border border-white/15" title="Đóng">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <button id="viewerPrevBtn" onclick="showPreviousImage()" class="absolute left-1 md:left-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 md:w-12 md:h-12 rounded-full bg-black/55 hover:bg-black/75 text-white flex items-center justify-center backdrop-blur border border-white/15 shadow-lg" title="Ảnh trước">
+                <i class="fa-solid fa-chevron-left text-lg"></i>
+            </button>
+
+            <div id="viewerSwipeArea" class="w-full flex-1 min-h-0 flex items-center justify-center overflow-hidden touch-pan-y select-none">
+                <img id="viewerImage" src="" draggable="false" class="max-w-full max-h-full rounded-2xl shadow-2xl object-contain transition-opacity duration-150">
+            </div>
+
+            <button id="viewerNextBtn" onclick="showNextImage()" class="absolute right-1 md:right-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 md:w-12 md:h-12 rounded-full bg-black/55 hover:bg-black/75 text-white flex items-center justify-center backdrop-blur border border-white/15 shadow-lg" title="Ảnh tiếp theo">
+                <i class="fa-solid fa-chevron-right text-lg"></i>
+            </button>
+
+            <div class="pt-3 flex flex-col items-center gap-2">
+                <div id="viewerCounter" class="text-white text-xs font-semibold bg-black/45 px-3 py-1 rounded-full border border-white/10">1 / 1</div>
+                <p class="text-white/65 text-[11px] text-center">
+                    Vuốt trái/phải để xem ảnh • Máy tính dùng phím ← → • ESC để đóng
+                </p>
+            </div>
         </div>
     </div>
 
@@ -702,6 +723,12 @@
         let rooms = [];
         let currentImages = []; // URL ảnh đã lưu trên Storage
         let pendingImageFiles = []; // ảnh mới chờ upload
+
+        // V6.6: gallery xem ảnh toàn màn hình, hỗ trợ vuốt ngang / phím mũi tên
+        let viewerImages = [];
+        let viewerIndex = 0;
+        let viewerTouchStartX = 0;
+        let viewerTouchStartY = 0;
         const ROOM_IMAGE_BUCKET = 'room-images';
         const ROOM_PAGE_SIZE = 24;
         let roomPage = 1;
@@ -1729,7 +1756,7 @@
                 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col justify-between">
                     <div>
                         ${coverImage ? `
-                            <div class="relative h-48 bg-slate-100 overflow-hidden group cursor-pointer" onclick="viewImage('${coverImage}')">
+                            <div class="relative h-48 bg-slate-100 overflow-hidden group cursor-pointer" onclick="openRoomGallery('${room.id}', 0)">
                                 <img src="${coverImage}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                                 <span class="absolute bottom-2 right-2 bg-black/60 text-white text-[11px] px-2 py-0.5 rounded-full backdrop-blur-sm">
                                     <i class="fa-regular fa-image mr-1"></i> ${room.images.length} ảnh
@@ -1750,8 +1777,8 @@
 
                             ${hasImages && room.images.length > 1 ? `
                                 <div class="flex gap-1.5 overflow-x-auto mb-3 pb-1">
-                                    ${room.images.map(img => `
-                                        <img src="${img}" onclick="viewImage('${img}')" class="w-10 h-10 object-cover rounded-lg cursor-pointer border border-slate-200 hover:opacity-80">
+                                    ${room.images.map((img, imgIndex) => `
+                                        <img src="${img}" onclick="openRoomGallery('${room.id}', ${imgIndex})" class="w-10 h-10 object-cover rounded-lg cursor-pointer border border-slate-200 hover:opacity-80">
                                     `).join('')}
                                 </div>
                             ` : ''}
@@ -1957,16 +1984,119 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
             filterRooms();
         }
 
-        function viewImage(url) {
-            document.getElementById('viewerImage').src = url;
-            document.getElementById('imageViewerModal').classList.remove('hidden');
-            document.getElementById('imageViewerModal').classList.add('flex');
+        function openRoomGallery(roomId, startIndex = 0) {
+            const room = rooms.find(r => String(r.id) === String(roomId));
+            const images = Array.isArray(room?.images) ? room.images.filter(Boolean) : [];
+
+            if (!images.length) {
+                showToast('Phòng này chưa có ảnh!', 'error');
+                return;
+            }
+
+            viewerImages = images;
+            viewerIndex = Math.max(0, Math.min(Number(startIndex) || 0, viewerImages.length - 1));
+
+            const modal = document.getElementById('imageViewerModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+
+            renderViewerImage();
         }
 
-        function closeImageViewer() {
-            document.getElementById('imageViewerModal').classList.add('hidden');
-            document.getElementById('imageViewerModal').classList.remove('flex');
+        // Giữ tương thích nếu nơi khác trong app vẫn gọi viewImage(url).
+        function viewImage(url) {
+            viewerImages = url ? [url] : [];
+            viewerIndex = 0;
+            if (!viewerImages.length) return;
+
+            const modal = document.getElementById('imageViewerModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+            renderViewerImage();
         }
+
+        function renderViewerImage() {
+            if (!viewerImages.length) return;
+
+            const image = document.getElementById('viewerImage');
+            image.style.opacity = '0.35';
+            image.src = viewerImages[viewerIndex];
+            image.onload = () => { image.style.opacity = '1'; };
+
+            document.getElementById('viewerCounter').innerText = `${viewerIndex + 1} / ${viewerImages.length}`;
+
+            const prevBtn = document.getElementById('viewerPrevBtn');
+            const nextBtn = document.getElementById('viewerNextBtn');
+            const multi = viewerImages.length > 1;
+
+            prevBtn.classList.toggle('hidden', !multi);
+            nextBtn.classList.toggle('hidden', !multi);
+        }
+
+        function showNextImage() {
+            if (viewerImages.length <= 1) return;
+            viewerIndex = (viewerIndex + 1) % viewerImages.length;
+            renderViewerImage();
+        }
+
+        function showPreviousImage() {
+            if (viewerImages.length <= 1) return;
+            viewerIndex = (viewerIndex - 1 + viewerImages.length) % viewerImages.length;
+            renderViewerImage();
+        }
+
+        function closeImageViewer(event = null) {
+            // Nếu click trực tiếp vào lớp nền thì đóng; click nội dung không đóng.
+            if (event && event.target !== event.currentTarget) return;
+
+            const modal = document.getElementById('imageViewerModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+
+        // Điều khiển gallery bằng bàn phím.
+        document.addEventListener('keydown', function(event) {
+            const modal = document.getElementById('imageViewerModal');
+            if (!modal || modal.classList.contains('hidden')) return;
+
+            if (event.key === 'ArrowRight') {
+                event.preventDefault();
+                showNextImage();
+            } else if (event.key === 'ArrowLeft') {
+                event.preventDefault();
+                showPreviousImage();
+            } else if (event.key === 'Escape') {
+                event.preventDefault();
+                closeImageViewer();
+            }
+        });
+
+        // Vuốt ngang trên điện thoại/tablet.
+        document.addEventListener('DOMContentLoaded', function() {
+            const swipeArea = document.getElementById('viewerSwipeArea');
+            if (!swipeArea) return;
+
+            swipeArea.addEventListener('touchstart', function(event) {
+                const touch = event.changedTouches[0];
+                viewerTouchStartX = touch.clientX;
+                viewerTouchStartY = touch.clientY;
+            }, { passive: true });
+
+            swipeArea.addEventListener('touchend', function(event) {
+                const touch = event.changedTouches[0];
+                const deltaX = touch.clientX - viewerTouchStartX;
+                const deltaY = touch.clientY - viewerTouchStartY;
+
+                // Chỉ đổi ảnh khi người dùng vuốt ngang rõ ràng.
+                if (Math.abs(deltaX) < 45 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+
+                if (deltaX < 0) showNextImage();
+                else showPreviousImage();
+            }, { passive: true });
+        });
 
         async function clearAllData() {
             if (!hasAdminAccess()) {
