@@ -564,6 +564,8 @@
         let roomPage = 1;
         // V6.1: khóa thao tác lưu để 1 lần bấm không thể INSERT 2 phòng.
         let roomSaveInProgress = false;
+        // V6.2: khóa lưu tài khoản để tránh submit lặp / tạo trùng.
+        let userSaveInProgress = false;
         let roomTotal = 0;
         let roomFilterTimer = null;
         let dbCases = [];
@@ -674,69 +676,75 @@
         async function saveUserToDB(userData) {
             if (!supabaseClient) {
                 showToast('Supabase chưa kết nối. Không thể lưu tài khoản!', 'error');
-                return false;
+                return null;
             }
 
             try {
-                let result;
-                const isEditing = userData.id !== null &&
-                    userData.id !== undefined &&
-                    userData.id !== '' &&
-                    users.some(u => String(u.id) === String(userData.id));
+                const hasId = userData.id !== null && userData.id !== undefined && userData.id !== '';
 
-                if (isEditing) {
-                    // UPDATE: giữ nguyên ID hiện tại, tuyệt đối không INSERT thêm dòng mới.
+                if (hasId) {
+                    // UPDATE tuyệt đối theo ID hiện có. Không fallback sang INSERT.
                     const row = mapAppUserToDb(userData, false);
-                    result = await supabaseClient
+                    const { data, error } = await supabaseClient
                         .from('users')
                         .update(row)
                         .eq('id', Number(userData.id))
-                        .select()
-                        .single();
-                } else {
-                    // INSERT: chỉ chạy khi thực sự tạo tài khoản mới.
-                    const row = mapAppUserToDb(userData, false);
-                    result = await supabaseClient
-                        .from('users')
-                        .insert([row])
-                        .select()
-                        .single();
+                        .select('id, username, password, role, full_name')
+                        .maybeSingle();
+
+                    if (error) throw error;
+                    if (!data) {
+                        throw new Error('Không tìm thấy tài khoản để cập nhật hoặc policy UPDATE đang chặn thao tác.');
+                    }
+                    return data.id;
                 }
 
-                if (result.error) {
-                    console.error('Supabase users error:', result.error);
-                    const detail = result.error.message || result.error.details || 'Không xác định';
-                    showToast(`Không thể lưu tài khoản: ${detail}`, 'error');
-                    return false;
-                }
+                // INSERT chỉ khi form thật sự là "Thêm tài khoản mới".
+                const row = mapAppUserToDb(userData, false);
+                const { data, error } = await supabaseClient
+                    .from('users')
+                    .insert([row])
+                    .select('id')
+                    .single();
 
-                return true;
+                if (error) throw error;
+                return data?.id ?? null;
+
             } catch (err) {
                 console.error('Lỗi lưu tài khoản:', err);
-                showToast(`Lỗi lưu tài khoản: ${err.message || err}`, 'error');
-                return false;
+                showToast(`Không thể lưu tài khoản: ${err?.message || err?.details || err}`, 'error');
+                return null;
             }
         }
 
         async function deleteUserFromDB(id) {
+            if (!supabaseClient) {
+                showToast('Supabase chưa kết nối. Không thể xóa tài khoản!', 'error');
+                return false;
+            }
+
+            const numericId = Number(id);
+            if (!Number.isFinite(numericId)) {
+                showToast('ID tài khoản không hợp lệ!', 'error');
+                return false;
+            }
+
             try {
                 const { data, error } = await supabaseClient
                     .from('users')
                     .delete()
-                    .eq('id', Number(id))
+                    .eq('id', numericId)
                     .select('id');
 
                 if (error) throw error;
-
                 if (!data || data.length === 0) {
-                    showToast('Không thể xóa tài khoản. Kiểm tra quyền DELETE/RLS trên Supabase!', 'error');
-                    return false;
+                    throw new Error('Supabase không xóa bản ghi. Policy DELETE của users đang chặn thao tác.');
                 }
 
                 return true;
             } catch (err) {
                 console.error('Lỗi xóa tài khoản:', err);
-                showToast(`Lỗi xóa tài khoản: ${err.message || err}`, 'error');
+                showToast(`Không thể xóa tài khoản: ${err?.message || err?.details || err}`, 'error');
                 return false;
             }
         }
@@ -1223,12 +1231,17 @@
 
         async function saveUser(e) {
             e.preventDefault();
+
+            if (userSaveInProgress) {
+                showToast('Đang lưu tài khoản, vui lòng chờ...', 'error');
+                return;
+            }
             if (currentUser.role !== 'Quản trị viên') {
                 showToast('Bạn không có quyền thực hiện thao tác này!', 'error');
                 return;
             }
 
-            const editId = document.getElementById('editUserId').value;
+            const editId = document.getElementById('editUserId').value.trim();
             const userVal = document.getElementById('accUsername').value.trim().toLowerCase();
             const nameVal = document.getElementById('accFullName').value.trim();
             const passVal = document.getElementById('accPassword').value.trim();
@@ -1239,33 +1252,67 @@
                 return;
             }
 
-            // Không cho trùng username với tài khoản KHÁC.
+            // Không cho trùng username với một tài khoản khác.
             const duplicate = users.some(u =>
-                u.user.toLowerCase() === userVal &&
+                String(u.user || '').toLowerCase() === userVal &&
                 String(u.id) !== String(editId || '')
             );
             if (duplicate) {
-                showToast('Tên tài khoản trùng lặp!', 'error');
+                showToast('Tên tài khoản đã tồn tại!', 'error');
                 return;
             }
 
-            const userData = {
-                id: editId ? Number(editId) : null,
-                user: userVal,
-                name: nameVal,
-                pass: passVal,
-                role: roleVal
-            };
+            // Nếu đang sửa, ID phải tồn tại trong danh sách hiện tại.
+            if (editId && !users.some(u => String(u.id) === String(editId))) {
+                showToast('Không tìm thấy tài khoản gốc để cập nhật. Hãy tải lại trang!', 'error');
+                return;
+            }
 
-            const saved = await saveUserToDB(userData);
+            const submitBtn = document.querySelector('#userForm button[type="submit"]');
+            userSaveInProgress = true;
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.dataset.oldText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang lưu...';
+                submitBtn.classList.add('opacity-60', 'cursor-not-allowed');
+            }
 
-            // Chỉ đóng form khi Supabase xác nhận lưu thành công.
-            if (!saved) return;
+            try {
+                const userData = {
+                    id: editId ? Number(editId) : null,
+                    user: userVal,
+                    name: nameVal,
+                    pass: passVal,
+                    role: roleVal
+                };
 
-            users = await loadUsersFromDB();
-            renderUsersTable();
-            closeUserModal();
-            showToast(editId ? 'Đã cập nhật tài khoản!' : 'Đã tạo tài khoản mới!');
+                const savedId = await saveUserToDB(userData);
+                if (savedId === null || savedId === undefined) return;
+
+                users = await loadUsersFromDB();
+                renderUsersTable();
+                closeUserModal();
+
+                // Nếu Admin đang sửa chính tài khoản đang đăng nhập thì cập nhật session hiển thị luôn.
+                if (editId && currentUser && String(currentUser.id) === String(editId)) {
+                    const refreshed = users.find(u => String(u.id) === String(editId));
+                    if (refreshed) {
+                        currentUser = refreshed;
+                        const storage = localStorage.getItem(AUTH_KEY) ? localStorage : sessionStorage;
+                        storage.setItem(AUTH_KEY, JSON.stringify(refreshed));
+                        showApp();
+                    }
+                }
+
+                showToast(editId ? 'Đã cập nhật tài khoản, không tạo bản mới!' : 'Đã tạo tài khoản mới!');
+            } finally {
+                userSaveInProgress = false;
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = submitBtn.dataset.oldText || 'Lưu Tài Khoản';
+                    submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                }
+            }
         }
 
         async function deleteUser(id) {
@@ -1273,21 +1320,31 @@
                 showToast('Bạn không có quyền xóa tài khoản!', 'error');
                 return;
             }
-            const u = users.find(x => x.id === id);
-            if (!u) return;
 
-            if (u.user === 'admin') {
+            // onclick truyền ID dạng chuỗi, Supabase int8 thường trả về number.
+            const u = users.find(x => String(x.id) === String(id));
+            if (!u) {
+                showToast('Không tìm thấy tài khoản cần xóa!', 'error');
+                return;
+            }
+
+            if (String(u.user).toLowerCase() === 'admin') {
                 showToast('Không thể xóa tài khoản Admin hệ thống!', 'error');
                 return;
             }
 
+            if (currentUser && String(currentUser.id) === String(u.id)) {
+                showToast('Không thể xóa chính tài khoản đang đăng nhập!', 'error');
+                return;
+            }
+
             if (confirm(`Xóa tài khoản "${u.user}" (${u.name})?`)) {
-                const deleted = await deleteUserFromDB(id);
+                const deleted = await deleteUserFromDB(u.id);
                 if (!deleted) return;
 
                 users = await loadUsersFromDB();
                 renderUsersTable();
-                showToast('Đã xóa tài khoản!');
+                showToast('Đã xóa tài khoản khỏi Supabase!');
             }
         }
 
