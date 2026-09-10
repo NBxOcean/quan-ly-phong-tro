@@ -522,9 +522,11 @@
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Chức Vụ / Phân Quyền *</label>
                     <select id="accRole" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
-                        <option value="Nhân viên Sale" selected>Nhân viên Sale (Mặc định - Chỉ xem/copy)</option>
-                        <option value="Quản trị viên">Quản trị viên (Admin - Full Quyền)</option>
+                        <option value="Nhân viên Sale" selected>Nhân viên Sale</option>
+                        <option value="Admin quản lý">Admin quản lý</option>
+                        <option value="Admin cao cấp">Admin cao cấp nhất</option>
                     </select>
+                    <p class="text-[11px] text-slate-500 mt-1.5">Admin cao cấp có toàn quyền. Admin quản lý vận hành hệ thống và quản lý nhân viên. Nhân viên dùng quyền cơ bản.</p>
                 </div>
 
                 <div class="pt-3 border-t flex justify-end gap-2">
@@ -535,6 +537,64 @@
         </div>
     </div>
 
+
+
+    <!-- THÔNG BÁO SAU KHI ĐĂNG NHẬP -->
+    <div id="loginNoticeModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm hidden items-center justify-center z-[70] p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full border border-slate-100 overflow-hidden">
+            <div class="bg-gradient-to-r from-sky-600 to-blue-700 p-5 text-white">
+                <div class="flex items-start justify-between gap-3">
+                    <div>
+                        <div class="text-[10px] uppercase tracking-[0.2em] font-bold text-blue-100 mb-1">NBxOcean • Thông báo hệ thống</div>
+                        <h3 id="loginNoticeTitle" class="text-lg font-extrabold">Thông báo</h3>
+                    </div>
+                    <span id="loginNoticeRoleBadge" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-white/15 border border-white/20"></span>
+                </div>
+            </div>
+            <div class="p-5">
+                <div id="loginNoticeMessage" class="text-sm text-slate-700 leading-7 whitespace-pre-line"></div>
+                <div class="mt-4 p-3 rounded-2xl bg-slate-50 border border-slate-200">
+                    <div class="text-[11px] text-slate-500">Đăng nhập với</div>
+                    <div id="loginNoticeUser" class="text-sm font-bold text-slate-800 mt-0.5"></div>
+                </div>
+                <div class="mt-5 flex gap-2 justify-end">
+                    <button id="editLoginNoticeBtn" onclick="openNoticeEditor()" class="hidden px-4 py-2 rounded-xl border border-blue-200 text-blue-700 font-semibold text-sm hover:bg-blue-50">
+                        <i class="fa-solid fa-pen mr-1"></i> Cập nhật thông báo
+                    </button>
+                    <button onclick="closeLoginNotice()" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow">
+                        Vào hệ thống
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BIÊN TẬP THÔNG BÁO - CHỈ ADMIN CAO CẤP -->
+    <div id="noticeEditorModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm hidden items-center justify-center z-[80] p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full border border-slate-100">
+            <div class="p-5 border-b flex justify-between items-center">
+                <div>
+                    <h3 class="font-extrabold text-slate-800">Cập nhật thông báo đăng nhập</h3>
+                    <p class="text-[11px] text-slate-500 mt-1">Nội dung này sẽ hiển thị cho mọi tài khoản khi đăng nhập.</p>
+                </div>
+                <button onclick="closeNoticeEditor()" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <form onsubmit="saveSystemNotice(event)" class="p-5 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tiêu đề *</label>
+                    <input id="noticeEditorTitle" required maxlength="120" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Thông tin cần thiết *</label>
+                    <textarea id="noticeEditorMessage" required rows="8" maxlength="3000" class="w-full border rounded-xl p-3 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeNoticeEditor()" class="px-4 py-2 rounded-xl border text-slate-600 text-sm">Hủy</button>
+                    <button id="noticeSaveBtn" type="submit" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm">Lưu thông báo</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- MODAL THÊM / SỬA KỊCH BẢN CRM - CHỈ ADMIN -->
     <div id="crmModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
@@ -658,7 +718,7 @@
         let currentFilteredData = [];
 
         const DEFAULT_USERS = [
-            { id: '1', user: 'admin', pass: '123456', name: 'Nguyên Bảo (Admin)', role: 'Quản trị viên' },
+            { id: '1', user: 'admin', pass: '123456', name: 'Nguyên Bảo (Admin)', role: 'Admin cao cấp' },
             { id: '2', user: 'nhanvien1', pass: '123456', name: 'Nguyễn Văn A', role: 'Nhân viên Sale' }
         ];
 
@@ -701,21 +761,23 @@
         // Chuyển dữ liệu Supabase (username/password/full_name) về cấu trúc app (user/pass/name)
         function mapDbUserToApp(u) {
             if (!u) return null;
+            const rawRole = String(u.role || '').toLowerCase();
+            let appRole = 'Nhân viên Sale';
+            if (rawRole === 'owner' || rawRole === 'super_admin') appRole = 'Admin cao cấp';
+            else if (rawRole === 'parent' || rawRole === 'admin' || rawRole === 'manager') appRole = 'Admin quản lý';
+            else if (rawRole === 'child' || rawRole === 'staff' || rawRole === 'sale') appRole = 'Nhân viên Sale';
             return {
                 id: u.id,
                 user: typeof u.username === 'string' ? u.username : (u.user || ''),
                 pass: typeof u.password === 'string' ? u.password : (u.pass || ''),
                 name: typeof u.full_name === 'string' ? u.full_name : (u.name || ''),
-                // Supabase đang có CHECK role chỉ cho phép: parent / child.
-                // App vẫn dùng tên tiếng Việt để hiển thị và phân quyền.
-                role: u.role === 'parent' ? 'Quản trị viên' :
-                      (u.role === 'child' ? 'Nhân viên Sale' : (u.role || 'Nhân viên Sale'))
+                role: appRole
             };
         }
 
         function mapAppUserToDb(userData, includeId = false) {
             const appRole = userData.role || 'Nhân viên Sale';
-            const dbRole = appRole === 'Quản trị viên' ? 'parent' : 'child';
+            const dbRole = appRole === 'Admin cao cấp' ? 'owner' : (appRole === 'Admin quản lý' ? 'parent' : 'child');
             const row = {
                 username: String(userData.user || '').trim().toLowerCase(),
                 password: String(userData.pass || '').trim(),
@@ -726,6 +788,18 @@
                 row.id = Number(userData.id);
             }
             return row;
+        }
+
+        function isSuperAdmin() {
+            return currentUser && currentUser.role === 'Admin cao cấp';
+        }
+
+        function isManagerAdmin() {
+            return currentUser && currentUser.role === 'Admin quản lý';
+        }
+
+        function hasAdminAccess() {
+            return !!currentUser && (isSuperAdmin() || isManagerAdmin());
         }
 
         // 1. ĐỒNG BỘ DỮ LIỆU TRÊN SUPABASE
@@ -1196,6 +1270,7 @@
                 } else {
                     sessionStorage.setItem(AUTH_KEY, JSON.stringify(foundUser));
                 }
+                sessionStorage.removeItem('NBX_LOGIN_NOTICE_SHOWN');
                 showToast(`Xin chào ${foundUser.name}!`, 'success');
                 showApp();
             } else {
@@ -1219,36 +1294,39 @@
             document.getElementById('currentUserDisplay').innerText = currentUser.name;
             document.getElementById('currentUserRole').innerText = currentUser.role;
 
-            const isAdmin = (currentUser.role === 'Quản trị viên');
-            
             const navUsersBtn = document.getElementById('nav-users');
             const adminAddRoomBtn = document.getElementById('adminAddRoomBtn');
             const adminDataControls = document.getElementById('adminDataControls');
             const crmAdminControls = document.getElementById('crmAdminControls');
             const roleBadgeHeader = document.getElementById('roleBadgeHeader');
 
-            if (isAdmin) {
+            if (hasAdminAccess()) {
                 navUsersBtn.classList.remove('hidden');
                 adminAddRoomBtn.classList.remove('hidden');
                 adminDataControls.classList.remove('hidden');
                 if (crmAdminControls) crmAdminControls.classList.remove('hidden');
-                roleBadgeHeader.innerText = 'ADMIN';
-                roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30';
                 renderUsersTable();
             } else {
                 navUsersBtn.classList.add('hidden');
                 adminAddRoomBtn.classList.add('hidden');
                 adminDataControls.classList.add('hidden');
                 if (crmAdminControls) crmAdminControls.classList.add('hidden');
+                if (!document.getElementById('tab-users').classList.contains('hidden')) switchTab('tab-inventory');
+            }
+
+            if (isSuperAdmin()) {
+                roleBadgeHeader.innerText = 'SUPER ADMIN';
+                roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/30';
+            } else if (isManagerAdmin()) {
+                roleBadgeHeader.innerText = 'ADMIN';
+                roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30';
+            } else {
                 roleBadgeHeader.innerText = 'SALE';
                 roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30';
-                
-                if (!document.getElementById('tab-users').classList.contains('hidden')) {
-                    switchTab('tab-inventory');
-                }
             }
 
             filterRooms();
+            setTimeout(() => showLoginNoticeIfNeeded(), 250);
         }
 
         function showLogin() {
@@ -1258,7 +1336,7 @@
         }
 
         function switchTab(tabId) {
-            if (tabId === 'tab-users' && currentUser.role !== 'Quản trị viên') {
+            if (tabId === 'tab-users' && !hasAdminAccess()) {
                 showToast('Chỉ Quản trị viên mới có quyền truy cập trang này!', 'error');
                 return;
             }
@@ -1283,7 +1361,7 @@
 
         // 3. QUẢN LÝ TÀI KHOẢN
         function openUserModal(editId = null) {
-            if (currentUser.role !== 'Quản trị viên') {
+            if (!hasAdminAccess()) {
                 showToast('Chỉ Admin mới có quyền quản lý tài khoản!', 'error');
                 return;
             }
@@ -1325,7 +1403,7 @@
                 showToast('Đang lưu tài khoản, vui lòng chờ...', 'error');
                 return;
             }
-            if (currentUser.role !== 'Quản trị viên') {
+            if (!hasAdminAccess()) {
                 showToast('Bạn không có quyền thực hiện thao tác này!', 'error');
                 return;
             }
@@ -1335,6 +1413,17 @@
             const nameVal = document.getElementById('accFullName').value.trim();
             const passVal = document.getElementById('accPassword').value.trim();
             const roleVal = document.getElementById('accRole').value;
+
+            if (roleVal === 'Admin cao cấp' && !isSuperAdmin()) {
+                showToast('Chỉ Admin cao cấp mới được cấp quyền Admin cao cấp!', 'error');
+                return;
+            }
+
+            const editingOriginal = editId ? users.find(u => String(u.id) === String(editId)) : null;
+            if (editingOriginal?.role === 'Admin cao cấp' && !isSuperAdmin()) {
+                showToast('Bạn không có quyền chỉnh sửa Admin cao cấp!', 'error');
+                return;
+            }
 
             if (!userVal || !nameVal || !passVal) {
                 showToast('Vui lòng nhập đầy đủ thông tin tài khoản!', 'error');
@@ -1405,7 +1494,7 @@
         }
 
         async function deleteUser(id) {
-            if (currentUser.role !== 'Quản trị viên') {
+            if (!hasAdminAccess()) {
                 showToast('Bạn không có quyền xóa tài khoản!', 'error');
                 return;
             }
@@ -1417,8 +1506,8 @@
                 return;
             }
 
-            if (String(u.user).toLowerCase() === 'admin') {
-                showToast('Không thể xóa tài khoản Admin hệ thống!', 'error');
+            if (u.role === 'Admin cao cấp') {
+                showToast('Không thể xóa tài khoản Admin cao cấp!', 'error');
                 return;
             }
 
@@ -1447,7 +1536,10 @@
                     <td class="p-3.5 font-medium">${u.name}</td>
                     <td class="p-3.5 font-mono text-slate-500">${u.pass}</td>
                     <td class="p-3.5">
-                        <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${u.role === 'Quản trị viên' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}">
+                        <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${
+                            u.role === 'Admin cao cấp' ? 'bg-fuchsia-100 text-fuchsia-800' :
+                            u.role === 'Admin quản lý' ? 'bg-amber-100 text-amber-800' :
+                            'bg-slate-100 text-slate-700'}">
                             ${u.role}
                         </span>
                     </td>
@@ -1611,7 +1703,7 @@
                 return;
             }
 
-            const isAdmin = currentUser && (currentUser.role === 'Quản trị viên');
+            const isAdmin = currentUser && hasAdminAccess();
 
             container.innerHTML = data.map(room => {
                 let statusBg = "bg-emerald-100 text-emerald-800 border-emerald-200";
@@ -1698,7 +1790,7 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
         }
 
         function openModal(isEdit = false) {
-            if (currentUser.role !== 'Quản trị viên') {
+            if (!hasAdminAccess()) {
                 showToast('Chỉ Admin mới có quyền thêm/sửa phòng!', 'error');
                 return;
             }
@@ -1725,7 +1817,7 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
                 showToast('Đang lưu dữ liệu, vui lòng chờ...', 'error');
                 return;
             }
-            if (currentUser.role !== 'Quản trị viên') {
+            if (!hasAdminAccess()) {
                 showToast('Chỉ Admin mới có quyền lưu dữ liệu phòng!', 'error');
                 return;
             }
@@ -1795,7 +1887,7 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
         }
 
         function editRoom(id) {
-            if (currentUser.role !== 'Quản trị viên') {
+            if (!hasAdminAccess()) {
                 showToast('Chỉ Admin mới có quyền sửa phòng!', 'error');
                 return;
             }
@@ -1821,7 +1913,7 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
         }
 
         async function deleteRoom(id) {
-            if (currentUser.role !== 'Quản trị viên') {
+            if (!hasAdminAccess()) {
                 showToast('Chỉ Admin mới có quyền xóa phòng!', 'error');
                 return;
             }
@@ -1865,7 +1957,7 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
         }
 
         async function clearAllData() {
-            if (currentUser.role !== 'Quản trị viên') {
+            if (!hasAdminAccess()) {
                 showToast('Chỉ Admin mới có quyền xóa toàn bộ kho phòng!', 'error');
                 return;
             }
@@ -1889,7 +1981,7 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
         }
 
         function importData(event) {
-            if (currentUser.role !== 'Quản trị viên') {
+            if (!hasAdminAccess()) {
                 showToast('Chỉ Admin mới có quyền Import dữ liệu!', 'error');
                 return;
             }
@@ -1991,6 +2083,112 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
             setTimeout(() => toast.classList.add('opacity-0'), 2000);
         }
 
+
+        // 5B. THÔNG BÁO ĐĂNG NHẬP
+        let systemNotice = {
+            title: 'Chào mừng trở lại NBxOcean',
+            message: 'Vui lòng kiểm tra các phòng mới, khách hàng cần phản hồi và các công việc ưu tiên trong ngày.'
+        };
+
+        async function loadSystemNotice() {
+            try {
+                const tenantId = await getCurrentTenantId();
+                const { data, error } = await supabaseClient
+                    .from('system_announcements')
+                    .select('title,message,updated_at')
+                    .eq('tenant_id', tenantId)
+                    .maybeSingle();
+                if (error) throw error;
+                if (data) systemNotice = { title: data.title || systemNotice.title, message: data.message || systemNotice.message, updatedAt: data.updated_at || '' };
+            } catch (err) {
+                console.warn('Không tải được thông báo hệ thống:', err);
+            }
+            return systemNotice;
+        }
+
+        async function showLoginNoticeIfNeeded() {
+            if (!currentUser || sessionStorage.getItem('NBX_LOGIN_NOTICE_SHOWN') === '1') return;
+            await loadSystemNotice();
+
+            document.getElementById('loginNoticeTitle').innerText = systemNotice.title;
+            document.getElementById('loginNoticeMessage').innerText = systemNotice.message;
+            document.getElementById('loginNoticeUser').innerText = `${currentUser.name} • ${currentUser.role}`;
+            document.getElementById('loginNoticeRoleBadge').innerText = isSuperAdmin() ? 'ADMIN CAO CẤP' : (isManagerAdmin() ? 'ADMIN QUẢN LÝ' : 'NHÂN VIÊN');
+
+            const editBtn = document.getElementById('editLoginNoticeBtn');
+            if (isSuperAdmin()) editBtn.classList.remove('hidden');
+            else editBtn.classList.add('hidden');
+
+            const modal = document.getElementById('loginNoticeModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            sessionStorage.setItem('NBX_LOGIN_NOTICE_SHOWN', '1');
+        }
+
+        function closeLoginNotice() {
+            const modal = document.getElementById('loginNoticeModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function openNoticeEditor() {
+            if (!isSuperAdmin()) {
+                showToast('Chỉ Admin cao cấp mới được cập nhật thông báo!', 'error');
+                return;
+            }
+            document.getElementById('noticeEditorTitle').value = systemNotice.title || '';
+            document.getElementById('noticeEditorMessage').value = systemNotice.message || '';
+            const modal = document.getElementById('noticeEditorModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeNoticeEditor() {
+            const modal = document.getElementById('noticeEditorModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        async function saveSystemNotice(e) {
+            e.preventDefault();
+            if (!isSuperAdmin()) {
+                showToast('Chỉ Admin cao cấp mới được cập nhật thông báo!', 'error');
+                return;
+            }
+
+            const title = document.getElementById('noticeEditorTitle').value.trim();
+            const message = document.getElementById('noticeEditorMessage').value.trim();
+            if (!title || !message) {
+                showToast('Vui lòng nhập đầy đủ nội dung thông báo!', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('noticeSaveBtn');
+            const old = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang lưu...';
+
+            try {
+                const tenantId = await getCurrentTenantId();
+                const { error } = await supabaseClient
+                    .from('system_announcements')
+                    .upsert([{ tenant_id: tenantId, title, message, updated_at: new Date().toISOString() }], { onConflict: 'tenant_id' });
+                if (error) throw error;
+
+                systemNotice = { title, message };
+                document.getElementById('loginNoticeTitle').innerText = title;
+                document.getElementById('loginNoticeMessage').innerText = message;
+                closeNoticeEditor();
+                showToast('Đã cập nhật thông báo đăng nhập!');
+            } catch (err) {
+                console.error('Lỗi lưu thông báo:', err);
+                showToast('Không thể lưu thông báo: ' + (err?.message || err), 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = old;
+            }
+        }
+
         // 6. CRM & KỊCH BẢN TƯ VẤN - SUPABASE + PHÂN QUYỀN ADMIN/SALE
         const coreCategories = {
             "XU_LY_TU_CHOI": "Xử lý từ chối khi tư vấn",
@@ -2001,7 +2199,7 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
         };
 
         function isCrmAdmin() {
-            return currentUser && currentUser.role === 'Quản trị viên';
+            return hasAdminAccess();
         }
 
         function escapeHtml(value = '') {
