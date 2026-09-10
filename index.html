@@ -216,6 +216,11 @@
                     </div>
 
                     <div id="roomList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+                    <div id="roomPagination" class="mt-6 flex items-center justify-center gap-3">
+                        <button id="prevPageBtn" onclick="changeRoomPage(-1)" class="px-3 py-2 rounded-xl border bg-white text-sm disabled:opacity-40">← Trang trước</button>
+                        <span id="pageInfo" class="text-sm font-semibold text-slate-600">Trang 1</span>
+                        <button id="nextPageBtn" onclick="changeRoomPage(1)" class="px-3 py-2 rounded-xl border bg-white text-sm disabled:opacity-40">Trang sau →</button>
+                    </div>
                 </section>
             </div>
 
@@ -530,7 +535,7 @@
         <span id="toastMsg">Đã thao tác thành công!</span>
     </div>
 
-    <!-- JAVASCRIPT HỢP NHẤT KHÔNG TRÙNG LẶP - SUPABASE ROOMS V5 -->
+    <!-- JAVASCRIPT HỢP NHẤT - SUPABASE ROOMS V6 STORAGE + PAGINATION -->
     <script>
         // Cấu hình hằng số & Khởi tạo
         const SUPABASE_URL = 'https://yhkblcdvpcvjbxwfnqac.supabase.co';
@@ -552,7 +557,13 @@
         let currentUser = null;
         let db = null;
         let rooms = [];
-        let currentImages = [];
+        let currentImages = []; // URL ảnh đã lưu trên Storage
+        let pendingImageFiles = []; // ảnh mới chờ upload
+        const ROOM_IMAGE_BUCKET = 'room-images';
+        const ROOM_PAGE_SIZE = 24;
+        let roomPage = 1;
+        let roomTotal = 0;
+        let roomFilterTimer = null;
         let dbCases = [];
         let currentFilteredData = [];
 
@@ -784,7 +795,7 @@
                 amenities: room.amenities || '',
                 mediaUrl: room.media_url || '',
                 note: room.note || '',
-                images: Array.isArray(room.images) ? room.images : [],
+                images: [],
                 updatedAt: room.updated_at || room.updatedAt || ''
             };
         }
@@ -804,7 +815,7 @@
                 amenities: String(roomData.amenities || '').trim(),
                 media_url: String(roomData.mediaUrl || '').trim(),
                 note: String(roomData.note || '').trim(),
-                images: Array.isArray(roomData.images) ? roomData.images : []
+                // V6: ảnh nằm ở Storage + bảng room_images, không nhét Base64 vào rooms.
             };
 
             if (!row.code) throw new Error('Mã/Tên phòng không được để trống.');
@@ -815,22 +826,123 @@
         }
 
         async function loadRoomsFromDB() {
+            // V6: chỉ tải 1 trang thay vì kéo toàn bộ kho phòng về trình duyệt.
+            return await loadRoomsPage(roomPage);
+        }
+
+        async function loadRoomsPage(page = 1) {
             if (!supabaseClient) return [];
             try {
                 const tenantId = await getCurrentTenantId();
-                const { data, error } = await supabaseClient
-                    .from('rooms')
-                    .select('*')
-                    .eq('tenant_id', tenantId)
-                    .order('code', { ascending: true });
+                const keyword = (document.getElementById('filterKeyword')?.value || '').trim();
+                const district = document.getElementById('filterDistrict')?.value || '';
+                const price = document.getElementById('filterPrice')?.value || '';
+                const status = document.getElementById('filterStatus')?.value || '';
 
+                let query = supabaseClient
+                    .from('rooms')
+                    .select('id,tenant_id,code,price,district,status,address,amenities,media_url,note,updated_at,room_images(id,image_url,storage_path,sort_order)', { count: 'exact' })
+                    .eq('tenant_id', tenantId);
+
+                if (keyword) {
+                    const safe = keyword.replace(/[,%()]/g, ' ');
+                    query = query.or(`code.ilike.%${safe}%,address.ilike.%${safe}%,amenities.ilike.%${safe}%`);
+                }
+                if (district) query = query.eq('district', district);
+                if (status) query = query.eq('status', status);
+                if (price === 'under3') query = query.lt('price', 3);
+                else if (price === '3to5') query = query.gte('price', 3).lte('price', 5);
+                else if (price === '5to8') query = query.gt('price', 5).lte('price', 8);
+                else if (price === 'over8') query = query.gt('price', 8);
+
+                const from = (page - 1) * ROOM_PAGE_SIZE;
+                const to = from + ROOM_PAGE_SIZE - 1;
+                const { data, error, count } = await query
+                    .order('updated_at', { ascending: false })
+                    .range(from, to);
                 if (error) throw error;
-                return (data || []).map(mapDbRoomToApp).filter(Boolean);
+
+                roomTotal = count || 0;
+                roomPage = page;
+                const mapped = (data || []).map(r => {
+                    const room = mapDbRoomToApp(r);
+                    const imgs = Array.isArray(r.room_images) ? [...r.room_images].sort((a,b)=>(a.sort_order||0)-(b.sort_order||0)) : [];
+                    room.images = imgs.map(x => x.image_url).filter(Boolean);
+                    room.imageRecords = imgs;
+                    return room;
+                });
+                rooms = mapped;
+                updateRoomPagination();
+                return mapped;
             } catch (err) {
-                console.error('Lỗi tải Rooms từ Supabase:', err);
+                console.error('Lỗi tải Rooms V6:', err);
                 showToast('Không thể tải kho phòng: ' + (err?.message || err), 'error');
+                roomTotal = 0;
+                updateRoomPagination();
                 return [];
             }
+        }
+
+        function updateRoomPagination() {
+            const pages = Math.max(1, Math.ceil(roomTotal / ROOM_PAGE_SIZE));
+            const info = document.getElementById('pageInfo');
+            if (info) info.textContent = `Trang ${roomPage}/${pages} • ${roomTotal.toLocaleString('vi-VN')} phòng`;
+            const prev = document.getElementById('prevPageBtn');
+            const next = document.getElementById('nextPageBtn');
+            if (prev) prev.disabled = roomPage <= 1;
+            if (next) next.disabled = roomPage >= pages;
+            const count = document.getElementById('roomCount');
+            if (count) count.textContent = roomTotal.toLocaleString('vi-VN');
+        }
+
+        async function changeRoomPage(delta) {
+            const pages = Math.max(1, Math.ceil(roomTotal / ROOM_PAGE_SIZE));
+            const target = Math.min(pages, Math.max(1, roomPage + delta));
+            if (target === roomPage) return;
+            rooms = await loadRoomsPage(target);
+            renderRooms(rooms);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function uploadPendingRoomImages(roomId) {
+            if (!pendingImageFiles.length) return true;
+            const tenantId = await getCurrentTenantId();
+            for (let i = 0; i < pendingImageFiles.length; i++) {
+                const item = pendingImageFiles[i];
+                const ext = 'jpg';
+                const path = `${tenantId}/${roomId}/${Date.now()}_${i}_${makeUuid()}.${ext}`;
+                const { error: uploadError } = await supabaseClient.storage
+                    .from(ROOM_IMAGE_BUCKET)
+                    .upload(path, item.blob, { contentType: 'image/jpeg', upsert: false, cacheControl: '31536000' });
+                if (uploadError) throw uploadError;
+                const { data: pub } = supabaseClient.storage.from(ROOM_IMAGE_BUCKET).getPublicUrl(path);
+                const { error: rowError } = await supabaseClient.from('room_images').insert([{
+                    room_id: roomId,
+                    tenant_id: tenantId,
+                    image_url: pub.publicUrl,
+                    storage_path: path,
+                    sort_order: currentImages.length + i
+                }]);
+                if (rowError) {
+                    await supabaseClient.storage.from(ROOM_IMAGE_BUCKET).remove([path]);
+                    throw rowError;
+                }
+            }
+            pendingImageFiles = [];
+            return true;
+        }
+
+        async function deleteStoredImageByUrl(url, roomId) {
+            const room = rooms.find(r => String(r.id) === String(roomId));
+            const rec = room?.imageRecords?.find(x => x.image_url === url);
+            if (!rec) return true;
+            const { error: rowError } = await supabaseClient.from('room_images').delete().eq('id', rec.id);
+            if (rowError) throw rowError;
+            if (rec.storage_path) {
+                const { error: storageError } = await supabaseClient.storage.from(ROOM_IMAGE_BUCKET).remove([rec.storage_path]);
+                if (storageError) console.warn('Đã xóa DB ảnh nhưng chưa xóa được Storage:', storageError);
+            }
+            return true;
         }
 
         // INSERT và UPDATE tách riêng để sửa phòng không tạo thêm bản ghi mới.
@@ -853,7 +965,7 @@
 
                     if (error) throw error;
                     if (!data) throw new Error('Không tìm thấy phòng để cập nhật hoặc policy UPDATE đang chặn thao tác.');
-                    return true;
+                    return roomData.id;
                 }
 
                 const row = await mapAppRoomToDb(roomData, true);
@@ -864,7 +976,7 @@
                     .single();
 
                 if (error) throw error;
-                return !!data;
+                return data?.id || false;
             } catch (err) {
                 console.error('Lỗi lưu/cập nhật phòng:', err);
                 const detail = err?.message || err?.details || err?.hint || 'Không xác định';
@@ -1207,69 +1319,74 @@
 
         function handleFileSelect(e) {
             const files = e.target.files;
-            for (let file of files) {
-                processAndCompressImage(file);
-            }
+            for (let file of files) processAndCompressImage(file);
+            e.target.value = '';
         }
 
         function processAndCompressImage(file) {
+            if (!file || !file.type.startsWith('image/')) return;
             const statusElem = document.getElementById('compressingStatus');
             statusElem.classList.remove('hidden');
             statusElem.classList.add('flex');
-
             const reader = new FileReader();
             reader.onload = function(event) {
                 const img = new Image();
-                img.src = event.target.result;
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    let width = img.width;
-                    let height = img.height;
-
-                    const MAX_SIZE = 1200;
-                    if (width > height) {
-                        if (width > MAX_SIZE) {
-                            height *= MAX_SIZE / width;
-                            width = MAX_SIZE;
-                        }
-                    } else {
-                        if (height > MAX_SIZE) {
-                            width *= MAX_SIZE / height;
-                            height = MAX_SIZE;
-                        }
+                    let width = img.width, height = img.height;
+                    const MAX_SIZE = 1600;
+                    if (Math.max(width, height) > MAX_SIZE) {
+                        const ratio = MAX_SIZE / Math.max(width, height);
+                        width = Math.round(width * ratio); height = Math.round(height * ratio);
                     }
-
-                    canvas.width = width;
-                    canvas.height = height;
-
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-
-                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
-                    currentImages.push(compressedBase64);
-                    
-                    statusElem.classList.add('hidden');
-                    statusElem.classList.remove('flex');
-                    renderImagePreviews();
-                }
+                    canvas.width = width; canvas.height = height;
+                    canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+                    canvas.toBlob(blob => {
+                        if (!blob) return;
+                        const preview = URL.createObjectURL(blob);
+                        pendingImageFiles.push({ blob, preview });
+                        statusElem.classList.add('hidden'); statusElem.classList.remove('flex');
+                        renderImagePreviews();
+                    }, 'image/jpeg', 0.78);
+                };
+                img.src = event.target.result;
             };
             reader.readAsDataURL(file);
         }
 
         function renderImagePreviews() {
             const container = document.getElementById('imagePreviewContainer');
-            container.innerHTML = currentImages.map((imgSrc, index) => `
+            const all = [
+                ...currentImages.map(url => ({ type: 'stored', src: url })),
+                ...pendingImageFiles.map((x, i) => ({ type: 'pending', src: x.preview, pendingIndex: i }))
+            ];
+            container.innerHTML = all.map((item, index) => `
                 <div class="relative group aspect-square rounded-xl overflow-hidden border border-slate-200 bg-slate-100">
-                    <img src="${imgSrc}" class="w-full h-full object-cover">
+                    <img src="${item.src}" class="w-full h-full object-cover">
                     <button type="button" onclick="removeImage(${index})" class="absolute top-1 right-1 bg-rose-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-80 hover:opacity-100 transition">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
-                </div>
-            `).join('');
+                </div>`).join('');
         }
 
-        function removeImage(index) {
-            currentImages.splice(index, 1);
+        async function removeImage(index) {
+            if (index < currentImages.length) {
+                const url = currentImages[index];
+                const roomId = document.getElementById('roomId').value.trim();
+                if (roomId && confirm('Xóa ảnh này khỏi kho lưu trữ?')) {
+                    try {
+                        await deleteStoredImageByUrl(url, roomId);
+                        currentImages.splice(index, 1);
+                        const room = rooms.find(r => String(r.id) === String(roomId));
+                        if (room) room.imageRecords = (room.imageRecords || []).filter(x => x.image_url !== url);
+                    } catch (e) { showToast('Không thể xóa ảnh: ' + (e.message || e), 'error'); return; }
+                } else if (!roomId) currentImages.splice(index, 1);
+            } else {
+                const pIndex = index - currentImages.length;
+                const item = pendingImageFiles[pIndex];
+                if (item?.preview) URL.revokeObjectURL(item.preview);
+                pendingImageFiles.splice(pIndex, 1);
+            }
             renderImagePreviews();
         }
 
@@ -1289,35 +1406,17 @@
         }
 
         function filterRooms() {
-            const keyword = document.getElementById('filterKeyword').value.toLowerCase();
-            const district = document.getElementById('filterDistrict').value;
-            const price = document.getElementById('filterPrice').value;
-            const status = document.getElementById('filterStatus').value;
-
-            const filtered = rooms.filter(room => {
-                const matchKeyword = (room.code && room.code.toLowerCase().includes(keyword)) || 
-                                     (room.address && room.address.toLowerCase().includes(keyword)) || 
-                                     (room.amenities && room.amenities.toLowerCase().includes(keyword));
-                
-                const matchDistrict = district === '' || room.district === district;
-                const matchStatus = status === '' || room.status === status;
-
-                let matchPrice = true;
-                const p = parseFloat(room.price);
-                if (price === 'under3') matchPrice = p < 3;
-                else if (price === '3to5') matchPrice = p >= 3 && p <= 5;
-                else if (price === '5to8') matchPrice = p > 5 && p <= 8;
-                else if (price === 'over8') matchPrice = p > 8;
-
-                return matchKeyword && matchDistrict && matchStatus && matchPrice;
-            });
-
-            renderRooms(filtered);
+            clearTimeout(roomFilterTimer);
+            roomFilterTimer = setTimeout(async () => {
+                roomPage = 1;
+                rooms = await loadRoomsPage(1);
+                renderRooms(rooms);
+            }, 250);
         }
 
         function renderRooms(data) {
             const container = document.getElementById('roomList');
-            document.getElementById('roomCount').textContent = data.length;
+            document.getElementById('roomCount').textContent = roomTotal.toLocaleString('vi-VN');
 
             if (data.length === 0) {
                 container.innerHTML = `
@@ -1430,6 +1529,8 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
             document.getElementById('roomForm').reset();
             document.getElementById('roomId').value = '';
             currentImages = [];
+            pendingImageFiles.forEach(x => x.preview && URL.revokeObjectURL(x.preview));
+            pendingImageFiles = [];
             renderImagePreviews();
         }
 
@@ -1455,14 +1556,21 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
                 images: [...currentImages]
             };
 
-            const saved = await saveRoomToDB(roomData, isEdit);
-            if (!saved) return;
+            const savedRoomId = await saveRoomToDB(roomData, isEdit);
+            if (!savedRoomId) return;
+            try {
+                await uploadPendingRoomImages(savedRoomId);
+            } catch (imgErr) {
+                console.error('Lỗi upload ảnh:', imgErr);
+                showToast('Phòng đã lưu nhưng có ảnh upload lỗi: ' + (imgErr?.message || imgErr), 'error');
+            }
 
-            rooms = await loadRoomsFromDB();
+            roomPage = 1;
+            rooms = await loadRoomsPage(1);
             renderDistrictOptions();
-            filterRooms();
+            renderRooms(rooms);
             closeModal();
-            showToast(isEdit ? 'Đã cập nhật phòng trên Supabase!' : 'Đã thêm phòng mới lên Supabase!');
+            showToast(isEdit ? 'Đã cập nhật phòng + ảnh Storage!' : 'Đã thêm phòng + ảnh Storage!');
         }
 
         function editRoom(id) {
@@ -1484,6 +1592,8 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
             document.getElementById('note').value = room.note || '';
             
             currentImages = room.images ? [...room.images] : [];
+            pendingImageFiles.forEach(x => x.preview && URL.revokeObjectURL(x.preview));
+            pendingImageFiles = [];
             renderImagePreviews();
 
             openModal(true);
@@ -1818,9 +1928,10 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
             
             checkAuth();
 
-            rooms = await loadRoomsFromDB();
+            roomPage = 1;
+            rooms = await loadRoomsPage(1);
             renderDistrictOptions();
-            filterRooms();
+            renderRooms(rooms);
             setupPasteAndDragEvents();
 
             generateRandomPost();
