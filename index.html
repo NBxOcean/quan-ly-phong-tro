@@ -991,9 +991,14 @@
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Mô tả</label>
                     <textarea id="regionDescription" rows="3" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50"></textarea>
                 </div>
-                <div class="pt-3 border-t flex justify-end gap-2">
-                    <button type="button" onclick="closeRegionModal()" class="px-4 py-2 border rounded-xl text-sm">Hủy</button>
-                    <button id="regionSaveBtn" type="submit" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-sm font-semibold">Lưu Khu Vực</button>
+                <div class="pt-3 border-t flex flex-wrap items-center justify-between gap-2">
+                    <button id="regionDeleteBtn" type="button" onclick="deleteRegionFromModal()" class="hidden px-4 py-2 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 rounded-xl text-sm font-semibold">
+                        <i class="fa-solid fa-trash mr-1"></i> Xóa Khu Vực
+                    </button>
+                    <div class="flex gap-2 ml-auto">
+                        <button type="button" onclick="closeRegionModal()" class="px-4 py-2 border rounded-xl text-sm">Hủy</button>
+                        <button id="regionSaveBtn" type="submit" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-sm font-semibold">Lưu Khu Vực</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -1398,13 +1403,21 @@
             try {
                 const tenantId = await getCurrentTenantId();
                 const {data,error}=await supabaseClient.from('regions')
-                    .select('id,tenant_id,region_id,name,code,description,is_active,created_at,updated_at')
+                    .select('id,tenant_id,name,code,description,is_active,created_at,updated_at')
                     .eq('tenant_id',tenantId).order('name',{ascending:true});
                 if(error) throw error;
                 return data||[];
             } catch(err) {
                 console.error('Lỗi tải khu vực:',err);
-                return [];
+                const list = document.getElementById('regionList');
+                if(list){
+                    list.innerHTML = `<div class="lg:col-span-2 bg-rose-50 border border-rose-200 rounded-2xl p-6 text-center">
+                        <div class="font-bold text-rose-700">Không tải được dữ liệu khu vực</div>
+                        <div class="text-xs text-rose-600 mt-1">${escapeHtml(String(err?.message || err || 'Lỗi không xác định'))}</div>
+                        <button onclick="refreshRegionsV732()" class="mt-3 px-4 py-2 bg-white border border-rose-200 rounded-xl text-xs font-bold text-rose-700">Tải lại</button>
+                    </div>`;
+                }
+                return null;
             }
         }
 
@@ -1419,11 +1432,21 @@
             });
         }
 
+        async function refreshRegionsV732(){
+            regions = await loadRegionsFromDB();
+            if(regions === null) return;
+            populateRegionOptions();
+            renderRegions();
+            renderTeamContext();
+            showToast('Đã tải lại danh sách khu vực.');
+        }
+
         function renderRegions() {
             const el=document.getElementById('regionList');
             if(!el) return;
+            if(regions === null) return;
             if(!regions.length){
-                el.innerHTML='<div class="lg:col-span-2 bg-white border rounded-2xl p-10 text-center text-slate-400">Chưa có khu vực.</div>';
+                el.innerHTML='<div class="lg:col-span-2 bg-white border rounded-2xl p-10 text-center text-slate-400">Chưa có khu vực. Bạn có thể tạo khu vực mới bằng nút phía trên.</div>';
                 return;
             }
             el.innerHTML=regions.map(r=>{
@@ -1433,7 +1456,14 @@
                 return `<div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                     <div class="p-4 border-b flex justify-between gap-3">
                         <div><h3 class="font-extrabold text-slate-800">${escapeHtml(r.name)}</h3><p class="text-[11px] font-bold text-sky-600 mt-1">${escapeHtml(r.code)}</p></div>
-                        <button onclick="openRegionModal('${r.id}')" class="text-xs font-semibold text-sky-600 bg-sky-50 px-2.5 py-1.5 rounded-lg">Sửa</button>
+                        <div class="flex items-center gap-2">
+                            <button onclick="openRegionModal('${r.id}')" class="text-xs font-semibold text-sky-600 bg-sky-50 hover:bg-sky-100 px-2.5 py-1.5 rounded-lg">
+                                <i class="fa-solid fa-pen mr-1"></i>Sửa
+                            </button>
+                            <button onclick="deleteRegion('${r.id}')" class="text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 px-2.5 py-1.5 rounded-lg">
+                                <i class="fa-solid fa-trash mr-1"></i>Xóa
+                            </button>
+                        </div>
                     </div>
                     <div class="p-4 text-xs space-y-3">
                         ${r.description?`<p class="text-slate-600">${escapeHtml(r.description)}</p>`:''}
@@ -1451,26 +1481,244 @@
         function openRegionModal(id=null){
             if(!isSuperAdmin()) return showToast('Chỉ Admin cao cấp mới quản lý khu vực!','error');
             const r=id?regions.find(x=>String(x.id)===String(id)):null;
+            if(id && !r){
+                showToast('Không tìm thấy khu vực cần sửa. Hãy tải lại danh sách khu vực.', 'error');
+                refreshRegionsV732();
+                return;
+            }
             document.getElementById('regionForm').reset();
             document.getElementById('regionEditId').value=r?.id||'';
             document.getElementById('regionName').value=r?.name||'';
             document.getElementById('regionCode').value=r?.code||'';
             document.getElementById('regionDescription').value=r?.description||'';
             document.getElementById('regionModalTitle').innerText=r?'Chỉnh Sửa Khu Vực':'Tạo Khu Vực';
+            const deleteBtn = document.getElementById('regionDeleteBtn');
+            if(deleteBtn) deleteBtn.classList.toggle('hidden', !r);
             const m=document.getElementById('regionModal'); m.classList.remove('hidden');m.classList.add('flex');
         }
         function closeRegionModal(){const m=document.getElementById('regionModal');m.classList.add('hidden');m.classList.remove('flex');}
-        async function saveRegion(e){
-            e.preventDefault(); if(!isSuperAdmin()||regionSaveInProgress)return;
-            const id=document.getElementById('regionEditId').value.trim();
-            const row={tenant_id:await getCurrentTenantId(),name:document.getElementById('regionName').value.trim(),code:document.getElementById('regionCode').value.trim().toUpperCase(),description:document.getElementById('regionDescription').value.trim()||null,is_active:true};
-            regionSaveInProgress=true;
+
+
+        async function deleteRegionFromModal(){
+            const id = String(document.getElementById('regionEditId')?.value || '').trim();
+            if(!id) return;
+            await deleteRegion(id);
+        }
+
+        async function deleteRegion(regionId){
+            if(!isSuperAdmin()){
+                showToast('Chỉ Admin cao cấp mới được xóa khu vực!', 'error');
+                return;
+            }
+
+            const region = regions.find(r => String(r.id) === String(regionId));
+            if(!region){
+                showToast('Không tìm thấy khu vực cần xóa. Hãy tải lại danh sách.', 'error');
+                return;
+            }
+
             try{
-                const q=id?await supabaseClient.from('regions').update(row).eq('id',id).select('id').maybeSingle():await supabaseClient.from('regions').insert([row]).select('id').single();
-                if(q.error) throw q.error;
-                closeRegionModal(); regions=await loadRegionsFromDB(); populateRegionOptions(); renderRegions(); showToast('Đã lưu khu vực!');
-            }catch(err){showToast('Không thể lưu khu vực: '+(err?.message||err),'error');}
-            finally{regionSaveInProgress=false;}
+                const tenantId = await getCurrentTenantId();
+
+                // Kiểm tra trực tiếp database, không chỉ dựa vào dữ liệu đang có trên giao diện.
+                const [
+                    {count: teamCount, error: teamError},
+                    {count: userCount, error: userError}
+                ] = await Promise.all([
+                    supabaseClient
+                        .from('teams')
+                        .select('id', {count:'exact', head:true})
+                        .eq('tenant_id', tenantId)
+                        .eq('region_id', region.id),
+                    supabaseClient
+                        .from('users')
+                        .select('id', {count:'exact', head:true})
+                        .eq('region_id', region.id)
+                ]);
+
+                if(teamError) throw teamError;
+                if(userError) throw userError;
+
+                if((teamCount || 0) > 0 || (userCount || 0) > 0){
+                    const details = [];
+                    if((teamCount || 0) > 0) details.push(`${teamCount} Team`);
+                    if((userCount || 0) > 0) details.push(`${userCount} tài khoản`);
+                    showToast(`Không thể xóa "${region.name}" vì còn ${details.join(' và ')} đang thuộc khu vực này. Hãy chuyển hoặc xóa các dữ liệu đó trước.`, 'error');
+                    return;
+                }
+
+                const ok = confirm(
+                    `XÓA KHU VỰC?\n\n` +
+                    `Tên: ${region.name}\n` +
+                    `Mã: ${region.code}\n\n` +
+                    `Khu vực sẽ bị xóa vĩnh viễn. Thao tác này không thể hoàn tác.`
+                );
+                if(!ok) return;
+
+                const {data, error} = await supabaseClient
+                    .from('regions')
+                    .delete()
+                    .eq('tenant_id', tenantId)
+                    .eq('id', region.id)
+                    .select('id')
+                    .maybeSingle();
+
+                if(error) throw error;
+                if(!data) throw new Error('Supabase không xóa khu vực. Có thể policy DELETE đang chặn thao tác.');
+
+                if(String(activeRegionId || '') === String(region.id)){
+                    activeRegionId = '';
+                    activeTeamId = '';
+                }
+
+                closeRegionModal();
+
+                regions = await loadRegionsFromDB();
+                if(regions === null) regions = [];
+                teams = await loadTeamsFromDB();
+
+                populateRegionOptions();
+                renderRegions();
+                renderTeams();
+                renderTeamContext();
+                renderUsersTable();
+
+                showToast(`Đã xóa khu vực "${region.name}".`);
+            }catch(err){
+                const msg = String(err?.message || err || '');
+                console.error('Lỗi xóa khu vực:', err);
+
+                if(
+                    msg.toLowerCase().includes('foreign key') ||
+                    msg.toLowerCase().includes('violates foreign key constraint')
+                ){
+                    showToast('Không thể xóa khu vực vì vẫn còn Team hoặc dữ liệu đang liên kết với khu vực này.', 'error');
+                }else{
+                    showToast('Không thể xóa khu vực: ' + msg, 'error');
+                }
+            }
+        }
+
+        async function saveRegion(e){
+            e.preventDefault();
+            if(!isSuperAdmin() || regionSaveInProgress) return;
+
+            const editId = String(document.getElementById('regionEditId')?.value || '').trim();
+            const tenantId = await getCurrentTenantId();
+            const name = String(document.getElementById('regionName')?.value || '').trim();
+            const code = String(document.getElementById('regionCode')?.value || '')
+                .trim()
+                .toUpperCase()
+                .replace(/\s+/g, '-');
+            const description = String(document.getElementById('regionDescription')?.value || '').trim() || null;
+
+            if(!name || !code){
+                showToast('Vui lòng nhập đầy đủ tên và mã khu vực!', 'error');
+                return;
+            }
+
+            regionSaveInProgress = true;
+            const saveBtn = document.getElementById('regionSaveBtn');
+            const oldBtn = saveBtn?.innerHTML || '';
+            if(saveBtn){
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang lưu...';
+            }
+
+            try {
+                // Luôn đọc bản ghi hiện tại nếu đang sửa, tránh mất ID do giao diện cũ/cache.
+                let currentRecord = null;
+                if(editId){
+                    const {data, error} = await supabaseClient
+                        .from('regions')
+                        .select('id,tenant_id,name,code')
+                        .eq('tenant_id', tenantId)
+                        .eq('id', editId)
+                        .maybeSingle();
+                    if(error) throw error;
+                    if(!data) throw new Error('Không tìm thấy khu vực cần cập nhật. Hãy tải lại trang.');
+                    currentRecord = data;
+                }
+
+                // Kiểm tra mã trùng trong cùng tenant, bỏ qua chính bản ghi đang sửa.
+                let duplicateQuery = supabaseClient
+                    .from('regions')
+                    .select('id,name,code')
+                    .eq('tenant_id', tenantId)
+                    .eq('code', code);
+
+                if(currentRecord?.id){
+                    duplicateQuery = duplicateQuery.neq('id', currentRecord.id);
+                }
+
+                const {data: duplicates, error: duplicateError} = await duplicateQuery.limit(1);
+                if(duplicateError) throw duplicateError;
+
+                if(duplicates?.length){
+                    throw new Error(`Mã khu vực "${code}" đã được sử dụng bởi "${duplicates[0].name}".`);
+                }
+
+                const row = {
+                    tenant_id: tenantId,
+                    name,
+                    code,
+                    description,
+                    is_active: true
+                };
+
+                let result;
+                if(currentRecord?.id){
+                    result = await supabaseClient
+                        .from('regions')
+                        .update(row)
+                        .eq('tenant_id', tenantId)
+                        .eq('id', currentRecord.id)
+                        .select('id,name,code')
+                        .maybeSingle();
+
+                    if(result.error) throw result.error;
+                    if(!result.data) throw new Error('Supabase không trả về khu vực sau khi cập nhật.');
+                } else {
+                    result = await supabaseClient
+                        .from('regions')
+                        .insert([row])
+                        .select('id,name,code')
+                        .single();
+
+                    if(result.error) throw result.error;
+                }
+
+                regions = await loadRegionsFromDB();
+                if(regions === null) throw new Error('Đã lưu nhưng không thể tải lại danh sách khu vực.');
+
+                populateRegionOptions();
+                renderRegions();
+                renderTeamContext();
+                closeRegionModal();
+
+                showToast(currentRecord ? 'Đã cập nhật khu vực!' : 'Đã tạo khu vực mới!');
+            } catch(err) {
+                const msg = String(err?.message || err || '');
+                console.error('Lỗi lưu/cập nhật khu vực:', err);
+
+                if(
+                    msg.includes('regions_tenant_id_code_key') ||
+                    msg.toLowerCase().includes('duplicate key') ||
+                    msg.includes('đã được sử dụng')
+                ){
+                    showToast(msg.includes('đã được sử dụng') ? msg : `Mã khu vực "${code}" đã tồn tại. Hãy dùng mã khác.`, 'error');
+                } else if(msg.includes("column regions.region_id does not exist")){
+                    showToast('Phiên bản cũ đang gọi sai cột region_id của bảng regions. Hãy dùng file V7.3.2.', 'error');
+                } else {
+                    showToast('Không thể cập nhật khu vực: ' + msg, 'error');
+                }
+            } finally {
+                regionSaveInProgress = false;
+                if(saveBtn){
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = oldBtn;
+                }
+            }
         }
 
         async function changeActiveRegion(id){
@@ -1528,7 +1776,7 @@
                 const tenantId = await getCurrentTenantId();
                 const { data, error } = await supabaseClient
                     .from('teams')
-                    .select('id,tenant_id,name,code,description,is_active,created_at,updated_at')
+                    .select('id,tenant_id,region_id,name,code,description,is_active,created_at,updated_at')
                     .eq('tenant_id', tenantId)
                     .order('name', { ascending: true });
                 if (error) throw error;
@@ -1544,6 +1792,14 @@
             populateRegionOptions();
             renderTeamContext();
             renderRegions();
+            if(regionLoadFailed){
+                const regionList = document.getElementById('regionList');
+                if(regionList) regionList.innerHTML = `<div class="lg:col-span-2 bg-rose-50 border border-rose-200 rounded-2xl p-6 text-center">
+                    <div class="font-bold text-rose-700">Không tải được dữ liệu khu vực</div>
+                    <div class="text-xs text-rose-600 mt-1">Bấm Tải lại để thử đồng bộ lại từ Supabase.</div>
+                    <button onclick="refreshRegionsV732()" class="mt-3 px-4 py-2 bg-white border border-rose-200 rounded-xl text-xs font-bold text-rose-700">Tải lại</button>
+                </div>`;
+            }
             renderTeams();
             populateUserTeamOptions();
         }
@@ -4415,6 +4671,8 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
         document.addEventListener('DOMContentLoaded', async () => {
             users = await loadUsersFromDB();
             regions = await loadRegionsFromDB();
+            const regionLoadFailed = regions === null;
+            if(regionLoadFailed) regions = [];
             teams = await loadTeamsFromDB();
 
             checkAuth();
