@@ -240,7 +240,32 @@
                 scroll-behavior: auto !important;
             }
         }
-    </style>
+    
+        /* V7.3.5 - Menu tác vụ ẩn gọn */
+        #taskMenuPanel {
+            animation: taskMenuIn .16s ease-out;
+        }
+        @keyframes taskMenuIn {
+            from { opacity: 0; transform: translateY(-6px) scale(.985); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .task-menu-item {
+            min-height: 58px;
+        }
+        .task-menu-item:not(.bg-orange-500\/15) {
+            box-shadow: none;
+        }
+        @media (max-width: 639px) {
+            #taskMenuPanel {
+                top: 66px;
+                max-height: calc(100dvh - 78px);
+            }
+            #taskMenuButton {
+                min-height: 40px;
+            }
+        }
+
+</style>
 
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 min-h-screen pb-12 antialiased">
@@ -323,29 +348,67 @@
                 </div>
 
                 <div class="flex items-center gap-2 sm:gap-3 flex-wrap w-full lg:w-auto">
-                    <nav class="flex flex-wrap bg-slate-800/80 p-1 rounded-2xl gap-1 border border-slate-700/60">
-                        <button onclick="switchTab('tab-inventory')" id="nav-inventory" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 bg-orange-500 text-white shadow">
-                            <i class="fa-solid fa-boxes-stacked"></i> Kho Phòng
+                    
+                    <div class="relative">
+                        <button id="taskMenuButton" onclick="toggleTaskMenu()" class="flex items-center gap-2 bg-slate-800/90 hover:bg-slate-700 text-white px-3.5 py-2 rounded-2xl border border-slate-700 shadow-sm text-sm font-bold transition">
+                            <i class="fa-solid fa-bars"></i>
+                            <span class="hidden sm:inline">Tác vụ</span>
+                            <span id="taskMenuCurrentLabel" class="text-[11px] sm:text-xs font-medium text-slate-300 max-w-[150px] truncate">Kho Phòng</span>
+                            <i id="taskMenuChevron" class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform"></i>
                         </button>
-                        <button onclick="switchTab('tab-poster')" id="nav-poster" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-700/50">
-                            <i class="fa-solid fa-pen-to-square"></i> Mẫu Marketing
-                        </button>
-                        <button onclick="switchTab('tab-crm')" id="nav-crm" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-700/50">
-                            <i class="fa-solid fa-comments"></i> Kịch Bản CRM
-                        </button>
-                        <button onclick="switchTab('tab-appointments')" id="nav-appointments" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-cyan-200 bg-cyan-500/10 border border-cyan-400/20 hover:text-white hover:bg-cyan-500/20">
-                            <i class="fa-solid fa-calendar-check"></i> Lịch Xem Phòng
-                        </button>
-                        <button onclick="switchTab('tab-regions')" id="nav-regions" class="tab-btn hidden px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-sky-300 hover:text-white hover:bg-slate-700/50">
-                            <i class="fa-solid fa-map-location-dot"></i> Khu Vực
-                        </button>
-                        <button onclick="switchTab('tab-teams')" id="nav-teams" class="tab-btn hidden px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-violet-300 hover:text-white hover:bg-slate-700/50">
-                            <i class="fa-solid fa-people-group"></i> Quản Lý Team
-                        </button>
-                        <button onclick="switchTab('tab-users')" id="nav-users" class="tab-btn hidden px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-amber-300 hover:text-white hover:bg-slate-700/50">
-                            <i class="fa-solid fa-users-gear"></i> Quản Lý Tài Khoản
-                        </button>
-                    </nav>
+
+                        <div id="taskMenuPanel" class="hidden fixed sm:absolute left-3 right-3 sm:left-auto sm:right-0 top-[72px] sm:top-full sm:mt-2 sm:w-[320px] bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-2xl shadow-2xl z-[90] overflow-hidden">
+                            <div class="px-3 py-2.5 border-b border-slate-700 flex items-center justify-between">
+                                <div>
+                                    <div class="text-[10px] uppercase tracking-wider font-bold text-slate-400">Điều hướng</div>
+                                    <div class="text-sm font-extrabold text-white">Danh sách tác vụ</div>
+                                </div>
+                                <button onclick="closeTaskMenu()" class="w-8 h-8 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+
+                            <div class="p-2 max-h-[70dvh] overflow-y-auto overscroll-contain">
+                                <button onclick="selectTaskFromMenu('tab-inventory')" id="nav-inventory" class="task-menu-item tab-btn w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-white bg-orange-500/15 border border-orange-400/20">
+                                    <span class="w-9 h-9 rounded-xl bg-orange-500/15 text-orange-300 flex items-center justify-center shrink-0"><i class="fa-solid fa-boxes-stacked"></i></span>
+                                    <span class="min-w-0"><span class="block font-bold">Kho Phòng</span><span class="block text-[11px] text-slate-400 truncate">Quản lý phòng và tài nguyên</span></span>
+                                </button>
+
+                                <button onclick="selectTaskFromMenu('tab-poster')" id="nav-poster" class="task-menu-item tab-btn w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
+                                    <span class="w-9 h-9 rounded-xl bg-pink-500/10 text-pink-300 flex items-center justify-center shrink-0"><i class="fa-solid fa-pen-to-square"></i></span>
+                                    <span class="min-w-0"><span class="block font-bold">Mẫu Marketing</span><span class="block text-[11px] text-slate-400 truncate">Nội dung đăng bài và mẫu bán hàng</span></span>
+                                </button>
+
+                                <button onclick="selectTaskFromMenu('tab-crm')" id="nav-crm" class="task-menu-item tab-btn w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
+                                    <span class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-300 flex items-center justify-center shrink-0"><i class="fa-solid fa-comments"></i></span>
+                                    <span class="min-w-0"><span class="block font-bold">Kịch Bản CRM</span><span class="block text-[11px] text-slate-400 truncate">Kịch bản tư vấn và xử lý tình huống</span></span>
+                                </button>
+
+                                <button onclick="selectTaskFromMenu('tab-appointments')" id="nav-appointments" class="task-menu-item tab-btn w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
+                                    <span class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-300 flex items-center justify-center shrink-0"><i class="fa-solid fa-calendar-check"></i></span>
+                                    <span class="min-w-0"><span class="block font-bold">Lịch Xem Phòng</span><span class="block text-[11px] text-slate-400 truncate">Quản lý lịch dẫn khách xem phòng</span></span>
+                                </button>
+
+                                <div class="my-2 border-t border-slate-700"></div>
+
+                                <button onclick="selectTaskFromMenu('tab-regions')" id="nav-regions" class="task-menu-item tab-btn hidden w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
+                                    <span class="w-9 h-9 rounded-xl bg-sky-500/10 text-sky-300 flex items-center justify-center shrink-0"><i class="fa-solid fa-map-location-dot"></i></span>
+                                    <span class="min-w-0"><span class="block font-bold">Khu Vực</span><span class="block text-[11px] text-slate-400 truncate">Quản lý cấu trúc khu vực</span></span>
+                                </button>
+
+                                <button onclick="selectTaskFromMenu('tab-teams')" id="nav-teams" class="task-menu-item tab-btn hidden w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
+                                    <span class="w-9 h-9 rounded-xl bg-violet-500/10 text-violet-300 flex items-center justify-center shrink-0"><i class="fa-solid fa-people-group"></i></span>
+                                    <span class="min-w-0"><span class="block font-bold">Quản Lý Team</span><span class="block text-[11px] text-slate-400 truncate">Phân team và quản lý nhân sự</span></span>
+                                </button>
+
+                                <button onclick="selectTaskFromMenu('tab-users')" id="nav-users" class="task-menu-item tab-btn hidden w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
+                                    <span class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-300 flex items-center justify-center shrink-0"><i class="fa-solid fa-users-gear"></i></span>
+                                    <span class="min-w-0"><span class="block font-bold">Quản Lý Tài Khoản</span><span class="block text-[11px] text-slate-400 truncate">Tài khoản, phân quyền và trạng thái online</span></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
 
                     <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-2xl border border-slate-700">
                         <div class="w-7 h-7 rounded-full bg-gradient-to-r from-orange-400 to-amber-400 text-slate-900 font-bold flex items-center justify-center text-xs">
@@ -389,7 +452,16 @@
             </div>
         </div>
 
-        <div id="appointmentQuickAccess" class="max-w-7xl mx-auto px-4 pt-4">
+    
+    <!-- V7.3.4: QUAY LẠI TÁC VỤ TRƯỚC -->
+    <div id="actionBackBar" class="max-w-7xl mx-auto px-3 sm:px-4 pt-3 hidden">
+        <button onclick="goBackTask()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-200 shadow-sm text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition">
+            <i class="fa-solid fa-arrow-left text-slate-500"></i>
+            <span id="actionBackLabel">Quay lại</span>
+        </button>
+    </div>
+
+    <div id="appointmentQuickAccess" class="max-w-7xl mx-auto px-4 pt-3 hidden">
             <button onclick="switchTab('tab-appointments')" class="w-full md:w-auto bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white rounded-2xl px-4 py-3 shadow-md flex items-center justify-between md:justify-start gap-3 transition">
                 <span class="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center"><i class="fa-solid fa-calendar-check"></i></span>
                 <span class="text-left">
@@ -885,7 +957,32 @@
     </div>
 
     <!-- MODAL THÊM / SỬA PHÒNG -->
-    <div id="roomModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    
+    <!-- V7.3.7: MODAL XEM TOÀN BỘ THÔNG TIN PHÒNG -->
+    <div id="roomDetailModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm hidden items-center justify-center z-[80] p-3 sm:p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl max-h-[92dvh] overflow-hidden border border-slate-200 flex flex-col">
+            <div class="px-4 sm:px-6 py-4 border-b border-slate-200 bg-white flex items-start justify-between gap-3 shrink-0">
+                <div class="min-w-0">
+                    <div class="text-[10px] font-bold uppercase tracking-wider text-orange-500">Thông tin phòng</div>
+                    <h3 id="roomDetailTitle" class="text-lg sm:text-xl font-extrabold text-slate-800 truncate">Chi tiết phòng</h3>
+                </div>
+                <button type="button" onclick="closeRoomDetail()" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 shrink-0">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="roomDetailBody" class="overflow-y-auto p-4 sm:p-6"></div>
+
+            <div class="px-4 sm:px-6 py-3 border-t border-slate-200 bg-slate-50 flex flex-wrap gap-2 justify-end shrink-0">
+                <button type="button" onclick="closeRoomDetail()" class="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 text-sm font-semibold">Đóng</button>
+                <button id="roomDetailCopyBtn" type="button" onclick="copyCurrentRoomDetail()" class="px-4 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold shadow-sm">
+                    <i class="fa-regular fa-copy mr-1"></i> Copy gửi khách + hình ảnh
+                </button>
+            </div>
+        </div>
+    </div>
+
+<div id="roomModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
         <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto border border-slate-100">
             <div class="p-5 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10">
                 <h3 id="modalTitle" class="text-lg font-bold text-slate-800">Thêm Căn Hộ / Phòng Trọ Mới</h3>
@@ -1324,6 +1421,7 @@
         let viewerIndex = 0;
         let viewerTouchStartX = 0;
         let viewerTouchStartY = 0;
+        let currentDetailRoomId = null; // V7.3.7
         const ROOM_IMAGE_BUCKET = 'room-images';
         const ROOM_PAGE_SIZE = 24;
         let roomPage = 1;
@@ -1351,6 +1449,9 @@
         let activeTeamId = '';
         let teamSaveInProgress = false;
         let regionSaveInProgress = false;
+        let taskHistory = [];
+        let currentTaskTab = 'tab-rooms';
+        let taskHistoryLocked = false;
         let onlineUserIds = new Set();
         let presenceHeartbeatTimer = null;
         let presenceRefreshTimer = null;
@@ -2610,6 +2711,10 @@
         }
 
         function showApp() {
+            updateTaskMenuCurrent(currentTaskTab || 'tab-inventory');
+            taskHistory = [];
+            currentTaskTab = 'tab-rooms';
+            updateTaskBackButton();
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
             document.getElementById('currentUserDisplay').innerText = currentUser.name;
@@ -2630,7 +2735,7 @@
             renderTeamContext();
 
             if (navAppointmentsBtn) navAppointmentsBtn.classList.remove('hidden');
-            if (appointmentQuickAccess) appointmentQuickAccess.classList.remove('hidden');
+            if (appointmentQuickAccess) appointmentQuickAccess.classList.add('hidden');
 
             if (hasAdminAccess()) {
                 navUsersBtn.classList.remove('hidden');
@@ -2679,7 +2784,143 @@
             document.getElementById('loginForm').reset();
         }
 
+
+        function getTaskTabLabel(tabId){
+            const labels = {
+                'tab-rooms': 'Kho Phòng',
+                'tab-marketing': 'Mẫu Marketing',
+                'tab-crm': 'Kịch Bản CRM',
+                'tab-appointments': 'Lịch Xem Phòng',
+                'tab-regions': 'Khu Vực',
+                'tab-teams': 'Quản Lý Team',
+                'tab-users': 'Quản Lý Tài Khoản'
+            };
+            return labels[tabId] || 'tác vụ trước';
+        }
+
+        function updateTaskBackButton(){
+            const bar = document.getElementById('actionBackBar');
+            const label = document.getElementById('actionBackLabel');
+            if(!bar || !label) return;
+
+            const previous = taskHistory.length ? taskHistory[taskHistory.length - 1] : null;
+            bar.classList.toggle('hidden', !previous);
+            if(previous) label.innerText = `Quay lại ${getTaskTabLabel(previous)}`;
+        }
+
+        function goBackTask(){
+            if(!taskHistory.length){
+                showToast('Không còn tác vụ trước đó.');
+                return;
+            }
+            const previous = taskHistory.pop();
+            taskHistoryLocked = true;
+            switchTab(previous);
+            taskHistoryLocked = false;
+            updateTaskBackButton();
+            window.scrollTo({top:0, behavior:'smooth'});
+        }
+
+
+        function toggleTaskMenu(){
+            const panel = document.getElementById('taskMenuPanel');
+            const chevron = document.getElementById('taskMenuChevron');
+            if(!panel) return;
+            const willOpen = panel.classList.contains('hidden');
+            panel.classList.toggle('hidden', !willOpen);
+            chevron?.classList.toggle('rotate-180', willOpen);
+        }
+
+        function closeTaskMenu(){
+            const panel = document.getElementById('taskMenuPanel');
+            const chevron = document.getElementById('taskMenuChevron');
+            panel?.classList.add('hidden');
+            chevron?.classList.remove('rotate-180');
+        }
+
+        function selectTaskFromMenu(tabId){
+            closeTaskMenu();
+            switchTab(tabId);
+        }
+
+        function updateTaskMenuCurrent(tabId){
+            const labels = {
+                'tab-inventory':'Kho Phòng',
+                'tab-poster':'Mẫu Marketing',
+                'tab-crm':'Kịch Bản CRM',
+                'tab-appointments':'Lịch Xem Phòng',
+                'tab-regions':'Khu Vực',
+                'tab-teams':'Quản Lý Team',
+                'tab-users':'Quản Lý Tài Khoản'
+            };
+
+            const label = document.getElementById('taskMenuCurrentLabel');
+            if(label) label.innerText = labels[tabId] || 'Tác vụ';
+
+            // Xóa TOÀN BỘ trạng thái active cũ trước khi tô mục mới.
+            document.querySelectorAll('.task-menu-item').forEach(btn=>{
+                btn.classList.remove(
+                    'bg-orange-500',
+                    'bg-orange-500/15',
+                    'border',
+                    'border-orange-400/20',
+                    'text-white',
+                    'shadow',
+                    'shadow-sm',
+                    'ring-1',
+                    'ring-orange-400/30'
+                );
+                btn.classList.add('text-slate-200');
+            });
+
+            const activeId = {
+                'tab-inventory':'nav-inventory',
+                'tab-poster':'nav-poster',
+                'tab-crm':'nav-crm',
+                'tab-appointments':'nav-appointments',
+                'tab-regions':'nav-regions',
+                'tab-teams':'nav-teams',
+                'tab-users':'nav-users'
+            }[tabId];
+
+            const activeBtn = activeId ? document.getElementById(activeId) : null;
+            if(activeBtn){
+                activeBtn.classList.remove('text-slate-200');
+                activeBtn.classList.add(
+                    'bg-orange-500/15',
+                    'border',
+                    'border-orange-400/20',
+                    'text-white',
+                    'ring-1',
+                    'ring-orange-400/30'
+                );
+            }
+        }
+
+        document.addEventListener('click', function(e){
+            const panel = document.getElementById('taskMenuPanel');
+            const button = document.getElementById('taskMenuButton');
+            if(!panel || !button || panel.classList.contains('hidden')) return;
+            if(!panel.contains(e.target) && !button.contains(e.target)) closeTaskMenu();
+        });
+
+        document.addEventListener('keydown', function(e){
+            if(e.key === 'Escape') {
+                closeTaskMenu();
+                const detailModal = document.getElementById('roomDetailModal');
+                if(detailModal && !detailModal.classList.contains('hidden')) closeRoomDetail();
+            }
+        });
+
         function switchTab(tabId) {
+            if(!taskHistoryLocked && currentTaskTab && currentTaskTab !== tabId){
+                taskHistory.push(currentTaskTab);
+                if(taskHistory.length > 15) taskHistory.shift();
+            }
+            currentTaskTab = tabId;
+            updateTaskBackButton();
+            updateTaskMenuCurrent(tabId);
+
             if (tabId === 'tab-users' && !hasAdminAccess()) {
                 showToast('Chỉ Admin mới có quyền truy cập trang này!', 'error');
                 return;
@@ -2697,26 +2938,12 @@
 
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                if(btn.id === 'nav-users') {
-                    btn.className = 'tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-amber-300 hover:text-white hover:bg-slate-700/50';
-                } else if (btn.id === 'nav-regions') {
-                    btn.className = 'tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-sky-300 hover:text-white hover:bg-slate-700/50';
-                } else if (btn.id === 'nav-teams') {
-                    btn.className = 'tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-violet-300 hover:text-white hover:bg-slate-700/50';
-                } else if (btn.id === 'nav-appointments') {
-                    btn.className = 'tab-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-cyan-200 bg-cyan-500/10 border border-cyan-400/20 hover:text-white hover:bg-cyan-500/20';
-                } else {
-                    btn.className = 'tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-700/50';
-                }
-            });
+            updateTaskMenuCurrent(tabId);
 
             document.getElementById(tabId).classList.remove('hidden');
 
-            const activeNav = document.getElementById('nav-' + tabId.replace('tab-', ''));
-            if (activeNav) {
-                activeNav.className = 'tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 bg-orange-500 text-white shadow';
-            }
+            // Chỉ update trạng thái màu trong menu; không ghi đè className của button.
+            updateTaskMenuCurrent(tabId);
         }
 
 
@@ -3637,7 +3864,10 @@
                                 <div>
                                     <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${statusBg}">${room.status}</span>
                                     ${isSuperAdmin() ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-100 text-violet-700">${escapeHtml(getTeamName(room.team_id))}</span>` : ''}
-                                    <h3 class="text-lg font-bold text-slate-800 mt-2">${room.code}</h3>
+                                    <button type="button" onclick="openRoomDetail('${room.id}')" class="block text-left group">
+                                        <h3 class="text-lg font-bold text-slate-800 mt-2 group-hover:text-orange-600 transition underline-offset-4 group-hover:underline">${escapeHtml(room.code)}</h3>
+                                        <span class="text-[10px] text-slate-400 group-hover:text-orange-500"><i class="fa-regular fa-eye mr-1"></i>Nhấn để xem toàn bộ thông tin</span>
+                                    </button>
                                 </div>
                                 <span class="text-xl font-extrabold text-orange-600">${room.price} <span class="text-xs font-normal text-slate-500">Tr/tháng</span></span>
                             </div>
@@ -3665,7 +3895,7 @@
                         </div>
                         <div class="flex items-center gap-2">
                             <button onclick="copyInfo('${room.id}')" title="Copy thông tin gửi khách" class="bg-orange-50 hover:bg-orange-100 text-orange-700 px-2.5 py-1.5 rounded-xl font-semibold transition flex items-center gap-1">
-                                <i class="fa-regular fa-copy"></i> Copy gửi khách
+                                <i class="fa-regular fa-copy"></i> Copy gửi khách + ảnh
                             </button>
                             
                             ${isAdmin ? `
@@ -3679,23 +3909,207 @@
             }).join('');
         }
 
+
+        function roomCustomerText(room){
+            const imageLines = Array.isArray(room.images) && room.images.length
+                ? `\n\n🖼️ HÌNH ẢNH PHÒNG (${room.images.length} ảnh):\n` +
+                  room.images.map((url, i) => `${i + 1}. ${url}`).join('\n')
+                : '';
+
+            return `🏡 ${String(room.code || '').toUpperCase()}
+💰 Giá thuê: ${room.price || 'Chưa cập nhật'} Triệu/tháng
+📌 Trạng thái: ${room.status || 'Chưa cập nhật'}
+📍 Khu vực: ${room.district || 'Chưa cập nhật'}
+🏠 Địa chỉ: ${room.address || 'Chưa cập nhật'}
+✨ Nội thất & Tiện ích: ${room.amenities || 'Chưa cập nhật'}${room.mediaUrl ? `\n🎥 Media/Video: ${room.mediaUrl}` : ''}${imageLines}
+
+🔥 Nhắn em để hẹn lịch xem phòng trực tiếp nhé!`;
+        }
+
+        function roomCustomerHtml(room){
+            const images = Array.isArray(room.images) ? room.images : [];
+            const imgHtml = images.length ? `
+                <div style="margin-top:12px">
+                    <b>🖼️ Hình ảnh phòng (${images.length} ảnh)</b><br>
+                    ${images.map((url, i) => `<div style="margin:8px 0"><img src="${escapeHtml(url)}" alt="Ảnh phòng ${i+1}" style="max-width:520px;width:100%;height:auto;border-radius:12px;display:block"><div><a href="${escapeHtml(url)}">Ảnh ${i+1}</a></div></div>`).join('')}
+                </div>` : '';
+
+            return `<div>
+                <div><b>🏡 ${escapeHtml(String(room.code || '').toUpperCase())}</b></div>
+                <div>💰 Giá thuê: ${escapeHtml(String(room.price || 'Chưa cập nhật'))} Triệu/tháng</div>
+                <div>📌 Trạng thái: ${escapeHtml(room.status || 'Chưa cập nhật')}</div>
+                <div>📍 Khu vực: ${escapeHtml(room.district || 'Chưa cập nhật')}</div>
+                <div>🏠 Địa chỉ: ${escapeHtml(room.address || 'Chưa cập nhật')}</div>
+                <div>✨ Nội thất &amp; Tiện ích: ${escapeHtml(room.amenities || 'Chưa cập nhật')}</div>
+                ${room.mediaUrl ? `<div>🎥 Media/Video: <a href="${escapeHtml(room.mediaUrl)}">${escapeHtml(room.mediaUrl)}</a></div>` : ''}
+                ${imgHtml}
+                <div style="margin-top:12px">🔥 Nhắn em để hẹn lịch xem phòng trực tiếp nhé!</div>
+            </div>`;
+        }
+
+        async function copyRoomForCustomer(room){
+            if(!room) return;
+
+            const plainText = roomCustomerText(room);
+            const htmlText = roomCustomerHtml(room);
+
+            try {
+                // Trình duyệt hỗ trợ ClipboardItem sẽ nhận cả text thường + nội dung HTML có ảnh.
+                // Ứng dụng đích không hỗ trợ HTML vẫn nhận text + link ảnh công khai.
+                if(window.ClipboardItem && navigator.clipboard?.write){
+                    const item = new ClipboardItem({
+                        'text/plain': new Blob([plainText], {type:'text/plain'}),
+                        'text/html': new Blob([htmlText], {type:'text/html'})
+                    });
+                    await navigator.clipboard.write([item]);
+                } else if(navigator.clipboard?.writeText) {
+                    await navigator.clipboard.writeText(plainText);
+                } else {
+                    const ta = document.createElement('textarea');
+                    ta.value = plainText;
+                    ta.style.position = 'fixed';
+                    ta.style.opacity = '0';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    ta.remove();
+                }
+
+                const imageCount = Array.isArray(room.images) ? room.images.length : 0;
+                showToast(imageCount
+                    ? `Đã copy thông tin + ${imageCount} link hình ảnh gửi khách!`
+                    : 'Đã copy thông tin phòng gửi khách!');
+            } catch(err){
+                console.error('Lỗi copy thông tin phòng:', err);
+                try{
+                    await navigator.clipboard.writeText(plainText);
+                    showToast('Đã copy thông tin và link hình ảnh!');
+                }catch{
+                    showToast('Không thể copy. Trình duyệt đang chặn Clipboard.', 'error');
+                }
+            }
+        }
+
         function copyInfo(id) {
             const room = rooms.find(r => String(r.id) === String(id));
             if (!room) return;
-
-            const textToCopy = 
-`🏡 [${room.code.toUpperCase()}] - KHU VỰC ${room.district.toUpperCase()}
-💰 Giá thuê: ${room.price} Triệu/tháng
-📍 Địa chỉ: ${room.address}
-✨ Nội thất & Tiện ích: ${room.amenities}
-${room.mediaUrl ? `📸 Xem clip/ảnh chi tiết: ${room.mediaUrl}` : ''}
-
-Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
-
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                showToast('Đã copy thông tin căn hộ gửi khách!');
-            });
+            copyRoomForCustomer(room);
         }
+
+        function copyCurrentRoomDetail(){
+            const room = rooms.find(r => String(r.id) === String(currentDetailRoomId));
+            if(!room){
+                showToast('Không tìm thấy dữ liệu phòng.', 'error');
+                return;
+            }
+            copyRoomForCustomer(room);
+        }
+
+        function openRoomDetail(id){
+            const room = rooms.find(r => String(r.id) === String(id));
+            if(!room){
+                showToast('Không tìm thấy dữ liệu phòng. Hãy tải lại Kho Phòng.', 'error');
+                return;
+            }
+
+            currentDetailRoomId = room.id;
+            const modal = document.getElementById('roomDetailModal');
+            const title = document.getElementById('roomDetailTitle');
+            const body = document.getElementById('roomDetailBody');
+            if(!modal || !body) return;
+
+            if(title) title.textContent = room.code || 'Chi tiết phòng';
+
+            const images = Array.isArray(room.images) ? room.images : [];
+            const statusClass = room.status === 'Còn trống'
+                ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
+                : room.status === 'Sắp trống'
+                    ? 'bg-amber-100 text-amber-700 border-amber-200'
+                    : 'bg-rose-100 text-rose-700 border-rose-200';
+
+            body.innerHTML = `
+                ${images.length ? `
+                    <div class="mb-5">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            ${images.map((url, i) => `
+                                <button type="button" onclick="openRoomGallery('${room.id}', ${i})" class="${i===0 ? 'col-span-2 sm:col-span-2 row-span-2' : ''} overflow-hidden rounded-2xl bg-slate-100 border border-slate-200 group">
+                                    <img loading="lazy" decoding="async" src="${url}" alt="Ảnh ${i+1} - ${escapeHtml(room.code)}" class="w-full ${i===0 ? 'h-56 sm:h-72' : 'h-28 sm:h-36'} object-cover group-hover:scale-105 transition duration-300">
+                                </button>
+                            `).join('')}
+                        </div>
+                        <div class="mt-2 text-[11px] text-slate-400"><i class="fa-regular fa-images mr-1"></i>${images.length} hình ảnh • Nhấn vào ảnh để xem toàn màn hình</div>
+                    </div>
+                ` : `
+                    <div class="mb-5 rounded-2xl bg-slate-100 border border-dashed border-slate-300 py-10 text-center text-slate-400">
+                        <i class="fa-regular fa-image text-3xl mb-2"></i>
+                        <div class="text-sm font-semibold">Phòng chưa có hình ảnh</div>
+                    </div>
+                `}
+
+                <div class="flex flex-wrap items-start justify-between gap-3 mb-5">
+                    <div>
+                        <span class="inline-flex px-2.5 py-1 rounded-full border text-xs font-bold ${statusClass}">${escapeHtml(room.status || 'Chưa cập nhật')}</span>
+                        <h2 class="text-2xl font-extrabold text-slate-800 mt-2">${escapeHtml(room.code || '')}</h2>
+                        ${isSuperAdmin() ? `<div class="mt-1 text-xs text-violet-600 font-semibold"><i class="fa-solid fa-people-group mr-1"></i>${escapeHtml(getTeamName(room.team_id))}</div>` : ''}
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[11px] uppercase font-bold text-slate-400">Giá thuê</div>
+                        <div class="text-2xl sm:text-3xl font-extrabold text-orange-600">${escapeHtml(String(room.price || '—'))}<span class="text-sm font-medium text-slate-500"> Tr/tháng</span></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <div class="text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-1">Khu vực</div>
+                        <div class="text-sm font-semibold text-slate-700"><i class="fa-solid fa-location-dot text-rose-500 mr-2"></i>${escapeHtml(room.district || 'Chưa cập nhật')}</div>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <div class="text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-1">Địa chỉ</div>
+                        <div class="text-sm font-semibold text-slate-700"><i class="fa-solid fa-house text-sky-500 mr-2"></i>${escapeHtml(room.address || 'Chưa cập nhật')}</div>
+                    </div>
+                </div>
+
+                <div class="rounded-2xl border border-slate-200 p-4 mb-3">
+                    <div class="text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-2">Nội thất & Tiện ích</div>
+                    <div class="text-sm text-slate-700 whitespace-pre-wrap">${escapeHtml(room.amenities || 'Chưa cập nhật')}</div>
+                </div>
+
+                ${room.mediaUrl ? `
+                    <div class="rounded-2xl border border-orange-200 bg-orange-50 p-4 mb-3">
+                        <div class="text-[10px] uppercase tracking-wider font-bold text-orange-500 mb-2">Media / Video</div>
+                        <a href="${escapeHtml(room.mediaUrl)}" target="_blank" rel="noopener" class="text-sm font-semibold text-orange-700 break-all hover:underline">
+                            <i class="fa-solid fa-link mr-1"></i>${escapeHtml(room.mediaUrl)}
+                        </a>
+                    </div>
+                ` : ''}
+
+                ${room.note ? `
+                    <div class="rounded-2xl border border-amber-200 bg-amber-50 p-4">
+                        <div class="text-[10px] uppercase tracking-wider font-bold text-amber-600 mb-2">Ghi chú nội bộ</div>
+                        <div class="text-sm text-amber-800 whitespace-pre-wrap">${escapeHtml(room.note)}</div>
+                    </div>
+                ` : ''}
+            `;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeRoomDetail(){
+            const modal = document.getElementById('roomDetailModal');
+            if(modal){
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+            currentDetailRoomId = null;
+            // Không mở khóa scroll nếu gallery ảnh vẫn đang mở.
+            const viewer = document.getElementById('imageViewerModal');
+            if(!viewer || viewer.classList.contains('hidden')){
+                document.body.style.overflow = '';
+            }
+        }
+
 
         function openModal(isEdit = false) {
             if (!hasAdminAccess()) {
