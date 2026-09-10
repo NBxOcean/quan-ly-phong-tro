@@ -562,6 +562,8 @@
         const ROOM_IMAGE_BUCKET = 'room-images';
         const ROOM_PAGE_SIZE = 24;
         let roomPage = 1;
+        // V6.1: khóa thao tác lưu để 1 lần bấm không thể INSERT 2 phòng.
+        let roomSaveInProgress = false;
         let roomTotal = 0;
         let roomFilterTimer = null;
         let dbCases = [];
@@ -990,20 +992,56 @@
                 showToast('Không thể xóa: ID phòng không phải UUID hợp lệ.', 'error');
                 return false;
             }
+
             try {
                 const tenantId = await getCurrentTenantId();
+
+                // Lấy danh sách ảnh trước khi xóa phòng để dọn luôn file Storage.
+                const { data: imageRows, error: imageReadError } = await supabaseClient
+                    .from('room_images')
+                    .select('id,storage_path')
+                    .eq('room_id', id)
+                    .eq('tenant_id', tenantId);
+
+                if (imageReadError) throw imageReadError;
+
+                const storagePaths = (imageRows || [])
+                    .map(x => x.storage_path)
+                    .filter(Boolean);
+
+                if (storagePaths.length > 0) {
+                    const { error: storageError } = await supabaseClient.storage
+                        .from(ROOM_IMAGE_BUCKET)
+                        .remove(storagePaths);
+                    if (storageError) {
+                        console.warn('Không xóa hết file Storage, tiếp tục xóa dữ liệu phòng:', storageError);
+                    }
+                }
+
+                // Xóa metadata ảnh trước. FK cũng có ON DELETE CASCADE, nhưng làm rõ thứ tự để tránh ảnh rác.
+                const { error: imageDeleteError } = await supabaseClient
+                    .from('room_images')
+                    .delete()
+                    .eq('room_id', id)
+                    .eq('tenant_id', tenantId);
+                if (imageDeleteError) throw imageDeleteError;
+
+                // Xóa phòng và yêu cầu Supabase trả ID để xác nhận thật sự đã xóa.
                 const { data, error } = await supabaseClient
                     .from('rooms')
                     .delete()
                     .eq('id', id)
                     .eq('tenant_id', tenantId)
                     .select('id');
+
                 if (error) throw error;
-                if (!data || data.length === 0) throw new Error('Không tìm thấy phòng hoặc policy DELETE đang chặn thao tác.');
+                if (!data || data.length === 0) {
+                    throw new Error('Supabase không xóa bản ghi. Policy DELETE của rooms đang chặn thao tác.');
+                }
                 return true;
             } catch (err) {
                 console.error('Lỗi xóa phòng:', err);
-                showToast('Không thể xóa phòng: ' + (err?.message || err), 'error');
+                showToast('Không thể xóa phòng: ' + (err?.message || err?.details || err), 'error');
                 return false;
             }
         }
@@ -1536,41 +1574,78 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
 
         async function saveRoom(e) {
             e.preventDefault();
+
+            if (roomSaveInProgress) {
+                showToast('Đang lưu dữ liệu, vui lòng chờ...', 'error');
+                return;
+            }
             if (currentUser.role !== 'Quản trị viên') {
                 showToast('Chỉ Admin mới có quyền lưu dữ liệu phòng!', 'error');
                 return;
             }
 
-            const id = document.getElementById('roomId').value.trim();
-            const isEdit = !!id;
-            const roomData = {
-                id: id || null,
-                code: document.getElementById('code').value,
-                price: document.getElementById('roomPrice').value,
-                district: document.getElementById('district').value,
-                status: document.getElementById('status').value,
-                address: document.getElementById('address').value,
-                amenities: document.getElementById('roomAmenities').value,
-                mediaUrl: document.getElementById('mediaUrl').value,
-                note: document.getElementById('note').value,
-                images: [...currentImages]
-            };
-
-            const savedRoomId = await saveRoomToDB(roomData, isEdit);
-            if (!savedRoomId) return;
-            try {
-                await uploadPendingRoomImages(savedRoomId);
-            } catch (imgErr) {
-                console.error('Lỗi upload ảnh:', imgErr);
-                showToast('Phòng đã lưu nhưng có ảnh upload lỗi: ' + (imgErr?.message || imgErr), 'error');
+            const saveBtn = document.getElementById('btnSave');
+            roomSaveInProgress = true;
+            if (saveBtn) {
+                saveBtn.disabled = true;
+                saveBtn.dataset.oldText = saveBtn.innerHTML;
+                saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang lưu...';
+                saveBtn.classList.add('opacity-60', 'cursor-not-allowed');
             }
 
-            roomPage = 1;
-            rooms = await loadRoomsPage(1);
-            renderDistrictOptions();
-            renderRooms(rooms);
-            closeModal();
-            showToast(isEdit ? 'Đã cập nhật phòng + ảnh Storage!' : 'Đã thêm phòng + ảnh Storage!');
+            try {
+                let id = document.getElementById('roomId').value.trim();
+                const wasExistingRoom = !!id;
+
+                // Với phòng mới, tạo UUID MỘT LẦN ngay từ đầu và ghi vào hidden input.
+                // Nếu submit bị kích hoạt lặp, lần kế tiếp vẫn dùng cùng UUID thay vì sinh phòng thứ hai.
+                if (!id) {
+                    id = makeUuid();
+                    document.getElementById('roomId').value = id;
+                }
+
+                const roomData = {
+                    id,
+                    code: document.getElementById('code').value,
+                    price: document.getElementById('roomPrice').value,
+                    district: document.getElementById('district').value,
+                    status: document.getElementById('status').value,
+                    address: document.getElementById('address').value,
+                    amenities: document.getElementById('roomAmenities').value,
+                    mediaUrl: document.getElementById('mediaUrl').value,
+                    note: document.getElementById('note').value,
+                    images: [...currentImages]
+                };
+
+                // Phòng mới INSERT đúng UUID đã khóa; phòng cũ UPDATE đúng UUID.
+                const savedRoomId = await saveRoomToDB(roomData, wasExistingRoom);
+                if (!savedRoomId) {
+                    // Nếu INSERT thất bại, cho phép thử lại như phòng mới.
+                    if (!wasExistingRoom) document.getElementById('roomId').value = '';
+                    return;
+                }
+
+                try {
+                    await uploadPendingRoomImages(savedRoomId);
+                } catch (imgErr) {
+                    console.error('Lỗi upload ảnh:', imgErr);
+                    showToast('Phòng đã lưu nhưng có ảnh upload lỗi: ' + (imgErr?.message || imgErr), 'error');
+                }
+
+                roomPage = 1;
+                rooms = await loadRoomsPage(1);
+                renderDistrictOptions();
+                renderRooms(rooms);
+                closeModal();
+                showToast(wasExistingRoom ? 'Đã cập nhật phòng + ảnh Storage!' : 'Đã thêm phòng + ảnh Storage!');
+            } finally {
+                roomSaveInProgress = false;
+                if (saveBtn) {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = saveBtn.dataset.oldText || 'Lưu Dữ Liệu';
+                    saveBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                }
+            }
         }
 
         function editRoom(id) {
@@ -1604,14 +1679,23 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
                 showToast('Chỉ Admin mới có quyền xóa phòng!', 'error');
                 return;
             }
-            if (confirm('Bạn có chắc muốn xóa phòng này?')) {
+
+            const room = rooms.find(r => String(r.id) === String(id));
+            const label = room?.code ? ` "${room.code}"` : '';
+
+            if (confirm(`Bạn có chắc muốn xóa phòng${label}? Ảnh trong Storage cũng sẽ được xóa.`)) {
                 const deleted = await deleteRoomFromDB(id);
                 if (!deleted) return;
 
-                rooms = await loadRoomsFromDB();
+                // Nếu trang hiện tại bị rỗng sau khi xóa, tự lùi 1 trang.
+                const estimatedRemaining = Math.max(0, roomTotal - 1);
+                const maxPage = Math.max(1, Math.ceil(estimatedRemaining / ROOM_PAGE_SIZE));
+                roomPage = Math.min(roomPage, maxPage);
+
+                rooms = await loadRoomsPage(roomPage);
                 renderDistrictOptions();
-                filterRooms();
-                showToast('Đã xóa phòng!');
+                renderRooms(rooms);
+                showToast('Đã xóa phòng và dọn ảnh Storage!');
             }
         }
 
