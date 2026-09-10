@@ -1051,7 +1051,7 @@
                 <div class="min-w-0">
                     <div class="text-[10px] font-bold uppercase tracking-wider text-orange-500">Gửi khách</div>
                     <h3 id="customerShareTitle" class="text-lg sm:text-xl font-extrabold text-slate-800 truncate">Thông tin & hình ảnh phòng</h3>
-                    <p class="text-[11px] text-slate-500 mt-1">Nội dung được tự rút gọn để dán Zalo ổn định. Bạn vẫn có thể tùy chỉnh thông tin và ảnh trước khi gửi.</p>
+                    <p class="text-[11px] text-slate-500 mt-1">Gửi nhanh chỉ dùng thông tin. Tại đây bạn có thể tùy chỉnh nội dung và chọn ảnh riêng khi cần gửi kèm.</p>
                 </div>
                 <button type="button" onclick="closeCustomerShare()" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 shrink-0">
                     <i class="fa-solid fa-xmark"></i>
@@ -1062,7 +1062,7 @@
                 <aside class="border-b lg:border-b-0 lg:border-r border-slate-200 p-4 overflow-y-auto">
                     <div class="rounded-2xl bg-orange-50 border border-orange-100 p-3 mb-4 text-[11px] text-orange-800">
                         <i class="fa-solid fa-bolt mr-1"></i>
-                        <b>Gửi nhanh:</b> tự dùng bản tin ngắn gọn cho Zalo + tối đa 5 ảnh đầu tiên.
+                        <b>Gửi nhanh:</b> chỉ gửi bản tin ngắn gọn cho Zalo/Messenger, không kèm ảnh.
                     </div>
                     <div class="text-sm font-extrabold text-slate-800 mb-1">1. Chọn thông tin gửi khách</div>
                     <div class="text-[10px] text-slate-400 mb-3">Bạn có thể bỏ các mục không muốn gửi.</div>
@@ -1153,13 +1153,13 @@
                         Đóng
                     </button>
                     <button type="button" onclick="quickSendRoom(currentDetailRoomId)" class="px-4 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-sm font-extrabold shadow-sm">
-                        <i class="fa-solid fa-bolt mr-1"></i> Gửi nhanh
+                        <i class="fa-solid fa-message mr-1"></i> Gửi nhanh thông tin
                     </button>
                     <button id="roomDetailCopyBtn" type="button" onclick="openCustomerShare(currentDetailRoomId)" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold shadow-sm">
                         <i class="fa-solid fa-sliders mr-1"></i> Tùy chỉnh gửi
                     </button>
                 </div>
-                <p class="mt-2 text-[10px] text-slate-400 text-right">Gửi nhanh mở gói 2 bước: trên điện thoại gửi nội dung qua Share, sau đó gửi ảnh thật ngay bên dưới.</p>
+                <p class="mt-2 text-[10px] text-slate-400 text-right">Gửi nhanh chỉ gửi thông tin phòng. Nếu muốn gửi ảnh, hãy chọn “Tùy chỉnh gửi”.</p>
             </div>
         </div>
     </div>
@@ -4091,8 +4091,8 @@
                             ${room.mediaUrl ? `<a href="${room.mediaUrl}" target="_blank" class="text-orange-600 hover:underline font-semibold flex items-center gap-1"><i class="fa-solid fa-link"></i> Media Ảnh/Video</a>` : '<span class="text-slate-400">Không có link</span>'}
                         </div>
                         <div class="flex items-center gap-2">
-                            <button onclick="quickSendRoom('${room.id}')" title="Gửi nhanh thông tin + 5 ảnh đầu tiên" class="bg-orange-500 hover:bg-orange-600 text-white px-2.5 py-1.5 rounded-xl font-bold transition flex items-center gap-1 shadow-sm">
-                                <i class="fa-solid fa-bolt"></i> Gửi nhanh
+                            <button onclick="quickSendRoom('${room.id}')" title="Chỉ gửi nhanh thông tin phòng" class="bg-orange-500 hover:bg-orange-600 text-white px-2.5 py-1.5 rounded-xl font-bold transition flex items-center gap-1 shadow-sm">
+                                <i class="fa-solid fa-message"></i> Gửi nhanh thông tin
                             </button>
                             <button onclick="openCustomerShare('${room.id}')" title="Tùy chọn thông tin và hình ảnh gửi khách" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1.5 rounded-xl font-semibold transition flex items-center gap-1">
                                 <i class="fa-solid fa-sliders"></i> Tùy chỉnh
@@ -4216,16 +4216,47 @@
                 return;
             }
 
-            // Gửi nhanh V7.4.6 = mở sẵn gói gửi khách với 5 ảnh đầu tiên.
-            openCustomerShare(room.id);
+            // V7.4.8: Gửi nhanh CHỈ gửi thông tin, tuyệt đối không kèm ảnh.
+            customerShareRoomId = room.id;
+            applyDefaultCustomerShareFields();
 
-            const images = Array.isArray(room.images) ? room.images : [];
-            customerSelectedImageIndexes = images.map((_,i)=>i).slice(0,5);
+            const msg = buildCustomerShareText(room);
+            if(!msg){
+                showToast('Phòng chưa có thông tin để gửi.', 'error');
+                return;
+            }
+
+            // Trên điện thoại/iOS: ưu tiên Share Sheet chỉ với nội dung text.
+            if(isMobileDevice() && navigator.share){
+                try{
+                    await navigator.share({
+                        title: room.code || 'Thông tin phòng',
+                        text: msg
+                    });
+                    showToast('Đã mở chia sẻ thông tin phòng.');
+                    return;
+                }catch(err){
+                    if(err?.name === 'AbortError'){
+                        showToast('Đã hủy chia sẻ.');
+                        return;
+                    }
+                    console.warn('Share text thất bại:', err);
+                }
+            }
+
+            // Desktop / trình duyệt không hỗ trợ Share: copy text.
+            const ok = await writeTextRobust(msg);
+            if(ok){
+                showToast('Đã copy thông tin phòng. Bạn chỉ cần dán vào Zalo/Messenger.');
+                return;
+            }
+
+            // Fallback cuối: mở modal để người dùng copy thủ công, KHÔNG chọn ảnh.
+            openCustomerShare(room.id);
+            customerSelectedImageIndexes = [];
             renderCustomerShareImages();
             renderCustomerSharePreview();
-
-            customerSendStep1Done = false;
-            showToast('Gói gửi khách đã sẵn sàng: Bước 1 Gửi nội dung → Bước 2 Gửi ảnh.');
+            showToast('Trình duyệt chặn chia sẻ/copy. Nội dung đã được mở để bạn copy thủ công.', 'error');
         }
 
 
