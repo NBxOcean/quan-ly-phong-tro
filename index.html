@@ -1106,8 +1106,8 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
                     <button type="button" onclick="customerSendStep1()" class="w-full px-4 py-3 rounded-2xl bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 text-sm font-extrabold text-left">
                         <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-sky-600 text-white mr-2">1</span>
-                        Copy nội dung
-                        <span class="block text-[10px] font-medium text-sky-600 mt-1 ml-9">Sau đó dán vào Zalo/Messenger</span>
+                        Chuẩn bị nội dung
+                        <span class="block text-[10px] font-medium text-sky-600 mt-1 ml-9">Điện thoại sẽ mở chia sẻ nội dung; máy tính vẫn có thể copy</span>
                     </button>
                     <button type="button" onclick="customerSendStep2()" class="w-full px-4 py-3 rounded-2xl bg-orange-50 hover:bg-orange-100 border border-orange-200 text-orange-700 text-sm font-extrabold text-left">
                         <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-orange-500 text-white mr-2">2</span>
@@ -1127,7 +1127,7 @@
                         <i class="fa-solid fa-paper-plane mr-1"></i> Gửi khách 2 bước
                     </button>
                 </div>
-                <p class="mt-2 text-[10px] text-slate-400 text-right">Luồng 2 bước: (1) Copy nội dung → dán vào Zalo/Messenger. (2) Ngay sau đó chia sẻ/copy ảnh thật để gửi liền bên dưới.</p>
+                <p class="mt-2 text-[10px] text-slate-400 text-right">Luồng 2 bước: trên điện thoại, Bước 1 mở chia sẻ nội dung thay vì dùng Clipboard; Bước 2 chia sẻ ảnh thật. Trên máy tính vẫn ưu tiên copy nội dung.</p>
             </div>
         </div>
     </div>
@@ -1159,7 +1159,7 @@
                         <i class="fa-solid fa-sliders mr-1"></i> Tùy chỉnh gửi
                     </button>
                 </div>
-                <p class="mt-2 text-[10px] text-slate-400 text-right">Gửi nhanh mở gói 2 bước: Copy nội dung trước, sau đó gửi/copy ảnh thật để ảnh nằm ngay dưới tin nhắn.</p>
+                <p class="mt-2 text-[10px] text-slate-400 text-right">Gửi nhanh mở gói 2 bước: trên điện thoại gửi nội dung qua Share, sau đó gửi ảnh thật ngay bên dưới.</p>
             </div>
         </div>
     </div>
@@ -4225,7 +4225,7 @@
             renderCustomerSharePreview();
 
             customerSendStep1Done = false;
-            showToast('Gói gửi khách đã sẵn sàng: Bước 1 Copy nội dung → Bước 2 Gửi ảnh.');
+            showToast('Gói gửi khách đã sẵn sàng: Bước 1 Gửi nội dung → Bước 2 Gửi ảnh.');
         }
 
 
@@ -4614,14 +4614,47 @@
             if(!room) return;
             const msg = buildCustomerShareText(room);
 
+            // Mobile: tránh Clipboard vì nhiều trình duyệt chặn.
+            if(isMobileDevice() && navigator.share){
+                try{
+                    await navigator.share({
+                        title: room.code || 'Thông tin phòng',
+                        text: msg
+                    });
+                    customerSendStep1Done = true;
+                    showToast('Đã mở chia sẻ nội dung. Chọn Zalo/Messenger để gửi thông tin.');
+                    return;
+                }catch(err){
+                    if(err?.name === 'AbortError'){
+                        showToast('Đã hủy chia sẻ nội dung.');
+                        return;
+                    }
+                    console.warn('Mobile text share thất bại:', err);
+                }
+            }
+
+            // Desktop hoặc mobile không hỗ trợ Web Share: thử copy.
             const ok = await writeTextRobust(msg);
             if(ok){
                 customerSendStep1Done = true;
-                showToast('Bước 1 xong: nội dung đã copy. Hãy dán vào Zalo/Messenger.');
-            }else{
-                showToast('Không copy được tự động. Hãy chọn nội dung trong phần xem trước để copy thủ công.', 'error');
+                showToast('Nội dung đã copy. Hãy dán vào Zalo/Messenger.');
+                return;
             }
+
+            // Fallback cuối: chọn text để người dùng copy thủ công.
+            const preview = document.getElementById('customerSharePreview');
+            if(preview){
+                try{
+                    const range = document.createRange();
+                    range.selectNodeContents(preview);
+                    const sel = window.getSelection();
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }catch{}
+            }
+            showToast('Trình duyệt chặn Clipboard. Nội dung đã được chọn để bạn copy thủ công.', 'error');
         }
+
 
         async function copySingleImageToClipboard(file){
             if(!navigator.clipboard || !window.ClipboardItem) return false;
