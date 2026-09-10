@@ -2172,8 +2172,21 @@
         }
 
         async function changeActiveTeam(teamId) {
-            if (!isSuperAdmin()) return;
-            activeTeamId = teamId || '';
+            // Admin cao cấp có thể chọn mọi team trong phạm vi đang xem.
+            // Admin Khu Vực được chọn bất kỳ team nào thuộc khu vực mình quản lý.
+            if (!(isSuperAdmin() || isRegionalAdmin())) return;
+
+            const nextTeamId = teamId || '';
+
+            if (isRegionalAdmin() && nextTeamId) {
+                const allowed = getVisibleTeams().some(t => String(t.id) === String(nextTeamId));
+                if (!allowed) {
+                    showToast('Bạn chỉ được chọn Team thuộc khu vực mình quản lý!', 'error');
+                    return;
+                }
+            }
+
+            activeTeamId = nextTeamId;
             renderTeamContext();
             renderUsersTable();
 
