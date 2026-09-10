@@ -1655,7 +1655,8 @@
         let customerShareRoomId = null;
         let customerSelectedImageIndexes = [];
         const ROOM_IMAGE_BUCKET = 'room-images';
-        const ROOM_PAGE_SIZE = 24;
+        const ROOM_PAGE_SIZE = 20; // Số ĐỊA CHỈ/tòa nhà mỗi trang (phòng cùng địa chỉ được gộp chung)
+        let roomGroupTotal = 0;
         let roomPage = 1;
         // V6.1: khóa thao tác lưu để 1 lần bấm không thể INSERT 2 phòng.
         let roomSaveInProgress = false;
@@ -2653,6 +2654,23 @@
             return await loadRoomsPage(roomPage);
         }
 
+        function normalizeRoomAddress(address) {
+            return String(address || 'Chưa cập nhật địa chỉ')
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase().replace(/đ/g, 'd')
+                .replace(/[^a-z0-9]+/g, ' ').trim();
+        }
+
+        function groupRoomsByAddress(list) {
+            const map = new Map();
+            (list || []).forEach(room => {
+                const key = normalizeRoomAddress(room.address) || `__no_address__${room.id}`;
+                if (!map.has(key)) map.set(key, { key, address: room.address || 'Chưa cập nhật địa chỉ', district: room.district || '', rooms: [] });
+                map.get(key).rooms.push(room);
+            });
+            return [...map.values()];
+        }
+
         async function loadRoomsPage(page = 1) {
             if (!supabaseClient) return [];
             try {
@@ -2686,15 +2704,11 @@
                 else if (price === '5to8') query = query.gt('price', 5).lte('price', 8);
                 else if (price === 'over8') query = query.gt('price', 8);
 
-                const from = (page - 1) * ROOM_PAGE_SIZE;
-                const to = from + ROOM_PAGE_SIZE - 1;
-                const { data, error, count } = await query
-                    .order('updated_at', { ascending: false })
-                    .range(from, to);
+                // Lấy toàn bộ phòng phù hợp để bảo đảm cùng một địa chỉ không bị tách sang 2 trang.
+                const { data, error, count } = await query.order('updated_at', { ascending: false }).range(0, 4999);
                 if (error) throw error;
 
                 roomTotal = count || 0;
-                roomPage = page;
                 const mapped = (data || []).map(r => {
                     const room = mapDbRoomToApp(r);
                     const imgs = Array.isArray(r.room_images) ? [...r.room_images].sort((a,b)=>(a.sort_order||0)-(b.sort_order||0)) : [];
@@ -2702,22 +2716,30 @@
                     room.imageRecords = imgs;
                     return room;
                 });
-                rooms = mapped;
+
+                const groups = groupRoomsByAddress(mapped);
+                roomGroupTotal = groups.length;
+                const pages = Math.max(1, Math.ceil(roomGroupTotal / ROOM_PAGE_SIZE));
+                roomPage = Math.min(Math.max(1, page), pages);
+                const from = (roomPage - 1) * ROOM_PAGE_SIZE;
+                const pageGroups = groups.slice(from, from + ROOM_PAGE_SIZE);
+                rooms = pageGroups.flatMap(g => g.rooms);
                 updateRoomPagination();
-                return mapped;
+                return rooms;
             } catch (err) {
-                console.error('Lỗi tải Rooms V6:', err);
+                console.error('Lỗi tải Rooms V7:', err);
                 showToast('Không thể tải kho phòng: ' + (err?.message || err), 'error');
                 roomTotal = 0;
+                roomGroupTotal = 0;
                 updateRoomPagination();
                 return [];
             }
         }
 
         function updateRoomPagination() {
-            const pages = Math.max(1, Math.ceil(roomTotal / ROOM_PAGE_SIZE));
+            const pages = Math.max(1, Math.ceil(roomGroupTotal / ROOM_PAGE_SIZE));
             const info = document.getElementById('pageInfo');
-            if (info) info.textContent = `Trang ${roomPage}/${pages} • ${roomTotal.toLocaleString('vi-VN')} phòng`;
+            if (info) info.textContent = `Trang ${roomPage}/${pages} • ${roomGroupTotal.toLocaleString('vi-VN')} địa chỉ • ${roomTotal.toLocaleString('vi-VN')} phòng`;
             const prev = document.getElementById('prevPageBtn');
             const next = document.getElementById('nextPageBtn');
             if (prev) prev.disabled = roomPage <= 1;
@@ -2727,7 +2749,7 @@
         }
 
         async function changeRoomPage(delta) {
-            const pages = Math.max(1, Math.ceil(roomTotal / ROOM_PAGE_SIZE));
+            const pages = Math.max(1, Math.ceil(roomGroupTotal / ROOM_PAGE_SIZE));
             const target = Math.min(pages, Math.max(1, roomPage + delta));
             if (target === roomPage) return;
             rooms = await loadRoomsPage(target);
@@ -4084,86 +4106,76 @@
             document.getElementById('roomCount').textContent = roomTotal.toLocaleString('vi-VN');
 
             if (data.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-full py-12 text-center text-slate-400">
-                        <i class="fa-regular fa-folder-open text-4xl mb-2"></i>
-                        <p>Không tìm thấy căn hộ phù hợp.</p>
-                    </div>`;
+                container.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400"><i class="fa-regular fa-folder-open text-4xl mb-2"></i><p>Không tìm thấy căn hộ phù hợp.</p></div>`;
                 return;
             }
 
             const isAdmin = currentUser && hasAdminAccess();
+            const groups = groupRoomsByAddress(data);
 
-            container.innerHTML = data.map(room => {
-                let statusBg = "bg-emerald-100 text-emerald-800 border-emerald-200";
-                if(room.status === 'Sắp trống') statusBg = "bg-amber-100 text-amber-800 border-amber-200";
-                if(room.status === 'Đã thuê') statusBg = "bg-rose-100 text-rose-800 border-rose-200";
-
-                const hasImages = room.images && room.images.length > 0;
-                const coverImage = hasImages ? room.images[0] : null;
+            container.innerHTML = groups.map((group, groupIndex) => {
+                const available = group.rooms.filter(r => r.status === 'Trống').length;
+                const soon = group.rooms.filter(r => r.status === 'Sắp trống').length;
+                const rented = group.rooms.filter(r => r.status === 'Đã thuê').length;
+                const minPrice = Math.min(...group.rooms.map(r => Number(r.price) || 0).filter(Boolean));
+                const maxPrice = Math.max(...group.rooms.map(r => Number(r.price) || 0).filter(Boolean));
+                const priceText = Number.isFinite(minPrice) && minPrice > 0 ? (minPrice === maxPrice ? `${minPrice} Tr` : `${minPrice}–${maxPrice} Tr`) : 'Liên hệ';
+                const panelId = `addressGroup_${roomPage}_${groupIndex}`;
 
                 return `
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col justify-between">
-                    <div>
-                        ${coverImage ? `
-                            <div class="relative h-48 bg-slate-100 overflow-hidden group cursor-pointer" onclick="openRoomGallery('${room.id}', 0)">
-                                <img loading="lazy" decoding="async" src="${coverImage}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                                <span class="absolute bottom-2 right-2 bg-black/60 text-white text-[11px] px-2 py-0.5 rounded-full backdrop-blur-sm">
-                                    <i class="fa-regular fa-image mr-1"></i> ${room.images.length} ảnh
-                                </span>
-                            </div>
-                        ` : ''}
-
-                        <div class="p-5">
-                            <div class="flex justify-between items-start mb-2">
-                                <div>
-                                    <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${statusBg}">${room.status}</span>
-                                    ${isSuperAdmin() ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-100 text-violet-700">${escapeHtml(getTeamName(room.team_id))}</span>` : ''}
-                                    <button type="button" onclick="openRoomDetail('${room.id}')" class="block text-left group">
-                                        <h3 class="text-lg font-bold text-slate-800 mt-2 group-hover:text-orange-600 transition underline-offset-4 group-hover:underline">${escapeHtml(room.code)}</h3>
-                                        <span class="text-[10px] text-slate-400 group-hover:text-orange-500"><i class="fa-regular fa-eye mr-1"></i>Nhấn để xem toàn bộ thông tin</span>
-                                    </button>
+                <div class="col-span-full bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <button type="button" onclick="document.getElementById('${panelId}').classList.toggle('hidden')" class="w-full text-left p-4 md:p-5 hover:bg-slate-50 transition">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="w-9 h-9 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-building"></i></span>
+                                    <div class="min-w-0">
+                                        <h3 class="font-extrabold text-slate-800 text-base md:text-lg truncate">${escapeHtml(group.address)}</h3>
+                                        <p class="text-xs text-slate-500"><i class="fa-solid fa-location-dot text-rose-500 mr-1"></i>${escapeHtml(group.district || 'Chưa cập nhật khu vực')}</p>
+                                    </div>
                                 </div>
-                                <span class="text-xl font-extrabold text-orange-600">${room.price} <span class="text-xs font-normal text-slate-500">Tr/tháng</span></span>
-                            </div>
-
-                            <p class="text-xs text-slate-500 mb-3"><i class="fa-solid fa-location-dot text-rose-500 mr-1"></i> ${room.address || 'Chưa cập nhật địa chỉ'} (${room.district})</p>
-
-                            ${hasImages && room.images.length > 1 ? `
-                                <div class="flex gap-1.5 overflow-x-auto mb-3 pb-1">
-                                    ${room.images.map((img, imgIndex) => `
-                                        <img loading="lazy" decoding="async" src="${img}" onclick="openRoomGallery('${room.id}', ${imgIndex})" class="w-10 h-10 object-cover rounded-lg cursor-pointer border border-slate-200 hover:opacity-80">
-                                    `).join('')}
+                                <div class="flex flex-wrap gap-1.5 mt-3">
+                                    ${group.rooms.map(r => `<span class="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700">${escapeHtml(r.code)}</span>`).join('')}
                                 </div>
-                            ` : ''}
-
-                            <div class="bg-slate-50 p-3 rounded-xl text-xs space-y-1 text-slate-600 mb-3">
-                                <p><strong><i class="fa-solid fa-list-check text-orange-500 mr-1"></i> Tiện ích:</strong> ${room.amenities || 'Chưa thông tin'}</p>
-                                ${room.note ? `<p class="text-amber-700"><strong><i class="fa-solid fa-note-sticky mr-1"></i> Ghi chú:</strong> ${room.note}</p>` : ''}
                             </div>
+                            <div class="flex flex-wrap items-center gap-2 md:justify-end shrink-0">
+                                <span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-bold">${group.rooms.length} phòng</span>
+                                ${available ? `<span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">${available} trống</span>` : ''}
+                                ${soon ? `<span class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-bold">${soon} sắp trống</span>` : ''}
+                                ${rented ? `<span class="px-2.5 py-1 rounded-full bg-rose-100 text-rose-700 text-xs font-bold">${rented} đã thuê</span>` : ''}
+                                <span class="text-orange-600 font-extrabold">${priceText}</span>
+                                <i class="fa-solid fa-chevron-down text-slate-400 ml-1"></i>
+                            </div>
+                        </div>
+                    </button>
+
+                    <div id="${panelId}" class="hidden border-t border-slate-100 bg-slate-50/60 p-3 md:p-4">
+                        <div class="grid grid-cols-1 xl:grid-cols-2 gap-3">
+                            ${group.rooms.map(room => {
+                                let statusBg = 'bg-emerald-100 text-emerald-800 border-emerald-200';
+                                if(room.status === 'Sắp trống') statusBg = 'bg-amber-100 text-amber-800 border-amber-200';
+                                if(room.status === 'Đã thuê') statusBg = 'bg-rose-100 text-rose-800 border-rose-200';
+                                const cover = room.images?.[0];
+                                return `<div class="bg-white rounded-xl border border-slate-200 p-3 flex gap-3 items-start">
+                                    ${cover ? `<img loading="lazy" src="${cover}" onclick="openRoomGallery('${room.id}',0)" class="w-20 h-20 object-cover rounded-xl cursor-pointer shrink-0">` : `<div class="w-20 h-20 rounded-xl bg-slate-100 text-slate-300 flex items-center justify-center shrink-0"><i class="fa-regular fa-image text-2xl"></i></div>`}
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex justify-between gap-2 items-start">
+                                            <button onclick="openRoomDetail('${room.id}')" class="text-left"><div class="font-extrabold text-slate-800 hover:text-orange-600">${escapeHtml(room.code)}</div><span class="text-[10px] text-slate-400">Xem chi tiết</span></button>
+                                            <div class="text-orange-600 font-extrabold whitespace-nowrap">${room.price} <span class="text-[10px] font-normal text-slate-400">Tr/tháng</span></div>
+                                        </div>
+                                        <div class="mt-1 flex flex-wrap gap-1"><span class="text-[10px] font-semibold px-2 py-0.5 rounded-full border ${statusBg}">${room.status}</span>${(isSuperAdmin() || isRegionalAdmin()) ? `<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-violet-100 text-violet-700">${escapeHtml(getTeamName(room.team_id))}</span>` : ''}</div>
+                                        <p class="text-xs text-slate-500 mt-2 line-clamp-2">${escapeHtml(room.amenities || 'Chưa cập nhật tiện ích')}</p>
+                                        <div class="flex flex-wrap gap-1.5 mt-2">
+                                            <button onclick="quickSendRoom('${room.id}')" class="text-[11px] bg-orange-500 hover:bg-orange-600 text-white px-2 py-1 rounded-lg font-bold"><i class="fa-solid fa-message mr-1"></i>Gửi</button>
+                                            <button onclick="openCustomerShare('${room.id}')" class="text-[11px] bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 py-1 rounded-lg font-semibold">Tùy chỉnh</button>
+                                            ${isAdmin ? `<button onclick="editRoom('${room.id}')" class="text-[11px] bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 py-1 rounded-lg"><i class="fa-solid fa-pen"></i></button><button onclick="deleteRoom('${room.id}')" class="text-[11px] bg-rose-50 hover:bg-rose-100 text-rose-600 px-2 py-1 rounded-lg"><i class="fa-solid fa-trash"></i></button>` : ''}
+                                        </div>
+                                    </div>
+                                </div>`;
+                            }).join('')}
                         </div>
                     </div>
-
-                    <div class="bg-slate-50 px-5 py-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                        <div>
-                            ${room.mediaUrl ? `<a href="${room.mediaUrl}" target="_blank" class="text-orange-600 hover:underline font-semibold flex items-center gap-1"><i class="fa-solid fa-link"></i> Media Ảnh/Video</a>` : '<span class="text-slate-400">Không có link</span>'}
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="quickSendRoom('${room.id}')" title="Chỉ gửi nhanh thông tin phòng" class="bg-orange-500 hover:bg-orange-600 text-white px-2.5 py-1.5 rounded-xl font-bold transition flex items-center gap-1 shadow-sm">
-                                <i class="fa-solid fa-message"></i> Gửi nhanh thông tin
-                            </button>
-                            <button onclick="openCustomerShare('${room.id}')" title="Tùy chọn thông tin và hình ảnh gửi khách" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1.5 rounded-xl font-semibold transition flex items-center gap-1">
-                                <i class="fa-solid fa-sliders"></i> Tùy chỉnh
-                            </button>
-                            
-                            ${isAdmin ? `
-                                <button onclick="editRoom('${room.id}')" title="Sửa thông tin" class="text-slate-400 hover:text-orange-600 p-1 transition"><i class="fa-solid fa-pen-to-square"></i></button>
-                                <button onclick="deleteRoom('${room.id}')" title="Xóa phòng" class="text-slate-400 hover:text-rose-600 p-1 transition"><i class="fa-solid fa-trash"></i></button>
-                            ` : ''}
-                        </div>
-                    </div>
-                </div>
-            `;
+                </div>`;
             }).join('');
         }
 
