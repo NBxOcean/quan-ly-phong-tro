@@ -597,25 +597,54 @@
 
         // 1. ĐỒNG BỘ DỮ LIỆU TRÊN SUPABASE
         // Dữ liệu phòng và tài khoản được đồng bộ online thay cho IndexedDB.
+        // Chuyển dữ liệu Supabase (username/password/full_name) về cấu trúc app (user/pass/name)
+        function mapDbUserToApp(u) {
+            if (!u) return null;
+            return {
+                id: u.id,
+                user: typeof u.username === 'string' ? u.username : (u.user || ''),
+                pass: typeof u.password === 'string' ? u.password : (u.pass || ''),
+                name: typeof u.full_name === 'string' ? u.full_name : (u.name || ''),
+                role: u.role || 'Nhân viên Sale'
+            };
+        }
+
+        function mapAppUserToDb(userData, includeId = false) {
+            const row = {
+                username: String(userData.user || '').trim().toLowerCase(),
+                password: String(userData.pass || '').trim(),
+                full_name: String(userData.name || '').trim(),
+                role: userData.role || 'Nhân viên Sale'
+            };
+            if (includeId && userData.id !== undefined && userData.id !== null && userData.id !== '') {
+                row.id = Number(userData.id);
+            }
+            return row;
+        }
+
+        // 1. ĐỒNG BỘ DỮ LIỆU TRÊN SUPABASE
         async function loadUsersFromDB() {
-            // Fallback mặc định giúp đăng nhập không bị khóa khi GitHub/Supabase gặp lỗi.
             if (!supabaseClient) return [...DEFAULT_USERS];
             try {
-                const { data, error } = await supabaseClient.from('users').select('*');
+                const { data, error } = await supabaseClient
+                    .from('users')
+                    .select('id, username, password, role, full_name, name, created_at');
                 if (error) throw error;
 
-                // Chỉ dùng dữ liệu remote nếu đúng cấu trúc mà app cần.
-                const validUsers = (data || []).filter(u =>
-                    u && typeof u.user === 'string' && typeof u.pass === 'string'
-                );
+                const validUsers = (data || [])
+                    .map(mapDbUserToApp)
+                    .filter(u => u && u.user && u.pass);
 
                 if (validUsers.length === 0) {
+                    // Tạo tài khoản mặc định theo ĐÚNG tên cột của bảng users.
                     for (const u of DEFAULT_USERS) {
-                        const { error: seedError } = await supabaseClient.from('users').upsert([u]);
+                        const row = mapAppUserToDb(u, false);
+                        const { error: seedError } = await supabaseClient.from('users').insert([row]);
                         if (seedError) console.warn('Không thể tạo user mặc định:', seedError);
                     }
                     return [...DEFAULT_USERS];
                 }
+
                 usersLoadedFromRemote = true;
                 return validUsers;
             } catch (err) {
@@ -632,25 +661,23 @@
 
             try {
                 let result;
+                const isEditing = userData.id && users.some(u => String(u.id) === String(userData.id));
 
-                // Tài khoản mới: INSERT. Tài khoản đang sửa: UPDATE.
-                // Tách 2 thao tác giúp lỗi RLS/khóa trùng được báo chính xác hơn upsert().
-                if (userData.id && users.some(u => String(u.id) === String(userData.id))) {
+                if (isEditing) {
+                    // UPDATE: dùng đúng các cột thực tế của Supabase.
+                    const row = mapAppUserToDb(userData, false);
                     result = await supabaseClient
                         .from('users')
-                        .update({
-                            user: userData.user,
-                            name: userData.name,
-                            pass: userData.pass,
-                            role: userData.role
-                        })
-                        .eq('id', userData.id)
+                        .update(row)
+                        .eq('id', Number(userData.id))
                         .select()
                         .single();
                 } else {
+                    // INSERT: KHÔNG gửi id dạng chuỗi Date.now() vào cột int8.
+                    const row = mapAppUserToDb(userData, false);
                     result = await supabaseClient
                         .from('users')
-                        .insert([userData])
+                        .insert([row])
                         .select()
                         .single();
                 }
@@ -672,12 +699,15 @@
 
         async function deleteUserFromDB(id) {
             try {
-                const { error } = await supabaseClient.from('users').delete().eq('id', id);
+                const { error } = await supabaseClient
+                    .from('users')
+                    .delete()
+                    .eq('id', Number(id));
                 if (error) throw error;
                 return true;
             } catch (err) {
                 console.error('Lỗi xóa tài khoản:', err);
-                showToast('Lỗi xóa tài khoản!', 'error');
+                showToast(`Lỗi xóa tài khoản: ${err.message || err}`, 'error');
                 return false;
             }
         }
@@ -919,7 +949,7 @@
             }
 
             const userData = {
-                id: editId || Date.now().toString(),
+                id: editId || null,
                 user: userVal,
                 name: nameVal,
                 pass: passVal,
