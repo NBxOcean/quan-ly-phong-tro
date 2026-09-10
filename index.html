@@ -2,7 +2,17 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <!-- V7.5.0 - PWA -->
+    <meta name="theme-color" content="#0f172a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="NBRES">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+
     
     <!-- V7.4.9 - SEO cho nbres.site -->
     <meta name="description" content="NBRES - Hệ thống quản lý căn hộ, phòng trọ, sale và chăm sóc khách hàng do Nguyên Bảo phát triển.">
@@ -6414,6 +6424,18 @@
         title="Lên đầu trang">
         <i class="fa-solid fa-arrow-up text-sm"></i>
     </button>
+
+
+<script>
+/* V7.5.0 - Đăng ký Service Worker cho PWA */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js', { scope: '/' })
+      .then(reg => console.log('NBRES PWA service worker:', reg.scope))
+      .catch(err => console.warn('NBRES PWA service worker error:', err));
+  });
+}
+</script>
 
 </body>
 </html>
