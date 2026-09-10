@@ -1218,6 +1218,7 @@
             
             <form id="roomForm" onsubmit="saveRoom(event)" class="p-5 space-y-4">
                 <input type="hidden" id="roomId">
+                <input type="hidden" id="roomTeamOverride">
                 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
@@ -2629,7 +2630,7 @@
 
             const row = {
                 tenant_id: tenantId,
-                team_id: requireTeamForWrite(),
+                team_id: (document.getElementById('roomTeamOverride')?.value || '').trim() || requireTeamForWrite(),
                 code: String(roomData.code || '').trim(),
                 price: numericPrice,
                 district: String(roomData.district || '').trim(),
@@ -4192,6 +4193,7 @@
                     </button>
 
                     <div id="${panelId}" class="hidden border-t border-slate-100 bg-slate-50/60 p-3 md:p-4">
+                        ${isAdmin ? `<div class="flex justify-end mb-3"><button type="button" onclick="openQuickAddRoom('${group.rooms[0].id}')" class="px-3 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-extrabold shadow-sm"><i class="fa-solid fa-plus mr-1"></i> Thêm phòng tại địa chỉ này</button></div>` : ''}
                         <div class="grid grid-cols-1 xl:grid-cols-2 gap-3">
                             ${group.rooms.map(room => {
                                 let statusBg = 'bg-emerald-100 text-emerald-800 border-emerald-200';
@@ -5488,7 +5490,60 @@
         }
 
 
+        let quickAddRoomMode = false;
+
+        function setQuickAddRoomMode(enabled) {
+            quickAddRoomMode = !!enabled;
+            const hideIds = ['roomPrice','district','status','address','roomAmenities','mediaUrl','note'];
+            hideIds.forEach(id => {
+                const el = document.getElementById(id);
+                const wrap = el?.closest('div');
+                if (wrap) wrap.classList.toggle('hidden', quickAddRoomMode);
+            });
+        }
+
+        function openQuickAddRoom(sourceRoomId) {
+            if (!hasAdminAccess()) {
+                showToast('Chỉ Admin mới có quyền thêm phòng!', 'error');
+                return;
+            }
+
+            const source = rooms.find(r => String(r.id) === String(sourceRoomId));
+            if (!source) {
+                showToast('Không tìm thấy phòng mẫu của địa chỉ này.', 'error');
+                return;
+            }
+
+            document.getElementById('roomForm').reset();
+            document.getElementById('roomId').value = '';
+            document.getElementById('roomTeamOverride').value = source.team_id || '';
+            document.getElementById('code').value = '';
+            document.getElementById('roomPrice').value = source.price ?? '';
+            document.getElementById('district').value = source.district || '';
+            document.getElementById('status').value = source.status || 'Còn trống';
+            document.getElementById('address').value = source.address || '';
+            document.getElementById('roomAmenities').value = source.amenities || '';
+            document.getElementById('mediaUrl').value = source.mediaUrl || '';
+            document.getElementById('note').value = source.note || '';
+
+            currentImages = [];
+            pendingImageFiles.forEach(x => x.preview && URL.revokeObjectURL(x.preview));
+            pendingImageFiles = [];
+            renderImagePreviews();
+            setQuickAddRoomMode(true);
+
+            document.getElementById('modalTitle').textContent = `Thêm nhanh phòng mới • ${source.address || 'Cùng địa chỉ'}`;
+            const modal = document.getElementById('roomModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            setTimeout(() => document.getElementById('code')?.focus(), 50);
+        }
+
         function openModal(isEdit = false) {
+            setQuickAddRoomMode(false);
+            const teamOverride = document.getElementById('roomTeamOverride');
+            if (teamOverride) teamOverride.value = '';
             if (!hasAdminAccess()) {
                 showToast('Chỉ Admin mới có quyền thêm/sửa phòng!', 'error');
                 return;
@@ -5499,10 +5554,13 @@
         }
 
         function closeModal() {
+            setQuickAddRoomMode(false);
             document.getElementById('roomModal').classList.add('hidden');
             document.getElementById('roomModal').classList.remove('flex');
             document.getElementById('roomForm').reset();
             document.getElementById('roomId').value = '';
+            const teamOverride = document.getElementById('roomTeamOverride');
+            if (teamOverride) teamOverride.value = '';
             currentImages = [];
             pendingImageFiles.forEach(x => x.preview && URL.revokeObjectURL(x.preview));
             pendingImageFiles = [];
