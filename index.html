@@ -107,7 +107,7 @@
                             Quản Lý Cho Thuê Căn Hộ
                             <span id="roleBadgeHeader" class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30">SALE</span>
                         </h1>
-                        <p class="text-[11px] text-slate-400">Hệ thống đồng bộ dữ liệu • Nguyên Bảo</p>
+                        <p class="text-[11px] text-slate-400">Hệ thống đồng bộ dữ liệu Supabase • Nguyên Bảo</p>
                     </div>
                 </div>
 
@@ -368,7 +368,7 @@
                         <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
                             <i class="fa-solid fa-users-gear text-orange-500"></i> Quản Lý Tài Khoản Nhân Viên Sale
                         </h2>
-                        <p class="text-xs text-slate-500">Tạo tài khoản mới, phân quyền Admin/Nhiên viên hoặc đổi mật khẩu</p>
+                        <p class="text-xs text-slate-500">Tạo tài khoản mới, phân quyền Admin/Nhân viên hoặc đổi mật khẩu</p>
                     </div>
                     <button onclick="openUserModal()" class="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold px-4 py-2 rounded-xl transition shadow flex items-center gap-2 text-sm">
                         <i class="fa-solid fa-user-plus"></i> Thêm Tài Khoản Mới
@@ -530,9 +530,9 @@
         <span id="toastMsg">Đã thao tác thành công!</span>
     </div>
 
-    <!-- JAVASCRIPT HỢP NHẤT KHÔNG TRÙNG LẶP -->
+    <!-- JAVASCRIPT HỢP NHẤT SUPABASE -->
     <script>
-        // Cấu hình hằng số & Khởi tạo
+        // Cấu hình hằng số & Khởi tạo Supabase
         const SUPABASE_URL = 'https://yhkblcdvpcvjbxwfnqac.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_pK0cLrfth79Gj5OyPUDIwg_ohhag-Ld';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -541,7 +541,6 @@
 
         let users = [];
         let currentUser = null;
-        let db = null;
         let rooms = [];
         let currentImages = [];
         let dbCases = [];
@@ -566,8 +565,7 @@
                 images: [
                     'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80',
                     'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80'
-                ],
-                updatedAt: new Date().toISOString()
+                ]
             },
             {
                 id: 'room_02',
@@ -581,118 +579,95 @@
                 note: 'Khách sắp trả phòng ngày 15 tới.',
                 images: [
                     'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80'
-                ],
-                updatedAt: new Date().toISOString()
+                ]
             }
         ];
 
-        // 1. INDEXED DB DRIVER
-        function initDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open("RoomManagerDB", 2);
-                request.onupgradeneeded = (e) => {
-                    db = e.target.result;
-                    if (!db.objectStoreNames.contains("rooms")) {
-                        db.createObjectStore("rooms", { keyPath: "id" });
-                    }
-                    if (!db.objectStoreNames.contains("users")) {
-                        db.createObjectStore("users", { keyPath: "id" });
-                    }
-                };
-                request.onsuccess = (e) => {
-                    db = e.target.result;
-                    resolve(db);
-                };
-                request.onerror = (e) => reject(e);
-            });
-        }
-
+        // 1. SUPABASE DRIVER FUNCTIONS
         async function loadUsersFromDB() {
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction("users", "readonly");
-                const store = tx.objectStore("users");
-                const request = store.getAll();
-                request.onsuccess = async () => {
-                    let result = request.result || [];
-                    if (result.length === 0) {
-                        for (let u of DEFAULT_USERS) {
-                            await saveUserToDB(u);
-                        }
-                        result = DEFAULT_USERS;
+            try {
+                const { data, error } = await supabaseClient.from('users').select('*');
+                if (error) throw error;
+                if (!data || data.length === 0) {
+                    for (let u of DEFAULT_USERS) {
+                        await saveUserToDB(u);
                     }
-                    resolve(result);
-                };
-                request.onerror = (e) => reject(e);
-            });
+                    return DEFAULT_USERS;
+                }
+                return data;
+            } catch (err) {
+                console.warn('Lỗi tải users từ Supabase, dùng dữ liệu mặc định:', err);
+                return DEFAULT_USERS;
+            }
         }
 
         async function saveUserToDB(userData) {
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction("users", "readwrite");
-                const store = tx.objectStore("users");
-                const request = store.put(userData);
-                request.onsuccess = () => resolve(true);
-                request.onerror = (e) => reject(e);
-            });
+            try {
+                const { error } = await supabaseClient.from('users').upsert([userData]);
+                if (error) throw error;
+            } catch (err) {
+                console.error('Lỗi lưu user:', err);
+                showToast('Lỗi lưu tài khoản lên Supabase!', 'error');
+            }
         }
 
         async function deleteUserFromDB(id) {
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction("users", "readwrite");
-                const store = tx.objectStore("users");
-                const request = store.delete(id);
-                request.onsuccess = () => resolve(true);
-                request.onerror = (e) => reject(e);
-            });
+            try {
+                const { error } = await supabaseClient.from('users').delete().eq('id', id);
+                if (error) throw error;
+            } catch (err) {
+                console.error('Lỗi xóa user:', err);
+            }
         }
 
         async function loadRoomsFromDB() {
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction("rooms", "readonly");
-                const store = tx.objectStore("rooms");
-                const request = store.getAll();
-                request.onsuccess = async () => {
-                    let result = request.result || [];
-                    if (result.length === 0) {
-                        for (let r of DEFAULT_ROOMS) {
-                            await saveRoomToDB(r);
-                        }
-                        result = DEFAULT_ROOMS;
+            try {
+                const { data, error } = await supabaseClient.from('rooms').select('*');
+                if (error) throw error;
+                if (!data || data.length === 0) {
+                    for (let r of DEFAULT_ROOMS) {
+                        await saveRoomToDB(r);
                     }
-                    resolve(result);
-                };
-                request.onerror = (e) => reject(e);
-            });
+                    return DEFAULT_ROOMS;
+                }
+                return data;
+            } catch (err) {
+                console.warn('Lỗi tải phòng từ Supabase, dùng dữ liệu mặc định:', err);
+                return DEFAULT_ROOMS;
+            }
         }
 
         async function saveRoomToDB(roomData) {
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction("rooms", "readwrite");
-                const store = tx.objectStore("rooms");
-                const request = store.put(roomData);
-                request.onsuccess = () => resolve(true);
-                request.onerror = (e) => reject(e);
-            });
+            try {
+                const { error } = await supabaseClient.from('rooms').upsert([roomData]);
+                if (error) throw error;
+            } catch (err) {
+                console.error('Lỗi lưu phòng:', err);
+                showToast('Lỗi lưu phòng lên Supabase!', 'error');
+            }
         }
 
         async function deleteRoomFromDB(id) {
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction("rooms", "readwrite");
-                const store = tx.objectStore("rooms");
-                const request = store.delete(id);
-                request.onsuccess = () => resolve(true);
-                request.onerror = (e) => reject(e);
-            });
+            try {
+                const { error } = await supabaseClient.from('rooms').delete().eq('id', id);
+                if (error) throw error;
+            } catch (err) {
+                console.error('Lỗi xóa phòng:', err);
+            }
         }
 
         async function clearAllFromDB() {
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction("rooms", "readwrite");
-                const store = tx.objectStore("rooms");
-                const request = store.clear();
-                request.onsuccess = () => resolve(true);
-                request.onerror = (e) => reject(e);
-            });
+            try {
+                // Xóa tất cả record trong bảng rooms
+                const { data, error } = await supabaseClient.from('rooms').select('id');
+                if (error) throw error;
+                if (data && data.length > 0) {
+                    const ids = data.map(r => r.id);
+                    await supabaseClient.from('rooms').delete().in('id', ids);
+                }
+            } catch (err) {
+                console.error('Lỗi xóa toàn bộ phòng:', err);
+            }
         }
 
         // 2. AUTH & PHÂN QUYỀN
@@ -726,7 +701,7 @@
             const passVal = document.getElementById('loginPassword').value.trim();
             const remember = document.getElementById('rememberMe').checked;
 
-            const foundUser = users.find(u => u.user.toLowerCase() === userVal && u.pass === passVal);
+            const foundUser = users.find(u => (u.user && u.user.toLowerCase() === userVal) && u.pass === passVal);
 
             if (foundUser) {
                 currentUser = foundUser;
@@ -862,7 +837,7 @@
             const passVal = document.getElementById('accPassword').value.trim();
             const roleVal = document.getElementById('accRole').value;
 
-            if (!editId && users.some(u => u.user.toLowerCase() === userVal)) {
+            if (!editId && users.some(u => u.user && u.user.toLowerCase() === userVal)) {
                 showToast('Tên tài khoản trùng lặp!', 'error');
                 return;
             }
@@ -909,12 +884,12 @@
 
             tbody.innerHTML = users.map(u => `
                 <tr class="hover:bg-slate-50 transition">
-                    <td class="p-3.5 font-bold text-orange-600">${u.user}</td>
-                    <td class="p-3.5 font-medium">${u.name}</td>
-                    <td class="p-3.5 font-mono text-slate-500">${u.pass}</td>
+                    <td class="p-3.5 font-bold text-orange-600">${u.user || ''}</td>
+                    <td class="p-3.5 font-medium">${u.name || ''}</td>
+                    <td class="p-3.5 font-mono text-slate-500">${u.pass || ''}</td>
                     <td class="p-3.5">
                         <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${u.role === 'Quản trị viên' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}">
-                            ${u.role}
+                            ${u.role || ''}
                         </span>
                     </td>
                     <td class="p-3.5 text-right space-x-2">
@@ -1213,8 +1188,7 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
                 amenities: document.getElementById('roomAmenities').value,
                 mediaUrl: document.getElementById('mediaUrl').value,
                 note: document.getElementById('note').value,
-                images: [...currentImages],
-                updatedAt: new Date().toISOString()
+                images: [...currentImages]
             };
 
             await saveRoomToDB(roomData);
@@ -1572,7 +1546,6 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
 
         // 7. KHỞI CHẠY ỨNG DỤNG
         document.addEventListener('DOMContentLoaded', async () => {
-            await initDB();
             users = await loadUsersFromDB();
             
             checkAuth();
