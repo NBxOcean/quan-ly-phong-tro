@@ -112,7 +112,7 @@
                 </div>
 
                 <div class="flex items-center gap-3 flex-wrap">
-                    <nav class="flex bg-slate-800/80 p-1 rounded-2xl gap-1 border border-slate-700/60">
+                    <nav class="flex flex-wrap bg-slate-800/80 p-1 rounded-2xl gap-1 border border-slate-700/60">
                         <button onclick="switchTab('tab-inventory')" id="nav-inventory" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 bg-orange-500 text-white shadow">
                             <i class="fa-solid fa-boxes-stacked"></i> Kho Phòng
                         </button>
@@ -121,6 +121,9 @@
                         </button>
                         <button onclick="switchTab('tab-crm')" id="nav-crm" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-700/50">
                             <i class="fa-solid fa-comments"></i> Kịch Bản CRM
+                        </button>
+                        <button onclick="switchTab('tab-appointments')" id="nav-appointments" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-700/50">
+                            <i class="fa-solid fa-calendar-check"></i> Lịch Xem Phòng
                         </button>
                         <button onclick="switchTab('tab-users')" id="nav-users" class="tab-btn hidden px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-amber-300 hover:text-white hover:bg-slate-700/50">
                             <i class="fa-solid fa-users-gear"></i> Quản Lý Tài Khoản
@@ -380,6 +383,81 @@
                 </div>
             </div>
 
+
+            <!-- TAB: LỊCH XEM PHÒNG -->
+            <div id="tab-appointments" class="tab-content hidden space-y-5">
+                <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex-wrap gap-3">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-calendar-check text-orange-500"></i> Lịch Dẫn Khách Xem Phòng
+                        </h2>
+                        <p id="appointmentPageHint" class="text-xs text-slate-500 mt-1">Nhân viên Sale tạo và theo dõi lịch của mình. Admin theo dõi toàn bộ nhân viên.</p>
+                    </div>
+                    <button onclick="openAppointmentModal()" class="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold px-4 py-2 rounded-xl transition shadow flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-calendar-plus"></i> Đặt Lịch Xem
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+                        <p class="text-[11px] font-semibold text-slate-500 uppercase">Hôm nay</p>
+                        <p id="apptTodayCount" class="text-2xl font-extrabold text-slate-800 mt-1">0</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+                        <p class="text-[11px] font-semibold text-slate-500 uppercase">Sắp tới</p>
+                        <p id="apptUpcomingCount" class="text-2xl font-extrabold text-blue-600 mt-1">0</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+                        <p class="text-[11px] font-semibold text-slate-500 uppercase">Đã xem</p>
+                        <p id="apptDoneCount" class="text-2xl font-extrabold text-emerald-600 mt-1">0</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+                        <p class="text-[11px] font-semibold text-slate-500 uppercase">Đã hủy</p>
+                        <p id="apptCancelledCount" class="text-2xl font-extrabold text-rose-600 mt-1">0</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+                        <div class="lg:col-span-2">
+                            <label class="text-[11px] font-semibold text-slate-500 mb-1 block">Tìm kiếm</label>
+                            <input id="apptSearch" oninput="filterAppointments()" class="w-full border rounded-xl px-3 py-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500" placeholder="Tên khách, số điện thoại, phòng...">
+                        </div>
+                        <div>
+                            <label class="text-[11px] font-semibold text-slate-500 mb-1 block">Ngày xem</label>
+                            <input type="date" id="apptDateFilter" onchange="filterAppointments()" class="w-full border rounded-xl px-3 py-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500">
+                        </div>
+                        <div id="apptSaleFilterWrap" class="hidden">
+                            <label class="text-[11px] font-semibold text-slate-500 mb-1 block">Nhân viên Sale</label>
+                            <select id="apptSaleFilter" onchange="filterAppointments()" class="w-full border rounded-xl px-3 py-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500">
+                                <option value="">Tất cả nhân viên</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[11px] font-semibold text-slate-500 mb-1 block">Trạng thái</label>
+                            <select id="apptStatusFilter" onchange="filterAppointments()" class="w-full border rounded-xl px-3 py-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500">
+                                <option value="">Tất cả trạng thái</option>
+                                <option value="Chờ xác nhận">Chờ xác nhận</option>
+                                <option value="Đã xác nhận">Đã xác nhận</option>
+                                <option value="Đã xem">Đã xem</option>
+                                <option value="Khách hủy">Khách hủy</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100">
+                        <span id="apptShowingCount" class="text-[11px] text-slate-500">0 lịch</span>
+                        <button onclick="resetAppointmentFilters()" class="text-xs text-orange-600 font-semibold hover:underline">Đặt lại bộ lọc</button>
+                    </div>
+                </div>
+
+                <div id="appointmentList" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="lg:col-span-2 text-center bg-white border border-slate-200 rounded-2xl p-10 text-slate-400">
+                        <i class="fa-regular fa-calendar text-3xl mb-2"></i>
+                        <p class="text-sm">Chưa có lịch xem phòng.</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- TAB 4: QUẢN LÝ TÀI KHOẢN (CHỈ DÀNH CHO ADMIN) -->
             <div id="tab-users" class="tab-content hidden space-y-6">
                 <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex-wrap gap-3">
@@ -410,6 +488,94 @@
                 </div>
             </div>
         </main>
+    </div>
+
+
+    <!-- MODAL ĐẶT / SỬA LỊCH XEM PHÒNG -->
+    <div id="appointmentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[60] p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto border border-slate-100">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10">
+                <div>
+                    <h3 id="appointmentModalTitle" class="text-lg font-bold text-slate-800">Đặt Lịch Xem Phòng</h3>
+                    <p class="text-[11px] text-slate-500 mt-1">Lưu người dẫn khách, phòng cần xem và thời gian hẹn.</p>
+                </div>
+                <button type="button" onclick="closeAppointmentModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <form id="appointmentForm" onsubmit="saveAppointment(event)" class="p-5 space-y-4">
+                <input type="hidden" id="appointmentId">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Tên khách hàng *</label>
+                        <input id="apptCustomerName" required class="w-full border rounded-xl p-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500" placeholder="VD: Nguyễn Văn A">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Số điện thoại</label>
+                        <input id="apptCustomerPhone" type="tel" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500" placeholder="VD: 09xxxxxxxx">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Phòng / Căn hộ cần xem *</label>
+                    <select id="apptRoomId" required class="w-full border rounded-xl p-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500">
+                        <option value="">-- Chọn phòng --</option>
+                    </select>
+                    <p id="apptRoomInfo" class="text-[11px] text-slate-500 mt-1"></p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Ngày & giờ xem *</label>
+                        <input id="apptDateTime" type="datetime-local" required class="w-full border rounded-xl p-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500">
+                    </div>
+                    <div id="apptAssignWrap">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nhân viên dẫn khách *</label>
+                        <select id="apptSaleUserId" required class="w-full border rounded-xl p-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500"></select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Điểm hẹn</label>
+                        <input id="apptMeetingPoint" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500" placeholder="VD: Sảnh tòa nhà / trước cổng">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Trạng thái</label>
+                        <select id="apptStatus" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500">
+                            <option value="Chờ xác nhận">Chờ xác nhận</option>
+                            <option value="Đã xác nhận">Đã xác nhận</option>
+                            <option value="Đã xem">Đã xem</option>
+                            <option value="Khách hủy">Khách hủy</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Ghi chú</label>
+                    <textarea id="apptNote" rows="3" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500" placeholder="Nhu cầu khách, ngân sách, lưu ý khi dẫn xem..."></textarea>
+                </div>
+
+                <div id="apptConflictWarning" class="hidden rounded-xl border border-amber-200 bg-amber-50 text-amber-800 text-xs p-3">
+                    <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                    Nhân viên này đã có lịch gần thời điểm đã chọn. Hãy kiểm tra trước khi lưu.
+                </div>
+
+                <div class="pt-3 border-t flex justify-between items-center gap-2">
+                    <button type="button" id="apptDeleteBtn" onclick="deleteAppointmentFromModal()" class="hidden px-4 py-2 border border-rose-200 text-rose-600 hover:bg-rose-50 rounded-xl text-sm font-medium">
+                        <i class="fa-solid fa-trash mr-1"></i> Xóa lịch
+                    </button>
+                    <div class="ml-auto flex gap-2">
+                        <button type="button" onclick="closeAppointmentModal()" class="px-4 py-2 border rounded-xl text-sm text-slate-600 hover:bg-slate-50">Hủy</button>
+                        <button type="submit" id="apptSaveBtn" class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl text-sm shadow">
+                            Lưu lịch xem
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- MODAL THÊM / SỬA PHÒNG -->
@@ -743,6 +909,11 @@
         let roomFilterTimer = null;
         let dbCases = [];
         let currentFilteredData = [];
+
+        // V6.7: Lịch xem phòng
+        let appointments = [];
+        let filteredAppointments = [];
+        let appointmentSaveInProgress = false;
 
         const DEFAULT_USERS = [
             { id: '1', user: 'admin', pass: '123456', name: 'Nguyên Bảo (Admin)', role: 'Admin cao cấp' },
@@ -1353,6 +1524,8 @@
             }
 
             filterRooms();
+            // Chuẩn bị quyền hiển thị trang lịch xem phòng theo tài khoản hiện tại.
+            setTimeout(() => populateAppointmentFilters(), 0);
             setTimeout(() => showLoginNoticeIfNeeded(), 250);
         }
 
@@ -1366,6 +1539,10 @@
             if (tabId === 'tab-users' && !hasAdminAccess()) {
                 showToast('Chỉ Quản trị viên mới có quyền truy cập trang này!', 'error');
                 return;
+            }
+
+            if (tabId === 'tab-appointments') {
+                setTimeout(() => refreshAppointments(), 0);
             }
 
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -1383,6 +1560,454 @@
             const activeNav = document.getElementById('nav-' + tabId.replace('tab-', ''));
             if (activeNav) {
                 activeNav.className = 'tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 bg-orange-500 text-white shadow';
+            }
+        }
+
+
+        // 2B. LỊCH XEM PHÒNG
+        function formatLocalDateTime(value) {
+            if (!value) return '';
+            const d = new Date(value);
+            if (Number.isNaN(d.getTime())) return value;
+            return d.toLocaleString('vi-VN', {
+                hour: '2-digit',
+                minute: '2-digit',
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        }
+
+        function toDatetimeLocalValue(value) {
+            if (!value) return '';
+            const d = new Date(value);
+            if (Number.isNaN(d.getTime())) return '';
+            const pad = n => String(n).padStart(2, '0');
+            return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        }
+
+        function appointmentStatusClass(status) {
+            if (status === 'Đã xác nhận') return 'bg-blue-100 text-blue-700 border-blue-200';
+            if (status === 'Đã xem') return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+            if (status === 'Khách hủy') return 'bg-rose-100 text-rose-700 border-rose-200';
+            return 'bg-amber-100 text-amber-700 border-amber-200';
+        }
+
+        function getUserById(id) {
+            return users.find(u => String(u.id) === String(id));
+        }
+
+        function getRoomById(id) {
+            return rooms.find(r => String(r.id) === String(id));
+        }
+
+        async function loadAllRoomsForAppointmentSelect() {
+            try {
+                const tenantId = await getCurrentTenantId();
+                const { data, error } = await supabaseClient
+                    .from('rooms')
+                    .select('id,code,address,district,status,price')
+                    .eq('tenant_id', tenantId)
+                    .order('code', { ascending: true })
+                    .limit(2000);
+                if (error) throw error;
+                return data || [];
+            } catch (err) {
+                console.error('Lỗi tải danh sách phòng cho lịch:', err);
+                return rooms || [];
+            }
+        }
+
+        async function loadAppointmentsFromDB() {
+            if (!supabaseClient || !currentUser) return [];
+            try {
+                const tenantId = await getCurrentTenantId();
+                let query = supabaseClient
+                    .from('viewing_appointments')
+                    .select('id,tenant_id,room_id,sale_user_id,created_by,customer_name,customer_phone,appointment_at,meeting_point,status,note,created_at,updated_at')
+                    .eq('tenant_id', tenantId)
+                    .order('appointment_at', { ascending: true });
+
+                // Sale chỉ tải lịch được phân cho chính mình ở giao diện hiện tại.
+                if (!hasAdminAccess()) {
+                    query = query.eq('sale_user_id', Number(currentUser.id));
+                }
+
+                const { data, error } = await query;
+                if (error) throw error;
+                return data || [];
+            } catch (err) {
+                console.error('Lỗi tải lịch xem phòng:', err);
+                showToast('Không tải được lịch xem phòng: ' + (err?.message || err), 'error');
+                return [];
+            }
+        }
+
+        async function refreshAppointments() {
+            appointments = await loadAppointmentsFromDB();
+            await populateAppointmentFilters();
+            filterAppointments();
+        }
+
+        async function populateAppointmentFilters() {
+            const saleFilterWrap = document.getElementById('apptSaleFilterWrap');
+            const saleFilter = document.getElementById('apptSaleFilter');
+
+            if (hasAdminAccess()) {
+                saleFilterWrap?.classList.remove('hidden');
+                if (saleFilter) {
+                    const previous = saleFilter.value;
+                    const saleUsers = users.filter(u => u.role === 'Nhân viên Sale');
+                    saleFilter.innerHTML = '<option value="">Tất cả nhân viên</option>' +
+                        saleUsers.map(u => `<option value="${u.id}">${escapeHtml(u.name)} (${escapeHtml(u.user)})</option>`).join('');
+                    saleFilter.value = previous;
+                }
+                document.getElementById('appointmentPageHint').innerText =
+                    'Admin xem toàn bộ lịch, biết nhân viên nào dẫn khách đi xem phòng nào và vào thời điểm nào.';
+            } else {
+                saleFilterWrap?.classList.add('hidden');
+                document.getElementById('appointmentPageHint').innerText =
+                    'Bạn có thể tạo, xem và cập nhật các lịch dẫn khách của chính mình.';
+            }
+        }
+
+        function filterAppointments() {
+            const search = (document.getElementById('apptSearch')?.value || '').trim().toLowerCase();
+            const date = document.getElementById('apptDateFilter')?.value || '';
+            const status = document.getElementById('apptStatusFilter')?.value || '';
+            const saleId = hasAdminAccess() ? (document.getElementById('apptSaleFilter')?.value || '') : '';
+
+            filteredAppointments = appointments.filter(a => {
+                const room = getRoomById(a.room_id);
+                const sale = getUserById(a.sale_user_id);
+                const haystack = [
+                    a.customer_name, a.customer_phone, room?.code, room?.address,
+                    sale?.name, sale?.user, a.meeting_point, a.note
+                ].filter(Boolean).join(' ').toLowerCase();
+
+                const apptDate = a.appointment_at ? toDatetimeLocalValue(a.appointment_at).slice(0, 10) : '';
+                return (!search || haystack.includes(search))
+                    && (!date || apptDate === date)
+                    && (!status || a.status === status)
+                    && (!saleId || String(a.sale_user_id) === String(saleId));
+            });
+
+            renderAppointments(filteredAppointments);
+            renderAppointmentStats(appointments);
+        }
+
+        function renderAppointmentStats(data) {
+            const now = new Date();
+            const todayKey = toDatetimeLocalValue(now.toISOString()).slice(0,10);
+            let today = 0, upcoming = 0, done = 0, cancelled = 0;
+
+            data.forEach(a => {
+                const d = new Date(a.appointment_at);
+                const key = toDatetimeLocalValue(a.appointment_at).slice(0,10);
+                if (key === todayKey && a.status !== 'Khách hủy') today++;
+                if (d >= now && !['Đã xem','Khách hủy'].includes(a.status)) upcoming++;
+                if (a.status === 'Đã xem') done++;
+                if (a.status === 'Khách hủy') cancelled++;
+            });
+
+            document.getElementById('apptTodayCount').innerText = today;
+            document.getElementById('apptUpcomingCount').innerText = upcoming;
+            document.getElementById('apptDoneCount').innerText = done;
+            document.getElementById('apptCancelledCount').innerText = cancelled;
+        }
+
+        function renderAppointments(data) {
+            const container = document.getElementById('appointmentList');
+            if (!container) return;
+            document.getElementById('apptShowingCount').innerText = `${data.length} lịch`;
+
+            if (!data.length) {
+                container.innerHTML = `
+                    <div class="lg:col-span-2 text-center bg-white border border-slate-200 rounded-2xl p-10 text-slate-400">
+                        <i class="fa-regular fa-calendar text-3xl mb-2"></i>
+                        <p class="text-sm">Không có lịch xem phòng phù hợp.</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = data.map(a => {
+                const room = getRoomById(a.room_id);
+                const sale = getUserById(a.sale_user_id);
+                const canEdit = hasAdminAccess() || String(a.sale_user_id) === String(currentUser?.id);
+                const when = new Date(a.appointment_at);
+                const isPast = when < new Date();
+                return `
+                    <div class="bg-white rounded-2xl border ${isPast ? 'border-slate-200' : 'border-orange-200'} shadow-sm overflow-hidden">
+                        <div class="p-4 border-b border-slate-100 flex justify-between items-start gap-3">
+                            <div>
+                                <div class="flex items-center gap-2 flex-wrap mb-1">
+                                    <span class="text-[11px] font-bold px-2 py-0.5 rounded-full border ${appointmentStatusClass(a.status)}">${escapeHtml(a.status)}</span>
+                                    ${isPast ? '<span class="text-[10px] text-slate-400">Đã qua thời gian hẹn</span>' : ''}
+                                </div>
+                                <h3 class="font-extrabold text-slate-800">${escapeHtml(a.customer_name)}</h3>
+                                ${a.customer_phone ? `<a href="tel:${escapeHtml(a.customer_phone)}" class="text-xs text-blue-600 hover:underline"><i class="fa-solid fa-phone mr-1"></i>${escapeHtml(a.customer_phone)}</a>` : ''}
+                            </div>
+                            ${canEdit ? `
+                                <button onclick="openAppointmentModal('${a.id}')" class="text-xs text-orange-600 font-semibold bg-orange-50 hover:bg-orange-100 px-2.5 py-1.5 rounded-lg">
+                                    <i class="fa-solid fa-pen-to-square mr-1"></i> Chi tiết
+                                </button>` : ''}
+                        </div>
+
+                        <div class="p-4 space-y-3 text-xs">
+                            <div class="flex items-start gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-clock"></i></div>
+                                <div>
+                                    <div class="text-slate-500">Thời gian xem</div>
+                                    <div class="font-bold text-slate-800 text-sm">${formatLocalDateTime(a.appointment_at)}</div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-building"></i></div>
+                                <div class="min-w-0">
+                                    <div class="text-slate-500">Phòng / căn hộ</div>
+                                    <div class="font-bold text-slate-800">${escapeHtml(room?.code || 'Phòng không còn trong kho')}</div>
+                                    <div class="text-slate-500 truncate">${escapeHtml(room?.address || '')}</div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-user-tie"></i></div>
+                                <div>
+                                    <div class="text-slate-500">Nhân viên dẫn khách</div>
+                                    <div class="font-bold text-slate-800">${escapeHtml(sale?.name || 'Không xác định')}</div>
+                                    ${hasAdminAccess() ? `<div class="text-slate-400">@${escapeHtml(sale?.user || '')}</div>` : ''}
+                                </div>
+                            </div>
+
+                            ${a.meeting_point ? `
+                            <div class="flex items-start gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-location-dot"></i></div>
+                                <div>
+                                    <div class="text-slate-500">Điểm hẹn</div>
+                                    <div class="font-medium text-slate-700">${escapeHtml(a.meeting_point)}</div>
+                                </div>
+                            </div>` : ''}
+
+                            ${a.note ? `
+                            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 text-slate-600 whitespace-pre-line">
+                                <strong>Ghi chú:</strong> ${escapeHtml(a.note)}
+                            </div>` : ''}
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+
+        function resetAppointmentFilters() {
+            document.getElementById('apptSearch').value = '';
+            document.getElementById('apptDateFilter').value = '';
+            document.getElementById('apptStatusFilter').value = '';
+            if (document.getElementById('apptSaleFilter')) document.getElementById('apptSaleFilter').value = '';
+            filterAppointments();
+        }
+
+        async function openAppointmentModal(id = null, preselectedRoomId = null) {
+            const modal = document.getElementById('appointmentModal');
+            const item = id ? appointments.find(a => String(a.id) === String(id)) : null;
+
+            if (item && !hasAdminAccess() && String(item.sale_user_id) !== String(currentUser?.id)) {
+                showToast('Bạn chỉ được xem và chỉnh sửa lịch của chính mình!', 'error');
+                return;
+            }
+
+            document.getElementById('appointmentForm').reset();
+            document.getElementById('appointmentId').value = item?.id || '';
+            document.getElementById('appointmentModalTitle').innerText = item ? 'Chi Tiết / Chỉnh Sửa Lịch Xem' : 'Đặt Lịch Xem Phòng';
+
+            const roomSelect = document.getElementById('apptRoomId');
+            const allRooms = await loadAllRoomsForAppointmentSelect();
+            roomSelect.innerHTML = '<option value="">-- Chọn phòng --</option>' +
+                allRooms.map(r => `<option value="${r.id}">${escapeHtml(r.code)} • ${escapeHtml(r.district || '')} • ${r.price || ''}tr</option>`).join('');
+
+            const saleSelect = document.getElementById('apptSaleUserId');
+            const saleUsers = users.filter(u => u.role === 'Nhân viên Sale');
+            if (hasAdminAccess()) {
+                saleSelect.innerHTML = saleUsers.map(u => `<option value="${u.id}">${escapeHtml(u.name)} (${escapeHtml(u.user)})</option>`).join('');
+                document.getElementById('apptAssignWrap').classList.remove('hidden');
+            } else {
+                saleSelect.innerHTML = `<option value="${currentUser.id}">${escapeHtml(currentUser.name)}</option>`;
+                saleSelect.value = String(currentUser.id);
+                document.getElementById('apptAssignWrap').classList.add('hidden');
+            }
+
+            if (item) {
+                document.getElementById('apptCustomerName').value = item.customer_name || '';
+                document.getElementById('apptCustomerPhone').value = item.customer_phone || '';
+                roomSelect.value = item.room_id || '';
+                document.getElementById('apptDateTime').value = toDatetimeLocalValue(item.appointment_at);
+                saleSelect.value = String(item.sale_user_id);
+                document.getElementById('apptMeetingPoint').value = item.meeting_point || '';
+                document.getElementById('apptStatus').value = item.status || 'Chờ xác nhận';
+                document.getElementById('apptNote').value = item.note || '';
+                document.getElementById('apptDeleteBtn').classList.remove('hidden');
+            } else {
+                if (preselectedRoomId) roomSelect.value = String(preselectedRoomId);
+                if (!hasAdminAccess()) saleSelect.value = String(currentUser.id);
+                const d = new Date(Date.now() + 60 * 60 * 1000);
+                d.setMinutes(Math.ceil(d.getMinutes()/15)*15, 0, 0);
+                document.getElementById('apptDateTime').value = toDatetimeLocalValue(d.toISOString());
+                document.getElementById('apptStatus').value = 'Chờ xác nhận';
+                document.getElementById('apptDeleteBtn').classList.add('hidden');
+            }
+
+            const canDelete = item && (hasAdminAccess() || String(item.sale_user_id) === String(currentUser?.id));
+            document.getElementById('apptDeleteBtn').classList.toggle('hidden', !canDelete);
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            ['apptDateTime','apptSaleUserId'].forEach(elId => {
+                const el = document.getElementById(elId);
+                if (el) el.onchange = checkAppointmentConflict;
+            });
+            roomSelect.onchange = updateAppointmentRoomInfo;
+            updateAppointmentRoomInfo();
+            checkAppointmentConflict();
+        }
+
+        function closeAppointmentModal() {
+            const modal = document.getElementById('appointmentModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.getElementById('appointmentForm')?.reset();
+            document.getElementById('apptConflictWarning')?.classList.add('hidden');
+        }
+
+        function updateAppointmentRoomInfo() {
+            const id = document.getElementById('apptRoomId')?.value;
+            const r = rooms.find(x => String(x.id) === String(id));
+            const info = document.getElementById('apptRoomInfo');
+            if (!info) return;
+            info.innerText = r ? `${r.address || ''}${r.district ? ' • ' + r.district : ''}${r.status ? ' • ' + r.status : ''}` : '';
+        }
+
+        function checkAppointmentConflict() {
+            const id = document.getElementById('appointmentId')?.value || '';
+            const saleId = document.getElementById('apptSaleUserId')?.value || '';
+            const whenValue = document.getElementById('apptDateTime')?.value || '';
+            const warning = document.getElementById('apptConflictWarning');
+            if (!saleId || !whenValue || !warning) return;
+
+            const selectedTime = new Date(whenValue).getTime();
+            const conflict = appointments.some(a => {
+                if (String(a.id) === String(id)) return false;
+                if (String(a.sale_user_id) !== String(saleId)) return false;
+                if (a.status === 'Khách hủy') return false;
+                const diffMinutes = Math.abs(new Date(a.appointment_at).getTime() - selectedTime) / 60000;
+                return diffMinutes < 60;
+            });
+            warning.classList.toggle('hidden', !conflict);
+        }
+
+        async function saveAppointment(e) {
+            e.preventDefault();
+            if (appointmentSaveInProgress) return;
+
+            const id = document.getElementById('appointmentId').value.trim() || null;
+            const existing = id ? appointments.find(a => String(a.id) === String(id)) : null;
+
+            if (existing && !hasAdminAccess() && String(existing.sale_user_id) !== String(currentUser?.id)) {
+                showToast('Bạn không có quyền chỉnh sửa lịch này!', 'error');
+                return;
+            }
+
+            const saleUserId = hasAdminAccess()
+                ? document.getElementById('apptSaleUserId').value
+                : currentUser.id;
+
+            if (!saleUserId) {
+                showToast('Vui lòng chọn nhân viên dẫn khách!', 'error');
+                return;
+            }
+
+            const row = {
+                tenant_id: await getCurrentTenantId(),
+                room_id: document.getElementById('apptRoomId').value,
+                sale_user_id: Number(saleUserId),
+                created_by: Number(currentUser.id),
+                customer_name: document.getElementById('apptCustomerName').value.trim(),
+                customer_phone: document.getElementById('apptCustomerPhone').value.trim() || null,
+                appointment_at: new Date(document.getElementById('apptDateTime').value).toISOString(),
+                meeting_point: document.getElementById('apptMeetingPoint').value.trim() || null,
+                status: document.getElementById('apptStatus').value,
+                note: document.getElementById('apptNote').value.trim() || null
+            };
+
+            const btn = document.getElementById('apptSaveBtn');
+            const old = btn.innerHTML;
+            appointmentSaveInProgress = true;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang lưu...';
+
+            try {
+                let result;
+                if (id) {
+                    result = await supabaseClient
+                        .from('viewing_appointments')
+                        .update(row)
+                        .eq('id', id)
+                        .eq('tenant_id', row.tenant_id)
+                        .select('id')
+                        .maybeSingle();
+                    if (result.error) throw result.error;
+                    if (!result.data) throw new Error('Không tìm thấy lịch hoặc policy UPDATE đang chặn.');
+                } else {
+                    result = await supabaseClient
+                        .from('viewing_appointments')
+                        .insert([row])
+                        .select('id')
+                        .single();
+                    if (result.error) throw result.error;
+                }
+
+                closeAppointmentModal();
+                await refreshAppointments();
+                showToast(id ? 'Đã cập nhật lịch xem phòng!' : 'Đã đặt lịch xem phòng!');
+            } catch (err) {
+                console.error('Lỗi lưu lịch:', err);
+                showToast('Không thể lưu lịch: ' + (err?.message || err), 'error');
+            } finally {
+                appointmentSaveInProgress = false;
+                btn.disabled = false;
+                btn.innerHTML = old;
+            }
+        }
+
+        async function deleteAppointmentFromModal() {
+            const id = document.getElementById('appointmentId').value.trim();
+            if (!id) return;
+            const item = appointments.find(a => String(a.id) === String(id));
+            if (!item) return;
+
+            if (!hasAdminAccess() && String(item.sale_user_id) !== String(currentUser?.id)) {
+                showToast('Bạn không có quyền xóa lịch này!', 'error');
+                return;
+            }
+
+            if (!confirm(`Xóa lịch xem phòng của khách "${item.customer_name}"?`)) return;
+
+            try {
+                const tenantId = await getCurrentTenantId();
+                const { data, error } = await supabaseClient
+                    .from('viewing_appointments')
+                    .delete()
+                    .eq('id', id)
+                    .eq('tenant_id', tenantId)
+                    .select('id');
+
+                if (error) throw error;
+                if (!data?.length) throw new Error('Không tìm thấy lịch hoặc policy DELETE đang chặn.');
+
+                closeAppointmentModal();
+                await refreshAppointments();
+                showToast('Đã xóa lịch xem phòng!');
+            } catch (err) {
+                showToast('Không thể xóa lịch: ' + (err?.message || err), 'error');
             }
         }
 
