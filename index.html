@@ -34,6 +34,18 @@
         .poster-toggle-row{display:flex;align-items:center;gap:.65rem;padding:.65rem .75rem;border:1px solid #e2e8f0;border-radius:.9rem;background:#fff;font-size:.78rem;font-weight:700;color:#475569;cursor:pointer;transition:.15s ease}
         .poster-toggle-row:hover{border-color:#fdba74;background:#fff7ed}
         .poster-toggle-row input{width:1rem;height:1rem;accent-color:#f97316;flex:0 0 auto}
+
+        /* V7.4.3 - Gửi nhanh / Tùy chỉnh */
+        @media (max-width: 639px) {
+            #customerShareModal > div {
+                max-height: 96dvh !important;
+            }
+            #customerShareModal aside,
+            #customerShareModal main {
+                padding: 12px !important;
+            }
+        }
+
 </style>
 
     <style id="v72-responsive">
@@ -1039,7 +1051,7 @@
                 <div class="min-w-0">
                     <div class="text-[10px] font-bold uppercase tracking-wider text-orange-500">Gửi khách</div>
                     <h3 id="customerShareTitle" class="text-lg sm:text-xl font-extrabold text-slate-800 truncate">Thông tin & hình ảnh phòng</h3>
-                    <p class="text-[11px] text-slate-500 mt-1">Chọn thông tin cần gửi và chọn các ảnh gốc đã cập nhật trên web.</p>
+                    <p class="text-[11px] text-slate-500 mt-1">Gửi nhanh dùng cấu hình mặc định. Tại đây bạn có thể tùy chỉnh thông tin và ảnh trước khi gửi.</p>
                 </div>
                 <button type="button" onclick="closeCustomerShare()" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 shrink-0">
                     <i class="fa-solid fa-xmark"></i>
@@ -1048,6 +1060,10 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-[380px_1fr] min-h-0 flex-1">
                 <aside class="border-b lg:border-b-0 lg:border-r border-slate-200 p-4 overflow-y-auto">
+                    <div class="rounded-2xl bg-orange-50 border border-orange-100 p-3 mb-4 text-[11px] text-orange-800">
+                        <i class="fa-solid fa-bolt mr-1"></i>
+                        <b>Gửi nhanh:</b> tự dùng thông tin chính và tối đa 5 ảnh đầu tiên. Bạn chỉ cần tùy chỉnh khi muốn thay đổi.
+                    </div>
                     <div class="text-sm font-extrabold text-slate-800 mb-1">1. Chọn thông tin gửi khách</div>
                     <div class="text-[10px] text-slate-400 mb-3">Bạn có thể bỏ các mục không muốn gửi.</div>
                     <div class="space-y-2">
@@ -1089,14 +1105,14 @@
                     <button type="button" onclick="copyCustomerShareText()" class="px-4 py-2.5 rounded-xl bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 text-sm font-bold">
                         <i class="fa-regular fa-copy mr-1"></i> Copy thông tin
                     </button>
-                    <button type="button" onclick="downloadSelectedCustomerImages()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold">
-                        <i class="fa-solid fa-download mr-1"></i> Tải ảnh đã chọn
+                    <button id="customerDownloadBtn" type="button" onclick="downloadSelectedCustomerImages()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold">
+                        <i class="fa-solid fa-mobile-screen-button mr-1"></i> Lưu ảnh vào điện thoại
                     </button>
                     <button type="button" onclick="shareSelectedCustomerImages()" class="col-span-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-sm font-extrabold">
-                        <i class="fa-solid fa-share-nodes mr-1"></i> Chia sẻ ảnh + thông tin
+                        <i class="fa-solid fa-paper-plane mr-1"></i> Gửi ảnh + thông tin
                     </button>
                 </div>
-                <p class="mt-2 text-[10px] text-slate-400 text-right">Lưu ý: Zalo/Facebook có thể xử lý ảnh + chữ khác nhau tùy thiết bị. Nếu không hỗ trợ, hệ thống sẽ tải ảnh về và copy nội dung.</p>
+                <p class="mt-2 text-[10px] text-slate-400 text-right">Trên điện thoại: hệ thống ưu tiên lưu từng ảnh gốc thay vì ZIP. iPhone có thể mở bảng Chia sẻ để chọn “Lưu hình ảnh”; Android thường lưu vào thư mục Tải xuống.</p>
             </div>
         </div>
     </div>
@@ -1121,11 +1137,14 @@
                     <button type="button" onclick="closeRoomDetail()" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 text-sm font-semibold">
                         Đóng
                     </button>
-                    <button id="roomDetailCopyBtn" type="button" onclick="openCustomerShare(currentDetailRoomId)" class="col-span-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-sm font-extrabold shadow-sm">
-                        <i class="fa-solid fa-paper-plane mr-1"></i> Gửi khách
+                    <button type="button" onclick="quickSendRoom(currentDetailRoomId)" class="px-4 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-sm font-extrabold shadow-sm">
+                        <i class="fa-solid fa-bolt mr-1"></i> Gửi nhanh
+                    </button>
+                    <button id="roomDetailCopyBtn" type="button" onclick="openCustomerShare(currentDetailRoomId)" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold shadow-sm">
+                        <i class="fa-solid fa-sliders mr-1"></i> Tùy chỉnh gửi
                     </button>
                 </div>
-                <p class="mt-2 text-[10px] text-slate-400 text-right">Chọn tối đa 5 ảnh → tự ghép poster → copy hoặc gửi thẳng cho khách.</p>
+                <p class="mt-2 text-[10px] text-slate-400 text-right">Gửi nhanh dùng thông tin chuẩn + tối đa 5 ảnh đầu tiên. Chọn Tùy chỉnh gửi nếu cần đổi nội dung hoặc ảnh.</p>
             </div>
         </div>
     </div>
@@ -4057,8 +4076,11 @@
                             ${room.mediaUrl ? `<a href="${room.mediaUrl}" target="_blank" class="text-orange-600 hover:underline font-semibold flex items-center gap-1"><i class="fa-solid fa-link"></i> Media Ảnh/Video</a>` : '<span class="text-slate-400">Không có link</span>'}
                         </div>
                         <div class="flex items-center gap-2">
-                            <button onclick="openCustomerShare('${room.id}')" title="Chọn thông tin và hình ảnh gửi khách" class="bg-orange-50 hover:bg-orange-100 text-orange-700 px-2.5 py-1.5 rounded-xl font-semibold transition flex items-center gap-1">
-                                <i class="fa-solid fa-paper-plane"></i> Gửi khách
+                            <button onclick="quickSendRoom('${room.id}')" title="Gửi nhanh thông tin + 5 ảnh đầu tiên" class="bg-orange-500 hover:bg-orange-600 text-white px-2.5 py-1.5 rounded-xl font-bold transition flex items-center gap-1 shadow-sm">
+                                <i class="fa-solid fa-bolt"></i> Gửi nhanh
+                            </button>
+                            <button onclick="openCustomerShare('${room.id}')" title="Tùy chọn thông tin và hình ảnh gửi khách" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1.5 rounded-xl font-semibold transition flex items-center gap-1">
+                                <i class="fa-solid fa-sliders"></i> Tùy chỉnh
                             </button>
                             
                             ${isAdmin ? `
@@ -4163,6 +4185,37 @@
 
 
 
+
+        function applyDefaultCustomerShareFields(){
+            document.querySelectorAll('[data-share-field]').forEach(el=>{
+                const field = el.dataset.shareField;
+                // Mặc định gửi khách: đủ thông tin bán hàng, không gửi ghi chú nội bộ.
+                el.checked = ['code','price','status','district','address','amenities','media'].includes(field);
+            });
+        }
+
+        async function quickSendRoom(id){
+            const room = rooms.find(r => String(r.id) === String(id));
+            if(!room){
+                showToast('Không tìm thấy dữ liệu phòng.', 'error');
+                return;
+            }
+
+            // Chuẩn bị cấu hình mặc định mà không cần mở modal.
+            customerShareRoomId = room.id;
+            applyDefaultCustomerShareFields();
+
+            const images = Array.isArray(room.images) ? room.images : [];
+            customerSelectedImageIndexes = images.map((_,i)=>i).slice(0,5);
+
+            // Nếu không có ảnh vẫn chia sẻ/copy phần thông tin.
+            showToast(customerSelectedImageIndexes.length
+                ? `Đang chuẩn bị ${customerSelectedImageIndexes.length} ảnh + thông tin...`
+                : 'Đang chuẩn bị thông tin phòng...');
+
+            await shareSelectedCustomerImages(true);
+        }
+
         function openCustomerShare(id){
             const room = rooms.find(r => String(r.id) === String(id));
             if(!room){
@@ -4171,11 +4224,10 @@
             }
 
             customerShareRoomId = room.id;
-            customerSelectedImageIndexes = Array.isArray(room.images) ? room.images.map((_,i)=>i) : [];
+            customerSelectedImageIndexes = Array.isArray(room.images) ? room.images.map((_,i)=>i).slice(0,5) : [];
 
+            applyDefaultCustomerShareFields();
             document.querySelectorAll('[data-share-field]').forEach(el=>{
-                const field = el.dataset.shareField;
-                el.checked = !['media','note'].includes(field);
                 el.onchange = renderCustomerSharePreview;
             });
 
@@ -4184,6 +4236,13 @@
 
             renderCustomerSharePreview();
             renderCustomerShareImages();
+
+            const downloadBtn = document.getElementById('customerDownloadBtn');
+            if(downloadBtn){
+                downloadBtn.innerHTML = isMobileDevice()
+                    ? '<i class="fa-solid fa-mobile-screen-button mr-1"></i> Lưu ảnh vào điện thoại'
+                    : '<i class="fa-solid fa-download mr-1"></i> Tải ảnh đã chọn';
+            }
 
             const modal = document.getElementById('customerShareModal');
             modal?.classList.remove('hidden');
@@ -4326,12 +4385,75 @@
             return files;
         }
 
+
+        function isMobileDevice(){
+            return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
+        }
+
+        function isIOSDevice(){
+            return /iPhone|iPad|iPod/i.test(navigator.userAgent || '') ||
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        }
+
+        async function triggerDirectFileDownload(file){
+            const url = URL.createObjectURL(file);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = file.name;
+            a.rel = 'noopener';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(()=>URL.revokeObjectURL(url), 4000);
+        }
+
+        async function saveImagesOnPhone(room, files){
+            if(!files.length){
+                showToast('Không có ảnh để lưu.', 'error');
+                return;
+            }
+
+            // iPhone/iPad: Safari không cho website ghi thẳng vào Photos.
+            // Cách gần nhất là mở Share Sheet với file ảnh thật để chọn "Lưu hình ảnh".
+            if(isIOSDevice() && navigator.share && (!navigator.canShare || navigator.canShare({files}))){
+                try{
+                    await navigator.share({
+                        title: room.code || 'Ảnh phòng',
+                        files
+                    });
+                    showToast('Đã mở bảng Chia sẻ. Chọn “Lưu hình ảnh” để lưu vào Ảnh.');
+                    return;
+                }catch(err){
+                    if(err?.name === 'AbortError'){
+                        showToast('Đã hủy lưu ảnh.');
+                        return;
+                    }
+                    console.warn('iOS share fallback:', err);
+                }
+            }
+
+            // Android/mobile browser: tải từng ảnh gốc, không tạo ZIP.
+            for(const file of files){
+                await triggerDirectFileDownload(file);
+                await new Promise(r=>setTimeout(r, 350));
+            }
+            showToast(`Đã gửi lệnh lưu ${files.length} ảnh vào điện thoại.`);
+        }
+
         async function downloadSelectedCustomerImages(){
             const room = rooms.find(r => String(r.id) === String(customerShareRoomId));
             if(!room) return;
             if(!customerSelectedImageIndexes.length){
                 showToast('Bạn chưa chọn ảnh.', 'error');
                 return;
+            }
+
+            const btn = document.getElementById('customerDownloadBtn');
+            const oldHtml = btn?.innerHTML;
+            if(btn){
+                btn.disabled = true;
+                btn.classList.add('opacity-60','cursor-not-allowed');
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang chuẩn bị ảnh...';
             }
 
             try{
@@ -4341,15 +4463,15 @@
                     return;
                 }
 
+                // V7.4.2: Trên điện thoại không ZIP — ưu tiên lưu từng ảnh gốc.
+                if(isMobileDevice()){
+                    await saveImagesOnPhone(room, files);
+                    return;
+                }
+
+                // Máy tính: 1 ảnh tải trực tiếp, nhiều ảnh gom ZIP.
                 if(files.length === 1){
-                    const url = URL.createObjectURL(files[0]);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = files[0].name;
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
-                    setTimeout(()=>URL.revokeObjectURL(url),2000);
+                    await triggerDirectFileDownload(files[0]);
                     showToast('Đã tải ảnh.');
                     return;
                 }
@@ -4358,7 +4480,11 @@
                     const zip = new JSZip();
                     files.forEach(f=>zip.file(f.name,f));
                     zip.file('Thong-tin-gui-khach.txt', buildCustomerShareText(room));
-                    const blob = await zip.generateAsync({type:'blob', compression:'DEFLATE', compressionOptions:{level:6}});
+                    const blob = await zip.generateAsync({
+                        type:'blob',
+                        compression:'DEFLATE',
+                        compressionOptions:{level:6}
+                    });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
@@ -4370,69 +4496,89 @@
                     showToast(`Đã tải ZIP ${files.length} ảnh.`);
                 }else{
                     for(const file of files){
-                        const url = URL.createObjectURL(file);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = file.name;
-                        document.body.appendChild(a);
-                        a.click();
-                        a.remove();
-                        setTimeout(()=>URL.revokeObjectURL(url),2500);
+                        await triggerDirectFileDownload(file);
                         await new Promise(r=>setTimeout(r,250));
                     }
                     showToast(`Đã tải ${files.length} ảnh.`);
                 }
             }catch(err){
                 console.error(err);
-                showToast('Lỗi khi tải ảnh.', 'error');
+                showToast('Lỗi khi lưu ảnh.', 'error');
+            }finally{
+                if(btn){
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-60','cursor-not-allowed');
+                    btn.innerHTML = oldHtml || '<i class="fa-solid fa-mobile-screen-button mr-1"></i> Lưu ảnh vào điện thoại';
+                }
             }
         }
 
-        async function shareSelectedCustomerImages(){
+        async function shareSelectedCustomerImages(quickMode = false){
             const room = rooms.find(r => String(r.id) === String(customerShareRoomId));
             if(!room) return;
 
             const text = buildCustomerShareText(room);
+
             try{
                 const files = await getSelectedCustomerImageFiles(room);
 
+                // Tốt nhất: điện thoại / trình duyệt hỗ trợ Web Share với file ảnh thật.
                 if(navigator.share && files.length && (!navigator.canShare || navigator.canShare({files}))){
                     await navigator.share({
                         title: room.code || 'Thông tin phòng',
                         text: text || undefined,
                         files
                     });
-                    showToast(`Đã mở chia sẻ ${files.length} ảnh.`);
+                    showToast(`Đã mở chia sẻ ${files.length} ảnh + thông tin.`);
                     return;
                 }
 
+                // Không có ảnh hoặc không tải được ảnh: vẫn chia sẻ text nếu thiết bị cho phép.
                 if(navigator.share && !files.length && text){
                     await navigator.share({
                         title: room.code || 'Thông tin phòng',
                         text
                     });
-                    showToast('Đã mở bảng chia sẻ nội dung.');
+                    showToast('Đã mở bảng chia sẻ thông tin.');
                     return;
                 }
 
+                // Fallback ổn định trên PC / trình duyệt không hỗ trợ share file.
                 if(text){
                     try{ await navigator.clipboard.writeText(text); }catch{}
                 }
+
                 if(files.length){
                     await downloadSelectedCustomerImages();
-                    showToast('Thiết bị chưa hỗ trợ gửi ảnh trực tiếp: đã copy nội dung và tải ảnh.');
+
+                    // Gửi nhanh trên desktop: báo rõ kết quả thay vì coi là lỗi.
+                    showToast(
+                        quickMode
+                            ? 'Đã copy thông tin + tải ảnh đã chọn. Dán nội dung rồi kéo/thả ảnh vào Zalo/Messenger.'
+                            : 'Đã copy thông tin + tải ảnh đã chọn.',
+                        'success'
+                    );
+                }else if(text){
+                    showToast('Đã copy thông tin phòng. Thiết bị không hỗ trợ chia sẻ ảnh trực tiếp.');
                 }else{
-                    showToast('Thiết bị chưa hỗ trợ chia sẻ trực tiếp. Nội dung đã được copy.', 'error');
+                    showToast('Chưa có nội dung hoặc hình ảnh để gửi.', 'error');
                 }
             }catch(err){
                 if(err?.name === 'AbortError'){
                     showToast('Đã hủy chia sẻ.');
                 }else{
                     console.error(err);
-                    showToast('Không thể chia sẻ. Hãy dùng Copy thông tin + Tải ảnh đã chọn.', 'error');
+                    if(quickMode){
+                        // Nếu Gửi nhanh gặp lỗi, tự mở màn hình tùy chỉnh thay vì để người dùng bị kẹt.
+                        showToast('Gửi nhanh chưa thực hiện được. Đã mở Tùy chỉnh gửi.', 'error');
+                        openCustomerShare(room.id);
+                    }else{
+                        showToast('Không thể chia sẻ. Hãy dùng Copy thông tin + Lưu ảnh.', 'error');
+                    }
                 }
             }
         }
+
 
         const POSTER_DEFAULT_FIELDS={code:true,price:true,status:true,district:true,address:true,amenities:true,media:false};
 
