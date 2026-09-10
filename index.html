@@ -2798,6 +2798,40 @@
             return true;
         }
 
+        // Chuẩn hóa dữ liệu để kiểm tra phòng trùng ổn định hơn.
+        function normalizeRoomDuplicateValue(value) {
+            return String(value || '')
+                .normalize('NFC')
+                .trim()
+                .replace(/\s+/g, ' ')
+                .toLocaleLowerCase('vi-VN');
+        }
+
+        // Một phòng được xem là trùng khi cùng tenant + cùng mã phòng + cùng địa chỉ.
+        // Khi đang sửa, bỏ qua chính bản ghi hiện tại.
+        async function findDuplicateRoom(roomData, isEdit = false) {
+            const tenantId = await getCurrentTenantId();
+            const codeKey = normalizeRoomDuplicateValue(roomData.code);
+            const addressKey = normalizeRoomDuplicateValue(roomData.address);
+
+            if (!codeKey || !addressKey) return null;
+
+            let query = supabaseClient
+                .from('rooms')
+                .select('id,code,address,team_id')
+                .eq('tenant_id', tenantId);
+
+            if (isEdit && isUuid(roomData.id)) query = query.neq('id', roomData.id);
+
+            const { data, error } = await query;
+            if (error) throw error;
+
+            return (data || []).find(room =>
+                normalizeRoomDuplicateValue(room.code) === codeKey &&
+                normalizeRoomDuplicateValue(room.address) === addressKey
+            ) || null;
+        }
+
         // INSERT và UPDATE tách riêng để sửa phòng không tạo thêm bản ghi mới.
         async function saveRoomToDB(roomData, isEdit = false) {
             if (!supabaseClient) {
@@ -2806,6 +2840,14 @@
             }
 
             try {
+                const duplicateRoom = await findDuplicateRoom(roomData, isEdit);
+                if (duplicateRoom) {
+                    const code = String(duplicateRoom.code || roomData.code || '').trim();
+                    const address = String(duplicateRoom.address || roomData.address || '').trim();
+                    showToast(`Phòng ${code} tại ${address} đã tồn tại trong Kho phòng!`, 'error');
+                    return false;
+                }
+
                 if (isEdit) {
                     if (!isUuid(roomData.id)) throw new Error('ID phòng hiện tại không phải UUID hợp lệ.');
                     const row = await mapAppRoomToDb(roomData, false);
