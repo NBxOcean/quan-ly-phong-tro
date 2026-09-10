@@ -1021,7 +1021,7 @@
                                 <label class="poster-toggle-row"><input type="checkbox" data-private-field="media" checked><span>Media / video</span></label>
                                 <label class="poster-toggle-row"><input type="checkbox" data-private-field="address" checked><span>Địa chỉ đầy đủ</span></label>
                             </div>
-                            <button type="button" onclick="copyPosterPrivateInfo()" class="mt-3 w-full px-4 py-2.5 rounded-xl border border-sky-200 bg-sky-50 hover:bg-sky-100 text-sky-700 text-sm font-bold"><i class="fa-regular fa-copy mr-1"></i> Copy thông tin gửi riêng</button>
+                            <button type="button" onclick="copyPosterPrivateInfo()" class="mt-3 w-full px-4 py-2.5 rounded-xl border border-sky-200 bg-sky-50 hover:bg-sky-100 text-sky-700 text-sm font-bold"><i class="fa-regular fa-copy mr-1"></i> Copy lại nội dung gửi riêng</button>
                         </section>
                     </div>
                 </aside>
@@ -1051,7 +1051,7 @@
                 <div class="min-w-0">
                     <div class="text-[10px] font-bold uppercase tracking-wider text-orange-500">Gửi khách</div>
                     <h3 id="customerShareTitle" class="text-lg sm:text-xl font-extrabold text-slate-800 truncate">Thông tin & hình ảnh phòng</h3>
-                    <p class="text-[11px] text-slate-500 mt-1">Gửi nhanh dùng cấu hình mặc định. Tại đây bạn có thể tùy chỉnh thông tin và ảnh trước khi gửi.</p>
+                    <p class="text-[11px] text-slate-500 mt-1">Nội dung được tự rút gọn để dán Zalo ổn định. Bạn vẫn có thể tùy chỉnh thông tin và ảnh trước khi gửi.</p>
                 </div>
                 <button type="button" onclick="closeCustomerShare()" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 shrink-0">
                     <i class="fa-solid fa-xmark"></i>
@@ -1062,7 +1062,7 @@
                 <aside class="border-b lg:border-b-0 lg:border-r border-slate-200 p-4 overflow-y-auto">
                     <div class="rounded-2xl bg-orange-50 border border-orange-100 p-3 mb-4 text-[11px] text-orange-800">
                         <i class="fa-solid fa-bolt mr-1"></i>
-                        <b>Gửi nhanh:</b> tự dùng thông tin chính và tối đa 5 ảnh đầu tiên. Bạn chỉ cần tùy chỉnh khi muốn thay đổi.
+                        <b>Gửi nhanh:</b> tự dùng bản tin ngắn gọn cho Zalo + tối đa 5 ảnh đầu tiên.
                     </div>
                     <div class="text-sm font-extrabold text-slate-800 mb-1">1. Chọn thông tin gửi khách</div>
                     <div class="text-[10px] text-slate-400 mb-3">Bạn có thể bỏ các mục không muốn gửi.</div>
@@ -1078,7 +1078,10 @@
                     </div>
 
                     <div class="mt-4 p-3 rounded-2xl bg-slate-50 border border-slate-200">
-                        <div class="text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-2">Xem trước nội dung</div>
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <div class="text-[10px] uppercase tracking-wider font-bold text-slate-400">Xem trước nội dung</div>
+                            <div id="customerShareCharCount" class="text-[10px] font-bold text-emerald-600">0/900 ký tự</div>
+                        </div>
                         <pre id="customerSharePreview" class="whitespace-pre-wrap text-xs leading-relaxed text-slate-700 font-sans"></pre>
                     </div>
                 </aside>
@@ -1100,19 +1103,31 @@
             </div>
 
             <div class="px-4 sm:px-6 py-3 border-t border-slate-200 bg-white shrink-0">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+                    <button type="button" onclick="customerSendStep1()" class="w-full px-4 py-3 rounded-2xl bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 text-sm font-extrabold text-left">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-sky-600 text-white mr-2">1</span>
+                        Copy nội dung
+                        <span class="block text-[10px] font-medium text-sky-600 mt-1 ml-9">Sau đó dán vào Zalo/Messenger</span>
+                    </button>
+                    <button type="button" onclick="customerSendStep2()" class="w-full px-4 py-3 rounded-2xl bg-orange-50 hover:bg-orange-100 border border-orange-200 text-orange-700 text-sm font-extrabold text-left">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-orange-500 text-white mr-2">2</span>
+                        Gửi / copy ảnh
+                        <span class="block text-[10px] font-medium text-orange-600 mt-1 ml-9">Ảnh thật sẽ nằm ngay dưới tin nhắn</span>
+                    </button>
+                </div>
                 <div class="grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-end gap-2">
                     <button type="button" onclick="closeCustomerShare()" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 text-sm font-semibold">Đóng</button>
                     <button type="button" onclick="copyCustomerShareText()" class="px-4 py-2.5 rounded-xl bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 text-sm font-bold">
                         <i class="fa-regular fa-copy mr-1"></i> Copy thông tin
                     </button>
                     <button id="customerDownloadBtn" type="button" onclick="downloadSelectedCustomerImages()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold">
-                        <i class="fa-solid fa-mobile-screen-button mr-1"></i> Lưu ảnh vào điện thoại
+                        <i class="fa-solid fa-download mr-1"></i> Tải ảnh dự phòng
                     </button>
                     <button type="button" onclick="shareSelectedCustomerImages()" class="col-span-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-sm font-extrabold">
-                        <i class="fa-solid fa-paper-plane mr-1"></i> Gửi ảnh + thông tin
+                        <i class="fa-solid fa-paper-plane mr-1"></i> Gửi khách 2 bước
                     </button>
                 </div>
-                <p class="mt-2 text-[10px] text-slate-400 text-right">Trên điện thoại: hệ thống ưu tiên lưu từng ảnh gốc thay vì ZIP. iPhone có thể mở bảng Chia sẻ để chọn “Lưu hình ảnh”; Android thường lưu vào thư mục Tải xuống.</p>
+                <p class="mt-2 text-[10px] text-slate-400 text-right">Luồng 2 bước: (1) Copy nội dung → dán vào Zalo/Messenger. (2) Ngay sau đó chia sẻ/copy ảnh thật để gửi liền bên dưới.</p>
             </div>
         </div>
     </div>
@@ -1144,7 +1159,7 @@
                         <i class="fa-solid fa-sliders mr-1"></i> Tùy chỉnh gửi
                     </button>
                 </div>
-                <p class="mt-2 text-[10px] text-slate-400 text-right">Gửi nhanh dùng thông tin chuẩn + tối đa 5 ảnh đầu tiên. Chọn Tùy chỉnh gửi nếu cần đổi nội dung hoặc ảnh.</p>
+                <p class="mt-2 text-[10px] text-slate-400 text-right">Gửi nhanh mở gói 2 bước: Copy nội dung trước, sau đó gửi/copy ảnh thật để ảnh nằm ngay dưới tin nhắn.</p>
             </div>
         </div>
     </div>
@@ -4201,20 +4216,18 @@
                 return;
             }
 
-            // Chuẩn bị cấu hình mặc định mà không cần mở modal.
-            customerShareRoomId = room.id;
-            applyDefaultCustomerShareFields();
+            // Gửi nhanh V7.4.6 = mở sẵn gói gửi khách với 5 ảnh đầu tiên.
+            openCustomerShare(room.id);
 
             const images = Array.isArray(room.images) ? room.images : [];
             customerSelectedImageIndexes = images.map((_,i)=>i).slice(0,5);
+            renderCustomerShareImages();
+            renderCustomerSharePreview();
 
-            // Nếu không có ảnh vẫn chia sẻ/copy phần thông tin.
-            showToast(customerSelectedImageIndexes.length
-                ? `Đang chuẩn bị ${customerSelectedImageIndexes.length} ảnh + thông tin...`
-                : 'Đang chuẩn bị thông tin phòng...');
-
-            await shareSelectedCustomerImages(true);
+            customerSendStep1Done = false;
+            showToast('Gói gửi khách đã sẵn sàng: Bước 1 Copy nội dung → Bước 2 Gửi ảnh.');
         }
+
 
         function openCustomerShare(id){
             const room = rooms.find(r => String(r.id) === String(id));
@@ -4224,6 +4237,7 @@
             }
 
             customerShareRoomId = room.id;
+            customerSendStep1Done = false;
             customerSelectedImageIndexes = Array.isArray(room.images) ? room.images.map((_,i)=>i).slice(0,5) : [];
 
             applyDefaultCustomerShareFields();
@@ -4271,28 +4285,77 @@
             return state;
         }
 
+
+        const ZALO_SAFE_MESSAGE_MAX = 900;
+
+        function compactText(value, maxLen){
+            const s = String(value ?? '')
+                .replace(/\s+/g, ' ')
+                .replace(/\s*,\s*/g, ', ')
+                .trim();
+            if(!s) return '';
+            return s.length > maxLen ? s.slice(0, Math.max(0, maxLen - 1)).trimEnd() + '…' : s;
+        }
+
+        function compactAmenities(value){
+            const s = compactText(value, 220);
+            if(!s) return '';
+            const parts = s.split(',').map(x=>x.trim()).filter(Boolean);
+            return parts.slice(0, 8).join(', ');
+        }
+
+        function enforceZaloMessageLimit(text, room){
+            let s = String(text || '').trim();
+            if(s.length <= ZALO_SAFE_MESSAGE_MAX) return s;
+
+            // Fallback cực gọn nếu dữ liệu phòng quá dài.
+            const fallback = [
+                `🏠 ${compactText(room.code || 'Phòng', 80)}`,
+                `💰 ${compactText(room.price || 'Chưa cập nhật', 40)} triệu/tháng`,
+                room.district ? `📍 ${compactText(room.district, 80)}` : '',
+                room.address ? `🏡 ${compactText(room.address, 160)}` : '',
+                room.amenities ? `✨ ${compactAmenities(room.amenities)}` : '',
+                room.status ? `📌 ${compactText(room.status, 50)}` : '',
+                '',
+                '📲 Nhắn em để hẹn xem phòng.'
+            ].filter(Boolean).join('\n');
+
+            return fallback.length > ZALO_SAFE_MESSAGE_MAX
+                ? fallback.slice(0, ZALO_SAFE_MESSAGE_MAX - 1).trimEnd() + '…'
+                : fallback;
+        }
+
         function buildCustomerShareText(room){
             const f = getCustomerShareFieldState();
             const lines = [];
 
-            if(f.code) lines.push(`🏠 ${room.code || 'Phòng'}`);
-            if(f.price) lines.push(`💰 Giá thuê: ${room.price || 'Chưa cập nhật'} triệu/tháng`);
-            if(f.status) lines.push(`📌 Trạng thái: ${room.status || 'Chưa cập nhật'}`);
-            if(f.district) lines.push(`📍 Khu vực: ${room.district || 'Chưa cập nhật'}`);
-            if(f.address) lines.push(`🏡 Địa chỉ: ${room.address || 'Chưa cập nhật'}`);
-            if(f.amenities) lines.push(`✨ Nội thất & tiện ích: ${room.amenities || 'Chưa cập nhật'}`);
-            if(f.media && room.mediaUrl) lines.push(`🎥 Media/Video: ${room.mediaUrl}`);
-            if(f.note && room.note) lines.push(`📝 Ghi chú: ${room.note}`);
+            if(f.code) lines.push(`🏠 ${compactText(room.code || 'Phòng', 80)}`);
+            if(f.price) lines.push(`💰 ${compactText(room.price || 'Chưa cập nhật', 40)} triệu/tháng`);
+            if(f.status) lines.push(`📌 ${compactText(room.status || 'Chưa cập nhật', 50)}`);
+            if(f.district && room.district) lines.push(`📍 ${compactText(room.district, 80)}`);
+            if(f.address && room.address) lines.push(`🏡 ${compactText(room.address, 160)}`);
+            if(f.amenities && room.amenities) lines.push(`✨ ${compactAmenities(room.amenities)}`);
+            if(f.media && room.mediaUrl) lines.push(`🎥 ${compactText(room.mediaUrl, 180)}`);
+            if(f.note && room.note) lines.push(`📝 ${compactText(room.note, 120)}`);
 
-            if(lines.length) lines.push('', '🔥 Nhắn em để hẹn lịch xem phòng trực tiếp nhé!');
-            return lines.join('\n');
+            if(lines.length) lines.push('', '📲 Nhắn em để hẹn xem phòng.');
+            return enforceZaloMessageLimit(lines.join('\n'), room);
         }
 
         function renderCustomerSharePreview(){
             const room = rooms.find(r => String(r.id) === String(customerShareRoomId));
             const preview = document.getElementById('customerSharePreview');
+            const counter = document.getElementById('customerShareCharCount');
             if(!room || !preview) return;
-            preview.textContent = buildCustomerShareText(room) || 'Chưa chọn thông tin để gửi.';
+
+            const msg = buildCustomerShareText(room);
+            preview.textContent = msg || 'Chưa chọn thông tin để gửi.';
+
+            if(counter){
+                const len = msg.length;
+                counter.textContent = `${len}/${ZALO_SAFE_MESSAGE_MAX} ký tự`;
+                counter.className = `text-[10px] font-bold ${len <= ZALO_SAFE_MESSAGE_MAX ? 'text-emerald-600' : 'text-rose-600'}`;
+            }
         }
 
         function renderCustomerShareImages(){
@@ -4513,6 +4576,137 @@
             }
         }
 
+
+        let customerSendStep1Done = false;
+
+        async function writeTextRobust(text){
+            if(!text) return false;
+            try{
+                if(navigator.clipboard && window.isSecureContext){
+                    await navigator.clipboard.writeText(text);
+                    return true;
+                }
+            }catch(e){
+                console.warn('navigator.clipboard thất bại:', e);
+            }
+
+            try{
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.setAttribute('readonly','');
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                ta.style.pointerEvents = 'none';
+                document.body.appendChild(ta);
+                ta.select();
+                ta.setSelectionRange(0, ta.value.length);
+                const ok = document.execCommand('copy');
+                ta.remove();
+                return !!ok;
+            }catch(e){
+                console.warn('execCommand copy thất bại:', e);
+                return false;
+            }
+        }
+
+        async function customerSendStep1(){
+            const room = rooms.find(r => String(r.id) === String(customerShareRoomId));
+            if(!room) return;
+            const msg = buildCustomerShareText(room);
+
+            const ok = await writeTextRobust(msg);
+            if(ok){
+                customerSendStep1Done = true;
+                showToast('Bước 1 xong: nội dung đã copy. Hãy dán vào Zalo/Messenger.');
+            }else{
+                showToast('Không copy được tự động. Hãy chọn nội dung trong phần xem trước để copy thủ công.', 'error');
+            }
+        }
+
+        async function copySingleImageToClipboard(file){
+            if(!navigator.clipboard || !window.ClipboardItem) return false;
+            try{
+                let blob = file;
+                // Clipboard image thường tương thích tốt nhất với PNG.
+                if(file.type !== 'image/png'){
+                    const bitmap = await createImageBitmap(file);
+                    const canvas = document.createElement('canvas');
+                    canvas.width = bitmap.width;
+                    canvas.height = bitmap.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(bitmap,0,0);
+                    bitmap.close?.();
+                    blob = await new Promise(resolve=>canvas.toBlob(resolve,'image/png',0.95));
+                }
+                await navigator.clipboard.write([
+                    new ClipboardItem({'image/png': blob})
+                ]);
+                return true;
+            }catch(e){
+                console.warn('Copy ảnh clipboard thất bại:', e);
+                return false;
+            }
+        }
+
+        async function customerSendStep2(){
+            const room = rooms.find(r => String(r.id) === String(customerShareRoomId));
+            if(!room) return;
+            if(!customerSelectedImageIndexes.length){
+                showToast('Bạn chưa chọn ảnh.', 'error');
+                return;
+            }
+
+            try{
+                const files = await getSelectedCustomerImageFiles(room);
+                if(!files.length){
+                    showToast('Không lấy được ảnh đã chọn.', 'error');
+                    return;
+                }
+
+                // Điện thoại / trình duyệt hỗ trợ share file: gửi album ảnh thật.
+                if(navigator.share && (!navigator.canShare || navigator.canShare({files}))){
+                    try{
+                        await navigator.share({
+                            title: room.code || 'Ảnh phòng',
+                            files
+                        });
+                        showToast(
+                            customerSendStep1Done
+                                ? 'Bước 2 xong: đã mở chia sẻ ảnh. Trong Zalo/Messenger, gửi ảnh ngay dưới nội dung vừa dán.'
+                                : 'Đã mở chia sẻ ảnh. Nếu chưa gửi nội dung, hãy thực hiện Bước 1 trước.'
+                        );
+                        return;
+                    }catch(e){
+                        if(e?.name === 'AbortError'){
+                            showToast('Đã hủy chia sẻ ảnh.');
+                            return;
+                        }
+                        console.warn('share files thất bại:', e);
+                    }
+                }
+
+                // Desktop: nếu chỉ 1 ảnh, thử copy thẳng ảnh vào clipboard để Ctrl+V trong chat.
+                if(files.length === 1){
+                    const copiedImg = await copySingleImageToClipboard(files[0]);
+                    if(copiedImg){
+                        showToast('Ảnh đã copy. Chuyển sang Zalo/Messenger và bấm Ctrl+V để dán ảnh.');
+                        return;
+                    }
+                }
+
+                // Nhiều ảnh trên desktop: tải từng ảnh/ZIP để kéo thả.
+                await downloadSelectedCustomerImages();
+                showToast(
+                    customerSendStep1Done
+                        ? 'Nội dung đã copy. Ảnh đã chuẩn bị để bạn kéo/thả vào Zalo/Messenger ngay sau tin nhắn.'
+                        : 'Ảnh đã chuẩn bị. Hãy thực hiện Bước 1 để copy nội dung.'
+                );
+            }catch(e){
+                console.error(e);
+                showToast('Không thể chuẩn bị ảnh để gửi.', 'error');
+            }
+        }
+
         async function shareSelectedCustomerImages(quickMode = false){
             const room = rooms.find(r => String(r.id) === String(customerShareRoomId));
             if(!room) return;
@@ -4520,62 +4714,88 @@
             const text = buildCustomerShareText(room);
 
             try{
+                // 1) Copy nội dung trước. Đây là bước ổn định nhất trên mọi thiết bị.
+                let copied = false;
+                if(text){
+                    try{
+                        await navigator.clipboard.writeText(text);
+                        copied = true;
+                    }catch(err){
+                        console.warn('Clipboard không khả dụng:', err);
+                    }
+                }
+
+                // 2) Lấy file ảnh thật.
                 const files = await getSelectedCustomerImageFiles(room);
 
-                // Tốt nhất: điện thoại / trình duyệt hỗ trợ Web Share với file ảnh thật.
-                if(navigator.share && files.length && (!navigator.canShare || navigator.canShare({files}))){
-                    await navigator.share({
-                        title: room.code || 'Thông tin phòng',
-                        text: text || undefined,
-                        files
-                    });
-                    showToast(`Đã mở chia sẻ ${files.length} ảnh + thông tin.`);
-                    return;
+                // 3) Ưu tiên Web Share chỉ với FILE ẢNH.
+                // Nhiều app (đặc biệt Zalo/Messenger) xử lý text + files cùng lúc không ổn định.
+                if(files.length && navigator.share && (!navigator.canShare || navigator.canShare({files}))){
+                    try{
+                        await navigator.share({
+                            title: room.code || 'Ảnh phòng',
+                            files
+                        });
+
+                        showToast(
+                            copied
+                                ? 'Đã mở chia sẻ ảnh. Nội dung đã copy — vào Zalo/Messenger chỉ cần Dán rồi gửi.'
+                                : 'Đã mở chia sẻ ảnh.'
+                        );
+                        return;
+                    }catch(err){
+                        if(err?.name === 'AbortError'){
+                            showToast('Đã hủy chia sẻ.');
+                            return;
+                        }
+                        console.warn('Web Share file thất bại, chuyển fallback:', err);
+                    }
                 }
 
-                // Không có ảnh hoặc không tải được ảnh: vẫn chia sẻ text nếu thiết bị cho phép.
-                if(navigator.share && !files.length && text){
-                    await navigator.share({
-                        title: room.code || 'Thông tin phòng',
-                        text
-                    });
-                    showToast('Đã mở bảng chia sẻ thông tin.');
-                    return;
+                // 4) Nếu không share được ảnh nhưng có text, thử share riêng text.
+                if(!files.length && text && navigator.share){
+                    try{
+                        await navigator.share({
+                            title: room.code || 'Thông tin phòng',
+                            text
+                        });
+                        showToast('Đã mở bảng chia sẻ thông tin.');
+                        return;
+                    }catch(err){
+                        if(err?.name === 'AbortError'){
+                            showToast('Đã hủy chia sẻ.');
+                            return;
+                        }
+                    }
                 }
 
-                // Fallback ổn định trên PC / trình duyệt không hỗ trợ share file.
-                if(text){
-                    try{ await navigator.clipboard.writeText(text); }catch{}
-                }
-
+                // 5) Fallback PC / browser không hỗ trợ share file:
+                // copy text + tải ảnh. Không báo "gửi thất bại".
                 if(files.length){
                     await downloadSelectedCustomerImages();
 
-                    // Gửi nhanh trên desktop: báo rõ kết quả thay vì coi là lỗi.
                     showToast(
-                        quickMode
-                            ? 'Đã copy thông tin + tải ảnh đã chọn. Dán nội dung rồi kéo/thả ảnh vào Zalo/Messenger.'
-                            : 'Đã copy thông tin + tải ảnh đã chọn.',
-                        'success'
+                        copied
+                            ? 'Đã copy nội dung + tải ảnh. Mở Zalo/Messenger, dán nội dung rồi kéo/thả ảnh để gửi.'
+                            : 'Đã tải ảnh. Hãy kéo/thả ảnh vào Zalo/Messenger.'
                     );
-                }else if(text){
-                    showToast('Đã copy thông tin phòng. Thiết bị không hỗ trợ chia sẻ ảnh trực tiếp.');
-                }else{
-                    showToast('Chưa có nội dung hoặc hình ảnh để gửi.', 'error');
+                    return;
+                }
+
+                if(copied){
+                    showToast('Đã copy thông tin phòng. Phòng hiện chưa có ảnh để chia sẻ.');
+                    return;
+                }
+
+                showToast('Không thể truy cập Clipboard hoặc ảnh trên trình duyệt này.', 'error');
+
+                if(quickMode){
+                    openCustomerShare(room.id);
                 }
             }catch(err){
-                if(err?.name === 'AbortError'){
-                    showToast('Đã hủy chia sẻ.');
-                }else{
-                    console.error(err);
-                    if(quickMode){
-                        // Nếu Gửi nhanh gặp lỗi, tự mở màn hình tùy chỉnh thay vì để người dùng bị kẹt.
-                        showToast('Gửi nhanh chưa thực hiện được. Đã mở Tùy chỉnh gửi.', 'error');
-                        openCustomerShare(room.id);
-                    }else{
-                        showToast('Không thể chia sẻ. Hãy dùng Copy thông tin + Lưu ảnh.', 'error');
-                    }
-                }
+                console.error(err);
+                showToast('Không thể chuẩn bị nội dung gửi khách. Đã mở Tùy chỉnh gửi.', 'error');
+                if(quickMode) openCustomerShare(room.id);
             }
         }
 
