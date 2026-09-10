@@ -960,7 +960,59 @@
 
     <!-- MODAL THÊM / SỬA PHÒNG -->
     
-    <!-- V7.3.7: MODAL XEM TOÀN BỘ THÔNG TIN PHÒNG -->
+    
+    <!-- V7.3.9: MODAL CHỌN 5 ẢNH + TẠO POSTER GỬI KHÁCH -->
+    <div id="roomPosterModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-[95] p-3 sm:p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-5xl max-h-[94dvh] overflow-hidden border border-slate-200 flex flex-col">
+            <div class="px-4 sm:px-6 py-4 border-b border-slate-200 flex items-start justify-between gap-3 shrink-0">
+                <div class="min-w-0">
+                    <div class="text-[10px] font-bold uppercase tracking-wider text-orange-500">Poster gửi khách</div>
+                    <h3 id="roomPosterTitle" class="text-lg sm:text-xl font-extrabold text-slate-800 truncate">Chọn 5 ảnh</h3>
+                    <p class="text-[11px] text-slate-500 mt-1">Chọn tối đa 5 ảnh. Hệ thống tự ghép ảnh + thông tin phòng thành 1 poster.</p>
+                </div>
+                <button type="button" onclick="closeRoomPoster()" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 shrink-0">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-[360px_1fr] min-h-0 flex-1">
+                <div class="border-b lg:border-b-0 lg:border-r border-slate-200 p-4 overflow-y-auto">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="text-xs font-extrabold text-slate-700">Hình ảnh phòng</div>
+                        <div id="posterSelectedCount" class="text-[11px] font-bold text-orange-600">0/5 ảnh</div>
+                    </div>
+                    <div id="posterImagePicker" class="grid grid-cols-3 gap-2"></div>
+                    <div class="mt-4 rounded-2xl bg-orange-50 border border-orange-100 p-3 text-[11px] text-orange-800">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-1"></i>
+                        Ảnh đầu tiên sẽ là ảnh lớn. 4 ảnh còn lại xếp thành lưới bên dưới.
+                    </div>
+                </div>
+
+                <div class="p-4 sm:p-5 bg-slate-100 overflow-y-auto min-h-0">
+                    <div class="max-w-[620px] mx-auto">
+                        <canvas id="roomPosterCanvas" width="1080" height="1350" class="w-full h-auto bg-white rounded-2xl shadow-xl border border-slate-200"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-4 sm:px-6 py-3 border-t border-slate-200 bg-white shrink-0">
+                <div class="grid grid-cols-2 sm:flex sm:justify-end gap-2">
+                    <button type="button" onclick="closeRoomPoster()" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 text-sm font-semibold">Đóng</button>
+                    <button id="posterDownloadBtn" type="button" onclick="downloadRoomPoster()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold">
+                        <i class="fa-solid fa-download mr-1"></i> Tải poster
+                    </button>
+                    <button id="posterCopyBtn" type="button" onclick="copyRoomPoster()" class="px-4 py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100 border border-orange-200 text-orange-700 text-sm font-bold">
+                        <i class="fa-regular fa-copy mr-1"></i> Copy poster
+                    </button>
+                    <button id="posterShareBtn" type="button" onclick="shareRoomPoster()" class="col-span-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-sm font-extrabold">
+                        <i class="fa-solid fa-paper-plane mr-1"></i> Gửi poster cho khách
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- V7.3.7: MODAL XEM TOÀN BỘ THÔNG TIN PHÒNG -->
     <div id="roomDetailModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm hidden items-center justify-center z-[80] p-3 sm:p-4">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl max-h-[92dvh] overflow-hidden border border-slate-200 flex flex-col">
             <div class="px-4 sm:px-6 py-4 border-b border-slate-200 bg-white flex items-start justify-between gap-3 shrink-0">
@@ -980,17 +1032,11 @@
                     <button type="button" onclick="closeRoomDetail()" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 text-sm font-semibold">
                         Đóng
                     </button>
-                    <button id="roomDetailCopyBtn" type="button" onclick="copyCurrentRoomDetail()" class="px-3.5 py-2.5 rounded-xl border border-orange-200 bg-orange-50 hover:bg-orange-100 text-orange-700 text-sm font-bold">
-                        <i class="fa-regular fa-copy mr-1"></i> Copy nội dung
-                    </button>
-                    <button id="roomDetailDownloadBtn" type="button" onclick="downloadCurrentRoomImages()" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold">
-                        <i class="fa-solid fa-download mr-1"></i> Tải toàn bộ ảnh
-                    </button>
-                    <button id="roomDetailShareBtn" type="button" onclick="shareCurrentRoom()" class="col-span-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-sm font-extrabold shadow-sm">
-                        <i class="fa-solid fa-share-nodes mr-1"></i> Chia sẻ trực tiếp
+                    <button id="roomDetailCopyBtn" type="button" onclick="openRoomPoster(currentDetailRoomId)" class="col-span-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-sm font-extrabold shadow-sm">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Tạo poster 5 ảnh
                     </button>
                 </div>
-                <p class="mt-2 text-[10px] text-slate-400 text-right">Điện thoại: ưu tiên gửi ảnh thật qua bảng Chia sẻ • Máy tính: có thể tải ZIP ảnh.</p>
+                <p class="mt-2 text-[10px] text-slate-400 text-right">Chọn tối đa 5 ảnh → tự ghép poster → copy hoặc gửi thẳng cho khách.</p>
             </div>
         </div>
     </div>
@@ -1435,6 +1481,9 @@
         let viewerTouchStartX = 0;
         let viewerTouchStartY = 0;
         let currentDetailRoomId = null; // V7.3.7
+        let posterRoomId = null;
+        let posterSelectedIndexes = [];
+        let posterObjectUrl = null;
         const ROOM_IMAGE_BUCKET = 'room-images';
         const ROOM_PAGE_SIZE = 24;
         let roomPage = 1;
@@ -2920,6 +2969,11 @@
         document.addEventListener('keydown', function(e){
             if(e.key === 'Escape') {
                 closeTaskMenu();
+                const posterModal = document.getElementById('roomPosterModal');
+                if(posterModal && !posterModal.classList.contains('hidden')) {
+                    closeRoomPoster();
+                    return;
+                }
                 const detailModal = document.getElementById('roomDetailModal');
                 if(detailModal && !detailModal.classList.contains('hidden')) closeRoomDetail();
             }
@@ -3907,11 +3961,8 @@
                             ${room.mediaUrl ? `<a href="${room.mediaUrl}" target="_blank" class="text-orange-600 hover:underline font-semibold flex items-center gap-1"><i class="fa-solid fa-link"></i> Media Ảnh/Video</a>` : '<span class="text-slate-400">Không có link</span>'}
                         </div>
                         <div class="flex items-center gap-2">
-                            <button onclick="copyInfo('${room.id}')" title="Copy nội dung gửi khách" class="bg-orange-50 hover:bg-orange-100 text-orange-700 px-2.5 py-1.5 rounded-xl font-semibold transition flex items-center gap-1">
-                                <i class="fa-regular fa-copy"></i> Copy
-                            </button>
-                            <button onclick="shareRoomById('${room.id}')" title="Chia sẻ ảnh thật + nội dung" class="bg-sky-50 hover:bg-sky-100 text-sky-700 px-2.5 py-1.5 rounded-xl font-semibold transition flex items-center gap-1">
-                                <i class="fa-solid fa-share-nodes"></i> Gửi khách
+                            <button onclick="openRoomPoster('${room.id}')" title="Chọn 5 ảnh và tạo poster gửi khách" class="bg-orange-50 hover:bg-orange-100 text-orange-700 px-2.5 py-1.5 rounded-xl font-semibold transition flex items-center gap-1">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Poster gửi khách
                             </button>
                             
                             ${isAdmin ? `
@@ -4012,6 +4063,327 @@
             copyRoomForCustomer(room);
         }
 
+
+
+        function openRoomPoster(id){
+            const room = rooms.find(r => String(r.id) === String(id));
+            if(!room){
+                showToast('Không tìm thấy dữ liệu phòng.', 'error');
+                return;
+            }
+            if(!Array.isArray(room.images) || !room.images.length){
+                showToast('Phòng này chưa có hình ảnh để tạo poster.', 'error');
+                return;
+            }
+
+            posterRoomId = room.id;
+            posterSelectedIndexes = room.images.map((_,i)=>i).slice(0,5);
+
+            const modal = document.getElementById('roomPosterModal');
+            const title = document.getElementById('roomPosterTitle');
+            if(title) title.textContent = `${room.code || 'Phòng'} • Chọn ảnh`;
+            renderPosterImagePicker();
+            renderRoomPoster();
+
+            modal?.classList.remove('hidden');
+            modal?.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeRoomPoster(){
+            const modal = document.getElementById('roomPosterModal');
+            modal?.classList.add('hidden');
+            modal?.classList.remove('flex');
+            posterRoomId = null;
+            posterSelectedIndexes = [];
+            if(posterObjectUrl){
+                URL.revokeObjectURL(posterObjectUrl);
+                posterObjectUrl = null;
+            }
+
+            const detailModal = document.getElementById('roomDetailModal');
+            if(!detailModal || detailModal.classList.contains('hidden')){
+                document.body.style.overflow = '';
+            }
+        }
+
+        function renderPosterImagePicker(){
+            const room = rooms.find(r => String(r.id) === String(posterRoomId));
+            const picker = document.getElementById('posterImagePicker');
+            const count = document.getElementById('posterSelectedCount');
+            if(!room || !picker) return;
+
+            if(count) count.textContent = `${posterSelectedIndexes.length}/5 ảnh`;
+
+            picker.innerHTML = room.images.map((url, index)=>{
+                const selected = posterSelectedIndexes.includes(index);
+                const order = selected ? posterSelectedIndexes.indexOf(index) + 1 : '';
+                return `
+                    <button type="button" onclick="togglePosterImage(${index})" class="relative aspect-square rounded-xl overflow-hidden border-2 transition ${selected ? 'border-orange-500 ring-2 ring-orange-200' : 'border-slate-200 hover:border-slate-300'}">
+                        <img src="${url}" class="w-full h-full object-cover" alt="Ảnh ${index+1}">
+                        ${selected ? `<span class="absolute top-1 right-1 w-6 h-6 rounded-full bg-orange-500 text-white text-[11px] font-extrabold flex items-center justify-center shadow">${order}</span>` : ''}
+                        ${!selected ? `<span class="absolute inset-0 bg-slate-950/10 hover:bg-transparent transition"></span>` : ''}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function togglePosterImage(index){
+            const exists = posterSelectedIndexes.includes(index);
+            if(exists){
+                posterSelectedIndexes = posterSelectedIndexes.filter(i=>i!==index);
+            }else{
+                if(posterSelectedIndexes.length >= 5){
+                    showToast('Poster chỉ dùng tối đa 5 ảnh.', 'error');
+                    return;
+                }
+                posterSelectedIndexes.push(index);
+            }
+
+            if(!posterSelectedIndexes.length){
+                posterSelectedIndexes = [index];
+            }
+
+            renderPosterImagePicker();
+            renderRoomPoster();
+        }
+
+        function loadCanvasImage(url){
+            return new Promise((resolve, reject)=>{
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = ()=>resolve(img);
+                img.onerror = ()=>reject(new Error('Không tải được ảnh'));
+                img.src = url;
+            });
+        }
+
+        function drawImageCover(ctx, img, x, y, w, h, radius=0){
+            const scale = Math.max(w/img.width, h/img.height);
+            const sw = w/scale;
+            const sh = h/scale;
+            const sx = (img.width-sw)/2;
+            const sy = (img.height-sh)/2;
+
+            ctx.save();
+            if(radius){
+                roundedRectPath(ctx,x,y,w,h,radius);
+                ctx.clip();
+            }
+            ctx.drawImage(img,sx,sy,sw,sh,x,y,w,h);
+            ctx.restore();
+        }
+
+        function roundedRectPath(ctx,x,y,w,h,r){
+            const rr=Math.min(r,w/2,h/2);
+            ctx.beginPath();
+            ctx.moveTo(x+rr,y);
+            ctx.arcTo(x+w,y,x+w,y+h,rr);
+            ctx.arcTo(x+w,y+h,x,y+h,rr);
+            ctx.arcTo(x,y+h,x,y,rr);
+            ctx.arcTo(x,y,x+w,y,rr);
+            ctx.closePath();
+        }
+
+        function wrapCanvasText(ctx, text, maxWidth){
+            const words=String(text||'').split(/\s+/);
+            const lines=[];
+            let line='';
+            for(const word of words){
+                const test=line ? line+' '+word : word;
+                if(ctx.measureText(test).width>maxWidth && line){
+                    lines.push(line);
+                    line=word;
+                }else{
+                    line=test;
+                }
+            }
+            if(line) lines.push(line);
+            return lines;
+        }
+
+        async function renderRoomPoster(){
+            const room = rooms.find(r => String(r.id) === String(posterRoomId));
+            const canvas = document.getElementById('roomPosterCanvas');
+            if(!room || !canvas) return;
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width, H = canvas.height;
+
+            // Background
+            ctx.clearRect(0,0,W,H);
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillRect(0,0,W,H);
+
+            const urls = posterSelectedIndexes.map(i=>room.images[i]).filter(Boolean);
+            let imgs=[];
+            try{
+                imgs = await Promise.all(urls.map(loadCanvasImage));
+            }catch(err){
+                console.warn('Một số ảnh không tải được để tạo poster:',err);
+            }
+
+            // Header
+            ctx.fillStyle='#0f172a';
+            ctx.fillRect(0,0,W,126);
+            ctx.fillStyle='#f97316';
+            ctx.fillRect(0,118,W,8);
+
+            ctx.fillStyle='#ffffff';
+            ctx.font='800 42px Arial, sans-serif';
+            ctx.fillText('NBxOcean',48,60);
+            ctx.font='600 23px Arial, sans-serif';
+            ctx.fillStyle='#cbd5e1';
+            ctx.fillText('Căn hộ & Phòng trọ',48,96);
+
+            ctx.textAlign='right';
+            ctx.fillStyle='#ffffff';
+            ctx.font='800 28px Arial, sans-serif';
+            ctx.fillText('THÔNG TIN PHÒNG',W-48,72);
+            ctx.textAlign='left';
+
+            // Main image + 4-grid
+            const mx=48, contentW=W-96;
+            const top=162;
+            if(imgs[0]){
+                drawImageCover(ctx,imgs[0],mx,top,contentW,500,26);
+            }else{
+                ctx.fillStyle='#e2e8f0';
+                roundedRectPath(ctx,mx,top,contentW,500,26); ctx.fill();
+            }
+
+            const remaining=imgs.slice(1,5);
+            if(remaining.length){
+                const gap=14;
+                const gy=top+514;
+                const cellW=(contentW-gap)/2;
+                const cellH=210;
+                remaining.forEach((img,i)=>{
+                    const col=i%2,row=Math.floor(i/2);
+                    drawImageCover(ctx,img,mx+col*(cellW+gap),gy+row*(cellH+gap),cellW,cellH,20);
+                });
+            }
+
+            const infoY = remaining.length > 2 ? top+514+210*2+14+36 : (remaining.length ? top+514+210+36 : top+540);
+            let y=infoY;
+
+            // Card info
+            ctx.fillStyle='#ffffff';
+            roundedRectPath(ctx,mx,y,contentW,H-y-48,28); ctx.fill();
+
+            y+=48;
+            ctx.fillStyle='#0f172a';
+            ctx.font='800 40px Arial, sans-serif';
+            const codeLines=wrapCanvasText(ctx,String(room.code||'').toUpperCase(),contentW-96);
+            codeLines.slice(0,2).forEach((line,i)=>ctx.fillText(line,mx+38,y+i*46));
+            y += Math.max(1,Math.min(2,codeLines.length))*46 + 8;
+
+            ctx.fillStyle='#f97316';
+            ctx.font='800 38px Arial, sans-serif';
+            ctx.fillText(`${room.price || '—'} TRIỆU / THÁNG`,mx+38,y);
+            y+=52;
+
+            ctx.font='600 25px Arial, sans-serif';
+            ctx.fillStyle='#334155';
+            const entries=[
+                ['📍', `${room.address || 'Chưa cập nhật'}${room.district ? ' • '+room.district : ''}`],
+                ['✨', room.amenities || 'Chưa cập nhật tiện ích'],
+                ['📌', `Trạng thái: ${room.status || 'Chưa cập nhật'}`]
+            ];
+
+            for(const [icon,val] of entries){
+                ctx.fillStyle='#64748b';
+                ctx.font='700 24px Arial, sans-serif';
+                ctx.fillText(icon,mx+38,y);
+                ctx.fillStyle='#334155';
+                ctx.font='600 24px Arial, sans-serif';
+                const lines=wrapCanvasText(ctx,val,contentW-125).slice(0,2);
+                lines.forEach((line,i)=>ctx.fillText(line,mx+82,y+i*31));
+                y += Math.max(1,lines.length)*31+13;
+            }
+
+            ctx.fillStyle='#fff7ed';
+            roundedRectPath(ctx,mx+38,H-118,contentW-76,54,16); ctx.fill();
+            ctx.fillStyle='#c2410c';
+            ctx.font='800 23px Arial, sans-serif';
+            ctx.textAlign='center';
+            ctx.fillText('Liên hệ ngay để hẹn lịch xem phòng',W/2,H-83);
+            ctx.textAlign='left';
+        }
+
+        async function canvasPosterBlob(){
+            const canvas=document.getElementById('roomPosterCanvas');
+            if(!canvas) throw new Error('Không có poster');
+            return await new Promise((resolve,reject)=>{
+                canvas.toBlob(blob=>blob?resolve(blob):reject(new Error('Không tạo được ảnh poster')),'image/jpeg',0.94);
+            });
+        }
+
+        async function copyRoomPoster(){
+            try{
+                const blob=await canvasPosterBlob();
+                if(!navigator.clipboard?.write || !window.ClipboardItem){
+                    showToast('Trình duyệt không hỗ trợ copy ảnh trực tiếp. Hãy dùng Tải poster.', 'error');
+                    return;
+                }
+                const pngCanvas=document.getElementById('roomPosterCanvas');
+                const pngBlob=await new Promise((resolve,reject)=>pngCanvas.toBlob(b=>b?resolve(b):reject(new Error('Không tạo được PNG')),'image/png'));
+                await navigator.clipboard.write([new ClipboardItem({'image/png':pngBlob})]);
+                showToast('Đã copy poster dạng hình ảnh. Bạn có thể dán trực tiếp vào ứng dụng hỗ trợ.');
+            }catch(err){
+                console.error(err);
+                showToast('Không copy được poster. Hãy dùng nút Tải poster.', 'error');
+            }
+        }
+
+        async function downloadRoomPoster(){
+            try{
+                const room=rooms.find(r=>String(r.id)===String(posterRoomId));
+                const blob=await canvasPosterBlob();
+                const url=URL.createObjectURL(blob);
+                const a=document.createElement('a');
+                a.href=url;
+                a.download=`${safeRoomFileBase(room)}-poster.jpg`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                setTimeout(()=>URL.revokeObjectURL(url),2500);
+                showToast('Đã tải poster JPG.');
+            }catch(err){
+                console.error(err);
+                showToast('Không thể tải poster.', 'error');
+            }
+        }
+
+        async function shareRoomPoster(){
+            try{
+                const room=rooms.find(r=>String(r.id)===String(posterRoomId));
+                if(!room) throw new Error('Không tìm thấy phòng');
+
+                const blob=await canvasPosterBlob();
+                const file=new File([blob],`${safeRoomFileBase(room)}-poster.jpg`,{type:'image/jpeg'});
+                const text=`🏡 ${room.code}\n💰 ${room.price} triệu/tháng\n📍 ${room.address || ''}${room.district ? ' • '+room.district : ''}\n\nNhắn em để hẹn lịch xem phòng nhé!`;
+
+                if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
+                    await navigator.share({
+                        title: room.code || 'Thông tin phòng',
+                        text,
+                        files:[file]
+                    });
+                    showToast('Đã mở bảng chia sẻ poster.');
+                }else{
+                    await downloadRoomPoster();
+                    try{ await navigator.clipboard.writeText(text); }catch{}
+                    showToast('Thiết bị chưa hỗ trợ chia sẻ file: đã tải poster về máy.');
+                }
+            }catch(err){
+                if(err?.name==='AbortError'){
+                    showToast('Đã hủy chia sẻ.');
+                }else{
+                    console.error(err);
+                    showToast('Không thể chia sẻ poster.', 'error');
+                }
+            }
+        }
 
         function safeRoomFileBase(room){
             return String(room?.code || 'phong')
@@ -4305,11 +4677,11 @@
                     </div>
                 ` : ''}
 
-                <div class="rounded-2xl border border-sky-200 bg-sky-50 p-4 mb-3">
-                    <div class="text-[10px] uppercase tracking-wider font-bold text-sky-600 mb-1">Gửi khách nhanh</div>
-                    <div class="text-xs text-sky-800">
-                        <i class="fa-solid fa-mobile-screen-button mr-1"></i>
-                        Trên điện thoại, nút <b>Chia sẻ trực tiếp</b> sẽ cố gắng gửi <b>file ảnh thật</b> cùng nội dung phòng qua ứng dụng bạn chọn.
+                <div class="rounded-2xl border border-orange-200 bg-orange-50 p-4 mb-3">
+                    <div class="text-[10px] uppercase tracking-wider font-bold text-orange-600 mb-1">Poster gửi khách</div>
+                    <div class="text-xs text-orange-800">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-1"></i>
+                        Chọn tối đa <b>5 ảnh</b>, hệ thống sẽ tự ghép với thông tin phòng thành <b>1 poster duy nhất</b> để copy hoặc gửi khách.
                     </div>
                 </div>
 
