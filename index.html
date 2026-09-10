@@ -31,6 +31,217 @@
             box-shadow: 0 10px 30px -10px rgba(249, 115, 22, 0.4);
         }
     </style>
+
+    <style id="v72-responsive">
+        :root {
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-top: env(safe-area-inset-top, 0px);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            min-height: 100dvh;
+            overflow-x: hidden;
+            overscroll-behavior-y: none;
+            -webkit-tap-highlight-color: transparent;
+            text-rendering: optimizeLegibility;
+        }
+
+        button, a, input, select, textarea {
+            touch-action: manipulation;
+        }
+
+        button, select, input, textarea {
+            min-height: 40px;
+        }
+
+        /* Giảm giật khi các danh sách dài render */
+        .tab-content,
+        #roomGrid,
+        #appointmentList,
+        #teamList,
+        #caseListContainer {
+            contain: layout paint style;
+        }
+
+        /* Thanh menu: desktop gọn, mobile cuộn ngang */
+        header nav {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        header nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Tables không làm vỡ màn hình nhỏ */
+        #tab-users .bg-white.rounded-2xl.shadow-sm.border {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        #tab-users table {
+            min-width: 860px;
+        }
+
+        /* Popup/modal mượt và phù hợp viewport mobile */
+        [id$="Modal"] {
+            overscroll-behavior: contain;
+        }
+        [id$="Modal"] > div {
+            max-height: min(92dvh, 920px);
+        }
+
+        /* Form controls dễ bấm trên điện thoại */
+        input, select, textarea {
+            font-size: 16px;
+        }
+
+        /* Tối ưu ảnh */
+        img {
+            image-rendering: auto;
+        }
+
+        @media (max-width: 767px) {
+            body {
+                padding-bottom: var(--safe-bottom);
+            }
+
+            header {
+                position: sticky;
+                top: 0;
+                z-index: 40;
+                padding-top: var(--safe-top);
+                backdrop-filter: blur(14px);
+            }
+
+            header > div {
+                gap: 10px !important;
+            }
+
+            header nav {
+                width: 100%;
+                overflow-x: auto;
+                flex-wrap: nowrap !important;
+                white-space: nowrap;
+                justify-content: flex-start;
+                padding: 6px !important;
+            }
+
+            header nav .tab-btn {
+                flex: 0 0 auto;
+                min-height: 38px;
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+            }
+
+            #teamContextBar,
+            #appointmentQuickAccess,
+            main {
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+            }
+
+            main {
+                padding-top: 14px !important;
+                padding-bottom: calc(24px + var(--safe-bottom)) !important;
+            }
+
+            .tab-content {
+                gap: 14px;
+            }
+
+            .tab-content > .flex.justify-between.items-center.bg-white,
+            .tab-content > section.bg-white,
+            #tab-appointments > .bg-white,
+            #tab-teams > .bg-white {
+                border-radius: 16px !important;
+            }
+
+            #roomGrid,
+            #appointmentList,
+            #teamList {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Modal chuyển thành bottom-sheet nhẹ trên mobile */
+            #roomModal,
+            #userModal,
+            #teamModal,
+            #appointmentModal,
+            #crmModal,
+            #noticeEditorModal {
+                align-items: flex-end !important;
+                padding: 0 !important;
+            }
+
+            #roomModal > div,
+            #userModal > div,
+            #teamModal > div,
+            #appointmentModal > div,
+            #crmModal > div,
+            #noticeEditorModal > div {
+                width: 100% !important;
+                max-width: 100% !important;
+                max-height: 92dvh !important;
+                border-bottom-left-radius: 0 !important;
+                border-bottom-right-radius: 0 !important;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            #imageViewerModal {
+                padding: 0 !important;
+            }
+
+            /* Khoảng cách form gọn hơn */
+            form {
+                scroll-margin-bottom: 100px;
+            }
+
+            .grid.grid-cols-2,
+            .grid.grid-cols-3,
+            .grid.grid-cols-4 {
+                gap: 10px;
+            }
+
+            /* Nút chính full-width khi phù hợp */
+            #adminAddRoomBtn,
+            #tab-appointments button[onclick="openAppointmentModal()"],
+            #tab-teams button[onclick="openTeamModal()"] {
+                width: 100%;
+                justify-content: center;
+            }
+
+            /* Tránh chữ quá nhỏ */
+            .text-\[10px\] {
+                line-height: 1.35;
+            }
+
+            /* Floating back-to-top */
+            #mobileBackTop {
+                display: flex !important;
+            }
+        }
+
+        @media (min-width: 768px) {
+            input, select, textarea {
+                font-size: 14px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 min-h-screen pb-12 antialiased">
 
@@ -111,7 +322,7 @@
                     </div>
                 </div>
 
-                <div class="flex items-center gap-3 flex-wrap">
+                <div class="flex items-center gap-2 sm:gap-3 flex-wrap w-full lg:w-auto">
                     <nav class="flex flex-wrap bg-slate-800/80 p-1 rounded-2xl gap-1 border border-slate-700/60">
                         <button onclick="switchTab('tab-inventory')" id="nav-inventory" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 bg-orange-500 text-white shadow">
                             <i class="fa-solid fa-boxes-stacked"></i> Kho Phòng
@@ -2846,7 +3057,7 @@
                     <div>
                         ${coverImage ? `
                             <div class="relative h-48 bg-slate-100 overflow-hidden group cursor-pointer" onclick="openRoomGallery('${room.id}', 0)">
-                                <img src="${coverImage}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                <img loading="lazy" decoding="async" src="${coverImage}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                                 <span class="absolute bottom-2 right-2 bg-black/60 text-white text-[11px] px-2 py-0.5 rounded-full backdrop-blur-sm">
                                     <i class="fa-regular fa-image mr-1"></i> ${room.images.length} ảnh
                                 </span>
@@ -2868,7 +3079,7 @@
                             ${hasImages && room.images.length > 1 ? `
                                 <div class="flex gap-1.5 overflow-x-auto mb-3 pb-1">
                                     ${room.images.map((img, imgIndex) => `
-                                        <img src="${img}" onclick="openRoomGallery('${room.id}', ${imgIndex})" class="w-10 h-10 object-cover rounded-lg cursor-pointer border border-slate-200 hover:opacity-80">
+                                        <img loading="lazy" decoding="async" src="${img}" onclick="openRoomGallery('${room.id}', ${imgIndex})" class="w-10 h-10 object-cover rounded-lg cursor-pointer border border-slate-200 hover:opacity-80">
                                     `).join('')}
                                 </div>
                             ` : ''}
@@ -3858,6 +4069,32 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
             }, 2500);
         }
 
+
+        // V7.2: tối ưu thao tác PC + Mobile
+        let v72ScrollTicking = false;
+        window.addEventListener('scroll', () => {
+            if (v72ScrollTicking) return;
+            v72ScrollTicking = true;
+            requestAnimationFrame(() => {
+                const btn = document.getElementById('mobileBackTop');
+                if (btn) {
+                    const show = window.scrollY > 500 && window.innerWidth < 768;
+                    btn.classList.toggle('opacity-0', !show);
+                    btn.classList.toggle('pointer-events-none', !show);
+                    btn.classList.toggle('opacity-100', show);
+                }
+                v72ScrollTicking = false;
+            });
+        }, { passive: true });
+
+        window.addEventListener('resize', () => {
+            const btn = document.getElementById('mobileBackTop');
+            if (btn && window.innerWidth >= 768) {
+                btn.classList.add('opacity-0', 'pointer-events-none');
+                btn.classList.remove('opacity-100');
+            }
+        }, { passive: true });
+
         // 7. KHỞI CHẠY ỨNG DỤNG
         document.addEventListener('DOMContentLoaded', async () => {
             users = await loadUsersFromDB();
@@ -3882,5 +4119,12 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
             if (dbCases.length > 0) selectCase(dbCases[0].id);
         });
     </script>
+
+    <button id="mobileBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+        class="hidden fixed right-3 bottom-3 z-[45] w-11 h-11 rounded-full bg-slate-900/90 text-white shadow-lg items-center justify-center border border-white/10"
+        title="Lên đầu trang">
+        <i class="fa-solid fa-arrow-up text-sm"></i>
+    </button>
+
 </body>
 </html>
