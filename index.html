@@ -625,13 +625,47 @@
         }
 
         async function saveUserToDB(userData) {
+            if (!supabaseClient) {
+                showToast('Supabase chưa kết nối. Không thể lưu tài khoản!', 'error');
+                return false;
+            }
+
             try {
-                const { error } = await supabaseClient.from('users').upsert([userData]);
-                if (error) throw error;
+                let result;
+
+                // Tài khoản mới: INSERT. Tài khoản đang sửa: UPDATE.
+                // Tách 2 thao tác giúp lỗi RLS/khóa trùng được báo chính xác hơn upsert().
+                if (userData.id && users.some(u => String(u.id) === String(userData.id))) {
+                    result = await supabaseClient
+                        .from('users')
+                        .update({
+                            user: userData.user,
+                            name: userData.name,
+                            pass: userData.pass,
+                            role: userData.role
+                        })
+                        .eq('id', userData.id)
+                        .select()
+                        .single();
+                } else {
+                    result = await supabaseClient
+                        .from('users')
+                        .insert([userData])
+                        .select()
+                        .single();
+                }
+
+                if (result.error) {
+                    console.error('Supabase users error:', result.error);
+                    const detail = result.error.message || result.error.details || 'Không xác định';
+                    showToast(`Không thể lưu tài khoản: ${detail}`, 'error');
+                    return false;
+                }
+
                 return true;
             } catch (err) {
                 console.error('Lỗi lưu tài khoản:', err);
-                showToast('Lỗi lưu tài khoản lên Supabase!', 'error');
+                showToast(`Lỗi lưu tài khoản: ${err.message || err}`, 'error');
                 return false;
             }
         }
@@ -892,11 +926,15 @@
                 role: roleVal
             };
 
-            await saveUserToDB(userData);
+            const saved = await saveUserToDB(userData);
+
+            // Chỉ đóng form khi Supabase xác nhận lưu thành công.
+            if (!saved) return;
+
             users = await loadUsersFromDB();
             renderUsersTable();
             closeUserModal();
-            showToast('Đã lưu tài khoản!');
+            showToast(editId ? 'Đã cập nhật tài khoản!' : 'Đã tạo tài khoản mới!');
         }
 
         async function deleteUser(id) {
@@ -913,7 +951,9 @@
             }
 
             if (confirm(`Xóa tài khoản "${u.user}" (${u.name})?`)) {
-                await deleteUserFromDB(id);
+                const deleted = await deleteUserFromDB(id);
+                if (!deleted) return;
+
                 users = await loadUsersFromDB();
                 renderUsersTable();
                 showToast('Đã xóa tài khoản!');
