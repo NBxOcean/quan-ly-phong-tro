@@ -336,6 +336,9 @@
                         <button onclick="switchTab('tab-appointments')" id="nav-appointments" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 text-cyan-200 bg-cyan-500/10 border border-cyan-400/20 hover:text-white hover:bg-cyan-500/20">
                             <i class="fa-solid fa-calendar-check"></i> Lịch Xem Phòng
                         </button>
+                        <button onclick="switchTab('tab-regions')" id="nav-regions" class="tab-btn hidden px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-sky-300 hover:text-white hover:bg-slate-700/50">
+                            <i class="fa-solid fa-map-location-dot"></i> Khu Vực
+                        </button>
                         <button onclick="switchTab('tab-teams')" id="nav-teams" class="tab-btn hidden px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-violet-300 hover:text-white hover:bg-slate-700/50">
                             <i class="fa-solid fa-people-group"></i> Quản Lý Team
                         </button>
@@ -371,10 +374,17 @@
                         <p id="currentTeamLabel" class="text-sm font-extrabold text-slate-800">Đang tải team...</p>
                     </div>
                 </div>
-                <div id="superTeamSelectorWrap" class="hidden min-w-[240px]">
-                    <select id="superTeamSelector" onchange="changeActiveTeam(this.value)" class="w-full border rounded-xl px-3 py-2 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-violet-500">
-                        <option value="">Tất cả team</option>
-                    </select>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <div id="superRegionSelectorWrap" class="hidden min-w-[210px]">
+                        <select id="superRegionSelector" onchange="changeActiveRegion(this.value)" class="w-full border rounded-xl px-3 py-2 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-sky-500">
+                            <option value="">Tất cả khu vực</option>
+                        </select>
+                    </div>
+                    <div id="superTeamSelectorWrap" class="hidden min-w-[240px]">
+                        <select id="superTeamSelector" onchange="changeActiveTeam(this.value)" class="w-full border rounded-xl px-3 py-2 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-violet-500">
+                            <option value="">Tất cả team</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -560,7 +570,7 @@
                         <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
                             <i class="fa-solid fa-comments text-orange-500"></i> Thư Viện Kịch Bản CRM
                         </h2>
-                        <p class="text-xs text-slate-500 mt-1">Admin được thêm/sửa/xóa. Nhân viên Sale chỉ được xem và sao chép mẫu trả lời.</p>
+                        <p class="text-xs text-slate-500 mt-1">Admin được thêm/sửa/xóa. Nhân viên chỉ được xem và sao chép mẫu trả lời.</p>
                     </div>
                     <div id="crmAdminControls" class="hidden">
                         <button onclick="openCrmModal()" class="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold px-4 py-2 rounded-xl transition shadow flex items-center gap-2 text-sm">
@@ -635,7 +645,7 @@
                         <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
                             <i class="fa-solid fa-calendar-check text-orange-500"></i> Lịch Dẫn Khách Xem Phòng
                         </h2>
-                        <p id="appointmentPageHint" class="text-xs text-slate-500 mt-1">Nhân viên Sale tạo và theo dõi lịch của mình. Admin theo dõi toàn bộ nhân viên.</p>
+                        <p id="appointmentPageHint" class="text-xs text-slate-500 mt-1">Nhân viên tạo và theo dõi lịch của mình. Admin theo dõi toàn bộ nhân viên.</p>
                     </div>
                     <button onclick="openAppointmentModal()" class="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold px-4 py-2 rounded-xl transition shadow flex items-center gap-2 text-sm">
                         <i class="fa-solid fa-calendar-plus"></i> Đặt Lịch Xem
@@ -672,7 +682,7 @@
                             <input type="date" id="apptDateFilter" onchange="filterAppointments()" class="w-full border rounded-xl px-3 py-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500">
                         </div>
                         <div id="apptSaleFilterWrap" class="hidden">
-                            <label class="text-[11px] font-semibold text-slate-500 mb-1 block">Nhân viên Sale</label>
+                            <label class="text-[11px] font-semibold text-slate-500 mb-1 block">Nhân viên</label>
                             <select id="apptSaleFilter" onchange="filterAppointments()" class="w-full border rounded-xl px-3 py-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500">
                                 <option value="">Tất cả nhân viên</option>
                             </select>
@@ -702,6 +712,23 @@
                 </div>
             </div>
 
+
+
+            <!-- TAB V7.3: QUẢN LÝ KHU VỰC -->
+            <div id="tab-regions" class="tab-content hidden space-y-5">
+                <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex-wrap gap-3">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-map-location-dot text-sky-600"></i> Quản Lý Khu Vực
+                        </h2>
+                        <p class="text-xs text-slate-500 mt-1">Admin cao cấp tạo khu vực và phân Admin Khu Vực quản lý các Team trực thuộc.</p>
+                    </div>
+                    <button onclick="openRegionModal()" class="bg-gradient-to-r from-sky-600 to-blue-600 text-white font-semibold px-4 py-2 rounded-xl shadow flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-plus"></i> Tạo Khu Vực
+                    </button>
+                </div>
+                <div id="regionList" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
+            </div>
 
             <!-- TAB V7: QUẢN LÝ TEAM -->
             <div id="tab-teams" class="tab-content hidden space-y-5">
@@ -757,7 +784,8 @@
                                 <th class="p-3.5">Họ và Tên Nhân Viên</th>
                                 <th class="p-3.5">Mật Khẩu</th>
                                 <th class="p-3.5">Chức Vụ / Quyền Hạn</th>
-                                <th class="p-3.5">Team</th>
+                                <th class="p-3.5">Khu vực / Team</th>
+                                <th class="p-3.5">Trạng thái</th>
                                 <th class="p-3.5 text-right">Thao Tác Admin</th>
                             </tr>
                         </thead>
@@ -938,6 +966,39 @@
     </div>
 
 
+
+    <!-- MODAL KHU VỰC -->
+    <div id="regionModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm hidden items-center justify-center z-[75] p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full border border-slate-100 overflow-hidden">
+            <div class="p-5 border-b bg-slate-50 flex justify-between items-center">
+                <div>
+                    <h3 id="regionModalTitle" class="font-extrabold text-slate-800">Tạo Khu Vực</h3>
+                    <p class="text-[11px] text-slate-500 mt-1">Ví dụ: TP.HCM Đông, TP.HCM Tây, Bình Dương...</p>
+                </div>
+                <button onclick="closeRegionModal()" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <form id="regionForm" onsubmit="saveRegion(event)" class="p-5 space-y-4">
+                <input type="hidden" id="regionEditId">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tên khu vực *</label>
+                    <input id="regionName" required maxlength="100" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-sky-500" placeholder="VD: Khu vực Bình Thạnh">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Mã khu vực *</label>
+                    <input id="regionCode" required maxlength="30" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-sky-500" placeholder="VD: KV-BT">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Mô tả</label>
+                    <textarea id="regionDescription" rows="3" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50"></textarea>
+                </div>
+                <div class="pt-3 border-t flex justify-end gap-2">
+                    <button type="button" onclick="closeRegionModal()" class="px-4 py-2 border rounded-xl text-sm">Hủy</button>
+                    <button id="regionSaveBtn" type="submit" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-sm font-semibold">Lưu Khu Vực</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL TEAM -->
     <div id="teamModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm hidden items-center justify-center z-[70] p-4">
         <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full border border-slate-100 overflow-hidden">
@@ -957,6 +1018,12 @@
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Mã Team *</label>
                     <input id="teamCode" required maxlength="30" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-violet-500" placeholder="VD: BT01">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Khu vực *</label>
+                    <select id="teamRegionId" required class="w-full border rounded-xl p-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-sky-500">
+                        <option value="">-- Chọn khu vực --</option>
+                    </select>
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Mô tả</label>
@@ -1003,19 +1070,27 @@
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Chức Vụ / Phân Quyền *</label>
                     <select id="accRole" onchange="syncUserTeamRequirement()" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none bg-slate-50">
-                        <option value="Nhân viên Sale" selected>Nhân viên Sale</option>
+                        <option value="Nhân viên" selected>Nhân viên</option>
                         <option value="Admin Team">Admin Team</option>
-                        <option value="Admin cao cấp">Admin cao cấp nhất</option>
+                        <option value="Admin Khu Vực">Admin Khu Vực</option>
+                        <option value="Admin cao cấp">Admin cao cấp</option>
                     </select>
-                    <p class="text-[11px] text-slate-500 mt-1.5">Admin cao cấp quản lý toàn hệ thống. Admin Team chỉ quản lý nhân viên và tài nguyên thuộc team mình.</p>
+                    <p class="text-[11px] text-slate-500 mt-1.5">4 cấp quyền: Admin cao cấp → Admin Khu Vực → Admin Team → Nhân viên.</p>
+                </div>
+
+                <div id="accRegionWrap">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Khu vực</label>
+                    <select id="accRegionId" onchange="populateUserTeamOptions(null, this.value)" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-sky-500 outline-none bg-slate-50">
+                        <option value="">-- Chọn khu vực --</option>
+                    </select>
                 </div>
 
                 <div id="accTeamWrap">
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Team làm việc *</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Team làm việc</label>
                     <select id="accTeamId" class="w-full border rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-violet-500 outline-none bg-slate-50">
                         <option value="">-- Chọn team --</option>
                     </select>
-                    <p class="text-[11px] text-slate-500 mt-1.5">Admin cao cấp không bắt buộc thuộc team. Admin Team và Nhân viên phải được gán team.</p>
+                    <p class="text-[11px] text-slate-500 mt-1.5">Admin Khu Vực cần chọn khu vực. Admin Team và Nhân viên cần chọn Team.</p>
                 </div>
 
                 <div class="pt-3 border-t flex justify-end gap-2">
@@ -1266,12 +1341,19 @@
 
         // V7 Multi-Team
         let teams = [];
+        let regions = [];
+        let activeRegionId = '';
         let activeTeamId = '';
         let teamSaveInProgress = false;
+        let regionSaveInProgress = false;
+        let onlineUserIds = new Set();
+        let presenceHeartbeatTimer = null;
+        let presenceRefreshTimer = null;
+        const PRESENCE_ONLINE_MS = 90000;
 
         const DEFAULT_USERS = [
             { id: '1', user: 'admin', pass: '123456', name: 'Nguyên Bảo (Admin)', role: 'Admin cao cấp' },
-            { id: '2', user: 'nhanvien1', pass: '123456', name: 'Nguyễn Văn A', role: 'Nhân viên Sale' }
+            { id: '2', user: 'nhanvien1', pass: '123456', name: 'Nguyễn Văn A', role: 'Nhân viên' }
         ];
 
         const DEFAULT_ROOMS = [
@@ -1309,6 +1391,136 @@
         ];
 
 
+
+        // V7.3 - KHU VỰC + ONLINE PRESENCE
+        async function loadRegionsFromDB() {
+            if (!supabaseClient) return [];
+            try {
+                const tenantId = await getCurrentTenantId();
+                const {data,error}=await supabaseClient.from('regions')
+                    .select('id,tenant_id,region_id,name,code,description,is_active,created_at,updated_at')
+                    .eq('tenant_id',tenantId).order('name',{ascending:true});
+                if(error) throw error;
+                return data||[];
+            } catch(err) {
+                console.error('Lỗi tải khu vực:',err);
+                return [];
+            }
+        }
+
+        function populateRegionOptions(selected='') {
+            const ids=['superRegionSelector','accRegionId','teamRegionId'];
+            ids.forEach(id=>{
+                const el=document.getElementById(id);
+                if(!el) return;
+                const first=id==='superRegionSelector' ? '<option value="">Tất cả khu vực</option>' : '<option value="">-- Chọn khu vực --</option>';
+                el.innerHTML=first+regions.filter(r=>r.is_active!==false).map(r=>`<option value="${r.id}">${escapeHtml(r.name)} (${escapeHtml(r.code)})</option>`).join('');
+                if(selected) el.value=selected;
+            });
+        }
+
+        function renderRegions() {
+            const el=document.getElementById('regionList');
+            if(!el) return;
+            if(!regions.length){
+                el.innerHTML='<div class="lg:col-span-2 bg-white border rounded-2xl p-10 text-center text-slate-400">Chưa có khu vực.</div>';
+                return;
+            }
+            el.innerHTML=regions.map(r=>{
+                const rTeams=teams.filter(t=>String(t.region_id||'')===String(r.id));
+                const rAdmins=users.filter(u=>u.role==='Admin Khu Vực'&&String(u.region_id||'')===String(r.id));
+                const rUsers=users.filter(u=>String(u.region_id||'')===String(r.id));
+                return `<div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+                    <div class="p-4 border-b flex justify-between gap-3">
+                        <div><h3 class="font-extrabold text-slate-800">${escapeHtml(r.name)}</h3><p class="text-[11px] font-bold text-sky-600 mt-1">${escapeHtml(r.code)}</p></div>
+                        <button onclick="openRegionModal('${r.id}')" class="text-xs font-semibold text-sky-600 bg-sky-50 px-2.5 py-1.5 rounded-lg">Sửa</button>
+                    </div>
+                    <div class="p-4 text-xs space-y-3">
+                        ${r.description?`<p class="text-slate-600">${escapeHtml(r.description)}</p>`:''}
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="bg-sky-50 rounded-xl p-3 text-center"><b class="text-lg text-sky-700">${rTeams.length}</b><div class="text-[10px]">Team</div></div>
+                            <div class="bg-violet-50 rounded-xl p-3 text-center"><b class="text-lg text-violet-700">${rUsers.length}</b><div class="text-[10px]">Nhân sự</div></div>
+                            <div class="bg-emerald-50 rounded-xl p-3 text-center"><b class="text-lg text-emerald-700">${rUsers.filter(u=>onlineUserIds.has(String(u.id))).length}</b><div class="text-[10px]">Online</div></div>
+                        </div>
+                        <div><span class="text-slate-400">Admin khu vực:</span> <b>${rAdmins.length?rAdmins.map(a=>escapeHtml(a.name)).join(', '):'Chưa phân'}</b></div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function openRegionModal(id=null){
+            if(!isSuperAdmin()) return showToast('Chỉ Admin cao cấp mới quản lý khu vực!','error');
+            const r=id?regions.find(x=>String(x.id)===String(id)):null;
+            document.getElementById('regionForm').reset();
+            document.getElementById('regionEditId').value=r?.id||'';
+            document.getElementById('regionName').value=r?.name||'';
+            document.getElementById('regionCode').value=r?.code||'';
+            document.getElementById('regionDescription').value=r?.description||'';
+            document.getElementById('regionModalTitle').innerText=r?'Chỉnh Sửa Khu Vực':'Tạo Khu Vực';
+            const m=document.getElementById('regionModal'); m.classList.remove('hidden');m.classList.add('flex');
+        }
+        function closeRegionModal(){const m=document.getElementById('regionModal');m.classList.add('hidden');m.classList.remove('flex');}
+        async function saveRegion(e){
+            e.preventDefault(); if(!isSuperAdmin()||regionSaveInProgress)return;
+            const id=document.getElementById('regionEditId').value.trim();
+            const row={tenant_id:await getCurrentTenantId(),name:document.getElementById('regionName').value.trim(),code:document.getElementById('regionCode').value.trim().toUpperCase(),description:document.getElementById('regionDescription').value.trim()||null,is_active:true};
+            regionSaveInProgress=true;
+            try{
+                const q=id?await supabaseClient.from('regions').update(row).eq('id',id).select('id').maybeSingle():await supabaseClient.from('regions').insert([row]).select('id').single();
+                if(q.error) throw q.error;
+                closeRegionModal(); regions=await loadRegionsFromDB(); populateRegionOptions(); renderRegions(); showToast('Đã lưu khu vực!');
+            }catch(err){showToast('Không thể lưu khu vực: '+(err?.message||err),'error');}
+            finally{regionSaveInProgress=false;}
+        }
+
+        async function changeActiveRegion(id){
+            if(!isSuperAdmin()) return;
+            activeRegionId=id||''; activeTeamId='';
+            renderTeamContext(); renderUsersTable(); renderRegions(); renderTeams();
+            roomPage=1; rooms=await loadRoomsPage(1); renderDistrictOptions();renderRooms(rooms);
+            dbCases=await loadCrmScriptsFromDB();currentFilteredData=[...dbCases];renderCaseList(dbCases);
+            await refreshAppointments();
+        }
+
+        async function updatePresence(){
+            if(!currentUser||!supabaseClient||!Number.isFinite(Number(currentUser.id))) return;
+            try{
+                await supabaseClient.from('user_presence').upsert([{
+                    user_id:Number(currentUser.id),
+                    tenant_id:await getCurrentTenantId(),
+                    region_id:currentUser.region_id||null,
+                    team_id:currentUser.team_id||null,
+                    last_seen:new Date().toISOString(),
+                    user_agent:navigator.userAgent.slice(0,300)
+                }],{onConflict:'user_id'});
+            }catch(err){console.warn('Presence heartbeat:',err);}
+        }
+
+        async function refreshOnlineUsers(){
+            if(!supabaseClient||!currentUser)return;
+            try{
+                const cutoff=new Date(Date.now()-PRESENCE_ONLINE_MS).toISOString();
+                let q=supabaseClient.from('user_presence').select('user_id,last_seen,region_id,team_id').gte('last_seen',cutoff);
+                if(isRegionalAdmin()) q=q.eq('region_id',currentUser.region_id);
+                else if(isManagerAdmin()) q=q.eq('team_id',currentUser.team_id);
+                else if(!isSuperAdmin()) q=q.eq('user_id',Number(currentUser.id));
+                const {data,error}=await q;if(error)throw error;
+                onlineUserIds=new Set((data||[]).map(x=>String(x.user_id)));
+                renderUsersTable(); renderRegions(); renderTeams();
+            }catch(err){console.warn('Không tải được trạng thái online:',err);}
+        }
+
+        function startPresence(){
+            clearInterval(presenceHeartbeatTimer); clearInterval(presenceRefreshTimer);
+            updatePresence(); refreshOnlineUsers();
+            presenceHeartbeatTimer=setInterval(updatePresence,30000);
+            presenceRefreshTimer=setInterval(refreshOnlineUsers,30000);
+        }
+        function stopPresence(){
+            clearInterval(presenceHeartbeatTimer);clearInterval(presenceRefreshTimer);
+            presenceHeartbeatTimer=null;presenceRefreshTimer=null;
+        }
+
         // V7.0 - TEAM
         async function loadTeamsFromDB() {
             if (!supabaseClient) return [];
@@ -1329,31 +1541,44 @@
 
         async function refreshTeams() {
             teams = await loadTeamsFromDB();
+            populateRegionOptions();
             renderTeamContext();
+            renderRegions();
             renderTeams();
             populateUserTeamOptions();
         }
 
         function renderTeamContext() {
-            const bar = document.getElementById('teamContextBar');
-            if (!bar || !currentUser) return;
+            const bar=document.getElementById('teamContextBar');
+            if(!bar||!currentUser)return;
             bar.classList.remove('hidden');
-            const label = document.getElementById('currentTeamLabel');
-            const wrap = document.getElementById('superTeamSelectorWrap');
-            const select = document.getElementById('superTeamSelector');
+            const label=document.getElementById('currentTeamLabel');
+            const rWrap=document.getElementById('superRegionSelectorWrap');
+            const tWrap=document.getElementById('superTeamSelectorWrap');
+            const rSel=document.getElementById('superRegionSelector');
+            const tSel=document.getElementById('superTeamSelector');
 
-            if (isSuperAdmin()) {
-                wrap?.classList.remove('hidden');
-                if (select) {
-                    const selected = activeTeamId;
-                    select.innerHTML = '<option value="">Tất cả team</option>' +
-                        teams.filter(t => t.is_active !== false).map(t => `<option value="${t.id}">${escapeHtml(t.name)} (${escapeHtml(t.code)})</option>`).join('');
-                    select.value = selected;
-                }
-                if (label) label.innerText = activeTeamId ? getTeamName(activeTeamId) : 'Toàn hệ thống • Tất cả team';
-            } else {
-                wrap?.classList.add('hidden');
-                if (label) label.innerText = currentUser.team_id ? getTeamName(currentUser.team_id) : 'Chưa được phân Team';
+            populateRegionOptions(activeRegionId);
+
+            if(isSuperAdmin()){
+                rWrap?.classList.remove('hidden');tWrap?.classList.remove('hidden');
+            }else if(isRegionalAdmin()){
+                rWrap?.classList.add('hidden');tWrap?.classList.remove('hidden');
+            }else{
+                rWrap?.classList.add('hidden');tWrap?.classList.add('hidden');
+            }
+
+            if(tSel){
+                const visible=getVisibleTeams().filter(t=>t.is_active!==false);
+                tSel.innerHTML='<option value="">Tất cả team</option>'+visible.map(t=>`<option value="${t.id}">${escapeHtml(t.name)} (${escapeHtml(t.code)})</option>`).join('');
+                tSel.value=activeTeamId;
+            }
+            if(rSel) rSel.value=activeRegionId;
+
+            if(label){
+                if(isSuperAdmin()) label.innerText=activeTeamId?getTeamName(activeTeamId):(activeRegionId?getRegionName(activeRegionId):'Toàn hệ thống');
+                else if(isRegionalAdmin()) label.innerText=activeTeamId?getTeamName(activeTeamId):getRegionName(currentUser.region_id);
+                else label.innerText=getTeamName(currentUser.team_id);
             }
         }
 
@@ -1376,25 +1601,26 @@
             await refreshAppointments();
         }
 
-        function populateUserTeamOptions(selectedId = null) {
-            const select = document.getElementById('accTeamId');
-            if (!select) return;
-            const current = selectedId !== null ? selectedId : select.value;
-            select.innerHTML = '<option value="">-- Chọn team --</option>' +
-                teams.filter(t => t.is_active !== false).map(t => `<option value="${t.id}">${escapeHtml(t.name)} (${escapeHtml(t.code)})</option>`).join('');
-            if (current) select.value = String(current);
+        function populateUserTeamOptions(selectedId = null, regionId = null) {
+            const select=document.getElementById('accTeamId'); if(!select)return;
+            const current=selectedId!==null?selectedId:select.value;
+            const effectiveRegion=regionId!==null?regionId:(document.getElementById('accRegionId')?.value||'');
+            let list=teams.filter(t=>t.is_active!==false);
+            if(effectiveRegion) list=list.filter(t=>String(t.region_id||'')===String(effectiveRegion));
+            select.innerHTML='<option value="">-- Chọn team --</option>'+list.map(t=>`<option value="${t.id}">${escapeHtml(t.name)} (${escapeHtml(t.code)})</option>`).join('');
+            if(current)select.value=String(current);
         }
 
         function syncUserTeamRequirement() {
-            const role = document.getElementById('accRole')?.value || 'Nhân viên Sale';
-            const wrap = document.getElementById('accTeamWrap');
-            const teamSelect = document.getElementById('accTeamId');
-            if (!wrap || !teamSelect) return;
-            const needsTeam = role !== 'Admin cao cấp';
-            wrap.classList.toggle('opacity-50', !needsTeam);
-            teamSelect.disabled = !needsTeam;
-            teamSelect.required = needsTeam;
-            if (!needsTeam) teamSelect.value = '';
+            const role=document.getElementById('accRole')?.value||'Nhân viên';
+            const rWrap=document.getElementById('accRegionWrap'), tWrap=document.getElementById('accTeamWrap');
+            const r=document.getElementById('accRegionId'), t=document.getElementById('accTeamId');
+            const needRegion=role!=='Admin cao cấp';
+            const needTeam=role==='Admin Team'||role==='Nhân viên';
+            rWrap?.classList.toggle('opacity-50',!needRegion);
+            tWrap?.classList.toggle('opacity-50',!needTeam);
+            if(r){r.disabled=!needRegion;r.required=needRegion;if(!needRegion)r.value='';}
+            if(t){t.disabled=!needTeam;t.required=needTeam;if(!needTeam)t.value='';}
         }
 
         function renderTeams() {
@@ -1413,10 +1639,11 @@
                 return;
             }
 
-            list.innerHTML = teams.map(t => {
+            const visibleTeams = getVisibleTeams();
+            list.innerHTML = visibleTeams.map(t => {
                 const members = users.filter(u => String(u.team_id || '') === String(t.id));
                 const admins = members.filter(u => u.role === 'Admin Team');
-                const sale = members.filter(u => u.role === 'Nhân viên Sale');
+                const sale = members.filter(u => u.role === 'Nhân viên');
                 return `
                     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                         <div class="p-4 border-b border-slate-100 flex justify-between gap-3">
@@ -1425,7 +1652,7 @@
                                     <h3 class="font-extrabold text-slate-800">${escapeHtml(t.name)}</h3>
                                     <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${t.is_active !== false ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}">${t.is_active !== false ? 'ĐANG HOẠT ĐỘNG' : 'TẠM DỪNG'}</span>
                                 </div>
-                                <p class="text-[11px] text-violet-600 font-bold mt-1">${escapeHtml(t.code)}</p>
+                                <p class="text-[11px] text-violet-600 font-bold mt-1">${escapeHtml(t.code)} • ${escapeHtml(getRegionName(t.region_id))}</p>
                             </div>
                             <button onclick="openTeamModal('${t.id}')" class="text-xs font-semibold text-violet-600 bg-violet-50 hover:bg-violet-100 rounded-lg px-2.5 py-1.5">
                                 <i class="fa-solid fa-pen mr-1"></i> Sửa
@@ -1451,8 +1678,8 @@
         }
 
         function openTeamModal(id = null) {
-            if (!isSuperAdmin()) {
-                showToast('Chỉ Admin cao cấp mới được quản lý Team!', 'error');
+            if (!(isSuperAdmin() || isRegionalAdmin())) {
+                showToast('Bạn không có quyền quản lý Team!', 'error');
                 return;
             }
             const item = id ? teams.find(t => String(t.id) === String(id)) : null;
@@ -1461,6 +1688,9 @@
             document.getElementById('teamModalTitle').innerText = item ? 'Chỉnh Sửa Team' : 'Tạo Team Mới';
             document.getElementById('teamName').value = item?.name || '';
             document.getElementById('teamCode').value = item?.code || '';
+            populateRegionOptions(item?.region_id || (isRegionalAdmin()?currentUser.region_id:(activeRegionId||'')));
+            document.getElementById('teamRegionId').value = item?.region_id || (isRegionalAdmin()?currentUser.region_id:(activeRegionId||''));
+            document.getElementById('teamRegionId').disabled = isRegionalAdmin();
             document.getElementById('teamDescription').value = item?.description || '';
             document.getElementById('teamActive').checked = item ? item.is_active !== false : true;
             const modal = document.getElementById('teamModal');
@@ -1476,11 +1706,12 @@
 
         async function saveTeam(e) {
             e.preventDefault();
-            if (!isSuperAdmin() || teamSaveInProgress) return;
+            if (!(isSuperAdmin() || isRegionalAdmin()) || teamSaveInProgress) return;
             const id = document.getElementById('teamEditId').value.trim();
             const tenantId = await getCurrentTenantId();
             const row = {
                 tenant_id: tenantId,
+                region_id: isRegionalAdmin() ? currentUser.region_id : document.getElementById('teamRegionId').value,
                 name: document.getElementById('teamName').value.trim(),
                 code: document.getElementById('teamCode').value.trim().toUpperCase(),
                 description: document.getElementById('teamDescription').value.trim() || null,
@@ -1520,54 +1751,63 @@
         function mapDbUserToApp(u) {
             if (!u) return null;
             const rawRole = String(u.role || '').toLowerCase();
-            let appRole = 'Nhân viên Sale';
+            let appRole = 'Nhân viên';
             if (rawRole === 'owner' || rawRole === 'super_admin') appRole = 'Admin cao cấp';
+            else if (rawRole === 'regional_admin' || rawRole === 'area_admin') appRole = 'Admin Khu Vực';
             else if (rawRole === 'parent' || rawRole === 'admin' || rawRole === 'manager' || rawRole === 'team_admin') appRole = 'Admin Team';
-            else if (rawRole === 'child' || rawRole === 'staff' || rawRole === 'sale') appRole = 'Nhân viên Sale';
+            else appRole = 'Nhân viên';
             return {
                 id: u.id,
                 user: typeof u.username === 'string' ? u.username : (u.user || ''),
                 pass: typeof u.password === 'string' ? u.password : (u.pass || ''),
                 name: typeof u.full_name === 'string' ? u.full_name : (u.name || ''),
                 role: appRole,
+                region_id: u.region_id || null,
                 team_id: u.team_id || null
             };
         }
 
         function mapAppUserToDb(userData, includeId = false) {
-            const appRole = userData.role || 'Nhân viên Sale';
-            const dbRole = appRole === 'Admin cao cấp' ? 'owner' : (appRole === 'Admin Team' ? 'parent' : 'child');
+            const appRole = userData.role || 'Nhân viên';
+            const dbRole = appRole === 'Admin cao cấp' ? 'owner'
+                : appRole === 'Admin Khu Vực' ? 'regional_admin'
+                : appRole === 'Admin Team' ? 'parent' : 'child';
             const row = {
                 username: String(userData.user || '').trim().toLowerCase(),
                 password: String(userData.pass || '').trim(),
                 full_name: String(userData.name || '').trim(),
                 role: dbRole,
-                team_id: appRole === 'Admin cao cấp' ? null : (userData.team_id || null)
+                region_id: appRole === 'Admin cao cấp' ? null : (userData.region_id || null),
+                team_id: (appRole === 'Admin Team' || appRole === 'Nhân viên') ? (userData.team_id || null) : null
             };
             if (includeId && userData.id !== undefined && userData.id !== null && userData.id !== '') row.id = Number(userData.id);
             return row;
         }
 
-        function isSuperAdmin() {
-            return !!currentUser && currentUser.role === 'Admin cao cấp';
+        function isSuperAdmin() { return !!currentUser && currentUser.role === 'Admin cao cấp'; }
+        function isRegionalAdmin() { return !!currentUser && currentUser.role === 'Admin Khu Vực'; }
+        function isManagerAdmin() { return !!currentUser && currentUser.role === 'Admin Team'; }
+        function hasAdminAccess() { return !!currentUser && (isSuperAdmin() || isRegionalAdmin() || isManagerAdmin()); }
+
+        function getRegionName(id) {
+            if (!id) return 'Chưa phân khu vực';
+            return regions.find(r => String(r.id) === String(id))?.name || 'Khu vực không xác định';
+        }
+        function getTeamName(id) {
+            if (!id) return 'Chưa phân team';
+            return teams.find(t => String(t.id) === String(id))?.name || 'Team không xác định';
         }
 
-        function isManagerAdmin() {
-            return !!currentUser && currentUser.role === 'Admin Team';
-        }
-
-        function hasAdminAccess() {
-            return !!currentUser && (isSuperAdmin() || isManagerAdmin());
-        }
-
-        function getTeamName(teamId) {
-            if (!teamId) return 'Chưa phân team';
-            return teams.find(t => String(t.id) === String(teamId))?.name || 'Team không xác định';
+        function getEffectiveRegionId() {
+            if (!currentUser) return '';
+            if (isSuperAdmin()) return activeRegionId || '';
+            return currentUser.region_id || '';
         }
 
         function getEffectiveTeamId() {
             if (!currentUser) return '';
-            return isSuperAdmin() ? (activeTeamId || '') : (currentUser.team_id || '');
+            if (isSuperAdmin() || isRegionalAdmin()) return activeTeamId || '';
+            return currentUser.team_id || '';
         }
 
         function requireTeamForWrite() {
@@ -1579,28 +1819,44 @@
             return teamId;
         }
 
+        function getVisibleTeams() {
+            if (isSuperAdmin()) {
+                return activeRegionId ? teams.filter(t => String(t.region_id||'')===String(activeRegionId)) : teams;
+            }
+            if (isRegionalAdmin()) return teams.filter(t => String(t.region_id||'')===String(currentUser.region_id||''));
+            if (isManagerAdmin() || currentUser?.role === 'Nhân viên') return teams.filter(t => String(t.id)===String(currentUser.team_id||''));
+            return [];
+        }
+
         function getVisibleUsers() {
             if (!currentUser) return [];
             if (isSuperAdmin()) {
-                if (!activeTeamId) return users;
-                return users.filter(u => u.role === 'Admin cao cấp' || String(u.team_id || '') === String(activeTeamId));
+                return users.filter(u =>
+                    (!activeRegionId || String(u.region_id||'')===String(activeRegionId) || u.role==='Admin cao cấp') &&
+                    (!activeTeamId || String(u.team_id||'')===String(activeTeamId) || ['Admin cao cấp','Admin Khu Vực'].includes(u.role))
+                );
+            }
+            if (isRegionalAdmin()) {
+                return users.filter(u =>
+                    String(u.id)===String(currentUser.id) ||
+                    (String(u.region_id||'')===String(currentUser.region_id||'') && u.role !== 'Admin cao cấp')
+                );
             }
             if (isManagerAdmin()) {
                 return users.filter(u =>
-                    String(u.id) === String(currentUser.id) ||
-                    (u.role === 'Nhân viên Sale' && String(u.team_id || '') === String(currentUser.team_id || ''))
+                    String(u.id)===String(currentUser.id) ||
+                    (u.role==='Nhân viên' && String(u.team_id||'')===String(currentUser.team_id||''))
                 );
             }
-            return users.filter(u => String(u.id) === String(currentUser.id));
+            return users.filter(u => String(u.id)===String(currentUser.id));
         }
-
         // 1. ĐỒNG BỘ DỮ LIỆU TRÊN SUPABASE
         async function loadUsersFromDB() {
             if (!supabaseClient) return [...DEFAULT_USERS];
             try {
                 const { data, error } = await supabaseClient
                     .from('users')
-                    .select('id, username, password, role, full_name, name, team_id, created_at');
+                    .select('id, username, password, role, full_name, name, region_id, team_id, created_at');
                 if (error) throw error;
 
                 const validUsers = (data || [])
@@ -1641,7 +1897,7 @@
                         .from('users')
                         .update(row)
                         .eq('id', Number(userData.id))
-                        .select('id, username, password, role, full_name, team_id')
+                        .select('id, username, password, role, full_name, region_id, team_id')
                         .maybeSingle();
 
                     if (error) throw error;
@@ -1811,6 +2067,11 @@
 
                 const teamId = getEffectiveTeamId();
                 if (teamId) query = query.eq('team_id', teamId);
+                else if (isRegionalAdmin() || (isSuperAdmin() && activeRegionId)) {
+                    const teamIds = getVisibleTeams().map(t=>t.id);
+                    if (teamIds.length) query = query.in('team_id', teamIds);
+                    else query = query.eq('team_id','00000000-0000-0000-0000-000000000000');
+                }
 
                 if (keyword) {
                     const safe = keyword.replace(/[,%()]/g, ' ');
@@ -2083,6 +2344,7 @@
 
         function handleLogout() {
             if (confirm('Bạn muốn đăng xuất khỏi hệ thống?')) {
+                stopPresence();
                 localStorage.removeItem(AUTH_KEY);
                 sessionStorage.removeItem(AUTH_KEY);
                 currentUser = null;
@@ -2105,8 +2367,10 @@
             const navAppointmentsBtn = document.getElementById('nav-appointments');
             const appointmentQuickAccess = document.getElementById('appointmentQuickAccess');
             const navTeamsBtn = document.getElementById('nav-teams');
+            const navRegionsBtn = document.getElementById('nav-regions');
 
-            if (navTeamsBtn) navTeamsBtn.classList.toggle('hidden', !isSuperAdmin());
+            if (navRegionsBtn) navRegionsBtn.classList.toggle('hidden', !isSuperAdmin());
+            if (navTeamsBtn) navTeamsBtn.classList.toggle('hidden', !(isSuperAdmin() || isRegionalAdmin()));
             renderTeamContext();
 
             if (navAppointmentsBtn) navAppointmentsBtn.classList.remove('hidden');
@@ -2129,14 +2393,18 @@
             if (isSuperAdmin()) {
                 roleBadgeHeader.innerText = 'SUPER ADMIN';
                 roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/30';
+            } else if (isRegionalAdmin()) {
+                roleBadgeHeader.innerText = 'ADMIN KHU VỰC';
+                roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30';
             } else if (isManagerAdmin()) {
-                roleBadgeHeader.innerText = 'ADMIN';
+                roleBadgeHeader.innerText = 'ADMIN TEAM';
                 roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30';
             } else {
-                roleBadgeHeader.innerText = 'SALE';
+                roleBadgeHeader.innerText = 'NHÂN VIÊN';
                 roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30';
             }
 
+            startPresence();
             filterRooms();
             // Chuẩn bị quyền hiển thị trang lịch xem phòng theo tài khoản hiện tại.
             const quickHint = document.getElementById('appointmentQuickHint');
@@ -2160,9 +2428,11 @@
                 showToast('Chỉ Admin mới có quyền truy cập trang này!', 'error');
                 return;
             }
-            if (tabId === 'tab-teams' && !isSuperAdmin()) {
-                showToast('Chỉ Admin cao cấp mới có quyền quản lý Team!', 'error');
-                return;
+            if (tabId === 'tab-regions' && !isSuperAdmin()) {
+                showToast('Chỉ Admin cao cấp mới có quyền quản lý Khu Vực!', 'error'); return;
+            }
+            if (tabId === 'tab-teams' && !(isSuperAdmin() || isRegionalAdmin())) {
+                showToast('Bạn không có quyền quản lý Team!', 'error'); return;
             }
 
             if (tabId === 'tab-appointments') {
@@ -2174,6 +2444,8 @@
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 if(btn.id === 'nav-users') {
                     btn.className = 'tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-amber-300 hover:text-white hover:bg-slate-700/50';
+                } else if (btn.id === 'nav-regions') {
+                    btn.className = 'tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-sky-300 hover:text-white hover:bg-slate-700/50';
                 } else if (btn.id === 'nav-teams') {
                     btn.className = 'tab-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 text-violet-300 hover:text-white hover:bg-slate-700/50';
                 } else if (btn.id === 'nav-appointments') {
@@ -2239,6 +2511,10 @@
 
                 const teamId = getEffectiveTeamId();
                 if (teamId) query = query.eq('team_id', teamId);
+                else if (isRegionalAdmin() || (isSuperAdmin() && activeRegionId)) {
+                    const ids=getVisibleTeams().map(t=>t.id);
+                    if(ids.length) query=query.in('team_id',ids);
+                }
 
                 const { data, error } = await query.order('code', { ascending: true }).limit(2000);
                 if (error) throw error;
@@ -2260,6 +2536,10 @@
 
                 const teamId = getEffectiveTeamId();
                 if (teamId) query = query.eq('team_id', teamId);
+                else if (isRegionalAdmin() || (isSuperAdmin() && activeRegionId)) {
+                    const ids=getVisibleTeams().map(t=>t.id);
+                    if(ids.length) query=query.in('team_id',ids);
+                }
 
                 if (!hasAdminAccess()) query = query.eq('sale_user_id', Number(currentUser.id));
 
@@ -2287,7 +2567,7 @@
                 saleFilterWrap?.classList.remove('hidden');
                 if (saleFilter) {
                     const previous = saleFilter.value;
-                    const saleUsers = getVisibleUsers().filter(u => u.role === 'Nhân viên Sale');
+                    const saleUsers = getVisibleUsers().filter(u => u.role === 'Nhân viên');
                     saleFilter.innerHTML = '<option value="">Tất cả nhân viên</option>' +
                         saleUsers.map(u => `<option value="${u.id}">${escapeHtml(u.name)} (${escapeHtml(u.user)})</option>`).join('');
                     saleFilter.value = previous;
@@ -2455,7 +2735,7 @@
                 allRooms.map(r => `<option value="${r.id}">${escapeHtml(r.code)} • ${escapeHtml(r.district || '')} • ${r.price || ''}tr</option>`).join('');
 
             const saleSelect = document.getElementById('apptSaleUserId');
-            const saleUsers = getVisibleUsers().filter(u => u.role === 'Nhân viên Sale');
+            const saleUsers = getVisibleUsers().filter(u => u.role === 'Nhân viên');
             if (hasAdminAccess()) {
                 saleSelect.innerHTML = saleUsers.map(u => `<option value="${u.id}">${escapeHtml(u.name)} (${escapeHtml(u.user)})</option>`).join('');
                 document.getElementById('apptAssignWrap').classList.remove('hidden');
@@ -2655,8 +2935,10 @@
             populateUserTeamOptions();
             const roleSelect = document.getElementById('accRole');
             [...roleSelect.options].forEach(o => o.disabled = false);
-            if (!isSuperAdmin()) {
-                [...roleSelect.options].forEach(o => o.disabled = o.value !== 'Nhân viên Sale');
+            if (isRegionalAdmin()) {
+                [...roleSelect.options].forEach(o => o.disabled = !['Admin Team','Nhân viên'].includes(o.value));
+            } else if (isManagerAdmin()) {
+                [...roleSelect.options].forEach(o => o.disabled = o.value !== 'Nhân viên');
             }
             document.getElementById('userModal').classList.remove('hidden');
             document.getElementById('userModal').classList.add('flex');
@@ -2670,7 +2952,7 @@
                     closeUserModal();
                     return;
                 }
-                if (u && isManagerAdmin() && (u.role !== 'Nhân viên Sale' || String(u.team_id || '') !== String(currentUser.team_id || ''))) {
+                if (u && isManagerAdmin() && (u.role !== 'Nhân viên' || String(u.team_id || '') !== String(currentUser.team_id || ''))) {
                     showToast('Admin Team chỉ được quản lý nhân viên Sale thuộc team mình!', 'error');
                     closeUserModal();
                     return;
@@ -2680,8 +2962,10 @@
                     document.getElementById('accUsername').value = u.user || '';
                     document.getElementById('accFullName').value = u.name || '';
                     document.getElementById('accPassword').value = u.pass || '';
-                    document.getElementById('accRole').value = u.role || 'Nhân viên Sale';
-                    populateUserTeamOptions(u.team_id || '');
+                    document.getElementById('accRole').value = u.role || 'Nhân viên';
+                    populateRegionOptions(u.region_id || '');
+                    document.getElementById('accRegionId').value = u.region_id || '';
+                    populateUserTeamOptions(u.team_id || '', u.region_id || '');
                     document.getElementById('accTeamId').value = u.team_id || '';
                     syncUserTeamRequirement();
                 } else {
@@ -2691,9 +2975,13 @@
             } else {
                 document.getElementById('userForm').reset();
                 document.getElementById('editUserId').value = '';
-                document.getElementById('accRole').value = 'Nhân viên Sale';
-                populateUserTeamOptions(isManagerAdmin() ? currentUser.team_id : (activeTeamId || ''));
-                document.getElementById('accTeamId').value = isManagerAdmin() ? (currentUser.team_id || '') : (activeTeamId || '');
+                document.getElementById('accRole').value = 'Nhân viên';
+                const defaultRegion = isRegionalAdmin() ? currentUser.region_id : (isManagerAdmin() ? currentUser.region_id : (activeRegionId || ''));
+                const defaultTeam = isManagerAdmin() ? currentUser.team_id : (activeTeamId || '');
+                populateRegionOptions(defaultRegion);
+                document.getElementById('accRegionId').value = defaultRegion || '';
+                populateUserTeamOptions(defaultTeam, defaultRegion);
+                document.getElementById('accTeamId').value = defaultTeam || '';
                 syncUserTeamRequirement();
             }
         }
@@ -2721,17 +3009,29 @@
             const nameVal = document.getElementById('accFullName').value.trim();
             const passVal = document.getElementById('accPassword').value.trim();
             const roleVal = document.getElementById('accRole').value;
-            const teamVal = roleVal === 'Admin cao cấp' ? null :
-                (isManagerAdmin() ? currentUser.team_id : document.getElementById('accTeamId').value);
-
-            if (!isSuperAdmin() && roleVal !== 'Nhân viên Sale') {
-                showToast('Admin Team chỉ được tạo hoặc chỉnh sửa nhân viên Sale!', 'error');
-                return;
+            const selectedRegion = document.getElementById('accRegionId')?.value || '';
+            const selectedTeam = document.getElementById('accTeamId')?.value || '';
+            const regionVal = roleVal === 'Admin cao cấp' ? null :
+                (isRegionalAdmin() ? currentUser.region_id : (isManagerAdmin() ? currentUser.region_id : selectedRegion));
+            const teamVal = (roleVal === 'Admin Team' || roleVal === 'Nhân viên')
+                ? (isManagerAdmin() ? currentUser.team_id : selectedTeam) : null;
+            let normalizedRegionVal = regionVal;
+            if (teamVal) {
+                const selectedTeamObj = teams.find(t => String(t.id) === String(teamVal));
+                if (selectedTeamObj?.region_id) normalizedRegionVal = selectedTeamObj.region_id;
             }
 
-            if (roleVal !== 'Admin cao cấp' && !teamVal) {
-                showToast('Vui lòng chọn Team cho tài khoản này!', 'error');
-                return;
+            if (isRegionalAdmin() && !['Admin Team','Nhân viên'].includes(roleVal)) {
+                showToast('Admin Khu Vực chỉ được quản lý Admin Team và Nhân viên trong khu vực!', 'error'); return;
+            }
+            if (isManagerAdmin() && roleVal !== 'Nhân viên') {
+                showToast('Admin Team chỉ được quản lý Nhân viên trong team!', 'error'); return;
+            }
+            if (roleVal !== 'Admin cao cấp' && !regionVal) {
+                showToast('Vui lòng chọn khu vực!', 'error'); return;
+            }
+            if ((roleVal === 'Admin Team' || roleVal === 'Nhân viên') && !teamVal) {
+                showToast('Vui lòng chọn Team!', 'error'); return;
             }
 
             if (roleVal === 'Admin cao cấp' && !isSuperAdmin()) {
@@ -2740,10 +3040,14 @@
             }
 
             const editingOriginal = editId ? users.find(u => String(u.id) === String(editId)) : null;
+            if (editingOriginal && isRegionalAdmin() &&
+                (editingOriginal.role === 'Admin cao cấp' || editingOriginal.role === 'Admin Khu Vực' ||
+                 String(editingOriginal.region_id||'') !== String(currentUser.region_id||''))) {
+                showToast('Admin Khu Vực chỉ quản lý tài khoản trong khu vực của mình!', 'error'); return;
+            }
             if (editingOriginal && isManagerAdmin() &&
-                (editingOriginal.role !== 'Nhân viên Sale' || String(editingOriginal.team_id || '') !== String(currentUser.team_id || ''))) {
-                showToast('Admin Team chỉ được quản lý nhân viên thuộc team mình!', 'error');
-                return;
+                (editingOriginal.role !== 'Nhân viên' || String(editingOriginal.team_id||'') !== String(currentUser.team_id||''))) {
+                showToast('Admin Team chỉ quản lý Nhân viên thuộc team mình!', 'error'); return;
             }
             if (editingOriginal?.role === 'Admin cao cấp' && !isSuperAdmin()) {
                 showToast('Bạn không có quyền chỉnh sửa Admin cao cấp!', 'error');
@@ -2787,6 +3091,7 @@
                     name: nameVal,
                     pass: passVal,
                     role: roleVal,
+                    region_id: normalizedRegionVal,
                     team_id: teamVal
                 };
 
@@ -2869,6 +3174,7 @@
                     <td class="p-3.5">
                         <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${
                             u.role === 'Admin cao cấp' ? 'bg-fuchsia-100 text-fuchsia-800' :
+                            u.role === 'Admin Khu Vực' ? 'bg-sky-100 text-sky-800' :
                             u.role === 'Admin Team' ? 'bg-amber-100 text-amber-800' :
                             'bg-slate-100 text-slate-700'}">
                             ${u.role}
@@ -2877,7 +3183,13 @@
                     <td class="p-3.5">
                         ${u.role === 'Admin cao cấp'
                             ? '<span class="text-xs text-fuchsia-600 font-semibold">Toàn hệ thống</span>'
-                            : `<span class="text-xs font-semibold text-violet-700">${escapeHtml(getTeamName(u.team_id))}</span>`}
+                            : `<div class="text-xs font-semibold text-sky-700">${escapeHtml(getRegionName(u.region_id))}</div>
+                               <div class="text-[11px] text-violet-700 mt-0.5">${u.team_id ? escapeHtml(getTeamName(u.team_id)) : '—'}</div>`}
+                    </td>
+                    <td class="p-3.5">
+                        ${onlineUserIds.has(String(u.id))
+                            ? '<span class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700"><span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>Online</span>'
+                            : '<span class="inline-flex items-center gap-1.5 text-xs text-slate-400"><span class="w-2 h-2 bg-slate-300 rounded-full"></span>Offline</span>'}
                     </td>
                     <td class="p-3.5 text-right space-x-2">
                         ${(!isSuperAdmin() && u.role === 'Admin cao cấp')
@@ -3575,7 +3887,7 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
             document.getElementById('loginNoticeMessage').innerText = systemNotice.message;
             document.getElementById('loginNoticeUser').innerText = `${currentUser.name} • ${currentUser.role}`;
 
-            const roleText = isSuperAdmin() ? 'ADMIN CAO CẤP' : (isManagerAdmin() ? 'ADMIN TEAM' : 'NHÂN VIÊN');
+            const roleText = isSuperAdmin() ? 'ADMIN CAO CẤP' : (isRegionalAdmin() ? 'ADMIN KHU VỰC' : (isManagerAdmin() ? 'ADMIN TEAM' : 'NHÂN VIÊN'));
             document.getElementById('loginNoticeRoleBadge').innerText = roleText;
 
             const mobileBadge = document.getElementById('loginNoticeRoleBadgeMobile');
@@ -3715,6 +4027,10 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
 
                 const teamId = getEffectiveTeamId();
                 if (teamId) query = query.eq('team_id', teamId);
+                else if (isRegionalAdmin() || (isSuperAdmin() && activeRegionId)) {
+                    const ids=getVisibleTeams().map(t=>t.id);
+                    if(ids.length) query=query.in('team_id',ids);
+                }
 
                 const { data, error } = await query.order('updated_at', { ascending: false });
                 if (error) throw error;
@@ -4098,6 +4414,7 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
         // 7. KHỞI CHẠY ỨNG DỤNG
         document.addEventListener('DOMContentLoaded', async () => {
             users = await loadUsersFromDB();
+            regions = await loadRegionsFromDB();
             teams = await loadTeamsFromDB();
 
             checkAuth();
