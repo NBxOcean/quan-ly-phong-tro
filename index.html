@@ -1373,6 +1373,11 @@
                 // onclick truyền ID dưới dạng chuỗi, còn Supabase trả về int8.
                 // Vì vậy phải so sánh theo String để lấy đúng tài khoản cần sửa.
                 const u = users.find(x => String(x.id) === String(editId));
+                if (u && u.role === 'Admin cao cấp' && !isSuperAdmin()) {
+                    showToast('Admin quản lý không được xem hoặc chỉnh sửa tài khoản Admin cao cấp!', 'error');
+                    closeUserModal();
+                    return;
+                }
                 if (u) {
                     document.getElementById('editUserId').value = String(u.id);
                     document.getElementById('accUsername').value = u.user || '';
@@ -1534,7 +1539,11 @@
                 <tr class="hover:bg-slate-50 transition">
                     <td class="p-3.5 font-bold text-orange-600">${u.user}</td>
                     <td class="p-3.5 font-medium">${u.name}</td>
-                    <td class="p-3.5 font-mono text-slate-500">${u.pass}</td>
+                    <td class="p-3.5 font-mono text-slate-500">
+                        ${(!isSuperAdmin() && u.role === 'Admin cao cấp')
+                            ? '<span class="tracking-widest text-slate-400" title="Mật khẩu được bảo vệ">••••••••</span>'
+                            : escapeHtml(u.pass)}
+                    </td>
                     <td class="p-3.5">
                         <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${
                             u.role === 'Admin cao cấp' ? 'bg-fuchsia-100 text-fuchsia-800' :
@@ -1544,8 +1553,11 @@
                         </span>
                     </td>
                     <td class="p-3.5 text-right space-x-2">
-                        <button onclick="openUserModal('${u.id}')" class="text-orange-600 hover:text-orange-800 font-medium text-xs"><i class="fa-solid fa-pen-to-square"></i> Sửa</button>
-                        ${u.user !== 'admin' ? `<button onclick="deleteUser('${u.id}')" class="text-rose-600 hover:text-rose-800 font-medium text-xs"><i class="fa-solid fa-trash"></i> Xóa</button>` : ''}
+                        ${(!isSuperAdmin() && u.role === 'Admin cao cấp')
+                            ? '<span class="text-[11px] text-slate-400 italic"><i class="fa-solid fa-shield-halved mr-1"></i>Được bảo vệ</span>'
+                            : `<button onclick="openUserModal('${u.id}')" class="text-orange-600 hover:text-orange-800 font-medium text-xs"><i class="fa-solid fa-pen-to-square"></i> Sửa</button>
+                               ${u.user !== 'admin' ? `<button onclick="deleteUser('${u.id}')" class="text-rose-600 hover:text-rose-800 font-medium text-xs"><i class="fa-solid fa-trash"></i> Xóa</button>` : ''}`
+                        }
                     </td>
                 </tr>
             `).join('');
