@@ -535,11 +535,20 @@
         // Cấu hình hằng số & Khởi tạo
         const SUPABASE_URL = 'https://yhkblcdvpcvjbxwfnqac.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_pK0cLrfth79Gj5OyPUDIwg_ohhag-Ld';
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        let supabaseClient = null;
+        try {
+            if (window.supabase && typeof window.supabase.createClient === 'function') {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            }
+        } catch (e) {
+            console.error('Không thể khởi tạo Supabase:', e);
+        }
 
         const AUTH_KEY = 'app_logged_in_user_data';
 
         let users = [];
+        // Luôn có tài khoản mặc định để đăng nhập ngay cả khi Supabase chưa sẵn sàng.
+        let usersLoadedFromRemote = false;
         let currentUser = null;
         let db = null;
         let rooms = [];
@@ -589,20 +598,29 @@
         // 1. ĐỒNG BỘ DỮ LIỆU TRÊN SUPABASE
         // Dữ liệu phòng và tài khoản được đồng bộ online thay cho IndexedDB.
         async function loadUsersFromDB() {
+            // Fallback mặc định giúp đăng nhập không bị khóa khi GitHub/Supabase gặp lỗi.
+            if (!supabaseClient) return [...DEFAULT_USERS];
             try {
                 const { data, error } = await supabaseClient.from('users').select('*');
                 if (error) throw error;
 
-                if (!data || data.length === 0) {
+                // Chỉ dùng dữ liệu remote nếu đúng cấu trúc mà app cần.
+                const validUsers = (data || []).filter(u =>
+                    u && typeof u.user === 'string' && typeof u.pass === 'string'
+                );
+
+                if (validUsers.length === 0) {
                     for (const u of DEFAULT_USERS) {
-                        await supabaseClient.from('users').upsert([u]);
+                        const { error: seedError } = await supabaseClient.from('users').upsert([u]);
+                        if (seedError) console.warn('Không thể tạo user mặc định:', seedError);
                     }
-                    return DEFAULT_USERS;
+                    return [...DEFAULT_USERS];
                 }
-                return data;
+                usersLoadedFromRemote = true;
+                return validUsers;
             } catch (err) {
-                console.error('Lỗi tải Users từ Supabase:', err);
-                return DEFAULT_USERS;
+                console.error('Lỗi tải Users từ Supabase, dùng tài khoản mặc định:', err);
+                return [...DEFAULT_USERS];
             }
         }
 
@@ -725,7 +743,7 @@
             const passVal = document.getElementById('loginPassword').value.trim();
             const remember = document.getElementById('rememberMe').checked;
 
-            const foundUser = users.find(u => u.user.toLowerCase() === userVal && u.pass === passVal);
+            const foundUser = users.find(u => typeof u.user === 'string' && typeof u.pass === 'string' && u.user.toLowerCase() === userVal && u.pass === passVal);
 
             if (foundUser) {
                 currentUser = foundUser;
