@@ -267,6 +267,8 @@
 
 </style>
 
+
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 min-h-screen pb-12 antialiased">
 
@@ -973,11 +975,22 @@
 
             <div id="roomDetailBody" class="overflow-y-auto p-4 sm:p-6"></div>
 
-            <div class="px-4 sm:px-6 py-3 border-t border-slate-200 bg-slate-50 flex flex-wrap gap-2 justify-end shrink-0">
-                <button type="button" onclick="closeRoomDetail()" class="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 text-sm font-semibold">Đóng</button>
-                <button id="roomDetailCopyBtn" type="button" onclick="copyCurrentRoomDetail()" class="px-4 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold shadow-sm">
-                    <i class="fa-regular fa-copy mr-1"></i> Copy gửi khách + hình ảnh
-                </button>
+            <div class="px-4 sm:px-6 py-3 border-t border-slate-200 bg-slate-50 shrink-0">
+                <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:justify-end">
+                    <button type="button" onclick="closeRoomDetail()" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 text-sm font-semibold">
+                        Đóng
+                    </button>
+                    <button id="roomDetailCopyBtn" type="button" onclick="copyCurrentRoomDetail()" class="px-3.5 py-2.5 rounded-xl border border-orange-200 bg-orange-50 hover:bg-orange-100 text-orange-700 text-sm font-bold">
+                        <i class="fa-regular fa-copy mr-1"></i> Copy nội dung
+                    </button>
+                    <button id="roomDetailDownloadBtn" type="button" onclick="downloadCurrentRoomImages()" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold">
+                        <i class="fa-solid fa-download mr-1"></i> Tải toàn bộ ảnh
+                    </button>
+                    <button id="roomDetailShareBtn" type="button" onclick="shareCurrentRoom()" class="col-span-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-sm font-extrabold shadow-sm">
+                        <i class="fa-solid fa-share-nodes mr-1"></i> Chia sẻ trực tiếp
+                    </button>
+                </div>
+                <p class="mt-2 text-[10px] text-slate-400 text-right">Điện thoại: ưu tiên gửi ảnh thật qua bảng Chia sẻ • Máy tính: có thể tải ZIP ảnh.</p>
             </div>
         </div>
     </div>
@@ -3894,8 +3907,11 @@
                             ${room.mediaUrl ? `<a href="${room.mediaUrl}" target="_blank" class="text-orange-600 hover:underline font-semibold flex items-center gap-1"><i class="fa-solid fa-link"></i> Media Ảnh/Video</a>` : '<span class="text-slate-400">Không có link</span>'}
                         </div>
                         <div class="flex items-center gap-2">
-                            <button onclick="copyInfo('${room.id}')" title="Copy thông tin gửi khách" class="bg-orange-50 hover:bg-orange-100 text-orange-700 px-2.5 py-1.5 rounded-xl font-semibold transition flex items-center gap-1">
-                                <i class="fa-regular fa-copy"></i> Copy gửi khách + ảnh
+                            <button onclick="copyInfo('${room.id}')" title="Copy nội dung gửi khách" class="bg-orange-50 hover:bg-orange-100 text-orange-700 px-2.5 py-1.5 rounded-xl font-semibold transition flex items-center gap-1">
+                                <i class="fa-regular fa-copy"></i> Copy
+                            </button>
+                            <button onclick="shareRoomById('${room.id}')" title="Chia sẻ ảnh thật + nội dung" class="bg-sky-50 hover:bg-sky-100 text-sky-700 px-2.5 py-1.5 rounded-xl font-semibold transition flex items-center gap-1">
+                                <i class="fa-solid fa-share-nodes"></i> Gửi khách
                             </button>
                             
                             ${isAdmin ? `
@@ -3977,7 +3993,7 @@
 
                 const imageCount = Array.isArray(room.images) ? room.images.length : 0;
                 showToast(imageCount
-                    ? `Đã copy thông tin + ${imageCount} link hình ảnh gửi khách!`
+                    ? `Đã copy nội dung + ${imageCount} link ảnh. Muốn gửi ảnh thật hãy dùng Chia sẻ trực tiếp.`
                     : 'Đã copy thông tin phòng gửi khách!');
             } catch(err){
                 console.error('Lỗi copy thông tin phòng:', err);
@@ -3994,6 +4010,212 @@
             const room = rooms.find(r => String(r.id) === String(id));
             if (!room) return;
             copyRoomForCustomer(room);
+        }
+
+
+        function safeRoomFileBase(room){
+            return String(room?.code || 'phong')
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/đ/gi,'d')
+                .replace(/[^a-z0-9]+/gi,'-')
+                .replace(/^-+|-+$/g,'')
+                .slice(0,60) || 'phong';
+        }
+
+        async function fetchRoomImageFiles(room){
+            const urls = Array.isArray(room?.images) ? room.images.filter(Boolean) : [];
+            if(!urls.length) return [];
+
+            const base = safeRoomFileBase(room);
+            const files = [];
+
+            for(let i = 0; i < urls.length; i++){
+                const url = urls[i];
+                try{
+                    const res = await fetch(url, { mode:'cors', cache:'no-store' });
+                    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+                    const blob = await res.blob();
+                    const mime = blob.type || 'image/jpeg';
+                    let ext = 'jpg';
+                    if(mime.includes('png')) ext = 'png';
+                    else if(mime.includes('webp')) ext = 'webp';
+                    else if(mime.includes('gif')) ext = 'gif';
+                    files.push(new File([blob], `${base}-${String(i+1).padStart(2,'0')}.${ext}`, {type:mime}));
+                }catch(err){
+                    console.warn('Không tải được ảnh để chia sẻ:', url, err);
+                }
+            }
+            return files;
+        }
+
+        async function shareRoomById(id){
+            const room = rooms.find(r => String(r.id) === String(id));
+            if(!room){
+                showToast('Không tìm thấy dữ liệu phòng.', 'error');
+                return;
+            }
+            await shareRoomDirect(room);
+        }
+
+        async function shareCurrentRoom(){
+            const room = rooms.find(r => String(r.id) === String(currentDetailRoomId));
+            if(!room){
+                showToast('Không tìm thấy dữ liệu phòng.', 'error');
+                return;
+            }
+            await shareRoomDirect(room);
+        }
+
+        async function shareRoomDirect(room){
+            const shareBtn = document.getElementById('roomDetailShareBtn');
+            const oldHtml = shareBtn?.innerHTML;
+            if(shareBtn){
+                shareBtn.disabled = true;
+                shareBtn.classList.add('opacity-60','cursor-not-allowed');
+                shareBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang chuẩn bị ảnh...';
+            }
+
+            try{
+                const text = roomCustomerText(room);
+                const files = await fetchRoomImageFiles(room);
+
+                // Ưu tiên Web Share API với FILE ảnh thật.
+                if(navigator.share && files.length && (!navigator.canShare || navigator.canShare({files}))){
+                    await navigator.share({
+                        title: room.code || 'Thông tin phòng',
+                        text,
+                        files
+                    });
+                    showToast(`Đã mở chia sẻ ${files.length} ảnh thật.`);
+                    return;
+                }
+
+                // Nếu thiết bị chỉ hỗ trợ chia sẻ text.
+                if(navigator.share && !files.length){
+                    await navigator.share({
+                        title: room.code || 'Thông tin phòng',
+                        text
+                    });
+                    showToast('Đã mở bảng chia sẻ nội dung.');
+                    return;
+                }
+
+                // Desktop / trình duyệt không hỗ trợ chia sẻ file => tải ZIP.
+                await downloadRoomImages(room, files);
+                try{
+                    await navigator.clipboard.writeText(text);
+                    showToast('Thiết bị không hỗ trợ gửi ảnh trực tiếp: đã tải ZIP ảnh + copy nội dung.');
+                }catch{
+                    showToast('Thiết bị không hỗ trợ gửi ảnh trực tiếp: đã tải ZIP ảnh.');
+                }
+            }catch(err){
+                // Người dùng tự hủy bảng share thì không hiện lỗi đỏ.
+                if(err?.name === 'AbortError'){
+                    showToast('Đã hủy chia sẻ.');
+                }else{
+                    console.error('Lỗi chia sẻ phòng:', err);
+                    showToast('Không thể chia sẻ trực tiếp. Hãy dùng nút Tải toàn bộ ảnh.', 'error');
+                }
+            }finally{
+                if(shareBtn){
+                    shareBtn.disabled = false;
+                    shareBtn.classList.remove('opacity-60','cursor-not-allowed');
+                    shareBtn.innerHTML = oldHtml || '<i class="fa-solid fa-share-nodes mr-1"></i> Chia sẻ trực tiếp';
+                }
+            }
+        }
+
+        async function downloadCurrentRoomImages(){
+            const room = rooms.find(r => String(r.id) === String(currentDetailRoomId));
+            if(!room){
+                showToast('Không tìm thấy dữ liệu phòng.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('roomDetailDownloadBtn');
+            const oldHtml = btn?.innerHTML;
+            if(btn){
+                btn.disabled = true;
+                btn.classList.add('opacity-60','cursor-not-allowed');
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang tạo ZIP...';
+            }
+
+            try{
+                const files = await fetchRoomImageFiles(room);
+                await downloadRoomImages(room, files);
+            }catch(err){
+                console.error('Lỗi tải ảnh:', err);
+                showToast('Không thể tải ảnh. Vui lòng thử lại.', 'error');
+            }finally{
+                if(btn){
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-60','cursor-not-allowed');
+                    btn.innerHTML = oldHtml || '<i class="fa-solid fa-download mr-1"></i> Tải toàn bộ ảnh';
+                }
+            }
+        }
+
+        async function downloadRoomImages(room, prefetchedFiles = null){
+            const urls = Array.isArray(room?.images) ? room.images.filter(Boolean) : [];
+            if(!urls.length){
+                showToast('Phòng này chưa có hình ảnh.', 'error');
+                return;
+            }
+
+            const files = Array.isArray(prefetchedFiles) ? prefetchedFiles : await fetchRoomImageFiles(room);
+            if(!files.length){
+                // CORS chặn fetch: mở ảnh gốc để người dùng lưu thủ công.
+                window.open(urls[0], '_blank', 'noopener');
+                showToast('Trình duyệt chặn tải tự động. Đã mở ảnh gốc.');
+                return;
+            }
+
+            // 1 ảnh => tải trực tiếp.
+            if(files.length === 1){
+                const url = URL.createObjectURL(files[0]);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = files[0].name;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                setTimeout(()=>URL.revokeObjectURL(url), 2000);
+                showToast('Đã tải ảnh phòng.');
+                return;
+            }
+
+            // Nhiều ảnh => ZIP gọn, chỉ 1 lượt tải.
+            if(window.JSZip){
+                const zip = new JSZip();
+                files.forEach(file => zip.file(file.name, file));
+                zip.file('Thong-tin-phong.txt', roomCustomerText(room));
+
+                const blob = await zip.generateAsync({type:'blob', compression:'DEFLATE', compressionOptions:{level:6}});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${safeRoomFileBase(room)}-hinh-anh.zip`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                setTimeout(()=>URL.revokeObjectURL(url), 3000);
+                showToast(`Đã tải ZIP ${files.length} ảnh + thông tin phòng.`);
+                return;
+            }
+
+            // Fallback không có JSZip: tải tuần tự.
+            for(const file of files){
+                const url = URL.createObjectURL(file);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = file.name;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                setTimeout(()=>URL.revokeObjectURL(url), 2500);
+                await new Promise(r=>setTimeout(r,250));
+            }
+            showToast(`Đã gửi lệnh tải ${files.length} ảnh.`);
         }
 
         function copyCurrentRoomDetail(){
@@ -4082,6 +4304,14 @@
                         </a>
                     </div>
                 ` : ''}
+
+                <div class="rounded-2xl border border-sky-200 bg-sky-50 p-4 mb-3">
+                    <div class="text-[10px] uppercase tracking-wider font-bold text-sky-600 mb-1">Gửi khách nhanh</div>
+                    <div class="text-xs text-sky-800">
+                        <i class="fa-solid fa-mobile-screen-button mr-1"></i>
+                        Trên điện thoại, nút <b>Chia sẻ trực tiếp</b> sẽ cố gắng gửi <b>file ảnh thật</b> cùng nội dung phòng qua ứng dụng bạn chọn.
+                    </div>
+                </div>
 
                 ${room.note ? `
                     <div class="rounded-2xl border border-amber-200 bg-amber-50 p-4">
