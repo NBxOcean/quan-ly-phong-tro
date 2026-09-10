@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nbres-pwa-v750';
+const CACHE_NAME = 'nbres-pwa-v751';
 const APP_SHELL = [
   '/',
   '/manifest.webmanifest',
