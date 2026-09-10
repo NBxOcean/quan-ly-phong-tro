@@ -530,7 +530,7 @@
         <span id="toastMsg">Đã thao tác thành công!</span>
     </div>
 
-    <!-- JAVASCRIPT HỢP NHẤT KHÔNG TRÙNG LẶP -->
+    <!-- JAVASCRIPT HỢP NHẤT KHÔNG TRÙNG LẶP - SUPABASE ROOMS V5 -->
     <script>
         // Cấu hình hằng số & Khởi tạo
         const SUPABASE_URL = 'https://yhkblcdvpcvjbxwfnqac.supabase.co';
@@ -666,10 +666,13 @@
 
             try {
                 let result;
-                const isEditing = userData.id && users.some(u => String(u.id) === String(userData.id));
+                const isEditing = userData.id !== null &&
+                    userData.id !== undefined &&
+                    userData.id !== '' &&
+                    users.some(u => String(u.id) === String(userData.id));
 
                 if (isEditing) {
-                    // UPDATE: dùng đúng các cột thực tế của Supabase.
+                    // UPDATE: giữ nguyên ID hiện tại, tuyệt đối không INSERT thêm dòng mới.
                     const row = mapAppUserToDb(userData, false);
                     result = await supabaseClient
                         .from('users')
@@ -678,7 +681,7 @@
                         .select()
                         .single();
                 } else {
-                    // INSERT: KHÔNG gửi id dạng chuỗi Date.now() vào cột int8.
+                    // INSERT: chỉ chạy khi thực sự tạo tài khoản mới.
                     const row = mapAppUserToDb(userData, false);
                     result = await supabaseClient
                         .from('users')
@@ -704,11 +707,19 @@
 
         async function deleteUserFromDB(id) {
             try {
-                const { error } = await supabaseClient
+                const { data, error } = await supabaseClient
                     .from('users')
                     .delete()
-                    .eq('id', Number(id));
+                    .eq('id', Number(id))
+                    .select('id');
+
                 if (error) throw error;
+
+                if (!data || data.length === 0) {
+                    showToast('Không thể xóa tài khoản. Kiểm tra quyền DELETE/RLS trên Supabase!', 'error');
+                    return false;
+                }
+
                 return true;
             } catch (err) {
                 console.error('Lỗi xóa tài khoản:', err);
@@ -717,66 +728,186 @@
             }
         }
 
-        async function loadRoomsFromDB() {
-            try {
-                const { data, error } = await supabaseClient.from('rooms').select('*');
-                if (error) throw error;
+        // ===== SUPABASE ROOMS V5 =====
+        // Bảng rooms dùng UUID + tenant_id và tên cột snake_case.
+        // Website vẫn giữ tên field thân thiện như mediaUrl/updatedAt ở phía giao diện.
+        let currentTenantId = null;
 
-                if (!data || data.length === 0) {
-                    for (const r of DEFAULT_ROOMS) {
-                        await supabaseClient.from('rooms').upsert([r]);
-                    }
-                    return DEFAULT_ROOMS;
-                }
-                return data;
+        function isUuid(value) {
+            return typeof value === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+        }
+
+        function makeUuid() {
+            if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+                return window.crypto.randomUUID();
+            }
+            // Fallback UUID v4 cho trình duyệt cũ.
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        async function getCurrentTenantId() {
+            if (currentTenantId && isUuid(currentTenantId)) return currentTenantId;
+            if (!supabaseClient) throw new Error('Supabase chưa kết nối.');
+
+            const { data, error } = await supabaseClient
+                .from('tenants')
+                .select('id')
+                .eq('company_name', 'NBxOcean')
+                .limit(1)
+                .maybeSingle();
+
+            if (error) {
+                throw new Error('Không đọc được tenant NBxOcean: ' + (error.message || error.details || 'Supabase từ chối truy cập'));
+            }
+            if (!data || !isUuid(data.id)) {
+                throw new Error('Không tìm thấy tenant NBxOcean hợp lệ trong bảng tenants.');
+            }
+
+            currentTenantId = data.id;
+            return currentTenantId;
+        }
+
+        function mapDbRoomToApp(room) {
+            if (!room) return null;
+            return {
+                id: room.id,
+                tenant_id: room.tenant_id,
+                code: room.code || '',
+                price: room.price ?? '',
+                district: room.district || '',
+                status: room.status || '',
+                address: room.address || '',
+                amenities: room.amenities || '',
+                mediaUrl: room.media_url || '',
+                note: room.note || '',
+                images: Array.isArray(room.images) ? room.images : [],
+                updatedAt: room.updated_at || room.updatedAt || ''
+            };
+        }
+
+        async function mapAppRoomToDb(roomData, includeId = true) {
+            const tenantId = await getCurrentTenantId();
+            const numericPrice = Number(roomData.price);
+            if (!Number.isFinite(numericPrice)) throw new Error('Giá thuê phải là số hợp lệ.');
+
+            const row = {
+                tenant_id: tenantId,
+                code: String(roomData.code || '').trim(),
+                price: numericPrice,
+                district: String(roomData.district || '').trim(),
+                status: String(roomData.status || '').trim(),
+                address: String(roomData.address || '').trim(),
+                amenities: String(roomData.amenities || '').trim(),
+                media_url: String(roomData.mediaUrl || '').trim(),
+                note: String(roomData.note || '').trim(),
+                images: Array.isArray(roomData.images) ? roomData.images : []
+            };
+
+            if (!row.code) throw new Error('Mã/Tên phòng không được để trống.');
+            if (includeId) {
+                row.id = isUuid(roomData.id) ? roomData.id : makeUuid();
+            }
+            return row;
+        }
+
+        async function loadRoomsFromDB() {
+            if (!supabaseClient) return [];
+            try {
+                const tenantId = await getCurrentTenantId();
+                const { data, error } = await supabaseClient
+                    .from('rooms')
+                    .select('*')
+                    .eq('tenant_id', tenantId)
+                    .order('code', { ascending: true });
+
+                if (error) throw error;
+                return (data || []).map(mapDbRoomToApp).filter(Boolean);
             } catch (err) {
                 console.error('Lỗi tải Rooms từ Supabase:', err);
-                return DEFAULT_ROOMS;
+                showToast('Không thể tải kho phòng: ' + (err?.message || err), 'error');
+                return [];
             }
         }
 
-        async function saveRoomToDB(roomData) {
+        // INSERT và UPDATE tách riêng để sửa phòng không tạo thêm bản ghi mới.
+        async function saveRoomToDB(roomData, isEdit = false) {
+            if (!supabaseClient) {
+                showToast('Supabase chưa kết nối!', 'error');
+                return false;
+            }
+
             try {
-                const { error } = await supabaseClient.from('rooms').upsert([roomData]);
+                if (isEdit) {
+                    if (!isUuid(roomData.id)) throw new Error('ID phòng hiện tại không phải UUID hợp lệ.');
+                    const row = await mapAppRoomToDb(roomData, false);
+                    const { data, error } = await supabaseClient
+                        .from('rooms')
+                        .update(row)
+                        .eq('id', roomData.id)
+                        .select('id')
+                        .maybeSingle();
+
+                    if (error) throw error;
+                    if (!data) throw new Error('Không tìm thấy phòng để cập nhật hoặc policy UPDATE đang chặn thao tác.');
+                    return true;
+                }
+
+                const row = await mapAppRoomToDb(roomData, true);
+                const { data, error } = await supabaseClient
+                    .from('rooms')
+                    .insert([row])
+                    .select('id')
+                    .single();
+
                 if (error) throw error;
-                return true;
+                return !!data;
             } catch (err) {
-                console.error('Lỗi lưu phòng:', err);
-                showToast('Lỗi lưu phòng lên Supabase!', 'error');
+                console.error('Lỗi lưu/cập nhật phòng:', err);
+                const detail = err?.message || err?.details || err?.hint || 'Không xác định';
+                showToast('Không thể lưu phòng: ' + detail, 'error');
                 return false;
             }
         }
 
         async function deleteRoomFromDB(id) {
+            if (!isUuid(id)) {
+                showToast('Không thể xóa: ID phòng không phải UUID hợp lệ.', 'error');
+                return false;
+            }
             try {
-                const { error } = await supabaseClient.from('rooms').delete().eq('id', id);
+                const tenantId = await getCurrentTenantId();
+                const { data, error } = await supabaseClient
+                    .from('rooms')
+                    .delete()
+                    .eq('id', id)
+                    .eq('tenant_id', tenantId)
+                    .select('id');
                 if (error) throw error;
+                if (!data || data.length === 0) throw new Error('Không tìm thấy phòng hoặc policy DELETE đang chặn thao tác.');
                 return true;
             } catch (err) {
                 console.error('Lỗi xóa phòng:', err);
-                showToast('Lỗi xóa phòng trên Supabase!', 'error');
+                showToast('Không thể xóa phòng: ' + (err?.message || err), 'error');
                 return false;
             }
         }
 
         async function clearAllFromDB() {
             try {
-                const { data, error } = await supabaseClient.from('rooms').select('id');
+                const tenantId = await getCurrentTenantId();
+                const { error } = await supabaseClient
+                    .from('rooms')
+                    .delete()
+                    .eq('tenant_id', tenantId);
                 if (error) throw error;
-
-                if (data && data.length > 0) {
-                    for (const item of data) {
-                        const { error: deleteError } = await supabaseClient
-                            .from('rooms')
-                            .delete()
-                            .eq('id', item.id);
-                        if (deleteError) throw deleteError;
-                    }
-                }
                 return true;
             } catch (err) {
                 console.error('Lỗi dọn dữ liệu:', err);
-                showToast('Lỗi dọn sạch dữ liệu!', 'error');
+                showToast('Không thể xóa dữ liệu phòng: ' + (err?.message || err), 'error');
                 return false;
             }
         }
@@ -914,13 +1045,18 @@
             document.getElementById('userModal').classList.add('flex');
 
             if (editId) {
-                const u = users.find(x => x.id === editId);
+                // onclick truyền ID dưới dạng chuỗi, còn Supabase trả về int8.
+                // Vì vậy phải so sánh theo String để lấy đúng tài khoản cần sửa.
+                const u = users.find(x => String(x.id) === String(editId));
                 if (u) {
-                    document.getElementById('editUserId').value = u.id;
-                    document.getElementById('accUsername').value = u.user;
-                    document.getElementById('accFullName').value = u.name;
-                    document.getElementById('accPassword').value = u.pass;
-                    document.getElementById('accRole').value = u.role;
+                    document.getElementById('editUserId').value = String(u.id);
+                    document.getElementById('accUsername').value = u.user || '';
+                    document.getElementById('accFullName').value = u.name || '';
+                    document.getElementById('accPassword').value = u.pass || '';
+                    document.getElementById('accRole').value = u.role || 'Nhân viên Sale';
+                } else {
+                    showToast('Không tìm thấy tài khoản cần chỉnh sửa!', 'error');
+                    closeUserModal();
                 }
             } else {
                 document.getElementById('userForm').reset();
@@ -948,13 +1084,23 @@
             const passVal = document.getElementById('accPassword').value.trim();
             const roleVal = document.getElementById('accRole').value;
 
-            if (!editId && users.some(u => u.user.toLowerCase() === userVal)) {
+            if (!userVal || !nameVal || !passVal) {
+                showToast('Vui lòng nhập đầy đủ thông tin tài khoản!', 'error');
+                return;
+            }
+
+            // Không cho trùng username với tài khoản KHÁC.
+            const duplicate = users.some(u =>
+                u.user.toLowerCase() === userVal &&
+                String(u.id) !== String(editId || '')
+            );
+            if (duplicate) {
                 showToast('Tên tài khoản trùng lặp!', 'error');
                 return;
             }
 
             const userData = {
-                id: editId || null,
+                id: editId ? Number(editId) : null,
                 user: userVal,
                 name: nameVal,
                 pass: passVal,
@@ -1251,7 +1397,7 @@
         }
 
         function copyInfo(id) {
-            const room = rooms.find(r => r.id === id);
+            const room = rooms.find(r => String(r.id) === String(id));
             if (!room) return;
 
             const textToCopy = 
@@ -1293,10 +1439,11 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
                 showToast('Chỉ Admin mới có quyền lưu dữ liệu phòng!', 'error');
                 return;
             }
-            
-            const id = document.getElementById('roomId').value;
+
+            const id = document.getElementById('roomId').value.trim();
+            const isEdit = !!id;
             const roomData = {
-                id: id || Date.now().toString(),
+                id: id || null,
                 code: document.getElementById('code').value,
                 price: document.getElementById('roomPrice').value,
                 district: document.getElementById('district').value,
@@ -1305,16 +1452,17 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
                 amenities: document.getElementById('roomAmenities').value,
                 mediaUrl: document.getElementById('mediaUrl').value,
                 note: document.getElementById('note').value,
-                images: [...currentImages],
-                updatedAt: new Date().toISOString()
+                images: [...currentImages]
             };
 
-            await saveRoomToDB(roomData);
+            const saved = await saveRoomToDB(roomData, isEdit);
+            if (!saved) return;
+
             rooms = await loadRoomsFromDB();
             renderDistrictOptions();
             filterRooms();
             closeModal();
-            showToast('Đã lưu thông tin phòng!');
+            showToast(isEdit ? 'Đã cập nhật phòng trên Supabase!' : 'Đã thêm phòng mới lên Supabase!');
         }
 
         function editRoom(id) {
@@ -1322,7 +1470,7 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
                 showToast('Chỉ Admin mới có quyền sửa phòng!', 'error');
                 return;
             }
-            const room = rooms.find(r => r.id === id);
+            const room = rooms.find(r => String(r.id) === String(id));
             if (!room) return;
 
             document.getElementById('roomId').value = room.id;
@@ -1347,7 +1495,9 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
                 return;
             }
             if (confirm('Bạn có chắc muốn xóa phòng này?')) {
-                await deleteRoomFromDB(id);
+                const deleted = await deleteRoomFromDB(id);
+                if (!deleted) return;
+
                 rooms = await loadRoomsFromDB();
                 renderDistrictOptions();
                 filterRooms();
@@ -1412,8 +1562,8 @@ Nhắn em ngay để hẹn lịch xem phòng trực tiếp nhé! 🔥`;
                     const importedRooms = JSON.parse(e.target.result);
                     if (Array.isArray(importedRooms)) {
                         for (let room of importedRooms) {
-                            if (!room.id) room.id = Date.now().toString() + Math.random().toString(36).substr(2, 4);
-                            await saveRoomToDB(room);
+                            if (!isUuid(room.id)) room.id = null;
+                            await saveRoomToDB(room, false);
                         }
                         rooms = await loadRoomsFromDB();
                         renderDistrictOptions();
