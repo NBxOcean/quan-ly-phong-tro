@@ -353,119 +353,709 @@
 .nb-notice{margin-top:16px;padding:11px 13px;border:1px solid rgba(212,175,55,.2);border-radius:7px;background:rgba(212,175,55,.04);color:#64748b;text-align:center;font-size:11px}.nb-notice strong{color:var(--nbres-gold)}.nb-auth-foot{margin-top:20px;padding-top:15px;border-top:1px solid rgba(255,255,255,.08);text-align:center;color:#64748b;font-size:10px}.nb-back{display:block;margin-top:13px;text-align:center;color:#64748b;font-size:10px;letter-spacing:1px;cursor:pointer}.nb-back:hover{color:var(--nbres-gold)}
 @media(max-width:520px){.nb-brand{letter-spacing:3px;margin-bottom:26px}.nb-gateway{height:330px}.nb-auth-panel{padding:28px 20px}.nb-options{align-items:flex-start;flex-direction:column}}
 
-/* NBRES V10.1.6 • ARCHITECTURAL PORTAL LOGIN */
+/* NBRES V10.1.7 • RESPONSIVE PROFESSIONAL LOGIN */
 #authScreen{
   font-family:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
-  background:#06080c;color:#f8fafc;
+  background:#07090d;color:#f8fafc;overflow:auto;
 }
 #authScreen:before{
   content:"";position:absolute;inset:0;pointer-events:none;
   background:
-    linear-gradient(90deg,transparent 49.92%,rgba(215,181,84,.12) 50%,transparent 50.08%),
-    radial-gradient(ellipse at 50% 18%,rgba(215,181,84,.12),transparent 36%),
-    linear-gradient(rgba(255,255,255,.024) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.024) 1px,transparent 1px);
-  background-size:auto,auto,96px 96px,96px 96px;
+    radial-gradient(circle at 50% 30%,rgba(205,172,72,.08),transparent 34%),
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:auto,84px 84px,84px 84px;
+  mask-image:linear-gradient(to bottom,#000 25%,transparent 95%);
 }
 #authScreen:after{
-  content:"";position:absolute;left:50%;top:8%;width:min(760px,82vw);height:84%;
-  transform:translateX(-50%);border:1px solid rgba(215,181,84,.08);
-  border-radius:360px 360px 34px 34px;pointer-events:none;
-  box-shadow:inset 0 0 90px rgba(215,181,84,.025),0 0 100px rgba(0,0,0,.6);
+  content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;
+  background:linear-gradient(transparent,rgba(205,172,72,.10),transparent);
+  pointer-events:none;
 }
 .nb-cover.nbres-signature{
-  width:min(1040px,94vw);max-width:none;padding:34px 22px 26px;z-index:2;
-  display:grid;grid-template-columns:minmax(280px,.92fr) minmax(330px,1.08fr);
-  align-items:center;gap:clamp(38px,7vw,92px);
+  width:min(100%,1120px);max-width:none;min-height:100vh;margin:auto;padding:44px 28px 30px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;
 }
-.nb-brand-column{display:flex;flex-direction:column;align-items:flex-start;text-align:left}
-.nbres-signature .nb-tag{
-  position:relative;display:inline-flex;align-items:center;gap:10px;margin:0 0 24px;
-  padding:8px 14px;border:1px solid rgba(215,181,84,.28);border-radius:999px;
-  background:rgba(215,181,84,.035);color:#d7b554;font-size:9px;font-weight:700;
-  letter-spacing:3px;text-transform:uppercase;
+.nb-simple-top{
+  width:min(100%,520px);display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:18px;padding:0 2px;
 }
-.nbres-signature .nb-tag:before{content:"";width:5px;height:5px;border-radius:50%;background:#d7b554;box-shadow:0 0 14px rgba(215,181,84,.9)}
-.nbres-signature .nbres-logo-auth{
-  width:138px;height:138px;margin:0 0 26px;border-radius:31px;object-fit:cover;
-  box-shadow:0 28px 70px rgba(0,0,0,.55),0 0 40px rgba(215,181,84,.10);
+.nb-simple-brand{display:flex;align-items:center;gap:10px;color:#d5b650;font-size:10px;font-weight:800;letter-spacing:3px;text-transform:uppercase}
+.nb-simple-brand:before{content:"";width:7px;height:7px;border:1px solid #d5b650;transform:rotate(45deg)}
+.nb-simple-status{display:flex;align-items:center;gap:7px;color:#566174;font-size:9px;letter-spacing:1.6px;text-transform:uppercase}
+.nb-simple-status:before{content:"";width:5px;height:5px;border-radius:50%;background:#5e9c79;box-shadow:0 0 10px rgba(94,156,121,.5)}
+.nb-login-shell{
+  width:min(100%,520px);padding:42px 42px 34px;border-radius:20px;
+  border:1px solid rgba(255,255,255,.075);
+  background:linear-gradient(145deg,rgba(12,15,20,.82),rgba(7,9,13,.88));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  box-shadow:0 30px 90px rgba(0,0,0,.52),inset 0 1px rgba(255,255,255,.025);
+  position:relative;overflow:hidden;
 }
-.nb-signature-kicker{font-size:10px;color:#6f7b8d;letter-spacing:3.4px;text-transform:uppercase;margin-bottom:10px}
-.nb-signature-title{
-  margin:0;max-width:440px;font-family:'Playfair Display',Georgia,serif;
-  font-size:clamp(34px,4.2vw,56px);line-height:1.02;font-weight:500;letter-spacing:-.02em;color:#f7f3e9;
+.nb-login-shell:before{
+  content:"";position:absolute;left:0;right:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(215,183,82,.65),transparent);
 }
-.nb-signature-title span{display:block;color:#d8b85a;font-style:italic}
-.nb-signature-sub{
-  max-width:400px;margin:20px 0 0;color:#778398;font-size:12px;line-height:1.9;letter-spacing:0;text-transform:none;
+.nb-login-eyebrow{color:#9a8441;font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px}
+.nb-login-title{
+  margin:0;color:#f6f7f9;font-family:'Be Vietnam Pro',sans-serif;font-size:clamp(25px,3vw,32px);
+  font-weight:600;line-height:1.3;letter-spacing:-.5px;
 }
-.nb-portal-column{position:relative}
-.nb-portal-index{
-  position:absolute;right:18px;top:-26px;color:rgba(215,181,84,.25);
-  font-family:'Playfair Display',serif;font-size:64px;line-height:1;z-index:0;
-}
+.nb-login-copy{margin:12px 0 30px;color:#707b8e;font-size:12px;line-height:1.8}
 .nbres-signature .nb-gateway{
-  width:100%;height:auto;min-height:370px;margin:0;padding:42px 40px 34px;border-radius:8px;
-  border:1px solid rgba(215,181,84,.23);
-  background:linear-gradient(145deg,rgba(17,21,29,.88),rgba(8,11,16,.96));
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  box-shadow:0 34px 100px rgba(0,0,0,.6);position:relative;overflow:hidden;
-  display:flex;flex-direction:column;align-items:flex-start;text-align:left;z-index:1;
+  width:100%;height:auto;min-height:0;margin:0;padding:0;border:0;border-radius:0;
+  background:transparent;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;
+  display:block;text-align:left;overflow:visible;
 }
-.nbres-signature .nb-gateway:before{
-  content:"";position:absolute;left:0;top:0;width:2px;height:42%;
-  background:linear-gradient(#e0c267,transparent);
+.nbres-signature .nb-gateway:before,.nbres-signature .nb-gateway:after{display:none}
+.nbres-signature .nb-gateway:hover{transform:none;border:0;box-shadow:none}
+.nb-access-button{
+  width:100%;min-height:58px;border:1px solid rgba(215,183,82,.34);border-radius:13px;
+  background:linear-gradient(180deg,rgba(215,183,82,.12),rgba(215,183,82,.055));
+  color:#f5f1e5;display:flex;align-items:center;justify-content:space-between;
+  padding:0 18px;cursor:pointer;transition:.22s ease;
 }
-.nbres-signature .nb-gateway:after{
-  content:"";position:absolute;right:-75px;bottom:-75px;width:220px;height:220px;
-  border:1px solid rgba(215,181,84,.09);border-radius:50%;
-  box-shadow:0 0 0 28px rgba(215,181,84,.025),0 0 0 56px rgba(215,181,84,.018);
+.nb-access-button:hover{border-color:rgba(224,194,99,.68);background:linear-gradient(180deg,rgba(215,183,82,.18),rgba(215,183,82,.08));transform:translateY(-1px)}
+.nb-access-button strong{font-size:11px;letter-spacing:1.2px;text-transform:uppercase}
+.nb-access-arrow{
+  width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.04);
+  display:grid;place-items:center;color:#d9ba59;font-size:16px;
 }
-.nbres-signature .nb-gateway:hover{transform:translateY(-5px);border-color:rgba(224,194,103,.5);box-shadow:0 42px 110px rgba(0,0,0,.72)}
-.nb-gateway-seal{
-  width:56px;height:56px;margin:0 0 52px;border:1px solid rgba(215,181,84,.65);
-  border-radius:50%;display:grid;place-items:center;color:#e0c267;
-  font-family:'Playfair Display',Georgia,serif;font-size:14px;font-weight:600;position:relative;
+.nb-login-note{
+  display:flex;gap:10px;align-items:flex-start;margin-top:20px;padding-top:20px;
+  border-top:1px solid rgba(255,255,255,.055);color:#535e70;font-size:10px;line-height:1.7;
 }
-.nb-gateway-seal:after{content:"";position:absolute;inset:7px;border:1px solid rgba(215,181,84,.22);border-radius:50%}
-.nb-portal-label{font-size:9px;color:#9a8440;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
-.nbres-signature .nb-gateway h2{
-  margin:0 0 13px;font-family:'Be Vietnam Pro',sans-serif;font-size:20px;font-weight:600;
-  letter-spacing:.3px;color:#f8fafc;
-}
-.nbres-signature .nb-gateway p{margin:0;max-width:310px;color:#748096;font-size:11.5px;line-height:1.85}
-.nb-enter-line{
-  margin-top:auto;padding-top:38px;width:100%;display:flex;align-items:center;justify-content:space-between;
-  color:#d9b958;font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
-}
-.nb-enter-line:before,.nb-enter-line:after{display:none}
-.nb-enter-arrow{
-  width:42px;height:42px;border-radius:50%;border:1px solid rgba(215,181,84,.35);
-  display:grid;place-items:center;font-size:15px;transition:.25s ease;
-}
-.nbres-signature .nb-gateway:hover .nb-enter-arrow{background:#d7b554;color:#080a0e;transform:translateX(3px)}
+.nb-login-note i{color:#8c793e;margin-top:2px}
 .nb-signature-foot{
-  grid-column:1/-1;margin-top:6px;text-align:center;color:#424b59;font-size:8px;
-  letter-spacing:2.2px;text-transform:uppercase;
+  width:min(100%,520px);margin-top:18px;text-align:center;color:#3f4857;font-size:8px;
+  letter-spacing:1.8px;text-transform:uppercase;
 }
-.nb-signature-foot strong{color:#8f7937;font-weight:600}
-@media(max-width:760px){
-  #authScreen{overflow-y:auto}
-  #authScreen:after{width:90vw;height:82%;top:6%}
-  .nb-cover.nbres-signature{display:flex;width:92vw;padding:26px 16px 24px;gap:24px}
-  .nb-brand-column{align-items:center;text-align:center}
-  .nbres-signature .nb-tag{margin-bottom:16px;letter-spacing:2px}
-  .nbres-signature .nbres-logo-auth{width:105px;height:105px;margin-bottom:17px;border-radius:25px}
-  .nb-signature-kicker{display:none}
-  .nb-signature-title{font-size:31px;line-height:1.08}
-  .nb-signature-sub{font-size:10.5px;line-height:1.7;margin-top:12px}
-  .nb-portal-column{width:100%}
-  .nb-portal-index{display:none}
-  .nbres-signature .nb-gateway{min-height:245px;padding:25px 23px 22px;border-radius:10px}
-  .nb-gateway-seal{width:46px;height:46px;margin-bottom:26px}
-  .nbres-signature .nb-gateway h2{font-size:17px}
-  .nb-enter-line{padding-top:24px}
-  .nb-signature-foot{margin-top:2px;font-size:7px;letter-spacing:1.4px}
+.nb-signature-foot strong{color:#7f6d36;font-weight:600}
+
+/* Login form shown after opening the portal */
+#authScreen .nb-auth-panel{
+  font-family:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
+}
+#authScreen input,#authScreen button,#authScreen a{font-family:inherit}
+
+
+
+/* NBRES V10.2.1 • ARCHITECTURAL LIGHT SIGNATURE */
+#authScreen{
+  background:
+    radial-gradient(ellipse at 50% 28%,rgba(196,157,54,.10),transparent 34%),
+    radial-gradient(ellipse at 15% 85%,rgba(35,55,78,.13),transparent 32%),
+    linear-gradient(145deg,#080a0f 0%,#05070a 52%,#090b10 100%) !important;
+}
+#authScreen:before{
+  content:"";position:absolute;inset:-30%;z-index:1;pointer-events:none;opacity:.72;
+  background:
+    linear-gradient(112deg,
+      transparent 38%,
+      rgba(232,201,111,.025) 44%,
+      rgba(232,201,111,.15) 49%,
+      rgba(255,235,177,.055) 52%,
+      transparent 59%);
+  animation:nbLightSweep 9s ease-in-out infinite alternate;
+  transform:translateX(-13%);
+}
+#authScreen:after{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 44%,rgba(217,183,82,.10),transparent 27%),
+    radial-gradient(circle at 50% 50%,transparent 35%,rgba(0,0,0,.34) 100%);
+}
+@keyframes nbLightSweep{
+  0%{transform:translate3d(-14%,0,0) rotate(-1deg);opacity:.40}
+  50%{opacity:.72}
+  100%{transform:translate3d(14%,0,0) rotate(1deg);opacity:.54}
+}
+.nb-cover.nbres-signature{position:relative;z-index:3}
+.nb-login-shell{
+  isolation:isolate;
+}
+.nb-login-shell > *{position:relative;z-index:2}
+.nb-login-shell:after{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(115deg,transparent 30%,rgba(215,183,82,.035) 47%,transparent 63%);
+  transform:translateX(-120%);
+  animation:nbPanelGlint 7.5s ease-in-out infinite;
+}
+@keyframes nbPanelGlint{
+  0%,55%{transform:translateX(-120%)}
+  78%,100%{transform:translateX(120%)}
+}
+.nb-access-coin{
+  animation:nbCoinBreath 3.8s ease-in-out infinite;
+}
+@keyframes nbCoinBreath{
+  0%,100%{box-shadow:0 12px 34px rgba(0,0,0,.42),inset 0 0 0 7px rgba(215,183,82,.025),0 0 18px rgba(215,183,82,.06)}
+  50%{box-shadow:0 14px 38px rgba(0,0,0,.46),inset 0 0 0 7px rgba(215,183,82,.035),0 0 34px rgba(215,183,82,.16)}
+}
+@media(max-width:560px){
+  #authScreen:before{inset:-45%;animation-duration:11s}
+}
+@media(prefers-reduced-motion:reduce){
+  #authScreen:before,.nb-login-shell:after,.nb-access-coin{animation:none}
+}
+
+/* NBRES signature access coin */
+.nb-access-coin-wrap{display:flex;flex-direction:column;align-items:center;margin:4px 0 2px}
+.nb-access-coin{
+  width:82px;height:82px;border-radius:50%;border:1px solid rgba(215,183,82,.70);
+  background:radial-gradient(circle at 38% 30%,rgba(215,183,82,.16),rgba(11,13,18,.96) 58%);
+  color:#d9ba59;display:grid;place-items:center;position:relative;cursor:pointer;
+  box-shadow:0 12px 34px rgba(0,0,0,.42),inset 0 0 0 7px rgba(215,183,82,.025),0 0 22px rgba(215,183,82,.06);
+  transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease;
+}
+.nb-access-coin:before{content:"";position:absolute;inset:9px;border:1px solid rgba(215,183,82,.25);border-radius:50%}
+.nb-access-coin span{font-size:14px;font-weight:800;letter-spacing:.3px;z-index:1}
+.nb-access-coin:hover,.nb-access-coin:focus-visible{transform:translateY(-3px) scale(1.04);border-color:#e0c263;box-shadow:0 16px 40px rgba(0,0,0,.5),0 0 28px rgba(215,183,82,.14);outline:none}
+.nb-coin-label{margin-top:15px;color:#a48c46;font-size:9px;font-weight:700;letter-spacing:2.4px;text-transform:uppercase}
+
+/* Tablet */
+@media (max-width:900px){
+  .nb-cover.nbres-signature{padding:36px 22px 26px}
+}
+
+/* Phone */
+@media (max-width:560px){
+  .nb-cover.nbres-signature{width:100%;min-height:100svh;padding:24px 16px 20px;justify-content:center}
+  .nb-simple-top{margin-bottom:12px}
+  .nb-simple-brand{font-size:8px;letter-spacing:2px}
+  .nb-simple-status{font-size:7px;letter-spacing:1px}
+  .nb-login-shell{padding:30px 22px 24px;border-radius:17px}
+  .nb-login-eyebrow{font-size:8px;letter-spacing:2px}
+  .nb-login-title{font-size:25px}
+  .nb-login-copy{font-size:11px;margin-bottom:24px}
+  .nb-access-coin{width:76px;height:76px}
+  .nb-coin-label{font-size:8px;letter-spacing:1.8px}
+  .nb-login-note{font-size:9px}
+  .nb-signature-foot{font-size:7px;letter-spacing:1.2px;margin-top:14px}
+}
+
+/* Very small phones */
+@media (max-width:360px){
+  .nb-cover.nbres-signature{padding-left:12px;padding-right:12px}
+  .nb-login-shell{padding:26px 18px 22px}
+  .nb-simple-status{display:none}
+  .nb-login-title{font-size:22px}
+}
+
+/* Short laptop / landscape phone */
+@media (max-height:720px) and (min-width:561px){
+  .nb-cover.nbres-signature{justify-content:flex-start;padding-top:26px;padding-bottom:22px}
+  .nb-login-shell{padding-top:30px;padding-bottom:28px}
+  .nb-login-copy{margin-bottom:22px}
+}
+
+
+/* NBRES V10.2.3 • GRAPHIC BALANCE PASS
+   Visual system: 8px spacing grid / restrained gold / centered hierarchy */
+:root{
+  --nb-gold:#d6b451;
+  --nb-gold-soft:rgba(214,180,81,.18);
+  --nb-ink:#07090d;
+  --nb-panel:#0d1016;
+  --nb-text:#f4f5f7;
+  --nb-muted:#7d8798;
+}
+#authScreen{
+  min-height:100dvh;
+  padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right))
+          max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+}
+.nb-cover.nbres-signature{
+  min-height:calc(100dvh - 32px);
+  padding:32px 20px 24px;
+}
+.nb-simple-top,.nb-login-shell,.nb-signature-foot{width:min(100%,500px)}
+.nb-simple-top{margin-bottom:16px}
+.nb-simple-brand{letter-spacing:2.6px}
+.nb-simple-status{letter-spacing:1.25px}
+
+.nb-login-shell{
+  padding:40px 40px 32px;
+  border-radius:18px;
+  border-color:rgba(255,255,255,.085);
+  background:linear-gradient(145deg,rgba(15,18,24,.94),rgba(9,11,16,.97));
+}
+.nb-login-eyebrow{
+  margin-bottom:10px;color:#a48b43;font-size:8px;letter-spacing:2.15px;
+}
+.nb-login-title{
+  max-width:410px;
+  font-size:clamp(24px,2.2vw,30px);
+  line-height:1.38;
+  letter-spacing:-.35px;
+}
+.nb-login-copy{
+  max-width:410px;margin:12px 0 28px;
+  color:#7d8798;font-size:11.5px;line-height:1.75;
+}
+
+/* The NB coin is the only primary focal action. */
+.nb-access-coin-wrap{margin:2px 0 0}
+.nb-access-coin{
+  width:76px;height:76px;
+  border-color:rgba(214,180,81,.72);
+  background:
+    radial-gradient(circle at 35% 28%,rgba(255,236,176,.14),transparent 25%),
+    radial-gradient(circle at center,rgba(214,180,81,.09),rgba(7,9,13,.96) 68%);
+}
+.nb-access-coin span{font-size:13px;letter-spacing:.4px}
+.nb-coin-label{
+  margin-top:12px;color:#9b8543;font-size:8px;letter-spacing:2px;
+}
+.nb-login-note{
+  margin-top:22px;padding-top:18px;
+  color:#596476;font-size:9.5px;line-height:1.65;
+}
+.nb-signature-foot{
+  margin-top:16px;color:#454e5c;font-size:7.5px;letter-spacing:1.55px;
+}
+
+/* Keep the animated light subordinate to content. */
+#authScreen:before{opacity:.48}
+#authScreen:after{
+  background:
+    radial-gradient(circle at 50% 44%,rgba(217,183,82,.075),transparent 25%),
+    radial-gradient(circle at 50% 50%,transparent 38%,rgba(0,0,0,.30) 100%);
+}
+.nb-login-shell:after{opacity:.72}
+
+/* Tablet */
+@media (max-width:768px){
+  .nb-cover.nbres-signature{padding:26px 18px 22px}
+  .nb-login-shell{padding:34px 30px 28px}
+}
+
+/* Phone */
+@media (max-width:560px){
+  #authScreen{padding:12px}
+  .nb-cover.nbres-signature{
+    min-height:calc(100dvh - 24px);
+    padding:18px 4px 16px;
+    justify-content:center;
+  }
+  .nb-simple-top{margin-bottom:12px}
+  .nb-simple-brand{font-size:8px;letter-spacing:1.8px}
+  .nb-simple-status{font-size:7px;letter-spacing:.9px}
+  .nb-login-shell{
+    padding:28px 20px 24px;
+    border-radius:16px;
+  }
+  .nb-login-title{font-size:23px;line-height:1.4}
+  .nb-login-copy{font-size:10.5px;line-height:1.7;margin-bottom:24px}
+  .nb-access-coin{width:72px;height:72px}
+  .nb-login-note{font-size:9px;margin-top:20px;padding-top:16px}
+  .nb-signature-foot{margin-top:12px;font-size:6.8px;letter-spacing:1px}
+}
+
+/* Short screens: prevent vertical clipping on small laptops / landscape phones. */
+@media (max-height:680px) and (min-width:561px){
+  .nb-cover.nbres-signature{justify-content:flex-start;padding-top:18px}
+  .nb-simple-top{margin-bottom:10px}
+  .nb-login-shell{padding:28px 34px 24px}
+  .nb-login-copy{margin-bottom:20px}
+  .nb-login-note{margin-top:16px;padding-top:14px}
+  .nb-signature-foot{margin-top:10px}
+}
+
+/* Ultra-wide screens: keep the login composition intentionally compact. */
+@media (min-width:1600px){
+  .nb-simple-top,.nb-login-shell,.nb-signature-foot{width:500px}
+}
+
+
+/* NBRES V10.2.4 • OUTER SPACE COMPOSITION
+   Fills negative space with restrained architectural/data motifs. */
+.nb-ambient-copy{
+  position:absolute;z-index:2;pointer-events:none;user-select:none;
+  color:rgba(142,151,166,.32);font-size:8px;letter-spacing:2.4px;text-transform:uppercase;
+}
+.nb-ambient-copy.left{left:clamp(24px,5vw,78px);top:50%;transform:translateY(-50%) rotate(-90deg)}
+.nb-ambient-copy.right{right:clamp(18px,4vw,66px);top:50%;transform:translateY(-50%) rotate(90deg)}
+.nb-arch-line{
+  position:absolute;z-index:1;pointer-events:none;border-color:rgba(214,180,81,.085);
+}
+.nb-arch-line.a{width:clamp(180px,26vw,420px);height:clamp(180px,26vw,420px);left:-9%;top:12%;border:1px solid rgba(214,180,81,.07);border-radius:50%}
+.nb-arch-line.b{width:clamp(240px,34vw,540px);height:clamp(240px,34vw,540px);right:-14%;bottom:-18%;border:1px solid rgba(255,255,255,.045);border-radius:50%}
+.nb-arch-line.c{left:8%;right:8%;top:18%;height:1px;background:linear-gradient(90deg,transparent,rgba(214,180,81,.08),transparent)}
+.nb-corner-mark{
+  position:absolute;z-index:2;pointer-events:none;width:38px;height:38px;opacity:.36;
+}
+.nb-corner-mark.tl{left:5%;top:8%;border-left:1px solid #8f7939;border-top:1px solid #8f7939}
+.nb-corner-mark.br{right:5%;bottom:8%;border-right:1px solid #8f7939;border-bottom:1px solid #8f7939}
+.nb-platform-points{
+  position:absolute;z-index:2;bottom:clamp(24px,5vh,54px);left:50%;transform:translateX(-50%);
+  width:min(860px,76vw);display:flex;justify-content:space-between;pointer-events:none;
+}
+.nb-platform-point{display:flex;align-items:center;gap:8px;color:rgba(111,122,140,.46);font-size:8px;letter-spacing:1.6px;text-transform:uppercase}
+.nb-platform-point:before{content:"";width:4px;height:4px;border-radius:50%;background:rgba(214,180,81,.52);box-shadow:0 0 10px rgba(214,180,81,.16)}
+@media(max-width:900px){
+  .nb-ambient-copy,.nb-platform-points,.nb-corner-mark{display:none}
+  .nb-arch-line.a{left:-30%;top:8%}
+  .nb-arch-line.b{right:-36%;bottom:-8%}
+}
+@media(max-width:560px){
+  .nb-arch-line.a{width:260px;height:260px;left:-48%;top:4%;opacity:.55}
+  .nb-arch-line.b{width:300px;height:300px;right:-56%;bottom:-8%;opacity:.55}
+  .nb-arch-line.c{left:4%;right:4%;top:12%}
+}
+
+
+/* ============================================================
+   NBRES V10.3.0 • CORE DESIGN SYSTEM
+   Applies the public-facing graphic standards to operations UI.
+   ============================================================ */
+:root{
+  --core-bg:#f6f7f9;
+  --core-surface:#ffffff;
+  --core-surface-2:#fbfbfc;
+  --core-ink:#172033;
+  --core-muted:#697386;
+  --core-line:#e7e9ee;
+  --core-gold:#b89435;
+  --core-gold-dark:#8b6c20;
+  --core-gold-soft:#f7f1df;
+  --core-navy:#0b1018;
+  --core-radius:16px;
+  --core-shadow:0 10px 30px rgba(15,23,42,.055);
+}
+
+/* Base operating canvas */
+body:not(:has(#authScreen:not(.hidden))){
+  background:
+    radial-gradient(circle at 90% 4%,rgba(184,148,53,.055),transparent 22%),
+    var(--core-bg);
+}
+#appScreen,#mainApp,.app-shell,.main-content{
+  font-family:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
+}
+#appScreen{
+  background:transparent;
+}
+
+/* Header: restrained premium system bar */
+#appScreen header, #mainApp header{
+  background:rgba(255,255,255,.92)!important;
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--core-line)!important;
+  box-shadow:0 5px 24px rgba(15,23,42,.035)!important;
+}
+#appScreen header .nbres-logo-header{
+  border-radius:12px;
+  box-shadow:0 6px 18px rgba(184,148,53,.16);
+}
+
+/* Sidebar */
+#appScreen aside,#sidebar{
+  background:linear-gradient(180deg,#0d121b 0%,#080c12 100%)!important;
+  border-right:1px solid rgba(255,255,255,.055)!important;
+  box-shadow:18px 0 50px rgba(15,23,42,.045);
+}
+#appScreen aside nav button,#sidebar nav button,
+#appScreen aside [id^="nav-"],#sidebar [id^="nav-"]{
+  border-radius:11px!important;
+  transition:background .18s ease,color .18s ease,transform .18s ease!important;
+}
+#appScreen aside nav button:hover,#sidebar nav button:hover,
+#appScreen aside [id^="nav-"]:hover,#sidebar [id^="nav-"]:hover{
+  background:rgba(255,255,255,.055)!important;
+  transform:translateX(2px);
+}
+#appScreen aside .active,#sidebar .active,
+#appScreen aside [aria-current="page"],#sidebar [aria-current="page"]{
+  background:linear-gradient(90deg,rgba(184,148,53,.18),rgba(184,148,53,.055))!important;
+  color:#e6ca77!important;
+  box-shadow:inset 2px 0 0 var(--core-gold);
+}
+
+/* Main content width and rhythm */
+#appScreen main,#mainApp main,.main-content{
+  color:var(--core-ink);
+}
+#appScreen main > [id^="tab-"],#mainApp [id^="tab-"]{
+  max-width:1500px;
+  margin-left:auto;margin-right:auto;
+}
+
+/* Headings */
+#appScreen h1,#appScreen h2,#appScreen h3,#mainApp h1,#mainApp h2,#mainApp h3{
+  letter-spacing:-.025em;
+}
+#appScreen h1,#mainApp h1{font-weight:800;color:#111827}
+#appScreen h2,#mainApp h2{font-weight:750;color:#182033}
+
+/* Cards / panels */
+#appScreen .bg-white,#mainApp .bg-white{
+  border-color:var(--core-line);
+}
+#appScreen .rounded-2xl.bg-white,#appScreen .rounded-xl.bg-white,
+#mainApp .rounded-2xl.bg-white,#mainApp .rounded-xl.bg-white{
+  box-shadow:var(--core-shadow);
+}
+#appScreen .shadow-lg,#appScreen .shadow-xl,#mainApp .shadow-lg,#mainApp .shadow-xl{
+  box-shadow:0 16px 42px rgba(15,23,42,.08)!important;
+}
+
+/* Inputs */
+#appScreen input:not([type="checkbox"]):not([type="radio"]),
+#appScreen select,#appScreen textarea,
+#mainApp input:not([type="checkbox"]):not([type="radio"]),
+#mainApp select,#mainApp textarea{
+  border-color:#dfe3e9!important;
+  border-radius:11px!important;
+  background:#fff!important;
+  transition:border-color .18s ease,box-shadow .18s ease!important;
+}
+#appScreen input:focus,#appScreen select:focus,#appScreen textarea:focus,
+#mainApp input:focus,#mainApp select:focus,#mainApp textarea:focus{
+  outline:none!important;
+  border-color:rgba(184,148,53,.72)!important;
+  box-shadow:0 0 0 3px rgba(184,148,53,.10)!important;
+}
+
+/* Buttons: gold only for primary actions */
+#appScreen button,#mainApp button{transition:transform .16s ease,box-shadow .16s ease,background .16s ease}
+#appScreen button:active,#mainApp button:active{transform:translateY(1px)}
+#appScreen .bg-blue-600,#appScreen .bg-indigo-600,#appScreen .bg-orange-500,
+#mainApp .bg-blue-600,#mainApp .bg-indigo-600,#mainApp .bg-orange-500{
+  background:linear-gradient(135deg,#c7a54a,#a8832c)!important;
+  color:white!important;
+  box-shadow:0 7px 18px rgba(168,131,44,.18);
+}
+#appScreen .text-blue-600,#appScreen .text-indigo-600,
+#mainApp .text-blue-600,#mainApp .text-indigo-600{
+  color:var(--core-gold-dark)!important;
+}
+
+/* Tables */
+#appScreen table,#mainApp table{
+  border-collapse:separate;border-spacing:0;
+}
+#appScreen thead,#mainApp thead{
+  background:#f7f8fa!important;
+}
+#appScreen th,#mainApp th{
+  color:#6b7280!important;font-size:10px!important;font-weight:800!important;
+  letter-spacing:.055em;text-transform:uppercase;
+}
+#appScreen tbody tr,#mainApp tbody tr{
+  transition:background .15s ease;
+}
+#appScreen tbody tr:hover,#mainApp tbody tr:hover{
+  background:#faf8f2!important;
+}
+
+/* Badges */
+#appScreen .rounded-full,#mainApp .rounded-full{
+  letter-spacing:.01em;
+}
+
+/* Modals */
+#appScreen .fixed.inset-0 > .bg-white,
+#mainApp .fixed.inset-0 > .bg-white{
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 30px 100px rgba(0,0,0,.22)!important;
+}
+#appScreen .fixed.inset-0.bg-black,
+#mainApp .fixed.inset-0.bg-black{
+  backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
+}
+
+/* Scrollbar */
+#appScreen ::-webkit-scrollbar,#mainApp ::-webkit-scrollbar{width:8px;height:8px}
+#appScreen ::-webkit-scrollbar-track,#mainApp ::-webkit-scrollbar-track{background:transparent}
+#appScreen ::-webkit-scrollbar-thumb,#mainApp ::-webkit-scrollbar-thumb{background:#cfd4dc;border-radius:999px}
+#appScreen ::-webkit-scrollbar-thumb:hover,#mainApp ::-webkit-scrollbar-thumb:hover{background:#b7bdc7}
+
+/* Mobile operating UI */
+@media(max-width:768px){
+  #appScreen main,#mainApp main,.main-content{padding-left:12px!important;padding-right:12px!important}
+  #appScreen .rounded-2xl,#mainApp .rounded-2xl{border-radius:14px!important}
+  #appScreen table,#mainApp table{font-size:11px}
+  #appScreen button,#mainApp button{min-height:40px}
+  #appScreen input,#appScreen select,#appScreen textarea,
+  #mainApp input,#mainApp select,#mainApp textarea{font-size:16px!important}
+}
+
+/* Respect reduced motion */
+@media(prefers-reduced-motion:reduce){
+  #appScreen *,#mainApp *{scroll-behavior:auto!important;transition:none!important}
+}
+
+
+/* ============================================================
+   NBRES V10.3.1 • DASHBOARD + INVENTORY MASTER DESIGN
+   Operational master screens: clearer hierarchy, denser data,
+   premium NBRES identity without sacrificing work readability.
+   ============================================================ */
+
+/* Shared master-page composition */
+#tab-company-dashboard,
+#tab-platform-dashboard,
+#tab-inventory{
+  position:relative;
+}
+#tab-company-dashboard:before,
+#tab-platform-dashboard:before,
+#tab-inventory:before{
+  content:"";display:block;height:3px;width:52px;border-radius:999px;
+  margin:0 0 18px;background:linear-gradient(90deg,var(--core-gold),rgba(184,148,53,.12));
+}
+
+/* DASHBOARD — executive visual hierarchy */
+#tab-company-dashboard > div,
+#tab-platform-dashboard > div{
+  position:relative;
+}
+#tab-company-dashboard .grid > .bg-white,
+#tab-platform-dashboard .grid > .bg-white{
+  position:relative;overflow:hidden;
+  border:1px solid var(--core-line)!important;
+  border-radius:16px!important;
+  background:linear-gradient(145deg,#fff,#fcfcfd)!important;
+  box-shadow:0 8px 26px rgba(15,23,42,.045)!important;
+}
+#tab-company-dashboard .grid > .bg-white:before,
+#tab-platform-dashboard .grid > .bg-white:before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--core-gold),rgba(184,148,53,.14));
+}
+#tab-company-dashboard .grid > .bg-white:hover,
+#tab-platform-dashboard .grid > .bg-white:hover{
+  transform:translateY(-2px);
+  box-shadow:0 14px 34px rgba(15,23,42,.07)!important;
+}
+#tab-company-dashboard .grid > .bg-white .text-2xl,
+#tab-company-dashboard .grid > .bg-white .text-3xl,
+#tab-platform-dashboard .grid > .bg-white .text-2xl,
+#tab-platform-dashboard .grid > .bg-white .text-3xl{
+  color:#121826!important;font-weight:800!important;letter-spacing:-.04em;
+}
+#tab-company-dashboard .grid > .bg-white i,
+#tab-platform-dashboard .grid > .bg-white i{
+  color:var(--core-gold-dark)!important;
+}
+
+/* Dashboard secondary panels */
+#tab-company-dashboard .rounded-2xl,
+#tab-platform-dashboard .rounded-2xl{
+  border-color:var(--core-line)!important;
+}
+#tab-company-dashboard canvas,
+#tab-platform-dashboard canvas{
+  max-height:320px;
+}
+
+/* INVENTORY — toolbar becomes a command surface */
+#tab-inventory .bg-white.rounded-2xl,
+#tab-inventory .bg-white.rounded-xl{
+  border:1px solid var(--core-line)!important;
+}
+#tab-inventory input[type="search"],
+#tab-inventory input[placeholder*="Tìm"],
+#tab-inventory input[placeholder*="tìm"]{
+  min-height:44px;
+  padding-left:14px!important;
+  background:#fbfcfd!important;
+}
+
+/* Inventory filters: compact, aligned and visually secondary */
+#tab-inventory select{
+  min-height:42px;
+  background-color:#fbfcfd!important;
+  font-size:12px!important;
+  color:#344054!important;
+}
+#tab-inventory label{
+  color:#687386;
+}
+
+/* Room cards: make status and content easier to scan */
+#tab-inventory .room-card,
+#tab-inventory [data-room-id]{
+  position:relative;
+  border:1px solid var(--core-line)!important;
+  border-radius:15px!important;
+  background:#fff!important;
+  box-shadow:0 6px 22px rgba(15,23,42,.045)!important;
+  overflow:hidden;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease!important;
+}
+#tab-inventory .room-card:hover,
+#tab-inventory [data-room-id]:hover{
+  transform:translateY(-2px);
+  border-color:rgba(184,148,53,.32)!important;
+  box-shadow:0 14px 34px rgba(15,23,42,.075)!important;
+}
+#tab-inventory .room-card img,
+#tab-inventory [data-room-id] img{
+  transition:transform .35s ease;
+}
+#tab-inventory .room-card:hover img,
+#tab-inventory [data-room-id]:hover img{
+  transform:scale(1.018);
+}
+
+/* Price is a primary data point */
+#tab-inventory .text-red-500,
+#tab-inventory .text-red-600{
+  color:#a77f22!important;
+}
+
+/* Inventory empty states */
+#tab-inventory .text-gray-400 i,
+#tab-inventory .text-gray-300 i{
+  color:#c8b477!important;
+}
+
+/* Destructive actions stay red; do not convert them to brand gold */
+#tab-inventory .bg-red-500,
+#tab-inventory .bg-red-600,
+#tab-inventory button.text-red-500,
+#tab-inventory button.text-red-600{
+  color:#dc2626!important;
+}
+#tab-inventory .bg-red-500,
+#tab-inventory .bg-red-600{
+  background:#dc2626!important;
+  color:#fff!important;
+}
+
+/* Page-level data table refinement */
+#tab-inventory .overflow-x-auto{
+  border-radius:13px;
+}
+#tab-inventory td{
+  color:#354052;
+  border-color:#edf0f3!important;
+}
+#tab-inventory th{
+  padding-top:13px!important;padding-bottom:13px!important;
+}
+
+/* Responsive: preserve useful density */
+@media(max-width:1024px){
+  #tab-company-dashboard .grid,
+  #tab-platform-dashboard .grid{
+    gap:12px!important;
+  }
+}
+@media(max-width:768px){
+  #tab-company-dashboard:before,
+  #tab-platform-dashboard:before,
+  #tab-inventory:before{margin-bottom:12px}
+  #tab-company-dashboard .grid > .bg-white,
+  #tab-platform-dashboard .grid > .bg-white{
+    border-radius:14px!important;
+  }
+  #tab-inventory .room-card,
+  #tab-inventory [data-room-id]{
+    border-radius:13px!important;
+  }
+  #tab-inventory select{min-height:44px}
 }
 
 </style>
@@ -476,25 +1066,40 @@
     <!-- 0. NBRES ARCHITECTURAL GATEWAY + SUPABASE AUTH -->
     <div id="authScreen" class="fixed inset-0 z-50 overflow-hidden flex items-center justify-center">
       <div class="nb-grid"></div><div class="nb-glow"></div>
-            <section class="nb-cover nbres-signature" id="nbCover">
-        <div class="nb-brand-column">
-          <span class="nb-tag">NBRES Real Estate System</span>
-          <img src="nbres-logo-premium.png" alt="NBRES" class="nbres-logo-auth" onclick="goToInventoryFromLogo()" title="NBRES">
-          <div class="nb-signature-kicker">Nguyên Bảo Real Estate System</div>
-          <h1 class="nb-signature-title">Quản trị bất động sản <span>theo một cách khác.</span></h1>
-          <p class="nb-signature-sub">Dữ liệu, đội ngũ Sale và hoạt động vận hành được kết nối trong một không gian quản trị duy nhất.</p>
+      <div class="nb-arch-line a"></div><div class="nb-arch-line b"></div><div class="nb-arch-line c"></div>
+      <div class="nb-corner-mark tl"></div><div class="nb-corner-mark br"></div>
+      <div class="nb-ambient-copy left">NBRES • Real Estate Intelligence</div>
+      <div class="nb-ambient-copy right">Private Business Workspace • 2026</div>
+      <div class="nb-platform-points" aria-hidden="true">
+        <div class="nb-platform-point">Property Data</div>
+        <div class="nb-platform-point">Sales CRM</div>
+        <div class="nb-platform-point">Team Operations</div>
+      </div>
+      <section class="nb-cover nbres-signature" id="nbCover">
+        <div class="nb-simple-top">
+          <div class="nb-simple-brand">NBRES</div>
+          <div class="nb-simple-status">Hệ thống trực tuyến</div>
         </div>
-        <div class="nb-portal-column">
-          <div class="nb-portal-index">01</div>
-          <div class="nb-gateway" onclick="triggerNBRESLogin()" role="button" tabindex="0" aria-label="Truy cập hệ thống NBRES" onkeydown="if(event.key==='Enter'||event.key===' '){triggerNBRESLogin()}">
-            <div class="nb-gateway-seal">NB</div>
-            <div class="nb-portal-label">Private Management Portal</div>
-            <h2>Truy cập hệ thống</h2>
-            <p>Không gian dành cho đội ngũ và doanh nghiệp đang vận hành trên nền tảng NBRES.</p>
-            <div class="nb-enter-line"><span>Bắt đầu phiên làm việc</span><span class="nb-enter-arrow">→</span></div>
+
+        <div class="nb-login-shell">
+          <div class="nb-login-eyebrow">Real Estate Management Platform</div>
+          <h1 class="nb-login-title">Không gian quản trị dành cho doanh nghiệp bất động sản.</h1>
+          <p class="nb-login-copy">Quản lý Kho Phòng, đội ngũ Sale, CRM và hoạt động vận hành trong một hệ thống thống nhất.</p>
+
+          <div class="nb-access-coin-wrap">
+            <button type="button" class="nb-access-coin" onclick="triggerNBRESLogin()" aria-label="Truy cập hệ thống NBRES" title="Truy cập hệ thống">
+              <span>NB</span>
+            </button>
+            <div class="nb-coin-label">Chạm để truy cập hệ thống</div>
+          </div>
+
+          <div class="nb-login-note">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Khu vực dành cho tài khoản đã được doanh nghiệp hoặc NBRES cấp quyền truy cập.</span>
           </div>
         </div>
-        <div class="nb-signature-foot">© 2026 <strong>NBRES</strong> • Real Estate Management Platform</div>
+
+        <div class="nb-signature-foot">© 2026 <strong>NBRES</strong> • Nguyên Bảo Real Estate System</div>
       </section>
       <div class="nb-auth-overlay" id="authOverlay">
         <div class="nb-auth-panel">
