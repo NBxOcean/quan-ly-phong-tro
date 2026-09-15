@@ -3887,7 +3887,7 @@
             if(currentUser?.id===id)return showToast('Không thể tự xóa tài khoản đang đăng nhập.','error');
             if(target.role==='Admin Quản Lí')return showToast('Không thể xóa Admin Quản Lí từ chức năng này.','error');
             const label=target.name||target.user||'tài khoản này';
-            if(!confirm(`XÓA TÀI KHOẢN "${label}"?\n\nTài khoản sẽ bị xóa khỏi Supabase Auth và không thể đăng nhập lại. Hành động này không thể hoàn tác.`))return;
+            if(!confirm(`Bạn chắc chắn muốn xóa thành viên ${label} đúng không?`))return;
             try{
                 const {data,error}=await supabaseClient.functions.invoke('admin-delete-user',{body:{user_id:id}});
                 if(error){
