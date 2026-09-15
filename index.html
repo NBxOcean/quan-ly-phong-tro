@@ -48,7 +48,7 @@
       }
     }
     </script>
-<title>NBRES - Quản Lý Căn Hộ & Phòng Trọ | Nguyên Bảo</title>
+<title>NBRES - Quản Lý Căn Hộ & Phòng Trọ | Nguyên Bảo • V10.0</title>
     <!-- Tailwind CSS & FontAwesome Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -445,6 +445,26 @@
                                     <span class="min-w-0"><span class="block font-bold">Kịch Bản CRM</span><span class="block text-[11px] text-slate-400 truncate">Kịch bản tư vấn và xử lý tình huống</span></span>
                                 </button>
 
+                                <button onclick="selectTaskFromMenu('tab-leads')" id="nav-leads" class="task-menu-item tab-btn w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
+                                    <span class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-300 flex items-center justify-center shrink-0"><i class="fa-solid fa-filter-circle-dollar"></i></span><span class="min-w-0"><span class="block font-bold">Khách Hàng / Lead</span><span class="block text-[11px] text-slate-400">Sale Pipeline</span></span>
+                                </button>
+                                <button onclick="selectTaskFromMenu('tab-business-report')" id="nav-business-report" class="task-menu-item tab-btn w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
+                                    <span class="w-9 h-9 rounded-xl bg-sky-500/10 text-sky-300 flex items-center justify-center"><i class="fa-solid fa-chart-line"></i></span><span class="font-bold">Báo Cáo Kinh Doanh</span>
+                                </button>
+                                <button onclick="selectTaskFromMenu('tab-notifications')" id="nav-notifications" class="task-menu-item tab-btn w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
+                                    <span class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-300 flex items-center justify-center"><i class="fa-solid fa-bell"></i></span><span class="font-bold">Thông Báo</span>
+                                </button>
+                                <button onclick="selectTaskFromMenu('tab-audit')" id="nav-audit" class="task-menu-item tab-btn w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
+                                    <span class="w-9 h-9 rounded-xl bg-violet-500/10 text-violet-300 flex items-center justify-center"><i class="fa-solid fa-clock-rotate-left"></i></span><span class="font-bold">Nhật Ký / Thùng Rác</span>
+                                </button>
+
+                                <button onclick="selectTaskFromMenu('tab-data-center')" id="nav-data-center" class="task-menu-item tab-btn w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
+                                    <span class="w-9 h-9 rounded-xl bg-teal-500/10 text-teal-300 flex items-center justify-center"><i class="fa-solid fa-file-arrow-up"></i></span><span class="font-bold">Dữ Liệu / Import</span>
+                                </button>
+                                <button onclick="selectTaskFromMenu('tab-onboarding')" id="nav-onboarding" class="task-menu-item tab-btn w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
+                                    <span class="w-9 h-9 rounded-xl bg-fuchsia-500/10 text-fuchsia-300 flex items-center justify-center"><i class="fa-solid fa-list-check"></i></span><span class="font-bold">Thiết Lập Công Ty</span>
+                                </button>
+
                                 <button onclick="selectTaskFromMenu('tab-appointments')" id="nav-appointments" class="task-menu-item tab-btn w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
                                     <span class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-300 flex items-center justify-center shrink-0"><i class="fa-solid fa-calendar-check"></i></span>
                                     <span class="min-w-0"><span class="block font-bold">Lịch Xem Phòng</span><span class="block text-[11px] text-slate-400 truncate">Quản lý lịch dẫn khách xem phòng</span></span>
@@ -745,6 +765,53 @@
                 </div>
             </div>
 
+
+            <div id="tab-leads" class="tab-content hidden space-y-5">
+                <div class="rounded-3xl bg-gradient-to-br from-emerald-950 via-slate-950 to-slate-900 text-white p-6 shadow-xl"><div class="flex justify-between gap-4 flex-wrap"><div><div class="text-[10px] uppercase tracking-[.22em] text-emerald-300 font-black">NBRES • SALES PIPELINE</div><h2 class="text-2xl font-black mt-2">Khách Hàng & Lead</h2><p class="text-sm text-slate-400 mt-1">Lead mới → tư vấn → xem phòng → thương lượng → chốt.</p></div><button onclick="openLeadModal()" class="px-4 py-2.5 rounded-xl bg-emerald-400 text-emerald-950 font-black text-sm"><i class="fa-solid fa-user-plus mr-1"></i>Thêm Lead</button></div></div>
+                <div id="leadStats" class="grid grid-cols-2 lg:grid-cols-6 gap-3"></div>
+                <div class="bg-white rounded-2xl border p-4 flex gap-2 flex-wrap"><input id="leadSearch" oninput="renderLeadsV9()" placeholder="Tìm tên / SĐT / nhu cầu..." class="flex-1 min-w-[220px] border rounded-xl px-3 py-2.5 bg-slate-50 text-sm"><select id="leadStageFilter" onchange="renderLeadsV9()" class="border rounded-xl px-3 py-2.5 bg-slate-50 text-xs font-bold"><option value="">Tất cả giai đoạn</option><option>Lead mới</option><option>Đang tư vấn</option><option>Đã liên hệ</option><option>Hẹn xem phòng</option><option>Đang thương lượng</option><option>Đã chốt</option><option>Mất khách</option></select></div>
+                <div id="leadPipeline" class="grid md:grid-cols-2 xl:grid-cols-4 gap-3"></div>
+            </div>
+
+            <div id="tab-business-report" class="tab-content hidden space-y-5"><div><div class="text-[10px] uppercase font-black text-sky-600">NBRES • BUSINESS INTELLIGENCE</div><h2 class="text-2xl font-black text-slate-900">Báo Cáo Kinh Doanh</h2></div><div id="businessReportStats" class="grid grid-cols-2 lg:grid-cols-4 gap-3"></div><div class="grid lg:grid-cols-2 gap-4"><div class="bg-white rounded-2xl border p-5"><h3 class="font-black">Phễu Sale</h3><div id="reportFunnel" class="mt-4 space-y-3"></div></div><div class="bg-white rounded-2xl border p-5"><h3 class="font-black">Hiệu suất vận hành</h3><div id="reportOps" class="mt-4 space-y-3"></div></div></div></div>
+
+            <div id="tab-notifications" class="tab-content hidden space-y-5"><div><h2 class="text-2xl font-black text-slate-900"><i class="fa-solid fa-bell text-amber-500 mr-2"></i>Trung Tâm Thông Báo <span id="notifCountV10" class="ml-2 text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-700">0</span></h2><p class="text-xs text-slate-500">Nhắc lịch và cảnh báo Lead cần chăm sóc.</p></div><div id="smartNotificationList" class="space-y-3"></div></div>
+
+            <div id="tab-audit" class="tab-content hidden space-y-5"><div><div class="text-[10px] uppercase font-black text-violet-600">NBRES • CONTROL & RECOVERY</div><h2 class="text-2xl font-black text-slate-900">Nhật Ký & Thùng Rác</h2></div><div class="grid lg:grid-cols-2 gap-4"><div class="bg-white rounded-2xl border overflow-hidden"><div class="p-4 border-b font-black">Nhật ký gần đây</div><div id="auditList" class="divide-y max-h-[620px] overflow-y-auto"></div></div><div class="bg-white rounded-2xl border overflow-hidden"><div class="p-4 border-b font-black">Thùng rác Lead</div><div id="recycleList" class="divide-y max-h-[620px] overflow-y-auto"></div></div></div></div>
+
+            <!-- V10.0 DATA CENTER -->
+            <div id="tab-data-center" class="tab-content hidden space-y-5">
+                <div class="rounded-3xl bg-slate-950 text-white p-6 border border-teal-400/20 shadow-xl">
+                    <div class="flex justify-between gap-4 flex-wrap">
+                        <div><div class="text-[10px] uppercase tracking-[.22em] text-teal-300 font-black">NBRES • DATA CENTER</div><h2 class="text-2xl font-black mt-2">Import / Export Dữ Liệu</h2><p class="text-sm text-slate-400 mt-1">Đưa dữ liệu vào NBRES có kiểm tra trước khi lưu, và xuất dữ liệu khi doanh nghiệp cần.</p></div>
+                        <button onclick="downloadLeadTemplateV10()" class="px-4 py-2.5 rounded-xl bg-teal-400 text-slate-950 font-black text-xs"><i class="fa-solid fa-download mr-1"></i>Tải mẫu Lead CSV</button>
+                    </div>
+                </div>
+                <div class="grid lg:grid-cols-2 gap-4">
+                    <div class="bg-white rounded-2xl border shadow-sm p-5">
+                        <h3 class="font-black text-slate-900">Import Lead</h3><p class="text-xs text-slate-500 mt-1">CSV UTF-8. Hệ thống sẽ preview và kiểm tra dữ liệu trước.</p>
+                        <input id="leadCsvFile" type="file" accept=".csv,text/csv" onchange="previewLeadCsvV10(event)" class="mt-4 block w-full text-xs border rounded-xl p-3 bg-slate-50">
+                        <div id="leadImportSummary" class="mt-4 text-xs text-slate-500">Chưa chọn file.</div>
+                        <div id="leadImportPreview" class="mt-3 overflow-auto max-h-80"></div>
+                        <button id="leadImportBtn" onclick="commitLeadImportV10()" disabled class="mt-4 px-4 py-2.5 rounded-xl bg-slate-900 disabled:opacity-40 text-white font-black text-xs">Import vào NBRES</button>
+                    </div>
+                    <div class="bg-white rounded-2xl border shadow-sm p-5">
+                        <h3 class="font-black text-slate-900">Export doanh nghiệp</h3><p class="text-xs text-slate-500 mt-1">Xuất nhanh dữ liệu đang có quyền xem để sao lưu hoặc xử lý ngoài hệ thống.</p>
+                        <div class="grid grid-cols-2 gap-3 mt-4">
+                            <button onclick="exportLeadsV10()" class="p-4 rounded-2xl bg-emerald-50 text-emerald-700 text-left"><i class="fa-solid fa-users"></i><div class="font-black text-xs mt-2">Lead / Khách hàng</div></button>
+                            <button onclick="exportRoomsV10()" class="p-4 rounded-2xl bg-orange-50 text-orange-700 text-left"><i class="fa-solid fa-building"></i><div class="font-black text-xs mt-2">Kho phòng</div></button>
+                        </div>
+                        <div class="mt-5 p-4 rounded-2xl bg-amber-50 text-amber-800 text-xs"><b>Lưu ý:</b> Export là bản sao dữ liệu. Backup hệ thống vẫn phải được cấu hình riêng ở Supabase/DB.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- V10.0 ONBOARDING -->
+            <div id="tab-onboarding" class="tab-content hidden space-y-5">
+                <div><div class="text-[10px] uppercase tracking-wider font-black text-fuchsia-600">NBRES • COMPANY SETUP</div><h2 class="text-2xl font-black text-slate-900 mt-1">Thiết Lập & Onboarding</h2><p class="text-xs text-slate-500 mt-1">Checklist đưa một Công Ty từ tài khoản mới đến trạng thái sẵn sàng vận hành.</p></div>
+                <div id="onboardingProgressV10" class="bg-white rounded-2xl border p-5 shadow-sm"></div>
+                <div id="onboardingStepsV10" class="grid md:grid-cols-2 xl:grid-cols-3 gap-3"></div>
+            </div>
 
             <!-- TAB: LỊCH XEM PHÒNG -->
             <div id="tab-appointments" class="tab-content hidden space-y-5">
@@ -1080,6 +1147,8 @@
 
 
     <div id="regionDetailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[70] p-4"><div class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[92vh] overflow-y-auto"><div class="p-5 border-b sticky top-0 bg-white z-10 flex justify-between items-center"><div><div class="text-[10px] font-extrabold tracking-widest text-sky-600">NBRES • KHU VỰC DETAIL</div><h3 id="regionDetailTitle" class="text-xl font-extrabold text-slate-800 mt-1">Khu Vực</h3></div><button onclick="closeRegionDetail()" class="w-9 h-9 rounded-xl bg-slate-100 text-slate-500"><i class="fa-solid fa-xmark"></i></button></div><div id="regionDetailBody" class="p-5"></div></div></div>
+
+    <div id="leadModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[85] p-4"><div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto"><div class="p-5 border-b flex justify-between"><div><div class="text-[10px] font-black text-emerald-600">NBRES • LEAD</div><h3 class="text-xl font-black">Khách Hàng / Lead</h3></div><button onclick="closeLeadModal()" class="w-9 h-9 rounded-xl bg-slate-100"><i class="fa-solid fa-xmark"></i></button></div><form onsubmit="saveLeadV9(event)" class="p-5 space-y-4"><input id="leadId" type="hidden"><div class="grid md:grid-cols-2 gap-3"><input id="leadName" required placeholder="Tên khách *" class="border rounded-xl p-3"><input id="leadPhone" placeholder="Số điện thoại" class="border rounded-xl p-3"></div><div class="grid md:grid-cols-2 gap-3"><select id="leadStage" class="border rounded-xl p-3"><option>Lead mới</option><option>Đang tư vấn</option><option>Đã liên hệ</option><option>Hẹn xem phòng</option><option>Đang thương lượng</option><option>Đã chốt</option><option>Mất khách</option></select><input id="leadSource" placeholder="Nguồn khách" class="border rounded-xl p-3"></div><div class="grid md:grid-cols-2 gap-3"><input id="leadBudget" placeholder="Ngân sách" class="border rounded-xl p-3"><input id="leadArea" placeholder="Khu vực quan tâm" class="border rounded-xl p-3"></div><textarea id="leadNeed" rows="4" placeholder="Nhu cầu / ghi chú" class="w-full border rounded-xl p-3"></textarea><div class="flex justify-end gap-2"><button type="button" onclick="closeLeadModal()" class="px-4 py-2.5 border rounded-xl font-bold">Hủy</button><button class="px-4 py-2.5 bg-emerald-600 text-white rounded-xl font-black">Lưu Lead</button></div></form></div></div>
 
     <!-- MODAL ĐẶT / SỬA LỊCH XEM PHÒNG -->
     <div id="appointmentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[60] p-4">
@@ -2845,13 +2914,11 @@
                     .select('id,tenant_id,region_id,team_id,created_by,code,price,district,status,address,amenities,media_url,note,updated_at,room_images(id,image_url,storage_path,sort_order)', { count: 'exact' })
                     .eq('tenant_id', tenantId);
 
+                // V9.0: Team tắt => lọc trực tiếp region_id.
                 const teamId = getEffectiveTeamId();
-                if (teamId) query = query.eq('team_id', teamId);
-                else if (isRegionalAdmin() || (isSuperAdmin() && activeRegionId)) {
-                    const teamIds = getVisibleTeams().map(t=>t.id);
-                    if (teamIds.length) query = query.in('team_id', teamIds);
-                    else query = query.eq('team_id','00000000-0000-0000-0000-000000000000');
-                }
+                if (isTeamFeatureEnabled() && teamId) query = query.eq('team_id', teamId);
+                else if (isRegionalAdmin()) query = query.eq('region_id', currentUser?.region_id);
+                else if ((isSuperAdmin() || isCompanyAdmin()) && activeRegionId) query = query.eq('region_id', activeRegionId);
 
                 if (keyword) {
                     const safe = keyword.replace(/[,%()]/g, ' ');
@@ -3424,6 +3491,7 @@
                 'tab-rooms': 'Kho Phòng',
                 'tab-marketing': 'Mẫu Marketing',
                 'tab-crm': 'Kịch Bản CRM',
+                'tab-leads':'Khách Hàng / Lead','tab-business-report':'Báo Cáo Kinh Doanh','tab-notifications':'Thông Báo','tab-audit':'Nhật Ký / Thùng Rác','tab-data-center':'Dữ Liệu / Import','tab-onboarding':'Thiết Lập Công Ty',
                 'tab-appointments': 'Lịch Xem Phòng',
                 'tab-regions': 'Khu Vực',
                 'tab-teams': 'Quản Lý Team',
@@ -3484,6 +3552,7 @@
                 'tab-inventory':'Kho Phòng',
                 'tab-poster':'Mẫu Marketing',
                 'tab-crm':'Kịch Bản CRM',
+                'tab-leads':'Khách Hàng / Lead','tab-business-report':'Báo Cáo Kinh Doanh','tab-notifications':'Thông Báo','tab-audit':'Nhật Ký / Thùng Rác',
                 'tab-appointments':'Lịch Xem Phòng',
                 'tab-regions':'Khu Vực',
                 'tab-teams':'Quản Lý Team',
@@ -3515,6 +3584,7 @@
                 'tab-inventory':'nav-inventory',
                 'tab-poster':'nav-poster',
                 'tab-crm':'nav-crm',
+                'tab-leads':'nav-leads','tab-business-report':'nav-business-report','tab-notifications':'nav-notifications','tab-audit':'nav-audit','tab-data-center':'nav-data-center','tab-onboarding':'nav-onboarding',
                 'tab-appointments':'nav-appointments',
                 'tab-regions':'nav-regions',
                 'tab-teams':'nav-teams',
@@ -3586,6 +3656,12 @@
             if (tabId === 'tab-company-dashboard') {
                 renderCompanyDashboard();
             }
+            if(tabId==='tab-leads')loadLeadsV9();
+            if(tabId==='tab-business-report')renderBusinessReportV9();
+            if(tabId==='tab-notifications')renderSmartNotificationsV10();
+            if(tabId==='tab-audit')loadAuditV9();
+            if(tabId==='tab-data-center')renderDataCenterV10();
+            if(tabId==='tab-onboarding')renderOnboardingV10();
             if (tabId === 'tab-users') {
                 renderUsersTable();
             }
@@ -4336,6 +4412,90 @@
             }catch(err){showToast(`Không thể ${verb} tài khoản: `+(err?.message||err),'error');}
         }
 
+
+        // ===== NBRES V10.0 BUSINESS OS =====
+        let leadsV9=[];
+        async function loadLeadsV9(){if(!supabaseClient||!currentTenantId){leadsV9=[];renderLeadsV9();return;}try{let q=supabaseClient.from('sales_leads').select('*').eq('tenant_id',currentTenantId).is('deleted_at',null).order('updated_at',{ascending:false});if(isRegionalAdmin())q=q.eq('region_id',currentUser.region_id);else if(isManagerAdmin()&&currentUser.team_id)q=q.eq('team_id',currentUser.team_id);else if(currentUser?.role==='Nhân Viên')q=q.eq('assigned_to',currentUser.id);const {data,error}=await q;if(error)throw error;leadsV9=data||[];}catch(e){leadsV9=[];showToast('CRM V9 cần chạy file SQL V9.0 trên Supabase.','error');}renderLeadsV9();}
+        function renderLeadsV9(){const q=(document.getElementById('leadSearch')?.value||'').toLowerCase(),stage=document.getElementById('leadStageFilter')?.value||'',list=leadsV9.filter(x=>(!stage||x.stage===stage)&&(!q||`${x.customer_name||''} ${x.phone||''} ${x.need||''}`.toLowerCase().includes(q))),stages=['Lead mới','Đang tư vấn','Đã liên hệ','Hẹn xem phòng','Đang thương lượng','Đã chốt'];const st=document.getElementById('leadStats');if(st)st.innerHTML=stages.map(s=>`<div class="bg-white border rounded-2xl p-3"><div class="text-[9px] uppercase font-bold text-slate-400">${s}</div><div class="text-2xl font-black mt-1">${leadsV9.filter(x=>x.stage===s).length}</div></div>`).join('');const b=document.getElementById('leadPipeline');if(!b)return;b.innerHTML=list.length?list.map(x=>`<div class="bg-white border rounded-2xl p-4 shadow-sm"><div class="flex justify-between gap-2"><div><div class="font-black">${escapeHtml(x.customer_name)}</div><div class="text-xs text-slate-400">${escapeHtml(x.phone||'Chưa có SĐT')}</div></div><span class="text-[10px] px-2 py-1 h-fit rounded-full bg-emerald-50 text-emerald-700 font-bold">${escapeHtml(x.stage)}</span></div><div class="mt-3 text-xs space-y-1"><div><b>Nhu cầu:</b> ${escapeHtml(x.need||'—')}</div><div><b>Ngân sách:</b> ${escapeHtml(x.budget||'—')}</div><div><b>Khu vực:</b> ${escapeHtml(x.interested_area||'—')}</div></div><div class="mt-4 pt-3 border-t flex justify-between"><button onclick="editLeadV9('${x.id}')" class="text-xs font-bold text-indigo-600">Sửa</button><button onclick="deleteLeadV9('${x.id}')" class="text-xs font-bold text-rose-600">Thùng rác</button></div></div>`).join(''):'<div class="xl:col-span-4 p-10 bg-white border border-dashed rounded-2xl text-center text-slate-400">Chưa có Lead.</div>';}
+        function openLeadModal(){if(!currentTenantId)return showToast('Hãy chọn Công Ty trước.','error');document.getElementById('leadId').value='';['leadName','leadPhone','leadSource','leadBudget','leadArea','leadNeed'].forEach(i=>document.getElementById(i).value='');document.getElementById('leadStage').value='Lead mới';document.getElementById('leadModal').classList.remove('hidden');document.getElementById('leadModal').classList.add('flex');}
+        function closeLeadModal(){document.getElementById('leadModal').classList.add('hidden');document.getElementById('leadModal').classList.remove('flex');}
+        function editLeadV9(id){const x=leadsV9.find(v=>v.id===id);if(!x)return;openLeadModal();document.getElementById('leadId').value=x.id;document.getElementById('leadName').value=x.customer_name||'';document.getElementById('leadPhone').value=x.phone||'';document.getElementById('leadStage').value=x.stage||'Lead mới';document.getElementById('leadSource').value=x.source||'';document.getElementById('leadBudget').value=x.budget||'';document.getElementById('leadArea').value=x.interested_area||'';document.getElementById('leadNeed').value=x.need||'';}
+        async function saveLeadV9(e){e.preventDefault();const id=document.getElementById('leadId').value,p={tenant_id:currentTenantId,region_id:currentUser?.region_id||activeRegionId||null,team_id:isTeamFeatureEnabled()?(currentUser?.team_id||activeTeamId||null):null,assigned_to:currentUser?.id||null,customer_name:document.getElementById('leadName').value.trim(),phone:document.getElementById('leadPhone').value.trim(),stage:document.getElementById('leadStage').value,source:document.getElementById('leadSource').value.trim(),budget:document.getElementById('leadBudget').value.trim(),interested_area:document.getElementById('leadArea').value.trim(),need:document.getElementById('leadNeed').value.trim(),updated_at:new Date().toISOString()};const r=id?await supabaseClient.from('sales_leads').update(p).eq('id',id):await supabaseClient.from('sales_leads').insert({...p,created_by:currentUser?.id});if(r.error)return showToast(r.error.message,'error');closeLeadModal();await loadLeadsV9();showToast('Đã lưu Lead.','success');}
+        async function deleteLeadV9(id){if(!confirm('Đưa Lead vào Thùng rác?'))return;const {error}=await supabaseClient.from('sales_leads').update({deleted_at:new Date().toISOString(),deleted_by:currentUser?.id}).eq('id',id);if(error)return showToast(error.message,'error');await loadLeadsV9();}
+        function renderBusinessReportV9(){const total=leadsV9.length,won=leadsV9.filter(x=>x.stage==='Đã chốt').length,ap=(appointments||[]).length,vac=(rooms||[]).filter(r=>['Còn trống','Trống'].includes(String(r.status||''))).length,b=document.getElementById('businessReportStats');if(b)b.innerHTML=[['Lead',total],['Đã chốt',won],['Lịch xem',ap],['Phòng trống',vac]].map(x=>`<div class="bg-white border rounded-2xl p-4"><div class="text-[10px] uppercase font-bold text-slate-400">${x[0]}</div><div class="text-3xl font-black mt-2">${x[1]}</div></div>`).join('');const f=document.getElementById('reportFunnel');if(f)f.innerHTML=['Lead mới','Đang tư vấn','Hẹn xem phòng','Đang thương lượng','Đã chốt'].map(s=>{const n=leadsV9.filter(x=>x.stage===s).length,p=total?Math.round(n/total*100):0;return `<div><div class="flex justify-between text-xs"><b>${s}</b><span>${n}</span></div><div class="h-2 bg-slate-100 rounded-full mt-1"><div class="h-full bg-sky-500 rounded-full" style="width:${p}%"></div></div></div>`}).join('');const o=document.getElementById('reportOps');if(o)o.innerHTML=`<div class="p-3 bg-slate-50 rounded-xl text-xs"><b>Tỷ lệ chốt:</b> ${total?Math.round(won/total*100):0}%</div><div class="p-3 bg-slate-50 rounded-xl text-xs"><b>Lịch xem / Lead:</b> ${total?(ap/total).toFixed(1):0}</div><div class="p-3 bg-slate-50 rounded-xl text-xs"><b>Kho phòng:</b> ${(rooms||[]).length} phòng • ${vac} trống</div>`;}
+        function renderSmartNotificationsV9(){const arr=[],now=Date.now(),stale=leadsV9.filter(x=>!['Đã chốt','Mất khách'].includes(x.stage)&&now-new Date(x.updated_at||x.created_at).getTime()>259200000);if(stale.length)arr.push([`${stale.length} Lead cần chăm sóc`,'Không cập nhật trong hơn 3 ngày.']);const b=document.getElementById('smartNotificationList');if(b)b.innerHTML=arr.length?arr.map(x=>`<div class="bg-white border rounded-2xl p-4"><div class="font-black text-slate-800">${x[0]}</div><div class="text-xs text-slate-500 mt-1">${x[1]}</div></div>`).join(''):'<div class="p-10 bg-white border rounded-2xl text-center text-slate-400">Không có cảnh báo mới.</div>';}
+        async function loadAuditV9(){if(!currentTenantId)return;const [a,r]=await Promise.all([supabaseClient.from('audit_logs').select('*').eq('tenant_id',currentTenantId).order('created_at',{ascending:false}).limit(100),supabaseClient.from('sales_leads').select('*').eq('tenant_id',currentTenantId).not('deleted_at','is',null).order('deleted_at',{ascending:false}).limit(100)]);const ab=document.getElementById('auditList');if(ab)ab.innerHTML=(a.data||[]).map(x=>`<div class="p-4"><div class="text-xs font-black">${escapeHtml(x.action)} • ${escapeHtml(x.entity_type)}</div><div class="text-[11px] text-slate-400">${new Date(x.created_at).toLocaleString('vi-VN')}</div></div>`).join('')||'<div class="p-8 text-center text-slate-400">Chưa có nhật ký.</div>';const rb=document.getElementById('recycleList');if(rb)rb.innerHTML=(r.data||[]).map(x=>`<div class="p-4 flex justify-between"><div><b class="text-xs">${escapeHtml(x.customer_name)}</b><div class="text-[11px] text-slate-400">${new Date(x.deleted_at).toLocaleString('vi-VN')}</div></div><button onclick="restoreLeadV9('${x.id}')" class="text-xs font-bold text-emerald-600">Khôi phục</button></div>`).join('')||'<div class="p-8 text-center text-slate-400">Thùng rác trống.</div>';}
+        async function restoreLeadV9(id){const {error}=await supabaseClient.from('sales_leads').update({deleted_at:null,deleted_by:null}).eq('id',id);if(error)return showToast(error.message,'error');await loadAuditV9();}
+
+
+        // ===== NBRES V10.0 COMMERCIAL RELEASE CANDIDATE =====
+        let pendingLeadImportV10=[];
+
+        function csvEscapeV10(v){const s=String(v??'');return /[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s;}
+        function downloadCsvV10(filename, headers, rows){
+            const body=[headers.join(','),...rows.map(r=>headers.map(h=>csvEscapeV10(r[h])).join(','))].join('\n');
+            const blob=new Blob(['\ufeff'+body],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');
+            a.href=URL.createObjectURL(blob);a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+        }
+        function downloadLeadTemplateV10(){
+            downloadCsvV10('NBRES_Lead_Template.csv',['customer_name','phone','stage','source','budget','interested_area','need'],[
+                {customer_name:'Nguyễn Văn A',phone:'0900000000',stage:'Lead mới',source:'Facebook',budget:'10-15 triệu',interested_area:'Bình Thạnh',need:'Căn 2PN'}
+            ]);
+        }
+        function parseCsvV10(raw){
+            const rows=[];let row=[],cell='',quote=false;
+            for(let i=0;i<raw.length;i++){const c=raw[i],n=raw[i+1];if(c==='"'&&quote&&n==='"'){cell+='"';i++;}else if(c==='"'){quote=!quote;}else if(c===','&&!quote){row.push(cell);cell='';}else if((c==='\n'||c==='\r')&&!quote){if(c==='\r'&&n==='\n')i++;row.push(cell);if(row.some(x=>x.trim()))rows.push(row);row=[];cell='';}else cell+=c;}
+            row.push(cell);if(row.some(x=>x.trim()))rows.push(row);return rows;
+        }
+        async function previewLeadCsvV10(e){
+            pendingLeadImportV10=[];const f=e.target.files?.[0];if(!f)return;
+            const raw=await f.text(),rows=parseCsvV10(raw);if(rows.length<2)return showToast('File CSV không có dữ liệu.','error');
+            const headers=rows[0].map(x=>x.trim().replace(/^\ufeff/,''));
+            const required=['customer_name'];if(required.some(h=>!headers.includes(h)))return showToast('CSV thiếu cột customer_name.','error');
+            const allowedStages=['Lead mới','Đang tư vấn','Đã liên hệ','Hẹn xem phòng','Đang thương lượng','Đã chốt','Mất khách'];
+            const data=rows.slice(1).map((r,i)=>{const o={};headers.forEach((h,j)=>o[h]=(r[j]||'').trim());o.__row=i+2;o.__valid=!!o.customer_name&&(!o.stage||allowedStages.includes(o.stage));return o;});
+            pendingLeadImportV10=data.filter(x=>x.__valid);
+            const bad=data.length-pendingLeadImportV10.length;
+            document.getElementById('leadImportSummary').innerHTML=`<b>${data.length}</b> dòng • <b class="text-emerald-600">${pendingLeadImportV10.length} hợp lệ</b> • <b class="text-rose-600">${bad} lỗi</b>`;
+            document.getElementById('leadImportPreview').innerHTML=`<table class="w-full text-[11px]"><thead><tr class="bg-slate-50"><th class="p-2 text-left">Dòng</th><th class="p-2 text-left">Khách</th><th class="p-2 text-left">SĐT</th><th class="p-2 text-left">Giai đoạn</th><th class="p-2">KQ</th></tr></thead><tbody>${data.slice(0,100).map(x=>`<tr class="border-t"><td class="p-2">${x.__row}</td><td class="p-2">${escapeHtml(x.customer_name)}</td><td class="p-2">${escapeHtml(x.phone||'')}</td><td class="p-2">${escapeHtml(x.stage||'Lead mới')}</td><td class="p-2 text-center ${x.__valid?'text-emerald-600':'text-rose-600'}">${x.__valid?'OK':'Lỗi'}</td></tr>`).join('')}</tbody></table>`;
+            document.getElementById('leadImportBtn').disabled=!pendingLeadImportV10.length;
+        }
+        async function commitLeadImportV10(){
+            if(!pendingLeadImportV10.length||!currentTenantId)return;
+            const payload=pendingLeadImportV10.map(x=>({tenant_id:currentTenantId,region_id:currentUser?.region_id||activeRegionId||null,team_id:isTeamFeatureEnabled()?(currentUser?.team_id||activeTeamId||null):null,assigned_to:currentUser?.role==='Nhân Viên'?currentUser.id:null,created_by:currentUser?.id,customer_name:x.customer_name,phone:x.phone||null,stage:x.stage||'Lead mới',source:x.source||null,budget:x.budget||null,interested_area:x.interested_area||null,need:x.need||null}));
+            const {error}=await supabaseClient.from('sales_leads').insert(payload);if(error)return showToast('Import lỗi: '+error.message,'error');
+            const n=payload.length;pendingLeadImportV10=[];document.getElementById('leadImportBtn').disabled=true;showToast(`Đã import ${n} Lead.`,'success');await loadLeadsV9();
+        }
+        function exportLeadsV10(){downloadCsvV10(`NBRES_Leads_${new Date().toISOString().slice(0,10)}.csv`,['customer_name','phone','stage','source','budget','interested_area','need'],leadsV9);}
+        function exportRoomsV10(){
+            const rs=(rooms||[]).map(r=>({code:r.code||r.room_code||r.name||'',status:r.status||'',price:r.price||'',region_id:r.region_id||'',team_id:r.team_id||''}));
+            downloadCsvV10(`NBRES_Rooms_${new Date().toISOString().slice(0,10)}.csv`,['code','status','price','region_id','team_id'],rs);
+        }
+        function renderDataCenterV10(){const b=document.getElementById('leadImportBtn');if(b)b.disabled=!pendingLeadImportV10.length;}
+
+        function renderOnboardingV10(){
+            const steps=[
+              {name:'Công Ty',done:!!currentTenantId,tab:'tab-platform-dashboard',icon:'fa-building'},
+              {name:'Khu Vực',done:(regions||[]).length>0,tab:'tab-regions',icon:'fa-map-location-dot'},
+              {name:'Nhân Sự',done:(users||[]).filter(u=>u.role!=='Admin Quản Lí').length>0,tab:'tab-users',icon:'fa-users'},
+              {name:'Kho Phòng',done:(rooms||[]).length>0,tab:'tab-inventory',icon:'fa-building-user'},
+              {name:'Lead đầu tiên',done:leadsV9.length>0,tab:'tab-leads',icon:'fa-user-check'},
+              {name:'Lịch xem',done:(appointments||[]).length>0,tab:'tab-appointments',icon:'fa-calendar-check'}
+            ];
+            const done=steps.filter(x=>x.done).length,p=Math.round(done/steps.length*100);
+            const prog=document.getElementById('onboardingProgressV10');if(prog)prog.innerHTML=`<div class="flex justify-between text-sm"><b>Mức độ sẵn sàng</b><b>${p}%</b></div><div class="h-3 bg-slate-100 rounded-full mt-3 overflow-hidden"><div class="h-full bg-fuchsia-500 rounded-full" style="width:${p}%"></div></div><div class="text-xs text-slate-500 mt-2">${done}/${steps.length} bước đã hoàn thành.</div>`;
+            const box=document.getElementById('onboardingStepsV10');if(box)box.innerHTML=steps.map((x,i)=>`<button onclick="switchTab('${x.tab}')" class="text-left bg-white border rounded-2xl p-4 shadow-sm ${x.done?'border-emerald-200':'hover:border-fuchsia-300'}"><div class="flex justify-between"><span class="w-10 h-10 rounded-xl ${x.done?'bg-emerald-50 text-emerald-600':'bg-slate-100 text-slate-500'} flex items-center justify-center"><i class="fa-solid ${x.icon}"></i></span><span class="${x.done?'text-emerald-600':'text-slate-400'}"><i class="fa-solid ${x.done?'fa-circle-check':'fa-circle'}"></i></span></div><div class="font-black text-sm mt-3">${i+1}. ${x.name}</div><div class="text-[11px] text-slate-400 mt-1">${x.done?'Đã hoàn thành':'Cần thiết lập'}</div></button>`).join('');
+        }
+
+        // V10 notification center: thêm lịch xem sắp tới + badge.
+        function renderSmartNotificationsV10(){
+            const items=[],now=Date.now();
+            const stale=leadsV9.filter(x=>!['Đã chốt','Mất khách'].includes(x.stage)&&now-new Date(x.updated_at||x.created_at).getTime()>259200000);
+            if(stale.length)items.push({title:`${stale.length} Lead cần chăm sóc`,body:'Không cập nhật trong hơn 3 ngày.',icon:'fa-user-clock'});
+            (appointments||[]).forEach(a=>{const raw=a.appointment_at||a.viewing_time||a.datetime||a.date_time;const d=raw?new Date(raw).getTime():0;if(d>now&&d-now<86400000)items.push({title:'Lịch xem trong 24 giờ',body:`${a.customer_name||'Khách hàng'} • ${new Date(d).toLocaleString('vi-VN')}`,icon:'fa-calendar-check'});});
+            const c=document.getElementById('notifCountV10');if(c)c.textContent=items.length;
+            const b=document.getElementById('smartNotificationList');if(b)b.innerHTML=items.length?items.map(x=>`<div class="bg-white border rounded-2xl p-4 flex gap-3"><span class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center"><i class="fa-solid ${x.icon}"></i></span><div><div class="font-black">${x.title}</div><div class="text-xs text-slate-500 mt-1">${x.body}</div></div></div>`).join(''):'<div class="p-10 bg-white border rounded-2xl text-center text-slate-400">Không có cảnh báo mới.</div>';
+        }
 
         // 4. QUẢN LÝ KHO PHÒNG & XỬ LÝ HÌNH ẢNH
         function setupPasteAndDragEvents() {
