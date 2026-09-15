@@ -889,12 +889,26 @@
 
             <!-- TAB 4: QUẢN LÝ TÀI KHOẢN (CHỈ DÀNH CHO ADMIN) -->
             <div id="tab-users" class="tab-content hidden space-y-6">
+                <div id="platformCompanyPanel" class="hidden bg-[#070a0f] rounded-2xl border border-[#D4AF37]/30 p-5 shadow-xl">
+                    <div class="flex items-center justify-between gap-3 flex-wrap">
+                        <div>
+                            <div class="text-[10px] uppercase tracking-[.22em] text-[#D4AF37] font-bold">NBRES • CẤU TRÚC DOANH NGHIỆP</div>
+                            <h2 class="text-lg font-bold text-white mt-1">Công Ty Trên Hệ Thống</h2>
+                            <p class="text-xs text-slate-400 mt-1">Admin Quản Lí tạo Công Ty trước, sau đó mới tạo Quản Lí Công Ty và phân quyền xuống Khu Vực → Team → Nhân Viên.</p>
+                        </div>
+                        <button onclick="openCompanyModal()" class="bg-[#D4AF37] hover:bg-[#e4c453] text-black font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 text-sm">
+                            <i class="fa-solid fa-building-circle-check"></i> Tạo Công Ty
+                        </button>
+                    </div>
+                    <div id="companyList" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 mt-5"></div>
+                </div>
+
                 <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex-wrap gap-3">
                     <div>
                         <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                            <i class="fa-solid fa-users-gear text-orange-500"></i> Quản Lý Tài Khoản Nhân Viên Sale
+                            <i class="fa-solid fa-users-gear text-orange-500"></i> Phân Quyền Nhân Sự NBRES
                         </h2>
-                        <p class="text-xs text-slate-500">Tạo tài khoản mới, phân quyền Admin/Nhiên viên hoặc đổi mật khẩu</p>
+                        <p class="text-xs text-slate-500">Tạo tài khoản theo cấu trúc Công Ty → Khu Vực → Team → Nhân Viên</p>
                     </div>
                     <button onclick="openUserModal()" class="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold px-4 py-2 rounded-xl transition shadow flex items-center gap-2 text-sm">
                         <i class="fa-solid fa-user-plus"></i> Thêm Tài Khoản Mới
@@ -1362,7 +1376,22 @@
     </div>
 
     <!-- MODAL TẠO TÀI KHOẢN V2 - SUPABASE AUTH -->
-    <div id="userModal" class="fixed inset-0 bg-[#030508]/80 backdrop-blur-md hidden items-center justify-center z-50 p-4">
+        <!-- MODAL TẠO CÔNG TY - CHỈ ADMIN QUẢN LÍ -->
+    <div id="companyModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden items-center justify-center z-[80] p-4">
+        <div class="bg-[#070a0f] text-white rounded-3xl shadow-2xl max-w-lg w-full border border-[#D4AF37]/35 overflow-hidden">
+            <div class="p-6 border-b border-white/10 flex justify-between items-start">
+                <div><div class="text-[10px] uppercase tracking-[.22em] text-[#D4AF37] font-bold">NBRES • KHỞI TẠO DOANH NGHIỆP</div><h3 class="text-xl font-semibold mt-1">Tạo Công Ty</h3><p class="text-xs text-slate-500 mt-1">Công Ty là cấp dữ liệu cao nhất bên dưới Admin Quản Lí.</p></div>
+                <button type="button" onclick="closeCompanyModal()" class="text-slate-500 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <form id="companyForm" onsubmit="saveCompany(event)" class="p-6 space-y-5">
+                <div><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Tên Công Ty *</label><input id="companyName" required maxlength="120" placeholder="Ví dụ: NBRES - Nguyên Bảo" class="w-full border border-white/10 rounded-xl p-3.5 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"></div>
+                <div class="rounded-xl border border-white/10 bg-white/[.03] p-4 text-xs text-slate-400"><i class="fa-solid fa-shield-halved text-[#D4AF37] mr-2"></i>Sau khi tạo Công Ty, quay lại phần tài khoản để tạo <b class="text-white">Quản Lí Công Ty</b> và gán vào Công Ty này.</div>
+                <div class="flex justify-end gap-3 pt-2"><button type="button" onclick="closeCompanyModal()" class="px-4 py-2.5 rounded-xl border border-white/10 text-slate-300">Hủy</button><button type="submit" class="px-5 py-2.5 rounded-xl bg-[#D4AF37] text-black font-bold"><i class="fa-solid fa-plus mr-1"></i> Tạo Công Ty</button></div>
+            </form>
+        </div>
+    </div>
+
+<div id="userModal" class="fixed inset-0 bg-[#030508]/80 backdrop-blur-md hidden items-center justify-center z-50 p-4">
         <div class="bg-[#080b10] rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-[#D4AF37]/30 text-slate-100">
             <div class="p-5 border-b border-white/10 flex justify-between items-center bg-gradient-to-r from-[#0a0f18] to-[#030508]">
                 <div><div class="text-[10px] uppercase tracking-[.22em] text-[#D4AF37] font-bold">NBRES • PHÂN QUYỀN NHÂN SỰ</div><h3 id="userModalTitle" class="text-lg font-semibold mt-1">Tạo Tài Khoản NBRES</h3><p class="text-[10px] text-slate-500 mt-1">Admin Quản Lí → Quản Lí Công Ty → Quản Lí Khu Vực → Quản Lí Team → Nhân Viên</p></div>
@@ -2898,6 +2927,7 @@
             try {
                 const tenantRes = await supabaseClient.from('tenants').select('id,company_name');
                 tenants = tenantRes.error ? [] : (tenantRes.data || []);
+                renderCompanies();
                 regions = await loadRegionsFromDB(); if(regions===null) regions=[];
                 teams = await loadTeamsFromDB();
                 users = await loadProfilesForWorkspace();
@@ -3681,11 +3711,44 @@
             }
         }
 
+        // 2.1 QUẢN LÍ CÔNG TY - CHỈ ADMIN QUẢN LÍ
+        function renderCompanies(){
+            const panel=document.getElementById('platformCompanyPanel');
+            const list=document.getElementById('companyList');
+            if(!panel||!list)return;
+            if(!isSuperAdmin()){panel.classList.add('hidden');return;}
+            panel.classList.remove('hidden');
+            if(!tenants.length){list.innerHTML='<div class="md:col-span-2 xl:col-span-3 border border-dashed border-white/10 rounded-2xl p-6 text-center text-sm text-slate-500">Chưa có Công Ty. Hãy tạo Công Ty đầu tiên để bắt đầu phân quyền.</div>';return;}
+            list.innerHTML=tenants.map(t=>`<div class="rounded-2xl border border-white/10 bg-white/[.03] p-4"><div class="flex items-start justify-between gap-3"><div><div class="w-9 h-9 rounded-xl bg-[#D4AF37]/10 text-[#D4AF37] flex items-center justify-center mb-3"><i class="fa-solid fa-building"></i></div><div class="font-bold text-white">${escapeHtml(t.company_name||'Công Ty')}</div><div class="text-[10px] text-slate-500 mt-1 font-mono">${escapeHtml(String(t.id||''))}</div></div><span class="text-[10px] px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400">Đang hoạt động</span></div></div>`).join('');
+        }
+        function openCompanyModal(){
+            if(!isSuperAdmin())return showToast('Chỉ Admin Quản Lí mới được tạo Công Ty!','error');
+            document.getElementById('companyForm')?.reset();
+            const m=document.getElementById('companyModal');m?.classList.remove('hidden');m?.classList.add('flex');
+            setTimeout(()=>document.getElementById('companyName')?.focus(),80);
+        }
+        function closeCompanyModal(){const m=document.getElementById('companyModal');m?.classList.add('hidden');m?.classList.remove('flex');}
+        async function saveCompany(e){
+            e.preventDefault();
+            if(!isSuperAdmin())return showToast('Chỉ Admin Quản Lí mới được tạo Công Ty!','error');
+            const company_name=document.getElementById('companyName')?.value.trim();
+            if(!company_name)return showToast('Vui lòng nhập tên Công Ty!','error');
+            const btn=document.querySelector('#companyForm button[type="submit"]');const old=btn?.innerHTML;if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang tạo...';}
+            try{
+                const {data,error}=await supabaseClient.from('tenants').insert({company_name}).select('id,company_name').single();
+                if(error)throw error;
+                tenants=[...tenants,data];renderCompanies();populateUserTenantOptions(data.id);closeCompanyModal();
+                showToast('Đã tạo Công Ty. Bây giờ có thể tạo Quản Lí Công Ty!','success');
+            }catch(err){console.error('Tạo công ty:',err);showToast('Không thể tạo Công Ty: '+(err?.message||err),'error');}
+            finally{if(btn){btn.disabled=false;btn.innerHTML=old||'Tạo Công Ty';}}
+        }
+
         // 3. QUẢN LÝ TÀI KHOẢN V2 - AUTH + PROFILES + EDGE FUNCTION
         const APP_TO_DB_ROLE = {'Quản Lí Công Ty':'company_admin','Quản Lí Khu Vực':'regional_admin','Quản Lí Team':'team_admin','Nhân Viên':'employee'};
 
         function openUserModal(editId = null) {
             if (!hasAdminAccess()) return showToast('Chỉ Admin mới có quyền quản lý tài khoản!','error');
+            if (isSuperAdmin() && !tenants.length) return showToast('Hãy tạo Công Ty trước khi tạo tài khoản quản lý!','error');
             if (editId) return showToast('Bản V2 hiện tạo tài khoản qua Auth. Chỉnh sửa tài khoản sẽ được nối ở bước tiếp theo.','error');
             document.getElementById('userForm').reset(); document.getElementById('editUserId').value='';
             const roleSelect=document.getElementById('accRole'); [...roleSelect.options].forEach(o=>o.disabled=false);
@@ -3732,6 +3795,7 @@
         async function deleteUser(){ showToast('Xóa tài khoản Auth sẽ được nối bằng Edge Function riêng để đảm bảo an toàn.','error'); }
 
         function renderUsersTable(){
+            renderCompanies();
             const tbody=document.getElementById('userTableBody'); if(!tbody)return;
             const visibleUsers=getVisibleUsers();
             tbody.innerHTML=visibleUsers.map(u=>`<tr class="hover:bg-slate-50 transition"><td class="p-3.5 font-bold text-orange-600">${escapeHtml(u.user||'—')}</td><td class="p-3.5 font-medium">${escapeHtml(u.name||'—')}</td><td class="p-3.5 text-slate-400"><span class="tracking-widest" title="Mật khẩu do Supabase Auth bảo vệ">••••••••</span></td><td class="p-3.5"><span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${u.role==='Admin Quản Lí'?'bg-fuchsia-100 text-fuchsia-800':u.role==='Quản Lí Công Ty'?'bg-yellow-100 text-yellow-800':u.role==='Quản Lí Khu Vực'?'bg-sky-100 text-sky-800':u.role==='Quản Lí Team'?'bg-amber-100 text-amber-800':'bg-slate-100 text-slate-700'}">${escapeHtml(u.role)}</span></td><td class="p-3.5">${u.role==='Admin Quản Lí'?'<span class="text-xs text-fuchsia-600 font-semibold">Toàn hệ thống</span>':`<div class="text-xs font-semibold text-sky-700">${escapeHtml(getRegionName(u.region_id))}</div><div class="text-[11px] text-violet-700 mt-0.5">${u.team_id?escapeHtml(getTeamName(u.team_id)):'—'}</div>`}</td><td class="p-3.5">${u.is_active!==false?'<span class="text-xs font-bold text-emerald-700">● Hoạt động</span>':'<span class="text-xs text-slate-400">● Đã khóa</span>'}</td><td class="p-3.5 text-right"><span class="text-[11px] text-slate-400"><i class="fa-solid fa-shield-halved mr-1"></i>Auth V2</span></td></tr>`).join('');
