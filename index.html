@@ -352,6 +352,122 @@
 .nb-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:0;color:#64748b;min-height:32px;padding:6px}.nb-options{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:17px 0 20px;color:#64748b;font-size:11px}.nb-options label{display:flex;align-items:center;gap:7px}.nb-options input{accent-color:var(--nbres-gold)}.nb-options a{color:var(--nbres-gold);cursor:pointer}.nb-submit{width:100%;height:48px;border:0;border-radius:7px;background:linear-gradient(135deg,#D4AF37,#f0cf67);color:#05070a;font-weight:800;font-size:12px;letter-spacing:2px;text-transform:uppercase;box-shadow:0 12px 30px rgba(212,175,55,.12);transition:.25s}.nb-submit:hover{transform:translateY(-1px);box-shadow:0 15px 35px rgba(212,175,55,.25)}.nb-submit:disabled{opacity:.55;cursor:wait}
 .nb-notice{margin-top:16px;padding:11px 13px;border:1px solid rgba(212,175,55,.2);border-radius:7px;background:rgba(212,175,55,.04);color:#64748b;text-align:center;font-size:11px}.nb-notice strong{color:var(--nbres-gold)}.nb-auth-foot{margin-top:20px;padding-top:15px;border-top:1px solid rgba(255,255,255,.08);text-align:center;color:#64748b;font-size:10px}.nb-back{display:block;margin-top:13px;text-align:center;color:#64748b;font-size:10px;letter-spacing:1px;cursor:pointer}.nb-back:hover{color:var(--nbres-gold)}
 @media(max-width:520px){.nb-brand{letter-spacing:3px;margin-bottom:26px}.nb-gateway{height:330px}.nb-auth-panel{padding:28px 20px}.nb-options{align-items:flex-start;flex-direction:column}}
+
+/* NBRES V10.1.6 • ARCHITECTURAL PORTAL LOGIN */
+#authScreen{
+  font-family:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
+  background:#06080c;color:#f8fafc;
+}
+#authScreen:before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(90deg,transparent 49.92%,rgba(215,181,84,.12) 50%,transparent 50.08%),
+    radial-gradient(ellipse at 50% 18%,rgba(215,181,84,.12),transparent 36%),
+    linear-gradient(rgba(255,255,255,.024) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.024) 1px,transparent 1px);
+  background-size:auto,auto,96px 96px,96px 96px;
+}
+#authScreen:after{
+  content:"";position:absolute;left:50%;top:8%;width:min(760px,82vw);height:84%;
+  transform:translateX(-50%);border:1px solid rgba(215,181,84,.08);
+  border-radius:360px 360px 34px 34px;pointer-events:none;
+  box-shadow:inset 0 0 90px rgba(215,181,84,.025),0 0 100px rgba(0,0,0,.6);
+}
+.nb-cover.nbres-signature{
+  width:min(1040px,94vw);max-width:none;padding:34px 22px 26px;z-index:2;
+  display:grid;grid-template-columns:minmax(280px,.92fr) minmax(330px,1.08fr);
+  align-items:center;gap:clamp(38px,7vw,92px);
+}
+.nb-brand-column{display:flex;flex-direction:column;align-items:flex-start;text-align:left}
+.nbres-signature .nb-tag{
+  position:relative;display:inline-flex;align-items:center;gap:10px;margin:0 0 24px;
+  padding:8px 14px;border:1px solid rgba(215,181,84,.28);border-radius:999px;
+  background:rgba(215,181,84,.035);color:#d7b554;font-size:9px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;
+}
+.nbres-signature .nb-tag:before{content:"";width:5px;height:5px;border-radius:50%;background:#d7b554;box-shadow:0 0 14px rgba(215,181,84,.9)}
+.nbres-signature .nbres-logo-auth{
+  width:138px;height:138px;margin:0 0 26px;border-radius:31px;object-fit:cover;
+  box-shadow:0 28px 70px rgba(0,0,0,.55),0 0 40px rgba(215,181,84,.10);
+}
+.nb-signature-kicker{font-size:10px;color:#6f7b8d;letter-spacing:3.4px;text-transform:uppercase;margin-bottom:10px}
+.nb-signature-title{
+  margin:0;max-width:440px;font-family:'Playfair Display',Georgia,serif;
+  font-size:clamp(34px,4.2vw,56px);line-height:1.02;font-weight:500;letter-spacing:-.02em;color:#f7f3e9;
+}
+.nb-signature-title span{display:block;color:#d8b85a;font-style:italic}
+.nb-signature-sub{
+  max-width:400px;margin:20px 0 0;color:#778398;font-size:12px;line-height:1.9;letter-spacing:0;text-transform:none;
+}
+.nb-portal-column{position:relative}
+.nb-portal-index{
+  position:absolute;right:18px;top:-26px;color:rgba(215,181,84,.25);
+  font-family:'Playfair Display',serif;font-size:64px;line-height:1;z-index:0;
+}
+.nbres-signature .nb-gateway{
+  width:100%;height:auto;min-height:370px;margin:0;padding:42px 40px 34px;border-radius:8px;
+  border:1px solid rgba(215,181,84,.23);
+  background:linear-gradient(145deg,rgba(17,21,29,.88),rgba(8,11,16,.96));
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  box-shadow:0 34px 100px rgba(0,0,0,.6);position:relative;overflow:hidden;
+  display:flex;flex-direction:column;align-items:flex-start;text-align:left;z-index:1;
+}
+.nbres-signature .nb-gateway:before{
+  content:"";position:absolute;left:0;top:0;width:2px;height:42%;
+  background:linear-gradient(#e0c267,transparent);
+}
+.nbres-signature .nb-gateway:after{
+  content:"";position:absolute;right:-75px;bottom:-75px;width:220px;height:220px;
+  border:1px solid rgba(215,181,84,.09);border-radius:50%;
+  box-shadow:0 0 0 28px rgba(215,181,84,.025),0 0 0 56px rgba(215,181,84,.018);
+}
+.nbres-signature .nb-gateway:hover{transform:translateY(-5px);border-color:rgba(224,194,103,.5);box-shadow:0 42px 110px rgba(0,0,0,.72)}
+.nb-gateway-seal{
+  width:56px;height:56px;margin:0 0 52px;border:1px solid rgba(215,181,84,.65);
+  border-radius:50%;display:grid;place-items:center;color:#e0c267;
+  font-family:'Playfair Display',Georgia,serif;font-size:14px;font-weight:600;position:relative;
+}
+.nb-gateway-seal:after{content:"";position:absolute;inset:7px;border:1px solid rgba(215,181,84,.22);border-radius:50%}
+.nb-portal-label{font-size:9px;color:#9a8440;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.nbres-signature .nb-gateway h2{
+  margin:0 0 13px;font-family:'Be Vietnam Pro',sans-serif;font-size:20px;font-weight:600;
+  letter-spacing:.3px;color:#f8fafc;
+}
+.nbres-signature .nb-gateway p{margin:0;max-width:310px;color:#748096;font-size:11.5px;line-height:1.85}
+.nb-enter-line{
+  margin-top:auto;padding-top:38px;width:100%;display:flex;align-items:center;justify-content:space-between;
+  color:#d9b958;font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
+}
+.nb-enter-line:before,.nb-enter-line:after{display:none}
+.nb-enter-arrow{
+  width:42px;height:42px;border-radius:50%;border:1px solid rgba(215,181,84,.35);
+  display:grid;place-items:center;font-size:15px;transition:.25s ease;
+}
+.nbres-signature .nb-gateway:hover .nb-enter-arrow{background:#d7b554;color:#080a0e;transform:translateX(3px)}
+.nb-signature-foot{
+  grid-column:1/-1;margin-top:6px;text-align:center;color:#424b59;font-size:8px;
+  letter-spacing:2.2px;text-transform:uppercase;
+}
+.nb-signature-foot strong{color:#8f7937;font-weight:600}
+@media(max-width:760px){
+  #authScreen{overflow-y:auto}
+  #authScreen:after{width:90vw;height:82%;top:6%}
+  .nb-cover.nbres-signature{display:flex;width:92vw;padding:26px 16px 24px;gap:24px}
+  .nb-brand-column{align-items:center;text-align:center}
+  .nbres-signature .nb-tag{margin-bottom:16px;letter-spacing:2px}
+  .nbres-signature .nbres-logo-auth{width:105px;height:105px;margin-bottom:17px;border-radius:25px}
+  .nb-signature-kicker{display:none}
+  .nb-signature-title{font-size:31px;line-height:1.08}
+  .nb-signature-sub{font-size:10.5px;line-height:1.7;margin-top:12px}
+  .nb-portal-column{width:100%}
+  .nb-portal-index{display:none}
+  .nbres-signature .nb-gateway{min-height:245px;padding:25px 23px 22px;border-radius:10px}
+  .nb-gateway-seal{width:46px;height:46px;margin-bottom:26px}
+  .nbres-signature .nb-gateway h2{font-size:17px}
+  .nb-enter-line{padding-top:24px}
+  .nb-signature-foot{margin-top:2px;font-size:7px;letter-spacing:1.4px}
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 </head>
@@ -360,14 +476,25 @@
     <!-- 0. NBRES ARCHITECTURAL GATEWAY + SUPABASE AUTH -->
     <div id="authScreen" class="fixed inset-0 z-50 overflow-hidden flex items-center justify-center">
       <div class="nb-grid"></div><div class="nb-glow"></div>
-      <section class="nb-cover" id="nbCover">
-        <span class="nb-tag">NBRES Real Estate System</span>
-        <img src="nbres-logo-premium.png" alt="NBRES" class="nbres-logo-auth" onclick="goToInventoryFromLogo()" title="NBRES">
-        <div class="nb-gateway" onclick="triggerNBRESLogin()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){triggerNBRESLogin()}">
-          <div class="nb-coin"></div><h2>Khám Phá Hệ Thống</h2>
-          <p>Không gian quản trị giỏ hàng, đội ngũ Sale và dữ liệu bất động sản của NBRES.</p>
+            <section class="nb-cover nbres-signature" id="nbCover">
+        <div class="nb-brand-column">
+          <span class="nb-tag">NBRES Real Estate System</span>
+          <img src="nbres-logo-premium.png" alt="NBRES" class="nbres-logo-auth" onclick="goToInventoryFromLogo()" title="NBRES">
+          <div class="nb-signature-kicker">Nguyên Bảo Real Estate System</div>
+          <h1 class="nb-signature-title">Quản trị bất động sản <span>theo một cách khác.</span></h1>
+          <p class="nb-signature-sub">Dữ liệu, đội ngũ Sale và hoạt động vận hành được kết nối trong một không gian quản trị duy nhất.</p>
         </div>
-        <div class="nb-hint">● &nbsp; Chạm để truy cập không gian</div>
+        <div class="nb-portal-column">
+          <div class="nb-portal-index">01</div>
+          <div class="nb-gateway" onclick="triggerNBRESLogin()" role="button" tabindex="0" aria-label="Truy cập hệ thống NBRES" onkeydown="if(event.key==='Enter'||event.key===' '){triggerNBRESLogin()}">
+            <div class="nb-gateway-seal">NB</div>
+            <div class="nb-portal-label">Private Management Portal</div>
+            <h2>Truy cập hệ thống</h2>
+            <p>Không gian dành cho đội ngũ và doanh nghiệp đang vận hành trên nền tảng NBRES.</p>
+            <div class="nb-enter-line"><span>Bắt đầu phiên làm việc</span><span class="nb-enter-arrow">→</span></div>
+          </div>
+        </div>
+        <div class="nb-signature-foot">© 2026 <strong>NBRES</strong> • Real Estate Management Platform</div>
       </section>
       <div class="nb-auth-overlay" id="authOverlay">
         <div class="nb-auth-panel">
