@@ -3536,6 +3536,7 @@
             applyRoleTaskVisibilityV10();
             updateTaskMenuCurrent(currentTaskTab || 'tab-inventory');
             requestAnimationFrame(()=>applyRoleTaskVisibilityV10());
+            setTimeout(()=>initAnnouncementsRealtimeV10(),700);
             taskHistory = [];
             currentTaskTab = 'tab-rooms';
             updateTaskBackButton();
@@ -4646,6 +4647,75 @@
             document.getElementById('announcementPriorityV10').value='normal';
             showToast(regional?'Đã gửi thông báo đến Khu Vực.':'Đã gửi thông báo toàn Công Ty.','success');
             await loadAnnouncementsV10();
+        }
+
+
+        // ===== V10.0.4 • REALTIME ANNOUNCEMENTS =====
+        let announcementRealtimeChannelV10=null;
+        const NBRES_ANN_SEEN_KEY='NBRES_ANNOUNCEMENTS_SEEN_V10';
+
+        function getSeenAnnouncementsV10(){
+            try{return new Set(JSON.parse(localStorage.getItem(NBRES_ANN_SEEN_KEY)||'[]'));}catch(e){return new Set();}
+        }
+        function markAnnouncementSeenV10(id){
+            if(!id)return;
+            const s=getSeenAnnouncementsV10();s.add(String(id));
+            localStorage.setItem(NBRES_ANN_SEEN_KEY,JSON.stringify([...s].slice(-500)));
+        }
+        function announcementVisibleToMeV10(a){
+            if(!a||!currentUser||!currentTenantId)return false;
+            if(String(a.tenant_id)!==String(currentTenantId))return false;
+            if(a.scope_type==='company')return true;
+            if(a.scope_type==='region')return !!currentUser.region_id&&String(a.region_id)===String(currentUser.region_id);
+            return false;
+        }
+        function showAnnouncementPopupV10(a,isRealtime=false){
+            if(!announcementVisibleToMeV10(a))return;
+            const old=document.getElementById('announcementPopupV10');if(old)old.remove();
+            const tone=a.priority==='urgent'?'rose':a.priority==='important'?'amber':'indigo';
+            const el=document.createElement('div');el.id='announcementPopupV10';
+            el.className='fixed inset-0 z-[120] bg-slate-950/55 backdrop-blur-sm flex items-center justify-center p-4';
+            el.innerHTML=`<div class="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden">
+              <div class="p-5 bg-slate-950 text-white flex justify-between gap-3">
+                <div><div class="text-[10px] uppercase tracking-[.2em] text-${tone}-300 font-black">${isRealtime?'THÔNG BÁO MỚI':'THÔNG BÁO KHI ĐĂNG NHẬP'}</div><div class="text-xl font-black mt-1">${escapeHtml(a.title||'Thông báo')}</div></div>
+                <button onclick="closeAnnouncementPopupV10('${a.announcement_id||''}')" class="w-9 h-9 rounded-xl bg-white/10"><i class="fa-solid fa-xmark"></i></button>
+              </div>
+              <div class="p-5"><div class="text-sm text-slate-700 whitespace-pre-wrap leading-6">${escapeHtml(a.body||'')}</div>
+              <div class="mt-4 pt-4 border-t flex justify-between items-center"><span class="text-[10px] text-slate-400">${a.scope_type==='region'?'Thông báo Khu Vực':'Thông báo Công Ty'} • ${new Date(a.created_at||Date.now()).toLocaleString('vi-VN')}</span><button onclick="closeAnnouncementPopupV10('${a.announcement_id||''}')" class="px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-black">Đã đọc</button></div></div>
+            </div>`;
+            document.body.appendChild(el);
+        }
+        function closeAnnouncementPopupV10(id){markAnnouncementSeenV10(id);document.getElementById('announcementPopupV10')?.remove();}
+
+        async function subscribeAnnouncementsRealtimeV10(){
+            if(!supabaseClient||!currentTenantId||!currentUser)return;
+            if(announcementRealtimeChannelV10){try{await supabaseClient.removeChannel(announcementRealtimeChannelV10);}catch(e){}}
+            announcementRealtimeChannelV10=supabaseClient.channel('nbres-announcements-'+currentTenantId+'-'+currentUser.id)
+              .on('postgres_changes',{event:'INSERT',schema:'public',table:'system_announcements',filter:`tenant_id=eq.${currentTenantId}`},payload=>{
+                  const a=payload.new;
+                  if(announcementVisibleToMeV10(a)){
+                      showAnnouncementPopupV10(a,true);
+                      loadAnnouncementsV10();
+                  }
+              }).subscribe();
+        }
+
+        async function showUnreadAnnouncementsOnLoginV10(){
+            if(!supabaseClient||!currentTenantId||!currentUser)return;
+            try{
+                const {data,error}=await supabaseClient.from('system_announcements').select('*')
+                  .eq('tenant_id',currentTenantId).eq('is_active',true)
+                  .order('created_at',{ascending:false}).limit(30);
+                if(error)throw error;
+                const seen=getSeenAnnouncementsV10();
+                const unread=(data||[]).filter(a=>announcementVisibleToMeV10(a)&&!seen.has(String(a.announcement_id)));
+                if(unread.length)showAnnouncementPopupV10(unread[unread.length-1],false);
+            }catch(e){console.warn('Unread announcements:',e);}
+        }
+
+        async function initAnnouncementsRealtimeV10(){
+            await subscribeAnnouncementsRealtimeV10();
+            await showUnreadAnnouncementsOnLoginV10();
         }
 
         // ===== NBRES V10.0 COMMERCIAL RELEASE CANDIDATE =====
