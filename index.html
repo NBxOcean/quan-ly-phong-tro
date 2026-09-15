@@ -422,6 +422,10 @@
                             </div>
 
                             <div class="p-2 max-h-[70dvh] overflow-y-auto overscroll-contain">
+                                <button onclick="selectTaskFromMenu('tab-company-dashboard')" id="nav-company-dashboard" class="task-menu-item tab-btn hidden w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
+                                    <span class="w-9 h-9 rounded-xl bg-indigo-500/10 text-indigo-300 flex items-center justify-center shrink-0"><i class="fa-solid fa-chart-line"></i></span>
+                                    <span class="min-w-0"><span class="block font-bold">Tổng Quan Công Ty</span><span class="block text-[11px] text-slate-400 truncate">Điều hành hoạt động trong một màn hình</span></span>
+                                </button>
                                 <button onclick="selectTaskFromMenu('tab-inventory')" id="nav-inventory" class="task-menu-item tab-btn w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-white bg-orange-500/15 border border-orange-400/20">
                                     <span class="w-9 h-9 rounded-xl bg-orange-500/15 text-orange-300 flex items-center justify-center shrink-0"><i class="fa-solid fa-boxes-stacked"></i></span>
                                     <span class="min-w-0"><span class="block font-bold">Kho Phòng</span><span class="block text-[11px] text-slate-400 truncate">Quản lý phòng và tài nguyên</span></span>
@@ -814,6 +818,58 @@
 
 
 
+            <!-- V7.10: DASHBOARD QUẢN LÍ CÔNG TY -->
+            <div id="tab-company-dashboard" class="tab-content hidden space-y-5">
+                <div class="rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white p-5 md:p-6 shadow-xl border border-slate-800">
+                    <div class="flex justify-between gap-4 flex-wrap items-start">
+                        <div>
+                            <div class="text-[10px] uppercase tracking-[.22em] text-indigo-300 font-extrabold">NBRES • BUSINESS OPERATING DASHBOARD</div>
+                            <h2 id="companyDashboardTitle" class="text-2xl font-extrabold mt-2">Tổng Quan Công Ty</h2>
+                            <p class="text-sm text-slate-400 mt-1">Tình hình phòng, nhân sự và lịch xem trong phạm vi Công Ty.</p>
+                        </div>
+                        <div class="flex gap-2 flex-wrap">
+                            <button onclick="switchTab('tab-regions')" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-xs font-bold"><i class="fa-solid fa-map-location-dot mr-1.5"></i>Khu Vực</button>
+                            <button onclick="switchTab('tab-users')" class="px-3.5 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-xs font-bold"><i class="fa-solid fa-user-plus mr-1.5"></i>Nhân Sự</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="bg-white rounded-2xl border p-4 shadow-sm"><div class="text-[10px] uppercase font-bold text-slate-400">Tổng phòng</div><div id="dashRooms" class="text-2xl font-extrabold text-slate-900 mt-1">0</div><div class="text-[11px] text-slate-400 mt-1">Trong Công Ty</div></div>
+                    <div class="bg-white rounded-2xl border p-4 shadow-sm"><div class="text-[10px] uppercase font-bold text-slate-400">Phòng còn trống</div><div id="dashVacant" class="text-2xl font-extrabold text-emerald-600 mt-1">0</div><div class="text-[11px] text-slate-400 mt-1">Sẵn sàng tư vấn</div></div>
+                    <div class="bg-white rounded-2xl border p-4 shadow-sm"><div class="text-[10px] uppercase font-bold text-slate-400">Nhân sự</div><div id="dashUsers" class="text-2xl font-extrabold text-indigo-600 mt-1">0</div><div id="dashOnline" class="text-[11px] text-emerald-600 font-bold mt-1">0 đang online</div></div>
+                    <div class="bg-white rounded-2xl border p-4 shadow-sm"><div class="text-[10px] uppercase font-bold text-slate-400">Khu vực</div><div id="dashRegions" class="text-2xl font-extrabold text-sky-600 mt-1">0</div><div id="dashTeams" class="text-[11px] text-violet-600 font-bold mt-1">Team đang tắt</div></div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div class="lg:col-span-2 bg-white rounded-2xl border shadow-sm p-5">
+                        <div class="flex justify-between items-center gap-3"><div><h3 class="font-extrabold text-slate-800">Vận hành Khu Vực</h3><p class="text-xs text-slate-400 mt-1">Phân bổ nhân sự và phòng theo từng khu vực.</p></div><button onclick="switchTab('tab-regions')" class="text-xs font-bold text-sky-600">Quản lý →</button></div>
+                        <div id="dashRegionList" class="mt-4 space-y-2"></div>
+                    </div>
+                    <div class="bg-white rounded-2xl border shadow-sm p-5">
+                        <h3 class="font-extrabold text-slate-800">Cần chú ý</h3>
+                        <p class="text-xs text-slate-400 mt-1">Các điểm cần xử lý trong vận hành.</p>
+                        <div id="dashAttention" class="mt-4 space-y-2"></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="bg-white rounded-2xl border shadow-sm p-5">
+                        <div class="flex justify-between items-center"><h3 class="font-extrabold text-slate-800">Lịch xem sắp tới</h3><button onclick="switchTab('tab-appointments')" class="text-xs font-bold text-cyan-600">Xem lịch →</button></div>
+                        <div id="dashAppointments" class="mt-4 space-y-2 text-sm"></div>
+                    </div>
+                    <div class="bg-white rounded-2xl border shadow-sm p-5">
+                        <h3 class="font-extrabold text-slate-800">Truy cập nhanh</h3>
+                        <div class="grid grid-cols-2 gap-2 mt-4">
+                            <button onclick="openModal(false)" class="p-3 rounded-xl bg-orange-50 text-orange-700 text-xs font-bold text-left"><i class="fa-solid fa-plus mr-1"></i>Thêm phòng</button>
+                            <button onclick="openRegionModal()" class="p-3 rounded-xl bg-sky-50 text-sky-700 text-xs font-bold text-left"><i class="fa-solid fa-map-location-dot mr-1"></i>Tạo khu vực</button>
+                            <button onclick="openUserModal()" class="p-3 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-bold text-left"><i class="fa-solid fa-user-plus mr-1"></i>Thêm nhân sự</button>
+                            <button onclick="switchTab('tab-appointments')" class="p-3 rounded-xl bg-cyan-50 text-cyan-700 text-xs font-bold text-left"><i class="fa-solid fa-calendar-check mr-1"></i>Lịch xem</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- TAB V7.3: QUẢN LÝ KHU VỰC -->
             <div id="tab-regions" class="tab-content hidden space-y-5">
                 <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex-wrap gap-3">
@@ -885,7 +941,7 @@
                                 <i class="fa-solid fa-people-group"></i>
                             </div>
                             <div>
-                                <h2 class="text-sm font-extrabold text-slate-800">Tính năng Team</h2>
+                                <h2 class="text-sm font-extrabold text-slate-800">Cấu Trúc Vận Hành • Team</h2>
                                 <p id="companyTeamSettingsHint" class="text-xs text-slate-500 mt-0.5">Tùy chọn cấu trúc Team cho Công Ty.</p>
                             </div>
                         </div>
@@ -929,6 +985,8 @@
         </main>
     </div>
 
+
+    <div id="regionDetailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[70] p-4"><div class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[92vh] overflow-y-auto"><div class="p-5 border-b sticky top-0 bg-white z-10 flex justify-between items-center"><div><div class="text-[10px] font-extrabold tracking-widest text-sky-600">NBRES • KHU VỰC DETAIL</div><h3 id="regionDetailTitle" class="text-xl font-extrabold text-slate-800 mt-1">Khu Vực</h3></div><button onclick="closeRegionDetail()" class="w-9 h-9 rounded-xl bg-slate-100 text-slate-500"><i class="fa-solid fa-xmark"></i></button></div><div id="regionDetailBody" class="p-5"></div></div></div>
 
     <!-- MODAL ĐẶT / SỬA LỊCH XEM PHÒNG -->
     <div id="appointmentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[60] p-4">
@@ -1216,7 +1274,10 @@
             
             <form id="roomForm" onsubmit="saveRoom(event)" class="p-5 space-y-4">
                 <input type="hidden" id="roomId">
-                <input type="hidden" id="roomTeamOverride">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Khu Vực *</label><select id="roomRegionOverride" onchange="syncRoomTeamOptions()" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-sky-500"></select></div>
+                    <div id="roomTeamOverrideWrap"><label class="block text-xs font-semibold text-slate-600 mb-1">Team</label><select id="roomTeamOverride" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50 outline-none focus:ring-2 focus:ring-violet-500"></select></div>
+                </div>
                 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
@@ -1770,6 +1831,7 @@
                     <div class="p-4 border-b flex justify-between gap-3">
                         <div><h3 class="font-extrabold text-slate-800">${escapeHtml(r.name)}</h3><p class="text-[11px] font-bold text-sky-600 mt-1">${escapeHtml(r.code)}</p></div>
                         <div class="flex items-center gap-2">
+                            <button onclick="openRegionDetail('${r.id}')" class="text-xs font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1.5 rounded-lg"><i class="fa-solid fa-chart-pie mr-1"></i>Chi tiết</button>
                             <button onclick="openRegionModal('${r.id}')" class="text-xs font-semibold text-sky-600 bg-sky-50 hover:bg-sky-100 px-2.5 py-1.5 rounded-lg">
                                 <i class="fa-solid fa-pen mr-1"></i>Sửa
                             </button>
@@ -1790,6 +1852,16 @@
                 </div>`;
             }).join('');
         }
+
+        function openRegionDetail(id){
+            const r=regions.find(x=>String(x.id)===String(id));if(!r)return;
+            const ru=users.filter(u=>String(u.region_id||'')===String(id)),rr=rooms.filter(x=>String(x.region_id||'')===String(id)),rt=teams.filter(t=>String(t.region_id||'')===String(id));
+            const managers=ru.filter(u=>u.role==='Quản Lí Khu Vực'),vacant=rr.filter(x=>['Còn trống','Trống'].includes(x.status)).length;
+            document.getElementById('regionDetailTitle').textContent=r.name;
+            document.getElementById('regionDetailBody').innerHTML=`<div class="grid grid-cols-2 md:grid-cols-4 gap-3"><div class="bg-sky-50 rounded-2xl p-4"><div class="text-[10px] uppercase font-bold text-sky-500">Phòng</div><div class="text-2xl font-extrabold text-sky-800">${rr.length}</div></div><div class="bg-emerald-50 rounded-2xl p-4"><div class="text-[10px] uppercase font-bold text-emerald-500">Còn trống</div><div class="text-2xl font-extrabold text-emerald-700">${vacant}</div></div><div class="bg-indigo-50 rounded-2xl p-4"><div class="text-[10px] uppercase font-bold text-indigo-500">Nhân sự</div><div class="text-2xl font-extrabold text-indigo-700">${ru.length}</div></div><div class="bg-violet-50 rounded-2xl p-4"><div class="text-[10px] uppercase font-bold text-violet-500">Team</div><div class="text-2xl font-extrabold text-violet-700">${isTeamFeatureEnabled()?rt.length:'—'}</div></div></div><div class="grid md:grid-cols-2 gap-4 mt-4"><div class="border rounded-2xl p-4"><h4 class="font-extrabold text-slate-800">Quản Lí Khu Vực</h4><div class="mt-3 text-sm">${managers.length?managers.map(x=>`<div class="p-2.5 bg-slate-50 rounded-xl mb-2"><b>${escapeHtml(x.name)}</b><div class="text-xs text-slate-400">${escapeHtml(x.user||'')}</div></div>`).join(''):'<span class="text-amber-600 font-semibold">Chưa phân quản lý</span>'}</div></div><div class="border rounded-2xl p-4"><h4 class="font-extrabold text-slate-800">Tình trạng vận hành</h4><div class="mt-3 space-y-2 text-xs"><div class="p-2.5 rounded-xl ${managers.length?'bg-emerald-50 text-emerald-700':'bg-amber-50 text-amber-700'}">${managers.length?'✓ Đã có quản lý khu vực':'⚠ Chưa có quản lý khu vực'}</div><div class="p-2.5 rounded-xl bg-slate-50">${ru.filter(x=>onlineUserIds.has(String(x.id))).length} nhân sự đang online</div></div></div></div>`;
+            const m=document.getElementById('regionDetailModal');m.classList.remove('hidden');m.classList.add('flex');
+        }
+        function closeRegionDetail(){const m=document.getElementById('regionDetailModal');m?.classList.add('hidden');m?.classList.remove('flex');}
 
         function openRegionModal(id=null){
             if(!(isSuperAdmin() || isCompanyAdmin() || isRegionalAdmin())) return showToast('Bạn không có quyền quản lý Khu Vực!','error');
@@ -2047,10 +2119,10 @@
         }
 
         async function updatePresence(){
-            if(!currentUser||!supabaseClient||!Number.isFinite(Number(currentUser.id))) return;
+            if(!currentUser||!supabaseClient||!isUuid(currentUser.id)) return;
             try{
                 await supabaseClient.from('user_presence').upsert([{
-                    user_id:Number(currentUser.id),
+                    user_id:currentUser.id,
                     tenant_id:await getCurrentTenantId(),
                     region_id:currentUser.region_id||null,
                     team_id:currentUser.team_id||null,
@@ -2067,7 +2139,7 @@
                 let q=supabaseClient.from('user_presence').select('user_id,last_seen,region_id,team_id').gte('last_seen',cutoff);
                 if(isRegionalAdmin()) q=q.eq('region_id',currentUser.region_id);
                 else if(isManagerAdmin()) q=q.eq('team_id',currentUser.team_id);
-                else if(!isSuperAdmin()) q=q.eq('user_id',Number(currentUser.id));
+                else if(!isSuperAdmin() && !isCompanyAdmin()) q=q.eq('user_id',currentUser.id);
                 const {data,error}=await q;if(error)throw error;
                 onlineUserIds=new Set((data||[]).map(x=>String(x.user_id)));
                 renderUsersTable(); renderRegions(); renderTeams();
@@ -2611,7 +2683,9 @@
             return {
                 id: room.id,
                 tenant_id: room.tenant_id,
+                region_id: room.region_id || null,
                 team_id: room.team_id || null,
+                created_by: room.created_by || null,
                 code: room.code || '',
                 price: room.price ?? '',
                 district: room.district || '',
@@ -2626,29 +2700,19 @@
         }
 
         async function mapAppRoomToDb(roomData, includeId = true) {
-            const tenantId = await getCurrentTenantId();
-            const numericPrice = Number(roomData.price);
-            if (!Number.isFinite(numericPrice)) throw new Error('Giá thuê phải là số hợp lệ.');
-
-            const row = {
-                tenant_id: tenantId,
-                team_id: (document.getElementById('roomTeamOverride')?.value || '').trim() || requireTeamForWrite(),
-                code: String(roomData.code || '').trim(),
-                price: numericPrice,
-                district: String(roomData.district || '').trim(),
-                status: String(roomData.status || '').trim(),
-                address: String(roomData.address || '').trim(),
-                amenities: String(roomData.amenities || '').trim(),
-                media_url: String(roomData.mediaUrl || '').trim(),
-                note: String(roomData.note || '').trim(),
-                // V6: ảnh nằm ở Storage + bảng room_images, không nhét Base64 vào rooms.
-            };
-
-            if (!row.team_id) throw new Error('Chưa chọn Team để lưu phòng.');
-            if (!row.code) throw new Error('Mã/Tên phòng không được để trống.');
-            if (includeId) {
-                row.id = isUuid(roomData.id) ? roomData.id : makeUuid();
-            }
+            const tenantId=await getCurrentTenantId();
+            const numericPrice=Number(roomData.price);
+            if(!Number.isFinite(numericPrice))throw new Error('Giá thuê phải là số hợp lệ.');
+            let regionId=(document.getElementById('roomRegionOverride')?.value||'').trim();
+            let teamId=(document.getElementById('roomTeamOverride')?.value||'').trim()||null;
+            if(isRegionalAdmin()||isManagerAdmin())regionId=currentUser.region_id||regionId;
+            if(isManagerAdmin())teamId=currentUser.team_id||teamId;
+            if(!isTeamFeatureEnabled())teamId=null;
+            if(teamId){const st=teams.find(t=>String(t.id)===String(teamId));if(st)regionId=st.region_id||regionId;}
+            if(!regionId)throw new Error('Vui lòng chọn Khu Vực cho phòng.');
+            const row={tenant_id:tenantId,region_id:regionId,team_id:teamId,code:String(roomData.code||'').trim(),price:numericPrice,district:String(roomData.district||'').trim(),status:String(roomData.status||'').trim(),address:String(roomData.address||'').trim(),amenities:String(roomData.amenities||'').trim(),media_url:String(roomData.mediaUrl||'').trim(),note:String(roomData.note||'').trim()};
+            if(includeId){row.id=isUuid(roomData.id)?roomData.id:makeUuid();row.created_by=currentUser?.id||null;}
+            if(!row.code)throw new Error('Mã/Tên phòng không được để trống.');
             return row;
         }
 
@@ -2685,7 +2749,7 @@
 
                 let query = supabaseClient
                     .from('rooms')
-                    .select('id,tenant_id,team_id,code,price,district,status,address,amenities,media_url,note,updated_at,room_images(id,image_url,storage_path,sort_order)', { count: 'exact' })
+                    .select('id,tenant_id,region_id,team_id,created_by,code,price,district,status,address,amenities,media_url,note,updated_at,room_images(id,image_url,storage_path,sort_order)', { count: 'exact' })
                     .eq('tenant_id', tenantId);
 
                 const teamId = getEffectiveTeamId();
@@ -2984,6 +3048,9 @@
                 renderTeamContext(); renderTeams(); populateUserTeamOptions(); renderRegions(); renderUsersTable();
                 roomPage=1; rooms=await loadRoomsPage(1); renderDistrictOptions(); renderRooms(rooms);
                 dbCases=await loadCrmScriptsFromDB(); currentFilteredData=[...dbCases]; renderCaseList(dbCases); if(dbCases.length) selectCase(dbCases[0].id);
+                appointments=await loadAppointmentsFromDB();
+                renderCompanyDashboard();
+                if(isCompanyAdmin()) switchTab('tab-company-dashboard');
             } catch(err){ console.error('Workspace load:',err); }
         }
         async function loadProfilesForWorkspace(){
@@ -3061,6 +3128,47 @@
             }
         }
 
+        function renderCompanyDashboard(){
+            const tab=document.getElementById('tab-company-dashboard');
+            if(!tab||!currentUser)return;
+            const title=document.getElementById('companyDashboardTitle');
+            if(title) title.textContent=getActiveCompanyName() || 'Tổng Quan Công Ty';
+
+            const companyUsers=(users||[]).filter(u=>u.role!=='Admin Quản Lí');
+            const companyRooms=rooms||[];
+            const vacant=companyRooms.filter(r=>['Còn trống','Trống'].includes(String(r.status||''))).length;
+            const online=companyUsers.filter(u=>onlineUserIds.has(String(u.id))).length;
+            const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=String(v)};
+            set('dashRooms',companyRooms.length); set('dashVacant',vacant); set('dashUsers',companyUsers.length); set('dashRegions',(regions||[]).length);
+            const on=document.getElementById('dashOnline'); if(on)on.textContent=`${online} đang online`;
+            const teamEl=document.getElementById('dashTeams'); if(teamEl)teamEl.textContent=isTeamFeatureEnabled()?`${(teams||[]).length} Team`:'Team đang tắt';
+
+            const regionList=document.getElementById('dashRegionList');
+            if(regionList){
+                regionList.innerHTML=(regions||[]).length ? regions.slice(0,6).map(r=>{
+                    const uc=companyUsers.filter(u=>String(u.region_id||'')===String(r.id)).length;
+                    const rc=companyRooms.filter(x=>String(x.region_id||'')===String(r.id)).length;
+                    return `<button onclick="activeRegionId='${r.id}';switchTab('tab-regions')" class="w-full flex items-center justify-between gap-3 p-3 rounded-xl bg-slate-50 hover:bg-sky-50 text-left"><div><div class="text-sm font-bold text-slate-800">${escapeHtml(r.name||'Khu Vực')}</div><div class="text-[11px] text-slate-400">${escapeHtml(r.code||'')}</div></div><div class="text-right text-[11px]"><div class="font-bold text-indigo-600">${uc} nhân sự</div><div class="text-slate-500">${rc} phòng</div></div></button>`;
+                }).join('') : '<div class="text-sm text-slate-400 p-4 bg-slate-50 rounded-xl">Chưa có Khu Vực.</div>';
+            }
+
+            const attention=[];
+            const noManager=(regions||[]).filter(r=>!companyUsers.some(u=>u.role==='Quản Lí Khu Vực'&&String(u.region_id||'')===String(r.id))).length;
+            if(noManager)attention.push(`<div class="p-3 rounded-xl bg-amber-50 text-amber-800 text-xs font-semibold"><i class="fa-solid fa-triangle-exclamation mr-1"></i>${noManager} khu vực chưa có Quản Lí Khu Vực</div>`);
+            const noRegion=companyUsers.filter(u=>['Nhân Viên','Quản Lí Khu Vực','Quản Lí Team'].includes(u.role)&&!u.region_id).length;
+            if(noRegion)attention.push(`<div class="p-3 rounded-xl bg-rose-50 text-rose-700 text-xs font-semibold"><i class="fa-solid fa-user-clock mr-1"></i>${noRegion} nhân sự chưa được gán Khu Vực</div>`);
+            if(!vacant)attention.push(`<div class="p-3 rounded-xl bg-sky-50 text-sky-700 text-xs font-semibold"><i class="fa-solid fa-house-circle-exclamation mr-1"></i>Hiện chưa có phòng ở trạng thái còn trống</div>`);
+            if(!attention.length)attention.push('<div class="p-3 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-semibold"><i class="fa-solid fa-circle-check mr-1"></i>Chưa phát hiện vấn đề vận hành nổi bật.</div>');
+            const att=document.getElementById('dashAttention'); if(att)att.innerHTML=attention.join('');
+
+            const ap=document.getElementById('dashAppointments');
+            if(ap){
+                const now=Date.now();
+                const upcoming=(appointments||[]).filter(a=>new Date(a.appointment_at).getTime()>=now).sort((a,b)=>new Date(a.appointment_at)-new Date(b.appointment_at)).slice(0,5);
+                ap.innerHTML=upcoming.length?upcoming.map(a=>`<div class="flex justify-between gap-3 p-3 bg-slate-50 rounded-xl"><div><div class="font-bold text-slate-700">${escapeHtml(a.customer_name||'Khách hàng')}</div><div class="text-[11px] text-slate-400">${escapeHtml(a.meeting_point||'')}</div></div><div class="text-xs font-bold text-cyan-700">${formatLocalDateTime(a.appointment_at)}</div></div>`).join(''):'<div class="text-sm text-slate-400 p-4 bg-slate-50 rounded-xl">Chưa có lịch xem sắp tới.</div>';
+            }
+        }
+
         function showApp() {
             updateTaskMenuCurrent(currentTaskTab || 'tab-inventory');
             taskHistory = [];
@@ -3072,6 +3180,8 @@
             document.getElementById('currentUserRole').innerText = currentUser.role;
 
             const navUsersBtn = document.getElementById('nav-users');
+            const navCompanyDashboardBtn = document.getElementById('nav-company-dashboard');
+            if(navCompanyDashboardBtn) navCompanyDashboardBtn.classList.toggle('hidden', !isCompanyAdmin());
             const adminAddRoomBtn = document.getElementById('adminAddRoomBtn');
             const adminDataControls = document.getElementById('adminDataControls');
             const crmAdminControls = document.getElementById('crmAdminControls');
@@ -3126,6 +3236,7 @@
 
             startPresence();
             filterRooms();
+            renderCompanyDashboard();
             // Chuẩn bị quyền hiển thị trang lịch xem phòng theo tài khoản hiện tại.
             const quickHint = document.getElementById('appointmentQuickHint');
             if (quickHint) {
@@ -3147,6 +3258,7 @@
 
         function getTaskTabLabel(tabId){
             const labels = {
+                'tab-company-dashboard': 'Tổng Quan Công Ty',
                 'tab-rooms': 'Kho Phòng',
                 'tab-marketing': 'Mẫu Marketing',
                 'tab-crm': 'Kịch Bản CRM',
@@ -3205,6 +3317,7 @@
 
         function updateTaskMenuCurrent(tabId){
             const labels = {
+                'tab-company-dashboard':'Tổng Quan Công Ty',
                 'tab-inventory':'Kho Phòng',
                 'tab-poster':'Mẫu Marketing',
                 'tab-crm':'Kịch Bản CRM',
@@ -3234,6 +3347,7 @@
             });
 
             const activeId = {
+                'tab-company-dashboard':'nav-company-dashboard',
                 'tab-inventory':'nav-inventory',
                 'tab-poster':'nav-poster',
                 'tab-crm':'nav-crm',
@@ -3302,6 +3416,9 @@
                 showToast('Bạn không có quyền quản lý Team hoặc Công Ty chưa bật tính năng Team!', 'error'); return;
             }
 
+            if (tabId === 'tab-company-dashboard') {
+                renderCompanyDashboard();
+            }
             if (tabId === 'tab-appointments') {
                 setTimeout(() => refreshAppointments(), 0);
             }
@@ -3359,7 +3476,7 @@
                 const tenantId = await getCurrentTenantId();
                 let query = supabaseClient
                     .from('rooms')
-                    .select('id,team_id,code,address,district,status,price')
+                    .select('id,region_id,team_id,code,address,district,status,price')
                     .eq('tenant_id', tenantId);
 
                 const teamId = getEffectiveTeamId();
@@ -3384,7 +3501,7 @@
                 const tenantId = await getCurrentTenantId();
                 let query = supabaseClient
                     .from('viewing_appointments')
-                    .select('id,tenant_id,team_id,room_id,sale_user_id,created_by,customer_name,customer_phone,appointment_at,meeting_point,status,note,created_at,updated_at')
+                    .select('id,tenant_id,region_id,team_id,room_id,sale_user_id,created_by,customer_name,customer_phone,appointment_at,meeting_point,status,note,created_at,updated_at')
                     .eq('tenant_id', tenantId);
 
                 const teamId = getEffectiveTeamId();
@@ -3688,15 +3805,19 @@
                 return;
             }
 
-            const appointmentTeamId = requireTeamForWrite();
-            if (!appointmentTeamId) return;
+            let appointmentTeamId=getEffectiveTeamId()||null;if(!isTeamFeatureEnabled())appointmentTeamId=null;
+            const selectedSale=users.find(u=>String(u.id)===String(saleUserId));
+            const selectedRoom=rooms.find(r=>String(r.id)===String(document.getElementById('apptRoomId').value));
+            const appointmentRegionId=selectedRoom?.region_id||selectedSale?.region_id||currentUser?.region_id||activeRegionId||null;
+            if(!appointmentRegionId)return showToast('Không xác định được Khu Vực của lịch xem phòng!','error');
 
             const row = {
                 tenant_id: await getCurrentTenantId(),
+                region_id: appointmentRegionId,
                 team_id: appointmentTeamId,
                 room_id: document.getElementById('apptRoomId').value,
-                sale_user_id: Number(saleUserId),
-                created_by: Number(currentUser.id),
+                sale_user_id: saleUserId,
+                created_by: currentUser.id,
                 customer_name: document.getElementById('apptCustomerName').value.trim(),
                 customer_phone: document.getElementById('apptCustomerPhone').value.trim() || null,
                 appointment_at: new Date(document.getElementById('apptDateTime').value).toISOString(),
@@ -5505,7 +5626,7 @@
 
             document.getElementById('roomForm').reset();
             document.getElementById('roomId').value = '';
-            document.getElementById('roomTeamOverride').value = source.team_id || '';
+            syncRoomScopeOptions(source.region_id||'',source.team_id||'');
             document.getElementById('code').value = '';
             document.getElementById('roomPrice').value = source.price ?? '';
             document.getElementById('district').value = source.district || '';
@@ -5529,15 +5650,28 @@
             setTimeout(() => document.getElementById('code')?.focus(), 50);
         }
 
+        function syncRoomScopeOptions(selectedRegion='',selectedTeam=''){
+            const r=document.getElementById('roomRegionOverride'),tw=document.getElementById('roomTeamOverrideWrap');if(!r)return;
+            const allowed=(isRegionalAdmin()||isManagerAdmin())?regions.filter(x=>String(x.id)===String(currentUser?.region_id||'')):regions;
+            r.innerHTML='<option value="">-- Chọn Khu Vực --</option>'+allowed.filter(x=>x.is_active!==false).map(x=>`<option value="${x.id}">${escapeHtml(x.name)} (${escapeHtml(x.code||'')})</option>`).join('');
+            r.value=selectedRegion||(isRegionalAdmin()||isManagerAdmin()?currentUser?.region_id:'')||activeRegionId||(allowed.length===1?allowed[0].id:'')||'';
+            syncRoomTeamOptions(selectedTeam);if(tw)tw.classList.toggle('hidden',!isTeamFeatureEnabled());
+        }
+        function syncRoomTeamOptions(selectedTeam=''){
+            const r=document.getElementById('roomRegionOverride'),t=document.getElementById('roomTeamOverride');if(!t)return;
+            if(!isTeamFeatureEnabled()){t.innerHTML='<option value="">Không sử dụng Team</option>';t.value='';return;}
+            let list=getVisibleTeams();if(r?.value)list=list.filter(x=>String(x.region_id||'')===String(r.value));
+            t.innerHTML='<option value="">-- Không gán Team --</option>'+list.filter(x=>x.is_active!==false).map(x=>`<option value="${x.id}">${escapeHtml(x.name)}</option>`).join('');
+            const v=selectedTeam||(isManagerAdmin()?currentUser?.team_id:'')||activeTeamId||'';if(v)t.value=v;
+        }
         function openModal(isEdit = false) {
             setQuickAddRoomMode(false);
-            const teamOverride = document.getElementById('roomTeamOverride');
-            if (teamOverride) teamOverride.value = '';
             if (!hasAdminAccess()) {
                 showToast('Chỉ Admin mới có quyền thêm/sửa phòng!', 'error');
                 return;
             }
             document.getElementById('modalTitle').textContent = isEdit ? 'Chỉnh Sửa Thông Tin Phòng' : 'Thêm Căn Hộ / Phòng Trọ Mới';
+            if(!isEdit)syncRoomScopeOptions();
             document.getElementById('roomModal').classList.remove('hidden');
             document.getElementById('roomModal').classList.add('flex');
         }
@@ -5649,6 +5783,7 @@
             document.getElementById('roomAmenities').value = room.amenities || '';
             document.getElementById('mediaUrl').value = room.mediaUrl || '';
             document.getElementById('note').value = room.note || '';
+            syncRoomScopeOptions(room.region_id||'',room.team_id||'');
             
             currentImages = room.images ? [...room.images] : [];
             pendingImageFiles.forEach(x => x.preview && URL.revokeObjectURL(x.preview));
