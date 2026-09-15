@@ -828,52 +828,67 @@
                     <div class="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-[#D4AF37]/10 blur-3xl pointer-events-none"></div>
                     <div class="relative flex items-start justify-between gap-4 flex-wrap">
                         <div>
-                            <div class="text-[10px] uppercase tracking-[.25em] text-[#D4AF37] font-extrabold">NBRES • PLATFORM COMMAND CENTER</div>
-                            <h2 class="text-2xl md:text-3xl font-black mt-2">Trung Tâm Điều Hành</h2>
-                            <p class="text-sm text-slate-400 mt-1 max-w-2xl">Quản trị Công Ty, phân quyền và theo dõi hệ thống từ một màn hình duy nhất.</p>
+                            <div class="text-[10px] uppercase tracking-[.25em] text-[#D4AF37] font-extrabold">NBRES • PLATFORM ADMIN</div>
+                            <h2 class="text-2xl md:text-3xl font-black mt-2">Quản Trị Nền Tảng</h2>
+                            <p class="text-sm text-slate-400 mt-1 max-w-2xl">Admin NBRES quản lý doanh nghiệp ở cấp nền tảng. Vận hành nội bộ được giao cho Quản Lí Công Ty.</p>
                         </div>
-                        <div class="flex gap-2 flex-wrap">
-                            <button onclick="openCompanyModal()" class="px-4 py-2.5 rounded-xl bg-[#D4AF37] hover:bg-[#e4c453] text-black text-xs font-extrabold shadow-lg"><i class="fa-solid fa-building-circle-check mr-1.5"></i>Tạo Công Ty</button>
-                            <button onclick="switchTab('tab-users')" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-xs font-bold"><i class="fa-solid fa-users-gear mr-1.5"></i>Nhân Sự</button>
-                        </div>
+                        <button onclick="openCompanyModal()" class="px-4 py-2.5 rounded-xl bg-[#D4AF37] hover:bg-[#e4c453] text-black text-xs font-extrabold shadow-lg"><i class="fa-solid fa-building-circle-check mr-1.5"></i>Khởi tạo Công Ty</button>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 xl:grid-cols-4 gap-3">
-                    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm"><div class="flex justify-between"><div class="text-[10px] uppercase tracking-wider font-bold text-slate-400">Công Ty</div><span class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center"><i class="fa-solid fa-building"></i></span></div><div id="platformStatCompanies" class="text-3xl font-black text-slate-900 mt-2">0</div><div class="text-[11px] text-slate-400 mt-1">Trên nền tảng</div></div>
-                    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm"><div class="flex justify-between"><div class="text-[10px] uppercase tracking-wider font-bold text-slate-400">Khu Vực</div><span class="w-8 h-8 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center"><i class="fa-solid fa-map-location-dot"></i></span></div><div id="platformStatRegions" class="text-3xl font-black text-slate-900 mt-2">—</div><div class="text-[11px] text-slate-400 mt-1">Công Ty đang chọn</div></div>
-                    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm"><div class="flex justify-between"><div class="text-[10px] uppercase tracking-wider font-bold text-slate-400">Nhân Sự</div><span class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center"><i class="fa-solid fa-user-group"></i></span></div><div id="platformStatUsers" class="text-3xl font-black text-slate-900 mt-2">—</div><div id="platformStatOnline" class="text-[11px] text-emerald-600 font-bold mt-1">Chọn Công Ty để xem</div></div>
-                    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm"><div class="flex justify-between"><div class="text-[10px] uppercase tracking-wider font-bold text-slate-400">Kho Phòng</div><span class="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center"><i class="fa-solid fa-building-user"></i></span></div><div id="platformStatRooms" class="text-3xl font-black text-slate-900 mt-2">—</div><div id="platformStatVacant" class="text-[11px] text-emerald-600 font-bold mt-1">Chọn Công Ty để xem</div></div>
+                    <div class="bg-white rounded-2xl border p-4 shadow-sm"><div class="text-[10px] uppercase font-bold text-slate-400">Doanh nghiệp</div><div id="platformStatCompanies" class="text-3xl font-black text-slate-900 mt-2">0</div><div class="text-[11px] text-slate-400 mt-1">Tổng Công Ty trên NBRES</div></div>
+                    <div class="bg-white rounded-2xl border p-4 shadow-sm"><div class="text-[10px] uppercase font-bold text-slate-400">Đã chọn</div><div id="platformSelectedCompanyStat" class="text-lg font-black text-amber-600 mt-3 truncate">Chưa chọn</div><div class="text-[11px] text-slate-400 mt-1">Ngữ cảnh hỗ trợ</div></div>
+                    <div class="bg-white rounded-2xl border p-4 shadow-sm"><div class="text-[10px] uppercase font-bold text-slate-400">Quản Lí Công Ty</div><div id="platformCompanyManagerStat" class="text-3xl font-black text-indigo-600 mt-2">—</div><div class="text-[11px] text-slate-400 mt-1">Tài khoản đầu mối</div></div>
+                    <div class="bg-white rounded-2xl border p-4 shadow-sm"><div class="text-[10px] uppercase font-bold text-slate-400">Trạng thái</div><div id="platformCompanyStatusStat" class="text-lg font-black text-emerald-600 mt-3">Sẵn sàng</div><div class="text-[11px] text-slate-400 mt-1">Nền tảng / doanh nghiệp</div></div>
                 </div>
 
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
-                    <div class="xl:col-span-2 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-                        <div class="p-5 border-b border-slate-100 flex justify-between items-center gap-3 flex-wrap">
-                            <div><h3 class="font-black text-slate-900">Doanh Nghiệp Trên NBRES</h3><p class="text-xs text-slate-400 mt-1">Chọn Công Ty để chuyển toàn bộ ngữ cảnh quản trị.</p></div>
-                            <div class="relative"><i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i><input id="platformCompanySearch" oninput="renderPlatformAdminDashboard()" placeholder="Tìm Công Ty..." class="pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs outline-none focus:ring-2 focus:ring-amber-400 w-56"></div>
+                    <div class="xl:col-span-2 bg-white rounded-3xl border shadow-sm overflow-hidden">
+                        <div class="p-5 border-b flex justify-between gap-3 flex-wrap">
+                            <div><h3 class="font-black text-slate-900">Doanh Nghiệp Khách Hàng</h3><p class="text-xs text-slate-400 mt-1">Admin chỉ chọn Công Ty để hỗ trợ cấp nền tảng, không vận hành thay doanh nghiệp.</p></div>
+                            <div class="relative"><i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i><input id="platformCompanySearch" oninput="renderPlatformAdminDashboard()" placeholder="Tìm Công Ty..." class="pl-9 pr-3 py-2.5 rounded-xl border bg-slate-50 text-xs outline-none focus:ring-2 focus:ring-amber-400 w-56"></div>
                         </div>
                         <div id="platformCompanyCommandList" class="p-4 grid md:grid-cols-2 gap-3"></div>
                     </div>
+
                     <div class="space-y-4">
-                        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-5">
-                            <div class="text-[10px] uppercase tracking-wider font-extrabold text-slate-400">Ngữ cảnh hiện tại</div>
+                        <div class="bg-white rounded-3xl border shadow-sm p-5">
+                            <div class="text-[10px] uppercase tracking-wider font-extrabold text-slate-400">Doanh nghiệp đang chọn</div>
                             <div id="platformActiveCompanyName" class="font-black text-xl text-slate-900 mt-2">Chưa chọn Công Ty</div>
-                            <div id="platformActiveCompanyMeta" class="text-xs text-slate-400 mt-1">Chọn một doanh nghiệp bên trái để bắt đầu quản trị.</div>
-                            <div id="platformActiveActions" class="hidden grid grid-cols-2 gap-2 mt-4">
-                                <button onclick="switchTab('tab-regions')" class="p-3 rounded-xl bg-sky-50 text-sky-700 text-xs font-bold text-left"><i class="fa-solid fa-map-location-dot mr-1"></i>Khu Vực</button>
-                                <button onclick="switchTab('tab-users')" class="p-3 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-bold text-left"><i class="fa-solid fa-users mr-1"></i>Nhân Sự</button>
-                                <button onclick="switchTab('tab-inventory')" class="p-3 rounded-xl bg-orange-50 text-orange-700 text-xs font-bold text-left"><i class="fa-solid fa-house mr-1"></i>Kho Phòng</button>
-                                <button onclick="switchTab('tab-appointments')" class="p-3 rounded-xl bg-cyan-50 text-cyan-700 text-xs font-bold text-left"><i class="fa-solid fa-calendar-check mr-1"></i>Lịch Xem</button>
+                            <div id="platformActiveCompanyMeta" class="text-xs text-slate-400 mt-1">Chọn doanh nghiệp để xem thông tin hỗ trợ.</div>
+                            <div id="platformSupportActions" class="hidden mt-4 space-y-2">
+                                <button onclick="openPlatformCompanyManager()" class="w-full p-3 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-bold text-left"><i class="fa-solid fa-user-tie mr-2"></i>Quản Lí Công Ty</button>
+                                <button onclick="showPlatformSupportInfo()" class="w-full p-3 rounded-xl bg-sky-50 text-sky-700 text-xs font-bold text-left"><i class="fa-solid fa-headset mr-2"></i>Thông tin hỗ trợ</button>
                             </div>
                         </div>
-                        <div class="bg-slate-950 rounded-3xl border border-slate-800 shadow-sm p-5 text-white">
-                            <h3 class="font-black">Thao tác nhanh</h3>
-                            <div class="space-y-2 mt-4">
-                                <button onclick="openCompanyModal()" class="w-full p-3 rounded-xl bg-[#D4AF37] text-black text-xs font-extrabold text-left"><i class="fa-solid fa-plus mr-2"></i>Tạo Công Ty mới</button>
-                                <button onclick="switchTab('tab-users')" class="w-full p-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-200 text-xs font-bold text-left"><i class="fa-solid fa-user-shield mr-2"></i>Quản lý tài khoản</button>
-                                <button onclick="switchTab('tab-regions')" class="w-full p-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-200 text-xs font-bold text-left"><i class="fa-solid fa-sitemap mr-2"></i>Cấu trúc doanh nghiệp</button>
-                            </div>
-                        </div>
+
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl border shadow-sm p-5">
+                    <div class="flex justify-between items-center gap-3 flex-wrap">
+                        <div><div class="text-[10px] uppercase font-extrabold tracking-wider text-slate-400">Platform tools</div><h3 class="font-black text-slate-900 mt-1">Công cụ dành cho Admin NBRES</h3></div>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+                        <button onclick="openCompanyModal()" class="p-4 rounded-2xl bg-amber-50 text-amber-700 text-left"><i class="fa-solid fa-building-circle-check"></i><div class="font-extrabold text-xs mt-2">Khởi tạo Công Ty</div><div class="text-[10px] opacity-70 mt-1">Tạo tenant mới</div></button>
+                        <button onclick="openPlatformCompanyManager()" class="p-4 rounded-2xl bg-indigo-50 text-indigo-700 text-left"><i class="fa-solid fa-user-tie"></i><div class="font-extrabold text-xs mt-2">Tài khoản đầu mối</div><div class="text-[10px] opacity-70 mt-1">Quản Lí Công Ty</div></button>
+                        <button onclick="showPlatformSupportInfo()" class="p-4 rounded-2xl bg-sky-50 text-sky-700 text-left"><i class="fa-solid fa-headset"></i><div class="font-extrabold text-xs mt-2">Hỗ trợ doanh nghiệp</div><div class="text-[10px] opacity-70 mt-1">Xem ngữ cảnh hỗ trợ</div></button>
+                        <button onclick="showToast('Nhật ký hệ thống sẽ được triển khai ở Audit Log.','success')" class="p-4 rounded-2xl bg-slate-100 text-slate-700 text-left"><i class="fa-solid fa-clock-rotate-left"></i><div class="font-extrabold text-xs mt-2">Nhật ký hệ thống</div><div class="text-[10px] opacity-70 mt-1">Chuẩn bị Audit Log</div></button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-dashed border-indigo-200 shadow-sm p-5">
+                    <div class="flex justify-between items-start gap-3 flex-wrap">
+                        <div><div class="text-[10px] uppercase tracking-wider font-extrabold text-indigo-500">Support access</div><h3 class="font-black text-slate-900 mt-1">Hỗ Trợ Vận Hành Khi Cần</h3><p class="text-xs text-slate-400 mt-1">Admin có thể xem và thao tác, nhưng đây không phải luồng quản lý hằng ngày của Công Ty.</p></div>
+                        <span class="px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-extrabold"><i class="fa-solid fa-shield-halved mr-1"></i>QUYỀN ADMIN</span>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-2 mt-4">
+                        <button onclick="platformSupportAction('region')" class="p-3 rounded-xl bg-sky-50 text-sky-700 text-left"><i class="fa-solid fa-map-location-dot"></i><div class="font-bold text-xs mt-2">Khu Vực</div><div class="text-[10px] opacity-70">Xem / tạo</div></button>
+                        <button onclick="platformSupportAction('team')" class="p-3 rounded-xl bg-violet-50 text-violet-700 text-left"><i class="fa-solid fa-people-group"></i><div class="font-bold text-xs mt-2">Team</div><div class="text-[10px] opacity-70">Xem / tạo</div></button>
+                        <button onclick="platformSupportAction('user')" class="p-3 rounded-xl bg-indigo-50 text-indigo-700 text-left"><i class="fa-solid fa-user-plus"></i><div class="font-bold text-xs mt-2">Nhân Sự</div><div class="text-[10px] opacity-70">Xem / tạo</div></button>
+                        <button onclick="platformSupportAction('room')" class="p-3 rounded-xl bg-orange-50 text-orange-700 text-left"><i class="fa-solid fa-house-circle-plus"></i><div class="font-bold text-xs mt-2">Phòng</div><div class="text-[10px] opacity-70">Xem / tạo</div></button>
+                        <button onclick="platformSupportAction('appointment')" class="p-3 rounded-xl bg-cyan-50 text-cyan-700 text-left"><i class="fa-solid fa-calendar-plus"></i><div class="font-bold text-xs mt-2">Lịch Xem</div><div class="text-[10px] opacity-70">Xem / tạo</div></button>
                     </div>
                 </div>
             </div>
@@ -1013,20 +1028,37 @@
                     </div>
                 </div>
 
-                <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex-wrap gap-3">
-                    <div>
-                        <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                            <i class="fa-solid fa-users-gear text-orange-500"></i> Phân Quyền Nhân Sự NBRES
-                        </h2>
-                        <p class="text-xs text-slate-500">Cấu trúc mặc định: Công Ty → Khu Vực → Nhân Viên. Team là tùy chọn.</p>
+                <div class="rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white p-5 md:p-6 shadow-xl border border-slate-800">
+                    <div class="flex justify-between items-start gap-4 flex-wrap">
+                        <div><div class="text-[10px] uppercase tracking-[.22em] text-indigo-300 font-extrabold">NBRES • PEOPLE & ACCESS CENTER</div><h2 class="text-2xl font-black mt-2">Nhân Sự & Phân Quyền</h2><p class="text-sm text-slate-400 mt-1">Quản lý con người, phạm vi truy cập và trạng thái tài khoản theo đúng cấu trúc vận hành.</p></div>
+                        <button onclick="openUserModal()" class="bg-white text-slate-900 hover:bg-slate-100 font-extrabold px-4 py-2.5 rounded-xl transition shadow flex items-center gap-2 text-sm"><i class="fa-solid fa-user-plus text-indigo-600"></i> Thêm Nhân Sự</button>
                     </div>
-                    <button onclick="openUserModal()" class="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold px-4 py-2 rounded-xl transition shadow flex items-center gap-2 text-sm">
-                        <i class="fa-solid fa-user-plus"></i> Thêm Tài Khoản Mới
-                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="bg-white rounded-2xl border p-4 shadow-sm"><div class="text-[10px] uppercase font-bold text-slate-400">Tổng nhân sự</div><div id="hrStatTotal" class="text-2xl font-black text-slate-900 mt-1">0</div></div>
+                    <div class="bg-white rounded-2xl border p-4 shadow-sm"><div class="text-[10px] uppercase font-bold text-slate-400">Đang online</div><div id="hrStatOnline" class="text-2xl font-black text-emerald-600 mt-1">0</div></div>
+                    <div class="bg-white rounded-2xl border p-4 shadow-sm"><div class="text-[10px] uppercase font-bold text-slate-400">Đang hoạt động</div><div id="hrStatActive" class="text-2xl font-black text-indigo-600 mt-1">0</div></div>
+                    <div class="bg-white rounded-2xl border p-4 shadow-sm"><div class="text-[10px] uppercase font-bold text-slate-400">Cần xử lý</div><div id="hrStatAttention" class="text-2xl font-black text-amber-600 mt-1">0</div></div>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+                    <div class="xl:col-span-2 bg-white rounded-2xl border shadow-sm p-4">
+                        <div class="flex gap-2 flex-wrap">
+                            <div class="relative flex-1 min-w-[220px]"><i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i><input id="hrSearch" oninput="renderUsersTable()" placeholder="Tìm tên, username..." class="w-full pl-9 pr-3 py-2.5 border rounded-xl bg-slate-50 text-sm outline-none focus:ring-2 focus:ring-indigo-500"></div>
+                            <select id="hrRoleFilter" onchange="renderUsersTable()" class="border rounded-xl px-3 py-2.5 bg-slate-50 text-xs font-semibold"><option value="">Tất cả chức vụ</option><option>Quản Lí Công Ty</option><option>Quản Lí Khu Vực</option><option>Quản Lí Team</option><option>Nhân Viên</option></select>
+                            <select id="hrStatusFilter" onchange="renderUsersTable()" class="border rounded-xl px-3 py-2.5 bg-slate-50 text-xs font-semibold"><option value="">Tất cả trạng thái</option><option value="active">Hoạt động</option><option value="locked">Đã khóa</option><option value="online">Đang online</option></select>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl border shadow-sm p-4">
+                        <div class="text-[10px] uppercase font-bold text-slate-400">Cơ cấu hiện tại</div>
+                        <div id="hrStructureSummary" class="text-xs text-slate-600 mt-2">Đang tải...</div>
+                    </div>
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <table class="w-full text-left border-collapse">
+                    <div class="overflow-x-auto">
+                    <table class="w-full min-w-[980px] text-left border-collapse">
                         <thead>
                             <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 text-xs uppercase font-bold">
                                 <th class="p-3.5">Tên Đăng Nhập</th>
@@ -1040,6 +1072,7 @@
                         </thead>
                         <tbody id="userTableBody" class="divide-y divide-slate-100 text-sm"></tbody>
                     </table>
+                    </div>
                 </div>
             </div>
         </main>
@@ -1500,10 +1533,8 @@
             </div>
             <form id="companyForm" onsubmit="saveCompany(event)" class="p-6 space-y-5">
                 <div><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Tên Công Ty *</label><input id="companyName" required maxlength="120" placeholder="Ví dụ: NBRES - Nguyên Bảo" class="w-full border border-white/10 rounded-xl p-3.5 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"></div>
-                <label class="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[.03] p-4 cursor-pointer">
-                    <input id="companyTeamsEnabled" type="checkbox" class="mt-0.5 accent-[#D4AF37]">
-                    <span><b class="text-sm text-white">Sử dụng Team</b><span class="block text-[11px] text-slate-500 mt-1">Không bắt buộc. Chỉ bật nếu Công Ty muốn chia nhân sự thành các Team Sale.</span></span>
-                </label>
+                <input id="companyTeamsEnabled" type="checkbox" class="hidden">
+                <div class="rounded-xl border border-white/10 bg-white/[.03] p-4 text-xs text-slate-400"><i class="fa-solid fa-building-shield text-[#D4AF37] mr-2"></i>Admin chỉ khởi tạo doanh nghiệp. Sau khi bàn giao, <b class="text-white">Quản Lí Công Ty</b> sẽ tự cấu hình Khu Vực, Team, nhân sự và hoạt động kinh doanh.</div>
                 <div class="rounded-xl border border-white/10 bg-white/[.03] p-4 text-xs text-slate-400"><i class="fa-solid fa-shield-halved text-[#D4AF37] mr-2"></i>Sau khi tạo Công Ty, quay lại phần tài khoản để tạo <b class="text-white">Quản Lí Công Ty</b> và gán vào Công Ty này.</div>
                 <div class="flex justify-end gap-3 pt-2"><button type="button" onclick="closeCompanyModal()" class="px-4 py-2.5 rounded-xl border border-white/10 text-slate-300">Hủy</button><button type="submit" class="px-5 py-2.5 rounded-xl bg-[#D4AF37] text-black font-bold"><i class="fa-solid fa-plus mr-1"></i> Tạo Công Ty</button></div>
             </form>
@@ -3199,33 +3230,56 @@
             const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=String(v)};
             set('platformStatCompanies',(tenants||[]).length);
 
-            const hasCompany=!!currentTenantId;
-            set('platformStatRegions',hasCompany?(regions||[]).length:'—');
-            set('platformStatUsers',hasCompany?(users||[]).filter(u=>u.role!=='Admin Quản Lí').length:'—');
-            set('platformStatRooms',hasCompany?(rooms||[]).length:'—');
-            const online=hasCompany?(users||[]).filter(u=>u.role!=='Admin Quản Lí'&&onlineUserIds.has(String(u.id))).length:0;
-            const vacant=hasCompany?(rooms||[]).filter(r=>['Còn trống','Trống'].includes(String(r.status||''))).length:0;
-            const oe=document.getElementById('platformStatOnline');if(oe)oe.textContent=hasCompany?`${online} đang online`:'Chọn Công Ty để xem';
-            const ve=document.getElementById('platformStatVacant');if(ve)ve.textContent=hasCompany?`${vacant} phòng còn trống`:'Chọn Công Ty để xem';
-
             const active=tenants.find(t=>String(t.id)===String(currentTenantId||''));
-            const an=document.getElementById('platformActiveCompanyName');if(an)an.textContent=active?.company_name||'Chưa chọn Công Ty';
-            const am=document.getElementById('platformActiveCompanyMeta');if(am)am.textContent=active?`${(regions||[]).length} khu vực • ${(users||[]).filter(u=>u.role!=='Admin Quản Lí').length} nhân sự • ${(rooms||[]).length} phòng`:'Chọn một doanh nghiệp bên trái để bắt đầu quản trị.';
-            document.getElementById('platformActiveActions')?.classList.toggle('hidden',!active);
+            const managers=(users||[]).filter(u=>u.role==='Quản Lí Công Ty');
+            set('platformSelectedCompanyStat',active?.company_name||'Chưa chọn');
+            set('platformCompanyManagerStat',active?managers.length:'—');
+            set('platformCompanyStatusStat',active?'Đang hoạt động':'Sẵn sàng');
 
-            const list=document.getElementById('platformCompanyCommandList');
-            if(!list)return;
+            const an=document.getElementById('platformActiveCompanyName');if(an)an.textContent=active?.company_name||'Chưa chọn Công Ty';
+            const am=document.getElementById('platformActiveCompanyMeta');
+            if(am)am.textContent=active
+                ? `${managers.length} Quản Lí Công Ty • ${active.teams_enabled?'Có sử dụng Team':'Không sử dụng Team'}`
+                : 'Chọn doanh nghiệp để xem thông tin hỗ trợ.';
+            document.getElementById('platformSupportActions')?.classList.toggle('hidden',!active);
+
+            const list=document.getElementById('platformCompanyCommandList');if(!list)return;
             if(!filtered.length){list.innerHTML='<div class="md:col-span-2 p-8 text-center text-sm text-slate-400 border border-dashed rounded-2xl">Không tìm thấy Công Ty.</div>';return;}
             list.innerHTML=filtered.map(t=>{
                 const selected=String(t.id)===String(currentTenantId||'');
                 return `<button onclick="selectCompanyContext('${t.id}')" class="group text-left p-4 rounded-2xl border ${selected?'border-amber-400 bg-amber-50/70 shadow-sm':'border-slate-200 bg-white hover:border-amber-300 hover:shadow-sm'} transition">
                     <div class="flex justify-between gap-3 items-start">
-                        <div class="flex gap-3 min-w-0"><span class="w-11 h-11 rounded-2xl ${selected?'bg-amber-500 text-white':'bg-slate-100 text-slate-500 group-hover:bg-amber-50 group-hover:text-amber-600'} flex items-center justify-center shrink-0"><i class="fa-solid fa-building"></i></span><div class="min-w-0"><div class="font-extrabold text-slate-900 truncate">${escapeHtml(t.company_name||'Công Ty')}</div><div class="text-[11px] text-slate-400 mt-1">${t.teams_enabled?'Cấu trúc có Team':'Cấu trúc không Team'}</div></div></div>
-                        <span class="text-[10px] px-2 py-1 rounded-full ${selected?'bg-amber-500 text-white':'bg-emerald-50 text-emerald-600'} font-bold">${selected?'ĐANG QUẢN TRỊ':'HOẠT ĐỘNG'}</span>
+                        <div class="flex gap-3 min-w-0"><span class="w-11 h-11 rounded-2xl ${selected?'bg-amber-500 text-white':'bg-slate-100 text-slate-500'} flex items-center justify-center shrink-0"><i class="fa-solid fa-building"></i></span><div class="min-w-0"><div class="font-extrabold text-slate-900 truncate">${escapeHtml(t.company_name||'Công Ty')}</div><div class="text-[11px] text-slate-400 mt-1">${t.teams_enabled?'Có sử dụng Team':'Không sử dụng Team'}</div></div></div>
+                        <span class="text-[10px] px-2 py-1 rounded-full ${selected?'bg-amber-500 text-white':'bg-emerald-50 text-emerald-600'} font-bold">${selected?'ĐÃ CHỌN':'HOẠT ĐỘNG'}</span>
                     </div>
-                    <div class="mt-3 pt-3 border-t border-slate-100 flex justify-between text-[11px]"><span class="text-slate-400">${selected?'Đã tải dữ liệu Công Ty':'Bấm để chuyển ngữ cảnh'}</span><span class="font-bold text-slate-600">Mở <i class="fa-solid fa-arrow-right ml-1"></i></span></div>
+                    <div class="mt-3 pt-3 border-t border-slate-100 flex justify-between text-[11px]"><span class="text-slate-400">${selected?'Ngữ cảnh hỗ trợ đang mở':'Không can thiệp vận hành nội bộ'}</span><span class="font-bold text-slate-600">Chọn <i class="fa-solid fa-arrow-right ml-1"></i></span></div>
                 </button>`;
             }).join('');
+        }
+
+        function openPlatformCompanyManager(){
+            if(!currentTenantId)return showToast('Hãy chọn Công Ty trước.','error');
+            switchTab('tab-users');
+        }
+
+        function showPlatformSupportInfo(){
+            if(!currentTenantId)return showToast('Hãy chọn Công Ty trước.','error');
+            const active=tenants.find(t=>String(t.id)===String(currentTenantId||''));
+            const managers=(users||[]).filter(u=>u.role==='Quản Lí Công Ty');
+            showToast(`${active?.company_name||'Công Ty'} • ${managers.length} Quản Lí Công Ty • Hỗ trợ cấp nền tảng`,'success');
+        }
+
+        function platformSupportAction(type){
+            if(!isSuperAdmin())return;
+            if(!currentTenantId)return showToast('Hãy chọn Công Ty cần hỗ trợ trước.','error');
+            if(type==='region'){switchTab('tab-regions');return;}
+            if(type==='team'){
+                if(!isTeamFeatureEnabled())return showToast('Công Ty này chưa bật Team. Quản Lí Công Ty có thể bật Team trong cấu hình Công Ty.','error');
+                switchTab('tab-teams');return;
+            }
+            if(type==='user'){switchTab('tab-users');return;}
+            if(type==='room'){switchTab('tab-inventory');return;}
+            if(type==='appointment'){switchTab('tab-appointments');return;}
         }
 
         function renderCompanyDashboard(){
@@ -3282,6 +3336,11 @@
             const navUsersBtn = document.getElementById('nav-users');
             const navPlatformDashboardBtn = document.getElementById('nav-platform-dashboard');
             if(navPlatformDashboardBtn) navPlatformDashboardBtn.classList.toggle('hidden', !isSuperAdmin());
+            // Platform Admin: có quyền hỗ trợ thao tác sâu khi cần, nhưng dashboard vẫn ưu tiên quản trị nền tảng.
+            // Không ẩn Kho Phòng / Lịch Xem / Khu Vực / Team; quyền thực tế vẫn được kiểm soát bởi RLS + switchTab.
+            if(isSuperAdmin()){
+                document.getElementById('nav-company-dashboard')?.classList.add('hidden');
+            }
             const navCompanyDashboardBtn = document.getElementById('nav-company-dashboard');
             if(navCompanyDashboardBtn) navCompanyDashboardBtn.classList.toggle('hidden', !isCompanyAdmin());
             const adminAddRoomBtn = document.getElementById('adminAddRoomBtn');
@@ -3526,6 +3585,9 @@
             }
             if (tabId === 'tab-company-dashboard') {
                 renderCompanyDashboard();
+            }
+            if (tabId === 'tab-users') {
+                renderUsersTable();
             }
             if (tabId === 'tab-appointments') {
                 setTimeout(() => refreshAppointments(), 0);
@@ -4218,10 +4280,62 @@
 
         function renderUsersTable(){
             renderCompanies();
-            const tbody=document.getElementById('userTableBody'); if(!tbody)return;
-            const visibleUsers=getVisibleUsers();
-            tbody.innerHTML=visibleUsers.map(u=>`<tr class="hover:bg-slate-50 transition"><td class="p-3.5 font-bold text-orange-600">${escapeHtml(u.user||'—')}</td><td class="p-3.5 font-medium">${escapeHtml(u.name||'—')}</td><td class="p-3.5 text-slate-400"><span class="tracking-widest" title="Mật khẩu do Supabase Auth bảo vệ">••••••••</span></td><td class="p-3.5"><span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${u.role==='Admin Quản Lí'?'bg-fuchsia-100 text-fuchsia-800':u.role==='Quản Lí Công Ty'?'bg-yellow-100 text-yellow-800':u.role==='Quản Lí Khu Vực'?'bg-sky-100 text-sky-800':u.role==='Quản Lí Team'?'bg-amber-100 text-amber-800':'bg-slate-100 text-slate-700'}">${escapeHtml(u.role)}</span></td><td class="p-3.5">${u.role==='Admin Quản Lí'?'<span class="text-xs text-fuchsia-600 font-semibold">Toàn hệ thống</span>':`<div class="text-xs font-semibold text-sky-700">${escapeHtml(getRegionName(u.region_id))}</div><div class="text-[11px] text-violet-700 mt-0.5">${u.team_id?escapeHtml(getTeamName(u.team_id)):'—'}</div>`}</td><td class="p-3.5">${u.is_active!==false?'<span class="text-xs font-bold text-emerald-700">● Hoạt động</span>':'<span class="text-xs text-slate-400">● Đã khóa</span>'}</td><td class="p-3.5 text-right">${u.role==='Admin Quản Lí'||u.id===currentUser?.id?'<span class="text-[11px] text-slate-400"><i class="fa-solid fa-shield-halved mr-1"></i>Được bảo vệ</span>':`<button onclick="deleteUser('${u.id}')" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 text-xs font-bold transition"><i class="fa-solid fa-trash-can"></i> Xóa</button>`}</td></tr>`).join('');
+            const tbody=document.getElementById('userTableBody');if(!tbody)return;
+            if(isSuperAdmin()){const h=document.querySelector('#tab-users h2.text-2xl');if(h)h.textContent='Nhân Sự & Phân Quyền • Hỗ Trợ Admin';}
+            const base=getVisibleUsers();
+            const q=(document.getElementById('hrSearch')?.value||'').trim().toLowerCase();
+            const role=document.getElementById('hrRoleFilter')?.value||'';
+            const status=document.getElementById('hrStatusFilter')?.value||'';
+            let visibleUsers=base.filter(u=>{
+                if(q&&!`${u.name||''} ${u.user||''}`.toLowerCase().includes(q))return false;
+                if(role&&u.role!==role)return false;
+                if(status==='active'&&u.is_active===false)return false;
+                if(status==='locked'&&u.is_active!==false)return false;
+                if(status==='online'&&!onlineUserIds.has(String(u.id)))return false;
+                return true;
+            });
+
+            const staff=base.filter(u=>u.role!=='Admin Quản Lí');
+            const active=staff.filter(u=>u.is_active!==false).length;
+            const online=staff.filter(u=>onlineUserIds.has(String(u.id))).length;
+            const attention=staff.filter(u=>['Quản Lí Khu Vực','Quản Lí Team','Nhân Viên'].includes(u.role)&&!u.region_id).length;
+            const set=(id,v)=>{const x=document.getElementById(id);if(x)x.textContent=String(v)};
+            set('hrStatTotal',staff.length);set('hrStatOnline',online);set('hrStatActive',active);set('hrStatAttention',attention);
+            const summary=document.getElementById('hrStructureSummary');
+            if(summary){
+                const counts={company:staff.filter(u=>u.role==='Quản Lí Công Ty').length,region:staff.filter(u=>u.role==='Quản Lí Khu Vực').length,team:staff.filter(u=>u.role==='Quản Lí Team').length,employee:staff.filter(u=>u.role==='Nhân Viên').length};
+                summary.innerHTML=`<div class="flex flex-wrap gap-x-3 gap-y-1"><span><b>${counts.company}</b> QL Công Ty</span><span><b>${counts.region}</b> QL Khu Vực</span>${isTeamFeatureEnabled()?`<span><b>${counts.team}</b> QL Team</span>`:''}<span><b>${counts.employee}</b> Nhân Viên</span></div>`;
+            }
+
+            if(!visibleUsers.length){tbody.innerHTML='<tr><td colspan="7" class="p-10 text-center text-slate-400">Không tìm thấy nhân sự phù hợp.</td></tr>';return;}
+            tbody.innerHTML=visibleUsers.map(u=>{
+                const protectedUser=u.role==='Admin Quản Lí'||String(u.id)===String(currentUser?.id);
+                const isOnline=onlineUserIds.has(String(u.id));
+                const canControl=!protectedUser&&hasAdminAccess();
+                const statusHtml=u.is_active!==false
+                    ? `<span class="text-xs font-bold text-emerald-700">● Hoạt động</span>${isOnline?'<div class="text-[10px] text-emerald-500 mt-1">Online</div>':''}`
+                    : '<span class="text-xs font-bold text-slate-400">● Đã khóa</span>';
+                const actions=protectedUser
+                    ? '<span class="text-[11px] text-slate-400"><i class="fa-solid fa-shield-halved mr-1"></i>Được bảo vệ</span>'
+                    : `<div class="flex justify-end gap-1.5"><button onclick="toggleProfileActive('${u.id}',${u.is_active===false?'true':'false'})" class="inline-flex items-center gap-1 px-2.5 py-2 rounded-xl ${u.is_active===false?'bg-emerald-50 text-emerald-700 border-emerald-200':'bg-amber-50 text-amber-700 border-amber-200'} border text-xs font-bold"><i class="fa-solid ${u.is_active===false?'fa-lock-open':'fa-lock'}"></i>${u.is_active===false?'Mở':'Khóa'}</button><button onclick="deleteUser('${u.id}')" class="inline-flex items-center gap-1 px-2.5 py-2 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold"><i class="fa-solid fa-trash-can"></i>Xóa</button></div>`;
+                return `<tr class="hover:bg-slate-50 transition"><td class="p-3.5 font-bold text-indigo-600">${escapeHtml(u.user||'—')}</td><td class="p-3.5"><div class="font-bold text-slate-800">${escapeHtml(u.name||'—')}</div><div class="text-[10px] ${isOnline?'text-emerald-500':'text-slate-400'} mt-1">${isOnline?'● Đang online':'● Offline'}</div></td><td class="p-3.5 text-slate-400"><span class="tracking-widest" title="Mật khẩu do Supabase Auth bảo vệ">••••••••</span></td><td class="p-3.5"><span class="text-xs font-semibold px-2.5 py-1 rounded-full ${u.role==='Admin Quản Lí'?'bg-fuchsia-100 text-fuchsia-800':u.role==='Quản Lí Công Ty'?'bg-yellow-100 text-yellow-800':u.role==='Quản Lí Khu Vực'?'bg-sky-100 text-sky-800':u.role==='Quản Lí Team'?'bg-violet-100 text-violet-800':'bg-slate-100 text-slate-700'}">${escapeHtml(u.role)}</span></td><td class="p-3.5">${u.role==='Admin Quản Lí'?'<span class="text-xs text-fuchsia-600 font-semibold">Toàn hệ thống</span>':`<div class="text-xs font-semibold text-sky-700">${escapeHtml(getRegionName(u.region_id))}</div>${isTeamFeatureEnabled()?`<div class="text-[11px] text-violet-700 mt-0.5">${u.team_id?escapeHtml(getTeamName(u.team_id)):'Không gán Team'}</div>`:''}`}</td><td class="p-3.5">${statusHtml}</td><td class="p-3.5 text-right">${actions}</td></tr>`;
+            }).join('');
         }
+
+        async function toggleProfileActive(id,enabled){
+            if(!hasAdminAccess())return showToast('Bạn không có quyền thay đổi trạng thái tài khoản.','error');
+            const target=users.find(u=>String(u.id)===String(id));
+            if(!target||target.role==='Admin Quản Lí'||String(id)===String(currentUser?.id))return showToast('Tài khoản này được bảo vệ.','error');
+            const verb=enabled?'mở khóa':'khóa';
+            if(!confirm(`Bạn muốn ${verb} tài khoản ${target.name||target.user}?`))return;
+            try{
+                const {data,error}=await supabaseClient.from('profiles').update({is_active:!!enabled}).eq('id',id).select('id,is_active').maybeSingle();
+                if(error)throw error;if(!data)throw new Error('Policy không cho phép cập nhật tài khoản này.');
+                target.is_active=!!enabled;renderUsersTable();renderPlatformAdminDashboard();renderCompanyDashboard();
+                showToast(`Đã ${verb} tài khoản.`,'success');
+            }catch(err){showToast(`Không thể ${verb} tài khoản: `+(err?.message||err),'error');}
+        }
+
 
         // 4. QUẢN LÝ KHO PHÒNG & XỬ LÝ HÌNH ẢNH
         function setupPasteAndDragEvents() {
