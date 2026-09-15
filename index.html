@@ -422,6 +422,10 @@
                             </div>
 
                             <div class="p-2 max-h-[70dvh] overflow-y-auto overscroll-contain">
+                                <button onclick="selectTaskFromMenu('tab-platform-dashboard')" id="nav-platform-dashboard" class="task-menu-item tab-btn hidden w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
+                                    <span class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-300 flex items-center justify-center shrink-0"><i class="fa-solid fa-gauge-high"></i></span>
+                                    <span class="min-w-0"><span class="block font-bold">Trung Tâm Điều Hành</span><span class="block text-[11px] text-slate-400 truncate">Toàn bộ hệ thống NBRES</span></span>
+                                </button>
                                 <button onclick="selectTaskFromMenu('tab-company-dashboard')" id="nav-company-dashboard" class="task-menu-item tab-btn hidden w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
                                     <span class="w-9 h-9 rounded-xl bg-indigo-500/10 text-indigo-300 flex items-center justify-center shrink-0"><i class="fa-solid fa-chart-line"></i></span>
                                     <span class="min-w-0"><span class="block font-bold">Tổng Quan Công Ty</span><span class="block text-[11px] text-slate-400 truncate">Điều hành hoạt động trong một màn hình</span></span>
@@ -818,6 +822,62 @@
 
 
 
+            <!-- V8.1: PLATFORM ADMIN COMMAND CENTER -->
+            <div id="tab-platform-dashboard" class="tab-content hidden space-y-5">
+                <div class="relative overflow-hidden rounded-3xl bg-[#070a0f] text-white p-5 md:p-7 shadow-2xl border border-[#D4AF37]/25">
+                    <div class="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-[#D4AF37]/10 blur-3xl pointer-events-none"></div>
+                    <div class="relative flex items-start justify-between gap-4 flex-wrap">
+                        <div>
+                            <div class="text-[10px] uppercase tracking-[.25em] text-[#D4AF37] font-extrabold">NBRES • PLATFORM COMMAND CENTER</div>
+                            <h2 class="text-2xl md:text-3xl font-black mt-2">Trung Tâm Điều Hành</h2>
+                            <p class="text-sm text-slate-400 mt-1 max-w-2xl">Quản trị Công Ty, phân quyền và theo dõi hệ thống từ một màn hình duy nhất.</p>
+                        </div>
+                        <div class="flex gap-2 flex-wrap">
+                            <button onclick="openCompanyModal()" class="px-4 py-2.5 rounded-xl bg-[#D4AF37] hover:bg-[#e4c453] text-black text-xs font-extrabold shadow-lg"><i class="fa-solid fa-building-circle-check mr-1.5"></i>Tạo Công Ty</button>
+                            <button onclick="switchTab('tab-users')" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-xs font-bold"><i class="fa-solid fa-users-gear mr-1.5"></i>Nhân Sự</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 xl:grid-cols-4 gap-3">
+                    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm"><div class="flex justify-between"><div class="text-[10px] uppercase tracking-wider font-bold text-slate-400">Công Ty</div><span class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center"><i class="fa-solid fa-building"></i></span></div><div id="platformStatCompanies" class="text-3xl font-black text-slate-900 mt-2">0</div><div class="text-[11px] text-slate-400 mt-1">Trên nền tảng</div></div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm"><div class="flex justify-between"><div class="text-[10px] uppercase tracking-wider font-bold text-slate-400">Khu Vực</div><span class="w-8 h-8 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center"><i class="fa-solid fa-map-location-dot"></i></span></div><div id="platformStatRegions" class="text-3xl font-black text-slate-900 mt-2">—</div><div class="text-[11px] text-slate-400 mt-1">Công Ty đang chọn</div></div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm"><div class="flex justify-between"><div class="text-[10px] uppercase tracking-wider font-bold text-slate-400">Nhân Sự</div><span class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center"><i class="fa-solid fa-user-group"></i></span></div><div id="platformStatUsers" class="text-3xl font-black text-slate-900 mt-2">—</div><div id="platformStatOnline" class="text-[11px] text-emerald-600 font-bold mt-1">Chọn Công Ty để xem</div></div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm"><div class="flex justify-between"><div class="text-[10px] uppercase tracking-wider font-bold text-slate-400">Kho Phòng</div><span class="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center"><i class="fa-solid fa-building-user"></i></span></div><div id="platformStatRooms" class="text-3xl font-black text-slate-900 mt-2">—</div><div id="platformStatVacant" class="text-[11px] text-emerald-600 font-bold mt-1">Chọn Công Ty để xem</div></div>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+                    <div class="xl:col-span-2 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div class="p-5 border-b border-slate-100 flex justify-between items-center gap-3 flex-wrap">
+                            <div><h3 class="font-black text-slate-900">Doanh Nghiệp Trên NBRES</h3><p class="text-xs text-slate-400 mt-1">Chọn Công Ty để chuyển toàn bộ ngữ cảnh quản trị.</p></div>
+                            <div class="relative"><i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i><input id="platformCompanySearch" oninput="renderPlatformAdminDashboard()" placeholder="Tìm Công Ty..." class="pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs outline-none focus:ring-2 focus:ring-amber-400 w-56"></div>
+                        </div>
+                        <div id="platformCompanyCommandList" class="p-4 grid md:grid-cols-2 gap-3"></div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-5">
+                            <div class="text-[10px] uppercase tracking-wider font-extrabold text-slate-400">Ngữ cảnh hiện tại</div>
+                            <div id="platformActiveCompanyName" class="font-black text-xl text-slate-900 mt-2">Chưa chọn Công Ty</div>
+                            <div id="platformActiveCompanyMeta" class="text-xs text-slate-400 mt-1">Chọn một doanh nghiệp bên trái để bắt đầu quản trị.</div>
+                            <div id="platformActiveActions" class="hidden grid grid-cols-2 gap-2 mt-4">
+                                <button onclick="switchTab('tab-regions')" class="p-3 rounded-xl bg-sky-50 text-sky-700 text-xs font-bold text-left"><i class="fa-solid fa-map-location-dot mr-1"></i>Khu Vực</button>
+                                <button onclick="switchTab('tab-users')" class="p-3 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-bold text-left"><i class="fa-solid fa-users mr-1"></i>Nhân Sự</button>
+                                <button onclick="switchTab('tab-inventory')" class="p-3 rounded-xl bg-orange-50 text-orange-700 text-xs font-bold text-left"><i class="fa-solid fa-house mr-1"></i>Kho Phòng</button>
+                                <button onclick="switchTab('tab-appointments')" class="p-3 rounded-xl bg-cyan-50 text-cyan-700 text-xs font-bold text-left"><i class="fa-solid fa-calendar-check mr-1"></i>Lịch Xem</button>
+                            </div>
+                        </div>
+                        <div class="bg-slate-950 rounded-3xl border border-slate-800 shadow-sm p-5 text-white">
+                            <h3 class="font-black">Thao tác nhanh</h3>
+                            <div class="space-y-2 mt-4">
+                                <button onclick="openCompanyModal()" class="w-full p-3 rounded-xl bg-[#D4AF37] text-black text-xs font-extrabold text-left"><i class="fa-solid fa-plus mr-2"></i>Tạo Công Ty mới</button>
+                                <button onclick="switchTab('tab-users')" class="w-full p-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-200 text-xs font-bold text-left"><i class="fa-solid fa-user-shield mr-2"></i>Quản lý tài khoản</button>
+                                <button onclick="switchTab('tab-regions')" class="w-full p-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-200 text-xs font-bold text-left"><i class="fa-solid fa-sitemap mr-2"></i>Cấu trúc doanh nghiệp</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- V7.10: DASHBOARD QUẢN LÍ CÔNG TY -->
             <div id="tab-company-dashboard" class="tab-content hidden space-y-5">
                 <div class="rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white p-5 md:p-6 shadow-xl border border-slate-800">
@@ -923,8 +983,8 @@
                 <div id="platformCompanyPanel" class="hidden bg-[#070a0f] rounded-2xl border border-[#D4AF37]/30 p-5 shadow-xl">
                     <div class="flex items-center justify-between gap-3 flex-wrap">
                         <div>
-                            <div class="text-[10px] uppercase tracking-[.22em] text-[#D4AF37] font-bold">NBRES • CẤU TRÚC DOANH NGHIỆP</div>
-                            <h2 class="text-lg font-bold text-white mt-1">Công Ty Trên Hệ Thống</h2>
+                            <div class="text-[10px] uppercase tracking-[.22em] text-[#D4AF37] font-bold">NBRES • QUẢN TRỊ DOANH NGHIỆP</div>
+                            <h2 class="text-lg font-bold text-white mt-1">Danh Sách Công Ty & Cấu Hình</h2>
                             <p class="text-xs text-slate-400 mt-1">Admin Quản Lí tạo Công Ty và Quản Lí Công Ty. Bấm vào một Công Ty để xem toàn bộ Khu Vực → Team → Nhân Viên của Công Ty đó.</p>
                         </div>
                         <button onclick="openCompanyModal()" class="bg-[#D4AF37] hover:bg-[#e4c453] text-black font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 text-sm">
@@ -2674,7 +2734,9 @@
                 populateRegionOptions(); renderRegions(); renderTeamContext(); renderTeams(); populateUserTeamOptions(); renderUsersTable();
                 roomPage=1; rooms=await loadRoomsPage(1); renderDistrictOptions(); renderRooms(rooms);
                 dbCases=await loadCrmScriptsFromDB(); currentFilteredData=[...dbCases]; renderCaseList(dbCases); if(dbCases.length) selectCase(dbCases[0].id);
-                showToast('Đang xem Công Ty: '+getActiveCompanyName(),'success');
+                appointments=await loadAppointmentsFromDB();
+                renderPlatformAdminDashboard();
+                showToast('Đang quản trị Công Ty: '+getActiveCompanyName(),'success');
             }catch(err){ console.error('Company context:',err); showToast(err?.message||'Không tải được Công Ty.','error'); }
         }
 
@@ -3050,7 +3112,9 @@
                 dbCases=await loadCrmScriptsFromDB(); currentFilteredData=[...dbCases]; renderCaseList(dbCases); if(dbCases.length) selectCase(dbCases[0].id);
                 appointments=await loadAppointmentsFromDB();
                 renderCompanyDashboard();
-                if(isCompanyAdmin()) switchTab('tab-company-dashboard');
+            renderPlatformAdminDashboard();
+                if(isSuperAdmin()) switchTab('tab-platform-dashboard');
+                else if(isCompanyAdmin()) switchTab('tab-company-dashboard');
             } catch(err){ console.error('Workspace load:',err); }
         }
         async function loadProfilesForWorkspace(){
@@ -3128,6 +3192,42 @@
             }
         }
 
+        function renderPlatformAdminDashboard(){
+            if(!isSuperAdmin())return;
+            const q=(document.getElementById('platformCompanySearch')?.value||'').trim().toLowerCase();
+            const filtered=(tenants||[]).filter(t=>String(t.company_name||'').toLowerCase().includes(q));
+            const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=String(v)};
+            set('platformStatCompanies',(tenants||[]).length);
+
+            const hasCompany=!!currentTenantId;
+            set('platformStatRegions',hasCompany?(regions||[]).length:'—');
+            set('platformStatUsers',hasCompany?(users||[]).filter(u=>u.role!=='Admin Quản Lí').length:'—');
+            set('platformStatRooms',hasCompany?(rooms||[]).length:'—');
+            const online=hasCompany?(users||[]).filter(u=>u.role!=='Admin Quản Lí'&&onlineUserIds.has(String(u.id))).length:0;
+            const vacant=hasCompany?(rooms||[]).filter(r=>['Còn trống','Trống'].includes(String(r.status||''))).length:0;
+            const oe=document.getElementById('platformStatOnline');if(oe)oe.textContent=hasCompany?`${online} đang online`:'Chọn Công Ty để xem';
+            const ve=document.getElementById('platformStatVacant');if(ve)ve.textContent=hasCompany?`${vacant} phòng còn trống`:'Chọn Công Ty để xem';
+
+            const active=tenants.find(t=>String(t.id)===String(currentTenantId||''));
+            const an=document.getElementById('platformActiveCompanyName');if(an)an.textContent=active?.company_name||'Chưa chọn Công Ty';
+            const am=document.getElementById('platformActiveCompanyMeta');if(am)am.textContent=active?`${(regions||[]).length} khu vực • ${(users||[]).filter(u=>u.role!=='Admin Quản Lí').length} nhân sự • ${(rooms||[]).length} phòng`:'Chọn một doanh nghiệp bên trái để bắt đầu quản trị.';
+            document.getElementById('platformActiveActions')?.classList.toggle('hidden',!active);
+
+            const list=document.getElementById('platformCompanyCommandList');
+            if(!list)return;
+            if(!filtered.length){list.innerHTML='<div class="md:col-span-2 p-8 text-center text-sm text-slate-400 border border-dashed rounded-2xl">Không tìm thấy Công Ty.</div>';return;}
+            list.innerHTML=filtered.map(t=>{
+                const selected=String(t.id)===String(currentTenantId||'');
+                return `<button onclick="selectCompanyContext('${t.id}')" class="group text-left p-4 rounded-2xl border ${selected?'border-amber-400 bg-amber-50/70 shadow-sm':'border-slate-200 bg-white hover:border-amber-300 hover:shadow-sm'} transition">
+                    <div class="flex justify-between gap-3 items-start">
+                        <div class="flex gap-3 min-w-0"><span class="w-11 h-11 rounded-2xl ${selected?'bg-amber-500 text-white':'bg-slate-100 text-slate-500 group-hover:bg-amber-50 group-hover:text-amber-600'} flex items-center justify-center shrink-0"><i class="fa-solid fa-building"></i></span><div class="min-w-0"><div class="font-extrabold text-slate-900 truncate">${escapeHtml(t.company_name||'Công Ty')}</div><div class="text-[11px] text-slate-400 mt-1">${t.teams_enabled?'Cấu trúc có Team':'Cấu trúc không Team'}</div></div></div>
+                        <span class="text-[10px] px-2 py-1 rounded-full ${selected?'bg-amber-500 text-white':'bg-emerald-50 text-emerald-600'} font-bold">${selected?'ĐANG QUẢN TRỊ':'HOẠT ĐỘNG'}</span>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-slate-100 flex justify-between text-[11px]"><span class="text-slate-400">${selected?'Đã tải dữ liệu Công Ty':'Bấm để chuyển ngữ cảnh'}</span><span class="font-bold text-slate-600">Mở <i class="fa-solid fa-arrow-right ml-1"></i></span></div>
+                </button>`;
+            }).join('');
+        }
+
         function renderCompanyDashboard(){
             const tab=document.getElementById('tab-company-dashboard');
             if(!tab||!currentUser)return;
@@ -3180,6 +3280,8 @@
             document.getElementById('currentUserRole').innerText = currentUser.role;
 
             const navUsersBtn = document.getElementById('nav-users');
+            const navPlatformDashboardBtn = document.getElementById('nav-platform-dashboard');
+            if(navPlatformDashboardBtn) navPlatformDashboardBtn.classList.toggle('hidden', !isSuperAdmin());
             const navCompanyDashboardBtn = document.getElementById('nav-company-dashboard');
             if(navCompanyDashboardBtn) navCompanyDashboardBtn.classList.toggle('hidden', !isCompanyAdmin());
             const adminAddRoomBtn = document.getElementById('adminAddRoomBtn');
@@ -3258,6 +3360,7 @@
 
         function getTaskTabLabel(tabId){
             const labels = {
+                'tab-platform-dashboard': 'Trung Tâm Điều Hành',
                 'tab-company-dashboard': 'Tổng Quan Công Ty',
                 'tab-rooms': 'Kho Phòng',
                 'tab-marketing': 'Mẫu Marketing',
@@ -3317,6 +3420,7 @@
 
         function updateTaskMenuCurrent(tabId){
             const labels = {
+                'tab-platform-dashboard':'Trung Tâm Điều Hành',
                 'tab-company-dashboard':'Tổng Quan Công Ty',
                 'tab-inventory':'Kho Phòng',
                 'tab-poster':'Mẫu Marketing',
@@ -3347,6 +3451,7 @@
             });
 
             const activeId = {
+                'tab-platform-dashboard':'nav-platform-dashboard',
                 'tab-company-dashboard':'nav-company-dashboard',
                 'tab-inventory':'nav-inventory',
                 'tab-poster':'nav-poster',
@@ -3416,6 +3521,9 @@
                 showToast('Bạn không có quyền quản lý Team hoặc Công Ty chưa bật tính năng Team!', 'error'); return;
             }
 
+            if (tabId === 'tab-platform-dashboard') {
+                renderPlatformAdminDashboard();
+            }
             if (tabId === 'tab-company-dashboard') {
                 renderCompanyDashboard();
             }
