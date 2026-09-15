@@ -4666,6 +4666,7 @@
                     return `<div class="bg-white border rounded-2xl p-4 shadow-sm">
                         <div class="flex justify-between gap-3"><div><div class="flex gap-2 items-center flex-wrap"><span class="text-[9px] px-2 py-1 rounded-full bg-${tone}-50 text-${tone}-700 font-black">${a.priority==='urgent'?'KHẨN CẤP':a.priority==='important'?'QUAN TRỌNG':'THÔNG BÁO'}</span><span class="text-[9px] px-2 py-1 rounded-full bg-slate-100 text-slate-600 font-bold">${scope}</span></div><div class="font-black text-slate-900 mt-2">${escapeHtml(a.title||'Thông báo')}</div></div><div class="text-[10px] text-slate-400 whitespace-nowrap">${new Date(a.created_at).toLocaleString('vi-VN')}</div></div>
                         <div class="text-sm text-slate-600 mt-2 whitespace-pre-wrap">${escapeHtml(a.body||'')}</div>
+                        ${canManageAnnouncementV101(a)?`<div class="mt-3 pt-3 border-t flex justify-end"><button onclick="deleteAnnouncementV101('${a.announcement_id||''}')" class="px-3 py-2 rounded-xl bg-rose-50 text-rose-700 text-[11px] font-black"><i class="fa-solid fa-trash-can mr-1"></i>Xóa thông báo</button></div>`:''}
                     </div>`;
                 }).join(''):'<div class="p-8 bg-white border border-dashed rounded-2xl text-center text-slate-400 text-xs">Chưa có thông báo nội bộ.</div>';
             }catch(e){
@@ -4673,6 +4674,24 @@
                 box.innerHTML='<div class="p-5 rounded-xl bg-amber-50 text-amber-800 text-xs">Cần chạy SQL V10.0.3 để kích hoạt thông báo theo Công Ty / Khu Vực.</div>';
             }
         }
+        function canManageAnnouncementV101(a){
+            if(!a||!currentUser||!currentTenantId)return false;
+            if(isSuperAdmin())return String(a.tenant_id)===String(currentTenantId);
+            if(isCompanyAdmin())return String(a.tenant_id)===String(currentTenantId) && a.scope_type==='company';
+            if(isRegionalAdmin())return String(a.tenant_id)===String(currentTenantId) && a.scope_type==='region' && String(a.region_id)===String(currentUser.region_id);
+            return false;
+        }
+        async function deleteAnnouncementV101(id){
+            const a=announcementsV10.find(x=>String(x.announcement_id)===String(id));
+            if(!a||!canManageAnnouncementV101(a))return showToast('Bạn không có quyền xóa thông báo này.','error');
+            if(!confirm(`Xóa thông báo "${a.title||'Thông báo'}"? Thông báo sẽ biến mất khỏi các tài khoản.`))return;
+            const {error}=await supabaseClient.from('system_announcements').delete().eq('announcement_id',id);
+            if(error)return showToast('Không thể xóa thông báo: '+error.message,'error');
+            announcementsV10=announcementsV10.filter(x=>String(x.announcement_id)!==String(id));
+            await loadAnnouncementsV10();
+            showToast('Đã xóa thông báo.','success');
+        }
+
         async function publishAnnouncementV10(){
             if(!canPublishAnnouncementV10())return showToast('Bạn không có quyền đăng thông báo.','error');
             if(!currentTenantId)return showToast('Hãy chọn Công Ty trước.','error');
@@ -6985,7 +7004,39 @@
 
                 const { data, error } = await query.order('updated_at', { ascending: false });
                 if (error) throw error;
-                return (data || []).map(mapDbCrmToApp);
+
+                // V10.1.2: Kịch bản CRM Global của NBRES được chia sẻ cho mọi Công Ty.
+                let globalRows = [];
+                try {
+                    const { data: globalData, error: globalError } = await supabaseClient
+                        .from('platform_content_library')
+                        .select('id,title,content,metadata,created_at,updated_at')
+                        .eq('content_type','crm')
+                        .eq('is_active',true)
+                        .order('sort_order',{ascending:true});
+                    if (globalError) throw globalError;
+                    globalRows = (globalData || []).map(g => {
+                        const m = g.metadata || {};
+                        return {
+                            id: 'global:' + g.id,
+                            tenant_id: null,
+                            category: m.category || 'XU_LY_TU_CHOI',
+                            categoryName: coreCategories[m.category] || m.category || 'Thư Viện NBRES',
+                            type: m.type || 'Kịch bản dùng chung',
+                            title: g.title || '',
+                            tag: m.tag || 'Tất cả',
+                            actionPlan: m.action_plan || '',
+                            responseTemplate: m.response_template || g.content || '',
+                            createdAt: g.created_at || '',
+                            updatedAt: g.updated_at || '',
+                            isGlobal: true
+                        };
+                    });
+                } catch(globalErr) {
+                    console.warn('Không tải được CRM Global:', globalErr);
+                }
+
+                return [...globalRows, ...(data || []).map(mapDbCrmToApp)];
             } catch (err) {
                 console.error('Lỗi tải CRM:', err);
                 showToast('Không tải được CRM: ' + (err?.message || err), 'error');
@@ -6994,6 +7045,10 @@
         }
 
         async function saveCrmScriptToDB(item) {
+            if (String(item?.id || '').startsWith('global:')) {
+                showToast('Đây là kịch bản dùng chung của NBRES. Chỉ Admin Quản Lí được chỉnh sửa tại Thư Viện NBRES.', 'error');
+                return null;
+            }
             if (!isCrmAdmin()) {
                 showToast('Chỉ Admin mới được thêm hoặc chỉnh sửa kịch bản!', 'error');
                 return null;
@@ -7043,6 +7098,10 @@
         }
 
         async function deleteCrmScriptFromDB(id) {
+            if (String(id || '').startsWith('global:')) {
+                showToast('Kịch bản dùng chung không thể xóa tại Công Ty.', 'error');
+                return false;
+            }
             if (!isCrmAdmin()) {
                 showToast('Chỉ Admin mới được xóa kịch bản!', 'error');
                 return false;
@@ -7078,7 +7137,7 @@
                 container.innerHTML = `<div class="p-8 text-center text-slate-400 text-sm">
                     <i class="fa-regular fa-folder-open text-2xl mb-2"></i>
                     <p>Không tìm thấy kịch bản phù hợp.</p>
-                    ${isCrmAdmin() ? '<p class="mt-1 text-[11px]">Admin có thể bấm “Thêm Kịch Bản” để tạo tình huống mới.</p>' : ''}
+                    <p class="mt-1 text-[11px]">Chọn tình huống phù hợp để xem và sao chép kịch bản tư vấn.</p>
                 </div>`;
                 return;
             }
