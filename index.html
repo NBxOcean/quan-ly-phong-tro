@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <!-- V7.5.0 - PWA -->
+    <!-- V7.5.1 - USERNAME AUTH + OPTIONAL TEAM -->
     <meta name="theme-color" content="#0f172a">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -371,7 +371,7 @@
         <div class="nb-auth-panel">
           <div><div class="nb-auth-title">Xác Thực Truy Cập</div><div class="nb-auth-sub">NBRES • Hệ thống quản trị & Sale bất động sản</div></div>
           <form id="loginForm" onsubmit="handleLogin(event)">
-            <div class="nb-field"><label>Email đăng nhập</label><div class="nb-input-wrap"><i class="fa-solid fa-envelope"></i><input type="email" id="loginUsername" autocomplete="email" required placeholder="name@company.com"></div></div>
+            <div class="nb-field"><label>Tên đăng nhập</label><div class="nb-input-wrap"><i class="fa-solid fa-user"></i><input type="text" id="loginUsername" autocomplete="username" required autocapitalize="none" spellcheck="false" placeholder="Ví dụ: ql.uniliving"></div></div>
             <div class="nb-field"><label>Mật khẩu bảo mật</label><div class="nb-input-wrap"><i class="fa-solid fa-lock"></i><input type="password" id="loginPassword" autocomplete="current-password" required placeholder="••••••••••••"><button class="nb-eye" type="button" onclick="togglePasswordVisibility('loginPassword','eyeIcon')"><i id="eyeIcon" class="fa-solid fa-eye"></i></button></div></div>
             <div class="nb-options"><label><input type="checkbox" id="rememberMe" checked> Ghi nhớ đăng nhập</label><a onclick="showToast('Vui lòng liên hệ Admin để được hỗ trợ đặt lại mật khẩu.','error')">Quên mật khẩu?</a></div>
             <button id="loginSubmitBtn" type="submit" class="nb-submit">Truy Cập Hệ Thống</button>
@@ -1399,13 +1399,13 @@
             </div>
             <form id="userForm" onsubmit="saveUser(event)" class="p-5 space-y-4 overflow-y-auto overscroll-contain min-h-0 flex-1 [scrollbar-gutter:stable]" style="-webkit-overflow-scrolling:touch;">
                 <input type="hidden" id="editUserId">
-                <div><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Email đăng nhập *</label><input type="email" id="accUsername" required placeholder="nhanvien@congty.vn" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"></div>
+                <div><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Tên đăng nhập *</label><input type="text" id="accUsername" required minlength="3" maxlength="32" autocapitalize="none" spellcheck="false" placeholder="Ví dụ: sale.nguyenbao" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><p class="text-[10px] text-slate-500 mt-1">3–32 ký tự: chữ không dấu, số, dấu chấm, gạch dưới hoặc gạch ngang.</p></div>
                 <div><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Họ và tên *</label><input type="text" id="accFullName" required placeholder="Nguyễn Văn A" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"></div>
                 <div><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Mật khẩu ban đầu *</label><div class="relative"><input type="password" id="accPassword" required minlength="8" placeholder="Tối thiểu 8 ký tự" class="w-full border border-white/10 rounded-xl p-3 pr-11 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><button type="button" onclick="togglePasswordVisibility('accPassword','accPasswordEye')" class="absolute right-3 top-3 text-slate-500 hover:text-[#D4AF37]"><i id="accPasswordEye" class="fa-solid fa-eye"></i></button></div><p class="text-[10px] text-slate-500 mt-1">Mật khẩu được gửi trực tiếp đến Supabase Auth và không hiển thị lại trong NBRES.</p></div>
                 <div><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Cấp quyền *</label><select id="accRole" onchange="syncUserTeamRequirement()" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><option value="Nhân Viên">Nhân Viên</option><option value="Quản Lí Team">Quản Lí Team</option><option value="Quản Lí Khu Vực">Quản Lí Khu Vực</option><option value="Quản Lí Công Ty">Quản Lí Công Ty</option></select><p class="text-[10px] text-slate-500 mt-1">Admin Quản Lí là cấp cao nhất và không được tạo từ biểu mẫu này.</p></div>
                 <div id="accTenantWrap"><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Công Ty *</label><select id="accTenantId" onchange="syncUserTenantSelection()" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><option value="">-- Chọn công ty --</option></select></div>
                 <div id="accRegionWrap"><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Khu vực</label><select id="accRegionId" onchange="populateUserTeamOptions(null,this.value)" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><option value="">-- Chọn khu vực --</option></select></div>
-                <div id="accTeamWrap"><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Team</label><select id="accTeamId" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><option value="">-- Chọn team --</option></select></div>
+                <div id="accTeamWrap"><label id="accTeamLabel" class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Team</label><select id="accTeamId" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><option value="">-- Chọn team --</option></select></div>
                 <div class="pt-3 border-t border-white/10 flex justify-end gap-2"><button type="button" onclick="closeUserModal()" class="px-4 py-2 border border-white/10 rounded-xl text-sm text-slate-400 hover:text-white">Hủy</button><button type="submit" class="px-5 py-2.5 bg-[#D4AF37] hover:bg-[#e6c553] text-[#030508] font-bold rounded-xl text-sm shadow-lg"><i class="fa-solid fa-user-plus mr-1"></i> Tạo tài khoản</button></div>
             </form>
         </div>
@@ -2212,11 +2212,12 @@
             const role=document.getElementById('accRole')?.value||'Nhân Viên';
             const tenantWrap=document.getElementById('accTenantWrap'), rWrap=document.getElementById('accRegionWrap'), tWrap=document.getElementById('accTeamWrap');
             const tenant=document.getElementById('accTenantId'), r=document.getElementById('accRegionId'), t=document.getElementById('accTeamId');
+            const teamLabel=document.getElementById('accTeamLabel');
             const needRegion=['Quản Lí Khu Vực','Quản Lí Team','Nhân Viên'].includes(role);
-            const needTeam=['Quản Lí Team','Nhân Viên'].includes(role);
+            const showTeam=['Quản Lí Team','Nhân Viên'].includes(role);
+            const needTeam=role==='Quản Lí Team';
             const platform=isSuperAdmin();
 
-            // Mọi tài khoản đều thuộc Công ty. Admin Quản Lí được chọn; cấp dưới bị khóa vào công ty của mình.
             tenantWrap?.classList.remove('hidden');
             if(tenant){
                 tenant.disabled=!platform;
@@ -2224,13 +2225,11 @@
                 if(!platform) tenant.value=currentUser?.tenant_id||'';
             }
 
-            // Hiện đúng chuỗi Công ty → Khu vực → Team theo cấp quyền được chọn.
             rWrap?.classList.toggle('hidden', !needRegion);
-            tWrap?.classList.toggle('hidden', !needTeam);
-            rWrap?.classList.remove('opacity-50');
-            tWrap?.classList.remove('opacity-50');
+            tWrap?.classList.toggle('hidden', !showTeam);
             if(r){r.disabled=!needRegion;r.required=needRegion;if(!needRegion)r.value='';}
-            if(t){t.disabled=!needTeam;t.required=needTeam;if(!needTeam)t.value='';}
+            if(t){t.disabled=!showTeam;t.required=needTeam;if(!showTeam)t.value='';}
+            if(teamLabel) teamLabel.textContent = role==='Nhân Viên' ? 'Team (không bắt buộc)' : 'Team *';
         }
 
         function renderTeams() {
@@ -2366,7 +2365,7 @@
             else if (rawRole === 'company_admin') appRole = 'Quản Lí Công Ty';
             else if (['regional_admin','area_admin'].includes(rawRole)) appRole = 'Quản Lí Khu Vực';
             else if (['parent','admin','manager','team_admin'].includes(rawRole)) appRole = 'Quản Lí Team';
-            return { id:u.id, user:u.email || u.username || u.user || '', pass:'', name:u.full_name || u.name || u.email || 'NBRES User', role:appRole, tenant_id:u.tenant_id||null, region_id:u.region_id||null, team_id:u.team_id||null, is_active:u.is_active!==false };
+            return { id:u.id, user:u.username || u.email || u.user || '', pass:'', name:u.full_name || u.name || u.username || u.email || 'NBRES User', role:appRole, tenant_id:u.tenant_id||null, region_id:u.region_id||null, team_id:u.team_id||null, is_active:u.is_active!==false };
         }
 
         function mapAppUserToDb(userData, includeId = false) {
@@ -2977,7 +2976,7 @@
         }
         async function loadProfilesForWorkspace(){
             if(!supabaseClient || !currentUser) return currentUser?[currentUser]:[];
-            const {data,error}=await supabaseClient.from('profiles').select('id,email,full_name,role,tenant_id,region_id,team_id,is_active,created_at');
+            const {data,error}=await supabaseClient.from('profiles').select('id,email,username,full_name,role,tenant_id,region_id,team_id,is_active,created_at');
             if(error){console.warn('Không tải được profiles:',error);return [currentUser];}
             const mapped=(data||[]).map(mapDbUserToApp).filter(Boolean);
             if(isSuperAdmin() && currentTenantId){
@@ -2991,7 +2990,7 @@
             try {
                 const { data:{ session }, error } = await supabaseClient.auth.getSession();
                 if (error || !session?.user) { showLogin(); return false; }
-                const { data:profile, error:profileError } = await supabaseClient.from('profiles').select('id,email,full_name,role,tenant_id,region_id,team_id,is_active').eq('id',session.user.id).single();
+                const { data:profile, error:profileError } = await supabaseClient.from('profiles').select('id,email,username,full_name,role,tenant_id,region_id,team_id,is_active').eq('id',session.user.id).single();
                 if (profileError || !profile || profile.is_active === false) { await supabaseClient.auth.signOut(); showLogin(); return false; }
                 currentUser = mapDbUserToApp(profile);
                 currentTenantId = profile.tenant_id || null;
@@ -3016,22 +3015,30 @@
         async function handleLogin(e) {
             e.preventDefault();
             if (!supabaseClient) return showToast('Không thể kết nối Supabase!','error');
-            const email = document.getElementById('loginUsername').value.trim().toLowerCase();
+            const loginId = document.getElementById('loginUsername').value.trim().toLowerCase();
             const password = document.getElementById('loginPassword').value;
             const btn = document.getElementById('loginSubmitBtn');
             if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> ĐANG XÁC THỰC...';}
             try {
+                if(!loginId) throw new Error('Vui lòng nhập tên đăng nhập.');
+                // Tài khoản username mới dùng email kỹ thuật; email cũ vẫn được hỗ trợ
+                // để Admin Quản Lí hiện tại không bị khóa khỏi hệ thống.
+                const email = loginId.includes('@') ? loginId : `${loginId}@auth.nbres.local`;
                 const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
                 if (error || !data?.user) throw error || new Error('Không thể đăng nhập.');
-                const { data:profile, error:profileError } = await supabaseClient.from('profiles').select('id,email,full_name,role,tenant_id,region_id,team_id,is_active').eq('id',data.user.id).single();
+                const { data:profile, error:profileError } = await supabaseClient.from('profiles').select('id,email,username,full_name,role,tenant_id,region_id,team_id,is_active').eq('id',data.user.id).single();
                 if (profileError || !profile) throw profileError || new Error('Không tìm thấy hồ sơ NBRES.');
                 if (profile.is_active === false) { await supabaseClient.auth.signOut(); throw new Error('Tài khoản đã bị khóa.'); }
                 currentUser = mapDbUserToApp(profile); currentTenantId = profile.tenant_id || null;
                 sessionStorage.removeItem('NBX_LOGIN_NOTICE_SHOWN');
                 showToast(`Xin chào ${currentUser.name}!`,'success');
                 await loadSecureWorkspace(); showApp();
-            } catch(err) { console.error(err); showToast(err?.message || 'Email hoặc mật khẩu không đúng!','error'); }
-            finally { if(btn){btn.disabled=false;btn.textContent='TRUY CẬP HỆ THỐNG';} }
+            } catch(err) {
+                console.error(err);
+                showToast(err?.message || 'Tên đăng nhập hoặc mật khẩu không đúng!','error');
+            } finally {
+                if(btn){btn.disabled=false;btn.textContent='TRUY CẬP HỆ THỐNG';}
+            }
         }
 
         async function handleLogout() {
@@ -3819,28 +3826,59 @@
 
         async function saveUser(e){
             e.preventDefault(); if(userSaveInProgress)return;
-            const email=document.getElementById('accUsername').value.trim().toLowerCase();
+            const username=document.getElementById('accUsername').value.trim().toLowerCase();
             const full_name=document.getElementById('accFullName').value.trim();
             const password=document.getElementById('accPassword').value;
             const appRole=document.getElementById('accRole').value; const role=APP_TO_DB_ROLE[appRole];
             const tenant_id=isSuperAdmin()?(document.getElementById('accTenantId').value||null):(currentUser?.tenant_id||null);
             let region_id=document.getElementById('accRegionId')?.value||null; let team_id=document.getElementById('accTeamId')?.value||null;
+
             if(isRegionalAdmin()){region_id=currentUser.region_id;}
             if(isManagerAdmin()){region_id=currentUser.region_id;team_id=currentUser.team_id;}
-            if(appRole==='Quản Lí Công Ty'){region_id=null;team_id=null;} else if(appRole==='Quản Lí Khu Vực'){team_id=null;}
-            if(!email||!full_name||password.length<8)return showToast('Nhập email, họ tên và mật khẩu tối thiểu 8 ký tự!','error');
+
+            // Chuẩn hóa phạm vi theo mô hình NBRES:
+            // Công Ty không thuộc Khu Vực/Team; Khu Vực không thuộc Team;
+            // Nhân Viên có thể trực thuộc Khu Vực mà không cần Team.
+            if(appRole==='Quản Lí Công Ty'){region_id=null;team_id=null;}
+            else if(appRole==='Quản Lí Khu Vực'){team_id=null;}
+
+            if(!/^[a-z0-9._-]{3,32}$/.test(username))
+                return showToast('Tên đăng nhập phải có 3–32 ký tự: chữ không dấu, số, dấu chấm, gạch dưới hoặc gạch ngang.','error');
+            if(!full_name||password.length<8)
+                return showToast('Nhập họ tên và mật khẩu tối thiểu 8 ký tự!','error');
             if(!role)return showToast('Cấp quyền không hợp lệ!','error');
-            if(!tenant_id)return showToast('Vui lòng chọn Công ty!','error');
-            if(['regional_admin','team_admin','employee'].includes(role)&&!region_id)return showToast('Vui lòng chọn Khu vực!','error');
-            if(['team_admin','employee'].includes(role)&&!team_id)return showToast('Vui lòng chọn Team!','error');
+            if(!tenant_id)return showToast('Vui lòng chọn Công Ty!','error');
+            if(['regional_admin','team_admin','employee'].includes(role)&&!region_id)
+                return showToast('Vui lòng chọn Khu Vực!','error');
+            if(role==='team_admin'&&!team_id)
+                return showToast('Quản Lí Team bắt buộc phải chọn Team!','error');
+
             const btn=document.querySelector('#userForm button[type="submit"]'); const old=btn?.innerHTML; userSaveInProgress=true;
             if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang tạo...';}
             try{
-                const {data,error}=await supabaseClient.functions.invoke('admin-create-user',{body:{email,password,full_name,role,tenant_id,region_id,team_id}});
-                if(error) throw error; if(!data?.success) throw new Error(data?.error||'Không thể tạo tài khoản.');
-                users=await loadProfilesForWorkspace(); renderUsersTable(); closeUserModal(); showToast('Đã tạo tài khoản Supabase Auth thành công!','success');
-            }catch(err){console.error('admin-create-user:',err);showToast('Tạo tài khoản thất bại: '+(err?.message||err),'error');}
-            finally{userSaveInProgress=false;if(btn){btn.disabled=false;btn.innerHTML=old||'Tạo tài khoản';}}
+                const {data,error}=await supabaseClient.functions.invoke('admin-create-user',{
+                    body:{username,password,full_name,role,tenant_id,region_id,team_id}
+                });
+                if(error){
+                    let detail='';
+                    try{
+                        if(error.context){
+                            const payload=await error.context.json();
+                            detail=payload?.error||payload?.message||'';
+                        }
+                    }catch(_){}
+                    throw new Error(detail||error.message||'Edge Function trả về lỗi.');
+                }
+                if(!data?.success) throw new Error(data?.error||'Không thể tạo tài khoản.');
+                users=await loadProfilesForWorkspace(); renderUsersTable(); closeUserModal();
+                showToast(`Đã tạo tài khoản ${username} thành công!`,'success');
+            }catch(err){
+                console.error('admin-create-user:',err);
+                showToast('Tạo tài khoản thất bại: '+(err?.message||err),'error');
+            } finally {
+                userSaveInProgress=false;
+                if(btn){btn.disabled=false;btn.innerHTML=old||'Tạo tài khoản';}
+            }
         }
 
         async function deleteUser(){ showToast('Xóa tài khoản Auth sẽ được nối bằng Edge Function riêng để đảm bảo an toàn.','error'); }
