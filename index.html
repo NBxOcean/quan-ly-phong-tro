@@ -1178,6 +1178,99 @@ code,pre,kbd,samp{
   .nb-login-copy{font-size:11px!important}
 }
 
+
+/* NBRES V10.3.3 • AUTH ICON FIX
+   Inline SVG icons: no Font Awesome glyph/font dependency. */
+#authScreen .nb-auth-svg{
+  width:18px;height:18px;
+  fill:none;
+  stroke:#8290a5;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  flex:0 0 auto;
+  font-family:initial!important;
+}
+#authScreen .nb-eye-svg{
+  width:17px;height:17px;
+  cursor:pointer;
+}
+
+
+/* NBRES V10.3.4 • AUTH ICON ALIGNMENT FIX
+   Locks icons inside fields and prevents flex/SVG overflow. */
+#authScreen .nb-field,
+#authScreen .nb-input-wrap,
+#authScreen .relative:has(input){
+  position:relative;
+}
+#authScreen .nb-auth-svg{
+  position:absolute!important;
+  left:17px!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  width:17px!important;
+  height:17px!important;
+  min-width:17px!important;
+  max-width:17px!important;
+  display:block!important;
+  margin:0!important;
+  padding:0!important;
+  z-index:3!important;
+  pointer-events:none;
+  overflow:visible;
+}
+#authScreen .nb-eye-svg{
+  left:auto!important;
+  right:17px!important;
+  pointer-events:auto;
+  cursor:pointer;
+}
+#authScreen input[type="text"],
+#authScreen input[type="email"],
+#authScreen input[type="password"]{
+  padding-left:50px!important;
+  padding-right:50px!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+}
+/* If an SVG sits directly in a field wrapper, keep the wrapper clipping clean. */
+#authScreen .nb-field,
+#authScreen .nb-input-wrap{
+  overflow:hidden;
+  border-radius:11px;
+}
+
+
+/* NBRES V10.3.5 • REMEMBER DEVICE */
+#authScreen .nb-remember-device{
+  display:flex;align-items:flex-start;gap:11px;
+  margin:16px 0 20px;padding:0;
+  color:#8d98aa;cursor:pointer;user-select:none;
+}
+#authScreen .nb-remember-device input{
+  position:absolute;opacity:0;pointer-events:none;
+}
+#authScreen .nb-remember-check{
+  width:17px;height:17px;min-width:17px;margin-top:2px;
+  border:1px solid #485365;border-radius:5px;
+  background:#080b10;position:relative;
+  transition:.18s ease;
+}
+#authScreen .nb-remember-device input:checked + .nb-remember-check{
+  border-color:#c6a544;background:#b89435;
+}
+#authScreen .nb-remember-device input:checked + .nb-remember-check:after{
+  content:"";position:absolute;left:5px;top:2px;width:4px;height:8px;
+  border:solid #080a0e;border-width:0 2px 2px 0;transform:rotate(45deg);
+}
+#authScreen .nb-remember-device strong{
+  display:block;color:#aab3c1;font-size:10px;font-weight:600;line-height:1.4;
+}
+#authScreen .nb-remember-device small{
+  display:block;margin-top:3px;color:#596476;font-size:8.5px;line-height:1.45;
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 </head>
@@ -1225,10 +1318,18 @@ code,pre,kbd,samp{
         <div class="nb-auth-panel">
           <div><div class="nb-auth-title">Xác Thực Truy Cập</div><div class="nb-auth-sub">NBRES • Hệ thống quản trị & Sale bất động sản</div></div>
           <form id="loginForm" onsubmit="handleLogin(event)">
-            <div class="nb-field"><label>Tên đăng nhập</label><div class="nb-input-wrap"><i class="fa-solid fa-user"></i><input type="text" id="loginUsername" autocomplete="username" required autocapitalize="none" spellcheck="false" placeholder="Ví dụ: ql.uniliving"></div></div>
-            <div class="nb-field"><label>Mật khẩu bảo mật</label><div class="nb-input-wrap"><i class="fa-solid fa-lock"></i><input type="password" id="loginPassword" autocomplete="current-password" required placeholder="••••••••••••"><button class="nb-eye" type="button" onclick="togglePasswordVisibility('loginPassword','eyeIcon')"><i id="eyeIcon" class="fa-solid fa-eye"></i></button></div></div>
+            <div class="nb-field"><label>Tên đăng nhập</label><div class="nb-input-wrap"><svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
+    </svg><input type="text" id="loginUsername" autocomplete="username" required autocapitalize="none" spellcheck="false" placeholder="Ví dụ: ql.uniliving"></div></div>
+            <div class="nb-field"><label>Mật khẩu bảo mật</label><div class="nb-input-wrap"><svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="5" y="10" width="14" height="10" rx="2"/>
+      <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+    </svg><input type="password" id="loginPassword" autocomplete="current-password" required placeholder="••••••••••••"><button class="nb-eye" type="button" onclick="togglePasswordVisibility('loginPassword','eyeIcon')"><svg class="nb-auth-svg nb-eye-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/>
+      <circle cx="12" cy="12" r="2.5"/>
+    </svg></button></div></div>
             <div class="nb-options"><label><input type="checkbox" id="rememberMe" checked> Ghi nhớ đăng nhập</label><a onclick="showToast('Vui lòng liên hệ Admin để được hỗ trợ đặt lại mật khẩu.','error')">Quên mật khẩu?</a></div>
-            <button id="loginSubmitBtn" type="submit" class="nb-submit">Truy Cập Hệ Thống</button>
+<button id="loginSubmitBtn" type="submit" class="nb-submit">Truy Cập Hệ Thống</button>
           </form>
           <div class="nb-notice">Tài khoản mới được cấp trực tiếp bởi <strong>Admin NBRES</strong>.</div>
           <div class="nb-auth-foot">© 2026 NBRES • Nguyên Bảo Real Estate System</div>
@@ -1340,7 +1441,9 @@ code,pre,kbd,samp{
                                 </button>
 
                                 <button onclick="selectTaskFromMenu('tab-users')" id="nav-users" class="task-menu-item tab-btn hidden w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
-                                    <span class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-300 flex items-center justify-center shrink-0"><i class="fa-solid fa-users-gear"></i></span>
+                                    <span class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-300 flex items-center justify-center shrink-0"><svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
+    </svg></span>
                                     <span class="min-w-0"><span class="block font-bold">Quản Lý Tài Khoản</span><span class="block text-[11px] text-slate-400 truncate">Tài khoản, phân quyền và trạng thái online</span></span>
                                 </button>
                             </div>
@@ -1350,7 +1453,9 @@ code,pre,kbd,samp{
 
                     <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-2xl border border-slate-700">
                         <div class="w-7 h-7 rounded-full bg-gradient-to-r from-orange-400 to-amber-400 text-slate-900 font-bold flex items-center justify-center text-xs">
-                            <i class="fa-solid fa-user-shield"></i>
+                            <svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
+    </svg>
                         </div>
                         <div class="hidden sm:block text-left pr-1">
                             <p id="currentUserDisplay" class="text-xs font-bold leading-tight text-white">Admin</p>
@@ -1624,7 +1729,9 @@ code,pre,kbd,samp{
 
 
             <div id="tab-leads" class="tab-content hidden space-y-5">
-                <div class="rounded-3xl bg-gradient-to-br from-emerald-950 via-slate-950 to-slate-900 text-white p-6 shadow-xl"><div class="flex justify-between gap-4 flex-wrap"><div><div class="text-[10px] uppercase tracking-[.22em] text-emerald-300 font-black">NBRES • SALES PIPELINE</div><h2 class="text-2xl font-black mt-2">Khách Hàng & Lead</h2><p class="text-sm text-slate-400 mt-1">Lead mới → tư vấn → xem phòng → thương lượng → chốt.</p></div><button onclick="openLeadModal()" class="px-4 py-2.5 rounded-xl bg-emerald-400 text-emerald-950 font-black text-sm"><i class="fa-solid fa-user-plus mr-1"></i>Thêm Lead</button></div></div>
+                <div class="rounded-3xl bg-gradient-to-br from-emerald-950 via-slate-950 to-slate-900 text-white p-6 shadow-xl"><div class="flex justify-between gap-4 flex-wrap"><div><div class="text-[10px] uppercase tracking-[.22em] text-emerald-300 font-black">NBRES • SALES PIPELINE</div><h2 class="text-2xl font-black mt-2">Khách Hàng & Lead</h2><p class="text-sm text-slate-400 mt-1">Lead mới → tư vấn → xem phòng → thương lượng → chốt.</p></div><button onclick="openLeadModal()" class="px-4 py-2.5 rounded-xl bg-emerald-400 text-emerald-950 font-black text-sm"><svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
+    </svg>Thêm Lead</button></div></div>
                 <div id="leadStats" class="grid grid-cols-2 lg:grid-cols-6 gap-3"></div>
                 <div class="bg-white rounded-2xl border p-4 flex gap-2 flex-wrap"><input id="leadSearch" oninput="renderLeadsV9()" placeholder="Tìm tên / SĐT / nhu cầu..." class="flex-1 min-w-[220px] border rounded-xl px-3 py-2.5 bg-slate-50 text-sm"><select id="leadStageFilter" onchange="renderLeadsV9()" class="border rounded-xl px-3 py-2.5 bg-slate-50 text-xs font-bold"><option value="">Tất cả giai đoạn</option><option>Lead mới</option><option>Đang tư vấn</option><option>Đã liên hệ</option><option>Hẹn xem phòng</option><option>Đang thương lượng</option><option>Đã chốt</option><option>Mất khách</option></select></div>
                 <div id="leadPipeline" class="grid md:grid-cols-2 xl:grid-cols-4 gap-3"></div>
@@ -1674,7 +1781,9 @@ code,pre,kbd,samp{
                     <div class="bg-white rounded-2xl border shadow-sm p-5">
                         <h3 class="font-black text-slate-900">Export doanh nghiệp</h3><p class="text-xs text-slate-500 mt-1">Xuất nhanh dữ liệu đang có quyền xem để sao lưu hoặc xử lý ngoài hệ thống.</p>
                         <div class="grid grid-cols-2 gap-3 mt-4">
-                            <button onclick="exportLeadsV10()" class="p-4 rounded-2xl bg-emerald-50 text-emerald-700 text-left"><i class="fa-solid fa-users"></i><div class="font-black text-xs mt-2">Lead / Khách hàng</div></button>
+                            <button onclick="exportLeadsV10()" class="p-4 rounded-2xl bg-emerald-50 text-emerald-700 text-left"><svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
+    </svg><div class="font-black text-xs mt-2">Lead / Khách hàng</div></button>
                             <button onclick="exportRoomsV10()" class="p-4 rounded-2xl bg-orange-50 text-orange-700 text-left"><i class="fa-solid fa-building"></i><div class="font-black text-xs mt-2">Kho phòng</div></button>
                         </div>
                         <div class="mt-5 p-4 rounded-2xl bg-amber-50 text-amber-800 text-xs"><b>Lưu ý:</b> Export là bản sao dữ liệu. Backup hệ thống vẫn phải được cấu hình riêng ở Supabase/DB.</div>
@@ -1801,7 +1910,9 @@ code,pre,kbd,samp{
                             <div id="platformActiveCompanyName" class="font-black text-xl text-slate-900 mt-2">Chưa chọn Công Ty</div>
                             <div id="platformActiveCompanyMeta" class="text-xs text-slate-400 mt-1">Chọn doanh nghiệp để xem thông tin hỗ trợ.</div>
                             <div id="platformSupportActions" class="hidden mt-4 space-y-2">
-                                <button onclick="openPlatformCompanyManager()" class="w-full p-3 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-bold text-left"><i class="fa-solid fa-user-tie mr-2"></i>Quản Lý Công Ty</button>
+                                <button onclick="openPlatformCompanyManager()" class="w-full p-3 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-bold text-left"><svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
+    </svg>Quản Lý Công Ty</button>
                                 <button onclick="showPlatformSupportInfo()" class="w-full p-3 rounded-xl bg-sky-50 text-sky-700 text-xs font-bold text-left"><i class="fa-solid fa-headset mr-2"></i>Thông tin hỗ trợ</button>
                             </div>
                         </div>
@@ -1815,7 +1926,9 @@ code,pre,kbd,samp{
                     </div>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
                         <button onclick="openCompanyModal()" class="p-4 rounded-2xl bg-amber-50 text-amber-700 text-left"><i class="fa-solid fa-building-circle-check"></i><div class="font-extrabold text-xs mt-2">Khởi tạo Công Ty</div><div class="text-[10px] opacity-70 mt-1">Tạo tenant mới</div></button>
-                        <button onclick="openPlatformCompanyManager()" class="p-4 rounded-2xl bg-indigo-50 text-indigo-700 text-left"><i class="fa-solid fa-user-tie"></i><div class="font-extrabold text-xs mt-2">Tài khoản đầu mối</div><div class="text-[10px] opacity-70 mt-1">Quản Lý Công Ty</div></button>
+                        <button onclick="openPlatformCompanyManager()" class="p-4 rounded-2xl bg-indigo-50 text-indigo-700 text-left"><svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
+    </svg><div class="font-extrabold text-xs mt-2">Tài khoản đầu mối</div><div class="text-[10px] opacity-70 mt-1">Quản Lý Công Ty</div></button>
                         <button onclick="showPlatformSupportInfo()" class="p-4 rounded-2xl bg-sky-50 text-sky-700 text-left"><i class="fa-solid fa-headset"></i><div class="font-extrabold text-xs mt-2">Hỗ trợ doanh nghiệp</div><div class="text-[10px] opacity-70 mt-1">Xem ngữ cảnh hỗ trợ</div></button>
                         <button onclick="showToast('Nhật ký hệ thống sẽ được triển khai ở Audit Log.','success')" class="p-4 rounded-2xl bg-slate-100 text-slate-700 text-left"><i class="fa-solid fa-clock-rotate-left"></i><div class="font-extrabold text-xs mt-2">Nhật ký hệ thống</div><div class="text-[10px] opacity-70 mt-1">Chuẩn bị Audit Log</div></button>
                     </div>
@@ -1829,7 +1942,9 @@ code,pre,kbd,samp{
                     <div class="grid grid-cols-2 md:grid-cols-5 gap-2 mt-4">
                         <button onclick="platformSupportAction('region')" class="p-3 rounded-xl bg-sky-50 text-sky-700 text-left"><i class="fa-solid fa-map-location-dot"></i><div class="font-bold text-xs mt-2">Khu vực</div><div class="text-[10px] opacity-70">Xem / tạo</div></button>
                         <button onclick="platformSupportAction('team')" class="p-3 rounded-xl bg-violet-50 text-violet-700 text-left"><i class="fa-solid fa-people-group"></i><div class="font-bold text-xs mt-2">Team</div><div class="text-[10px] opacity-70">Xem / tạo</div></button>
-                        <button onclick="platformSupportAction('user')" class="p-3 rounded-xl bg-indigo-50 text-indigo-700 text-left"><i class="fa-solid fa-user-plus"></i><div class="font-bold text-xs mt-2">Nhân Sự</div><div class="text-[10px] opacity-70">Xem / tạo</div></button>
+                        <button onclick="platformSupportAction('user')" class="p-3 rounded-xl bg-indigo-50 text-indigo-700 text-left"><svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
+    </svg><div class="font-bold text-xs mt-2">Nhân Sự</div><div class="text-[10px] opacity-70">Xem / tạo</div></button>
                         <button onclick="platformSupportAction('room')" class="p-3 rounded-xl bg-orange-50 text-orange-700 text-left"><i class="fa-solid fa-house-circle-plus"></i><div class="font-bold text-xs mt-2">Phòng</div><div class="text-[10px] opacity-70">Xem / tạo</div></button>
                         <button onclick="platformSupportAction('appointment')" class="p-3 rounded-xl bg-cyan-50 text-cyan-700 text-left"><i class="fa-solid fa-calendar-plus"></i><div class="font-bold text-xs mt-2">Lịch xem</div><div class="text-[10px] opacity-70">Xem / tạo</div></button>
                     </div>
@@ -1847,7 +1962,9 @@ code,pre,kbd,samp{
                         </div>
                         <div class="flex gap-2 flex-wrap">
                             <button onclick="switchTab('tab-regions')" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-xs font-bold"><i class="fa-solid fa-map-location-dot mr-1.5"></i>Khu vực</button>
-                            <button onclick="switchTab('tab-users')" class="px-3.5 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-xs font-bold"><i class="fa-solid fa-user-plus mr-1.5"></i>Nhân Sự</button>
+                            <button onclick="switchTab('tab-users')" class="px-3.5 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-xs font-bold"><svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
+    </svg>Nhân Sự</button>
                         </div>
                     </div>
                 </div>
@@ -1881,7 +1998,9 @@ code,pre,kbd,samp{
                         <div class="grid grid-cols-2 gap-2 mt-4">
                             <button onclick="openModal(false)" class="p-3 rounded-xl bg-orange-50 text-orange-700 text-xs font-bold text-left"><i class="fa-solid fa-plus mr-1"></i>Thêm phòng</button>
                             <button onclick="openRegionModal()" class="p-3 rounded-xl bg-sky-50 text-sky-700 text-xs font-bold text-left"><i class="fa-solid fa-map-location-dot mr-1"></i>Tạo khu vực</button>
-                            <button onclick="openUserModal()" class="p-3 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-bold text-left"><i class="fa-solid fa-user-plus mr-1"></i>Thêm nhân sự</button>
+                            <button onclick="openUserModal()" class="p-3 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-bold text-left"><svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
+    </svg>Thêm nhân sự</button>
                             <button onclick="switchTab('tab-appointments')" class="p-3 rounded-xl bg-cyan-50 text-cyan-700 text-xs font-bold text-left"><i class="fa-solid fa-calendar-check mr-1"></i>Lịch xem</button>
                         </div>
                     </div>
@@ -1974,7 +2093,9 @@ code,pre,kbd,samp{
                 <div class="rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white p-5 md:p-6 shadow-xl border border-slate-800">
                     <div class="flex justify-between items-start gap-4 flex-wrap">
                         <div><div class="text-[10px] uppercase tracking-[.22em] text-indigo-300 font-extrabold">NBRES • PEOPLE & ACCESS CENTER</div><h2 class="text-2xl font-black mt-2">Nhân Sự & Phân Quyền</h2><p class="text-sm text-slate-400 mt-1">Quản lý con người, phạm vi truy cập và trạng thái tài khoản theo đúng cấu trúc vận hành.</p></div>
-                        <button onclick="openUserModal()" class="bg-white text-slate-900 hover:bg-slate-100 font-extrabold px-4 py-2.5 rounded-xl transition shadow flex items-center gap-2 text-sm"><i class="fa-solid fa-user-plus text-indigo-600"></i> Thêm Nhân Sự</button>
+                        <button onclick="openUserModal()" class="bg-white text-slate-900 hover:bg-slate-100 font-extrabold px-4 py-2.5 rounded-xl transition shadow flex items-center gap-2 text-sm"><svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
+    </svg> Thêm Nhân Sự</button>
                     </div>
                 </div>
 
@@ -2503,12 +2624,17 @@ code,pre,kbd,samp{
                 <input type="hidden" id="editUserId">
                 <div><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Tên đăng nhập *</label><input type="text" id="accUsername" required minlength="3" maxlength="32" autocapitalize="none" spellcheck="false" placeholder="Ví dụ: sale.nguyenbao" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><p class="text-[10px] text-slate-500 mt-1">3–32 ký tự: chữ không dấu, số, dấu chấm, gạch dưới hoặc gạch ngang.</p></div>
                 <div><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Họ và tên *</label><input type="text" id="accFullName" required placeholder="Nguyễn Văn A" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"></div>
-                <div><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Mật khẩu ban đầu *</label><div class="relative"><input type="password" id="accPassword" required minlength="8" placeholder="Tối thiểu 8 ký tự" class="w-full border border-white/10 rounded-xl p-3 pr-11 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><button type="button" onclick="togglePasswordVisibility('accPassword','accPasswordEye')" class="absolute right-3 top-3 text-slate-500 hover:text-[#D4AF37]"><i id="accPasswordEye" class="fa-solid fa-eye"></i></button></div><p class="text-[10px] text-slate-500 mt-1">Mật khẩu được gửi trực tiếp đến Supabase Auth và không hiển thị lại trong NBRES.</p></div>
+                <div><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Mật khẩu ban đầu *</label><div class="relative"><input type="password" id="accPassword" required minlength="8" placeholder="Tối thiểu 8 ký tự" class="w-full border border-white/10 rounded-xl p-3 pr-11 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><button type="button" onclick="togglePasswordVisibility('accPassword','accPasswordEye')" class="absolute right-3 top-3 text-slate-500 hover:text-[#D4AF37]"><svg class="nb-auth-svg nb-eye-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/>
+      <circle cx="12" cy="12" r="2.5"/>
+    </svg></button></div><p class="text-[10px] text-slate-500 mt-1">Mật khẩu được gửi trực tiếp đến Supabase Auth và không hiển thị lại trong NBRES.</p></div>
                 <div><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Cấp quyền *</label><select id="accRole" onchange="syncUserTeamRequirement()" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><option value="Nhân viên">Nhân viên</option><option value="Quản Lí Team">Quản Lý Team</option><option value="Quản Lý Khu vực">Quản Lý Khu vực</option><option value="Quản Lí Công Ty">Quản Lý Công Ty</option></select><p class="text-[10px] text-slate-500 mt-1">Admin Quản Lý là cấp cao nhất và không được tạo từ biểu mẫu này.</p></div>
                 <div id="accTenantWrap"><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Công Ty *</label><select id="accTenantId" onchange="syncUserTenantSelection()" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><option value="">-- Chọn công ty --</option></select></div>
                 <div id="accRegionWrap"><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Khu vực</label><select id="accRegionId" onchange="populateUserTeamOptions(null,this.value)" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><option value="">-- Chọn khu vực --</option></select></div>
                 <div id="accTeamWrap"><label id="accTeamLabel" class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Team</label><select id="accTeamId" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><option value="">-- Chọn team --</option></select></div>
-                <div class="pt-3 border-t border-white/10 flex justify-end gap-2"><button type="button" onclick="closeUserModal()" class="px-4 py-2 border border-white/10 rounded-xl text-sm text-slate-400 hover:text-white">Hủy</button><button type="submit" class="px-5 py-2.5 bg-[#D4AF37] hover:bg-[#e6c553] text-[#030508] font-bold rounded-xl text-sm shadow-lg"><i class="fa-solid fa-user-plus mr-1"></i> Tạo tài khoản</button></div>
+                <div class="pt-3 border-t border-white/10 flex justify-end gap-2"><button type="button" onclick="closeUserModal()" class="px-4 py-2 border border-white/10 rounded-xl text-sm text-slate-400 hover:text-white">Hủy</button><button type="submit" class="px-5 py-2.5 bg-[#D4AF37] hover:bg-[#e6c553] text-[#030508] font-bold rounded-xl text-sm shadow-lg"><svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
+    </svg> Tạo tài khoản</button></div>
             </form>
         </div>
     </div>
@@ -2706,9 +2832,39 @@ code,pre,kbd,samp{
         const SUPABASE_URL = 'https://yhkblcdvpcvjbxwfnqac.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_pK0cLrfth79Gj5OyPUDIwg_ohhag-Ld';
         let supabaseClient = null;
+        const NBRES_REMEMBER_KEY = 'NBRES_REMEMBER_DEVICE';
+        const NBRES_LOGIN_ID_KEY = 'NBRES_REMEMBERED_LOGIN_ID';
+
+        const nbresAuthStorage = {
+            getItem(key) {
+                return sessionStorage.getItem(key) ?? localStorage.getItem(key);
+            },
+            setItem(key, value) {
+                const remember = true;
+                if (remember) {
+                    localStorage.setItem(key, value);
+                    sessionStorage.removeItem(key);
+                } else {
+                    sessionStorage.setItem(key, value);
+                    localStorage.removeItem(key);
+                }
+            },
+            removeItem(key) {
+                sessionStorage.removeItem(key);
+                localStorage.removeItem(key);
+            }
+        };
+
         try {
             if (window.supabase && typeof window.supabase.createClient === 'function') {
-                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+                    auth: {
+                        storage: nbresAuthStorage,
+                        persistSession: true,
+                        autoRefreshToken: true,
+                        detectSessionInUrl: true
+                    }
+                });
             }
         } catch (e) {
             console.error('Không thể khởi tạo Supabase:', e);
@@ -4156,6 +4312,7 @@ code,pre,kbd,samp{
                 // Tài khoản username mới dùng email kỹ thuật; email cũ vẫn được hỗ trợ
                 // để Admin Quản Lý hiện tại không bị khóa khỏi hệ thống.
                 const email = loginId.includes('@') ? loginId : `${loginId}@auth.nbres.local`;
+                if(window.nbresSaveRememberPreference) window.nbresSaveRememberPreference();
                 const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
                 if (error || !data?.user) throw error || new Error('Không thể đăng nhập.');
                 const { data:profile, error:profileError } = await supabaseClient.from('profiles').select('id,email,username,full_name,role,tenant_id,region_id,team_id,is_active').eq('id',data.user.id).single();
@@ -4268,7 +4425,9 @@ code,pre,kbd,samp{
             const noManager=(regions||[]).filter(r=>!companyUsers.some(u=>u.role==='Quản Lý Khu vực'&&String(u.region_id||'')===String(r.id))).length;
             if(noManager)attention.push(`<div class="p-3 rounded-xl bg-amber-50 text-amber-800 text-xs font-semibold"><i class="fa-solid fa-triangle-exclamation mr-1"></i>${noManager} khu vực chưa có Quản Lý Khu vực</div>`);
             const noRegion=companyUsers.filter(u=>['Nhân viên','Quản Lý Khu vực','Quản Lí Team'].includes(u.role)&&!u.region_id).length;
-            if(noRegion)attention.push(`<div class="p-3 rounded-xl bg-rose-50 text-rose-700 text-xs font-semibold"><i class="fa-solid fa-user-clock mr-1"></i>${noRegion} nhân sự chưa được gán Khu vực</div>`);
+            if(noRegion)attention.push(`<div class="p-3 rounded-xl bg-rose-50 text-rose-700 text-xs font-semibold"><svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
+    </svg>${noRegion} nhân sự chưa được gán Khu vực</div>`);
             if(!vacant)attention.push(`<div class="p-3 rounded-xl bg-sky-50 text-sky-700 text-xs font-semibold"><i class="fa-solid fa-house-circle-exclamation mr-1"></i>Hiện chưa có phòng ở trạng thái còn trống</div>`);
             if(!attention.length)attention.push('<div class="p-3 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-semibold"><i class="fa-solid fa-circle-check mr-1"></i>Chưa phát hiện vấn đề vận hành nổi bật.</div>');
             const att=document.getElementById('dashAttention'); if(att)att.innerHTML=attention.join('');
@@ -4930,7 +5089,9 @@ code,pre,kbd,samp{
                             </div>
 
                             <div class="flex items-start gap-3">
-                                <div class="w-9 h-9 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-user-tie"></i></div>
+                                <div class="w-9 h-9 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center shrink-0"><svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
+    </svg></div>
                                 <div>
                                     <div class="text-slate-500">Nhân viên dẫn khách</div>
                                     <div class="font-bold text-slate-800">${escapeHtml(sale?.name || 'Không xác định')}</div>
@@ -8084,7 +8245,9 @@ code,pre,kbd,samp{
                     <div class="flex items-center gap-2 mt-2 text-xs text-slate-500 flex-wrap">
                         <span><i class="fa-solid fa-tag text-slate-400"></i> Dạng vấn đề: <strong>${escapeHtml(item.type)}</strong></span>
                         <span>•</span>
-                        <span><i class="fa-solid fa-user-group text-slate-400"></i> Đối tượng: <strong>${escapeHtml(item.tag)}</strong></span>
+                        <span><svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
+    </svg> Đối tượng: <strong>${escapeHtml(item.tag)}</strong></span>
                     </div>
 
                     <div class="bg-sky-50/80 border border-sky-200 p-3.5 rounded-2xl space-y-1">
@@ -8119,7 +8282,10 @@ code,pre,kbd,samp{
 
                     ${!isCrmAdmin() ? `
                     <div class="text-[11px] text-slate-500 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-center">
-                        <i class="fa-solid fa-lock mr-1"></i> Tài khoản Sale chỉ có quyền xem và sao chép kịch bản.
+                        <svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="5" y="10" width="14" height="10" rx="2"/>
+      <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+    </svg> Tài khoản Sale chỉ có quyền xem và sao chép kịch bản.
                     </div>` : ''}
                 </div>
             `;
@@ -8346,6 +8512,33 @@ if ('serviceWorker' in navigator) {
       .catch(err => console.warn('NBRES PWA service worker error:', err));
   });
 }
+</script>
+
+
+<script>
+/* NBRES V10.3.7 • AUTOMATIC REMEMBER LOGIN */
+(function(){
+  const KEY='NBRES_REMEMBER_DEVICE';
+  const LOGIN_KEY='NBRES_REMEMBERED_LOGIN_ID';
+
+  window.nbresRememberDeviceEnabled=function(){ return true; };
+
+  window.nbresSaveRememberPreference=function(){
+    localStorage.setItem(KEY,'1');
+    const login=document.getElementById('loginUsername');
+    if(login && login.value.trim()){
+      localStorage.setItem(LOGIN_KEY,login.value.trim());
+    }
+    return true;
+  };
+
+  document.addEventListener('DOMContentLoaded',function(){
+    localStorage.setItem(KEY,'1');
+    const login=document.getElementById('loginUsername');
+    const savedLogin=localStorage.getItem(LOGIN_KEY);
+    if(login && savedLogin) login.value=savedLogin;
+  });
+})();
 </script>
 
 </body>
