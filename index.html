@@ -338,6 +338,8 @@
 .nb-cover{position:relative;z-index:2;width:100%;max-width:920px;padding:24px;text-align:center;transition:all 1s cubic-bezier(.77,0,.175,1)}
 .nb-cover.zoom-out{transform:scale(3.8);opacity:0;filter:blur(20px);pointer-events:none}
 .nb-tag{display:inline-flex;padding:6px 16px;border:1px solid rgba(212,175,55,.32);border-radius:999px;background:rgba(212,175,55,.05);color:var(--nbres-gold);font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase}
+.nbres-logo-auth{width:clamp(118px,18vw,178px);height:auto;display:block;margin:14px auto 22px;border-radius:26px;object-fit:contain;filter:drop-shadow(0 16px 28px rgba(212,175,55,.18));transition:transform .35s ease,filter .35s ease;cursor:pointer}.nbres-logo-auth:hover{transform:translateY(-2px) scale(1.025);filter:drop-shadow(0 18px 34px rgba(212,175,55,.28))}
+.nbres-logo-header{width:46px;height:46px;border-radius:13px;object-fit:cover;display:block;cursor:pointer;box-shadow:0 7px 20px rgba(212,175,55,.18);transition:transform .25s ease,box-shadow .25s ease}.nbres-logo-header:hover{transform:scale(1.06);box-shadow:0 9px 25px rgba(212,175,55,.3)}
 .nb-brand{margin:18px 0 38px;font-size:clamp(28px,5vw,48px);font-weight:300;letter-spacing:5px}.nb-brand strong{color:var(--nbres-gold);font-weight:700}.nb-bolt{display:inline-block;filter:drop-shadow(0 0 12px rgba(212,175,55,.8));animation:nbPulse 1.6s infinite}
 @keyframes nbPulse{50%{transform:scale(1.18);filter:drop-shadow(0 0 22px rgba(212,175,55,1))}}
 .nb-gateway{width:min(310px,84vw);height:390px;margin:auto;padding:32px;border:1px solid rgba(212,175,55,.42);border-radius:10px;background:linear-gradient(145deg,rgba(20,24,33,.92),rgba(5,8,12,.98));box-shadow:0 35px 80px rgba(0,0,0,.75),0 0 35px rgba(212,175,55,.08);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:.5s cubic-bezier(.16,1,.3,1)}
@@ -360,7 +362,7 @@
       <div class="nb-grid"></div><div class="nb-glow"></div>
       <section class="nb-cover" id="nbCover">
         <span class="nb-tag">NBRES Real Estate System</span>
-        <h1 class="nb-brand"><strong>GENZ SALE</strong> <span class="nb-bolt">⚡</span></h1>
+        <img src="nbres-logo-premium.png" alt="NBRES" class="nbres-logo-auth" onclick="goToInventoryFromLogo()" title="NBRES">
         <div class="nb-gateway" onclick="triggerNBRESLogin()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){triggerNBRESLogin()}">
           <div class="nb-coin"></div><h2>Khám Phá Hệ Thống</h2>
           <p>Không gian quản trị giỏ hàng, đội ngũ Sale và dữ liệu bất động sản của NBRES.</p>
@@ -388,9 +390,9 @@
         <header class="bg-slate-900 text-white shadow-xl sticky top-0 z-40 border-b border-slate-800">
             <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-tr from-orange-500 to-amber-400 rounded-xl flex items-center justify-center text-white shadow-md">
-                        <i class="fa-solid fa-house-fire text-lg"></i>
-                    </div>
+                    <button type="button" onclick="goToInventoryFromLogo()" class="shrink-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400/60" title="Về Kho Phòng" aria-label="Về Kho Phòng">
+                        <img src="nbres-logo-premium.png" alt="NBRES" class="nbres-logo-header">
+                    </button>
                     <div>
                         <h1 class="text-base md:text-lg font-bold leading-tight flex items-center gap-2">
                             Quản Lý Cho Thuê Căn Hộ
@@ -3212,6 +3214,14 @@
         }
 
         // 2. AUTH & PHÂN QUYỀN
+        function goToInventoryFromLogo(){
+            if (typeof currentUser !== 'undefined' && currentUser) {
+                if (typeof switchTab === 'function') switchTab('tab-inventory');
+                return;
+            }
+            triggerNBRESLogin();
+        }
+
         function triggerNBRESLogin(){ const c=document.getElementById('nbCover'),o=document.getElementById('authOverlay'); if(c)c.classList.add('zoom-out'); setTimeout(()=>{if(o)o.classList.add('active'); document.getElementById('loginUsername')?.focus();},420); }
         function resetNBRESLogin(){ const c=document.getElementById('nbCover'),o=document.getElementById('authOverlay'); if(o)o.classList.remove('active'); setTimeout(()=>{if(c)c.classList.remove('zoom-out');},250); }
         async function loadSecureWorkspace(){
@@ -3576,6 +3586,9 @@
             if(navCompanyDashboardBtn) navCompanyDashboardBtn.classList.toggle('hidden', !isCompanyAdmin());
             const adminAddRoomBtn = document.getElementById('adminAddRoomBtn');
             const adminDataControls = document.getElementById('adminDataControls');
+            document.querySelectorAll('[onclick*="clearAllData"]').forEach(btn=>{
+                btn.classList.toggle('hidden', !(isCompanyAdmin() || isSuperAdmin()));
+            });
             const crmAdminControls = document.getElementById('crmAdminControls');
             const roleBadgeHeader = document.getElementById('roleBadgeHeader');
             const navAppointmentsBtn = document.getElementById('nav-appointments');
@@ -6682,16 +6695,50 @@
         });
 
         async function clearAllData() {
-            if (!hasAdminAccess()) {
-                showToast('Chỉ Admin mới có quyền xóa toàn bộ kho phòng!', 'error');
+            // V10.1.3 SECURITY: thao tác phá huỷ chỉ dành cho Company Admin / Platform Admin.
+            if (!(isCompanyAdmin() || isSuperAdmin())) {
+                showToast('Chỉ Quản Lí Công Ty hoặc Admin Quản Lí mới có quyền dọn toàn bộ Kho Phòng.', 'error');
                 return;
             }
-            if (confirm('Lưu ý: Xóa toàn bộ danh sách phòng trong kho!')) {
+            if (!currentTenantId) {
+                showToast('Không xác định được Công Ty hiện tại.', 'error');
+                return;
+            }
+
+            // Không cho thao tác chỉ bằng một nút Confirm đơn giản.
+            const tenant = (tenants || []).find(t => String(t.id) === String(currentTenantId));
+            const companyName = tenant?.name || tenant?.company_name || currentTenant?.name || currentTenant?.company_name || '';
+            const expected = String(companyName || '').trim();
+
+            if (!expected) {
+                showToast('Không xác định được tên Công Ty để xác nhận thao tác.', 'error');
+                return;
+            }
+
+            const typed = prompt(
+                `THAO TÁC NGUY HIỂM\n\nBạn đang yêu cầu dọn toàn bộ Kho Phòng của:\n${expected}\n\nNhập chính xác tên Công Ty để tiếp tục:`
+            );
+            if (typed === null) return;
+
+            if (typed.trim() !== expected) {
+                showToast('Tên Công Ty không khớp. Đã hủy thao tác.', 'error');
+                return;
+            }
+
+            const finalConfirm = confirm(
+                `XÁC NHẬN LẦN CUỐI\n\nDọn toàn bộ Kho Phòng của "${expected}"?\n\nHành động này chỉ áp dụng cho Công Ty đang chọn.`
+            );
+            if (!finalConfirm) return;
+
+            try {
                 await clearAllFromDB();
                 rooms = await loadRoomsFromDB();
                 renderDistrictOptions();
                 filterRooms();
-                showToast('Đã dọn sạch kho dữ liệu!');
+                showToast('Đã dọn Kho Phòng của Công Ty đã xác nhận.', 'success');
+            } catch (err) {
+                console.error('Clear room inventory:', err);
+                showToast('Không thể dọn Kho Phòng: ' + (err?.message || err), 'error');
             }
         }
 
