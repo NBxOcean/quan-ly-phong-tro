@@ -878,6 +878,25 @@
                     <div id="companyList" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 mt-5"></div>
                 </div>
 
+                <div id="companyTeamSettingsCard" class="hidden bg-white p-4 rounded-2xl shadow-sm border border-violet-200">
+                    <div class="flex items-center justify-between gap-4 flex-wrap">
+                        <div class="flex items-center gap-3">
+                            <div class="w-11 h-11 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center">
+                                <i class="fa-solid fa-people-group"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-sm font-extrabold text-slate-800">Tính năng Team</h2>
+                                <p id="companyTeamSettingsHint" class="text-xs text-slate-500 mt-0.5">Tùy chọn cấu trúc Team cho Công Ty.</p>
+                            </div>
+                        </div>
+                        <label class="inline-flex items-center cursor-pointer gap-3">
+                            <span id="companyTeamToggleLabel" class="text-xs font-bold text-slate-500">Đang tắt</span>
+                            <input id="companyTeamToggle" type="checkbox" class="sr-only peer" onchange="toggleOwnCompanyTeamFeature(this.checked)">
+                            <div class="relative w-12 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:bg-violet-600 transition after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div>
+                        </label>
+                    </div>
+                </div>
+
                 <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex-wrap gap-3">
                     <div>
                         <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
@@ -2953,6 +2972,7 @@
                     currentTenantId = currentUser?.tenant_id || null;
                 }
                 renderCompanies();
+                renderOwnCompanyTeamSettings();
                 users = await loadProfilesForWorkspace();
                 if(!currentTenantId && isSuperAdmin()){
                     regions=[]; teams=[]; rooms=[]; dbCases=[]; currentFilteredData=[];
@@ -3068,6 +3088,7 @@
             if (navRegionsBtn) navRegionsBtn.classList.toggle('hidden', !(isSuperAdmin() || isCompanyAdmin() || isRegionalAdmin()));
             if (navTeamsBtn) navTeamsBtn.classList.toggle('hidden', !isTeamFeatureEnabled() || !(isSuperAdmin() || isCompanyAdmin() || isRegionalAdmin()));
             renderTeamContext();
+            renderOwnCompanyTeamSettings();
 
             if (navAppointmentsBtn) navAppointmentsBtn.classList.remove('hidden');
             if (appointmentQuickAccess) appointmentQuickAccess.classList.add('hidden');
@@ -3274,11 +3295,11 @@
                 showToast('Chỉ Admin mới có quyền truy cập trang này!', 'error');
                 return;
             }
-            if (tabId === 'tab-regions' && !isSuperAdmin()) {
-                showToast('Chỉ Admin Quản Lí mới có quyền quản lý Khu Vực!', 'error'); return;
+            if (tabId === 'tab-regions' && !(isSuperAdmin() || isCompanyAdmin() || isRegionalAdmin())) {
+                showToast('Bạn không có quyền truy cập Khu Vực!', 'error'); return;
             }
-            if (tabId === 'tab-teams' && !(isSuperAdmin() || isRegionalAdmin())) {
-                showToast('Bạn không có quyền quản lý Team!', 'error'); return;
+            if (tabId === 'tab-teams' && (!isTeamFeatureEnabled() || !(isSuperAdmin() || isCompanyAdmin() || isRegionalAdmin()))) {
+                showToast('Bạn không có quyền quản lý Team hoặc Công Ty chưa bật tính năng Team!', 'error'); return;
             }
 
             if (tabId === 'tab-appointments') {
@@ -3775,9 +3796,33 @@
                 if(error) throw error;
                 const t=tenants.find(x=>String(x.id)===String(id)); if(t)t.teams_enabled=!!enabled;
                 if(!enabled){activeTeamId='';}
-                renderCompanies(); showApp(); renderTeamContext(); renderUsersTable();
+                renderCompanies(); renderOwnCompanyTeamSettings(); showApp(); renderTeamContext(); renderUsersTable();
                 showToast(`Đã ${action} tính năng Team.`,'success');
             }catch(err){showToast('Không thể cập nhật tính năng Team: '+(err?.message||err),'error');}
+        }
+
+        function renderOwnCompanyTeamSettings(){
+            const card=document.getElementById('companyTeamSettingsCard');
+            const toggle=document.getElementById('companyTeamToggle');
+            const label=document.getElementById('companyTeamToggleLabel');
+            const hint=document.getElementById('companyTeamSettingsHint');
+            if(!card||!toggle||!label)return;
+            if(!isCompanyAdmin()){card.classList.add('hidden');return;}
+            card.classList.remove('hidden');
+            const t=tenants.find(x=>String(x.id||'')===String(currentUser?.tenant_id||''));
+            const enabled=!!t?.teams_enabled;
+            toggle.checked=enabled;
+            label.textContent=enabled?'Đang bật':'Đang tắt';
+            label.className='text-xs font-bold '+(enabled?'text-violet-600':'text-slate-500');
+            if(hint) hint.textContent=enabled
+                ? 'Công Ty đang dùng cấu trúc Khu Vực → Team → Nhân Viên.'
+                : 'Team đang tắt. Nhân Viên có thể được gán trực tiếp vào Khu Vực.';
+        }
+
+        async function toggleOwnCompanyTeamFeature(enabled){
+            if(!isCompanyAdmin()) return showToast('Chỉ Quản Lí Công Ty mới được thay đổi thiết lập này.','error');
+            await setCompanyTeamsEnabled(currentUser?.tenant_id,!!enabled);
+            renderOwnCompanyTeamSettings();
         }
 
         // 2.1 QUẢN LÍ CÔNG TY - CHỈ ADMIN QUẢN LÍ
@@ -3785,12 +3830,10 @@
             const panel=document.getElementById('platformCompanyPanel');
             const list=document.getElementById('companyList');
             if(!panel||!list)return;
-            if(!(isSuperAdmin()||isCompanyAdmin())){panel.classList.add('hidden');return;}
+            if(!isSuperAdmin()){panel.classList.add('hidden');return;}
             panel.classList.remove('hidden');
 
-            const visibleTenants=isSuperAdmin()
-                ? tenants
-                : tenants.filter(t=>String(t.id||'')===String(currentUser?.tenant_id||''));
+            const visibleTenants=tenants;
 
             if(!visibleTenants.length){
                 list.innerHTML='<div class="md:col-span-2 xl:col-span-3 border border-dashed border-white/10 rounded-2xl p-6 text-center text-sm text-slate-500">Không tải được thông tin Công Ty của tài khoản này.</div>';
