@@ -458,6 +458,9 @@
                                     <span class="w-9 h-9 rounded-xl bg-violet-500/10 text-violet-300 flex items-center justify-center"><i class="fa-solid fa-clock-rotate-left"></i></span><span class="font-bold">Nhật Ký / Thùng Rác</span>
                                 </button>
 
+                                <button onclick="selectTaskFromMenu('tab-platform-library')" id="nav-platform-library" class="task-menu-item tab-btn hidden w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
+                                    <span class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-300 flex items-center justify-center"><i class="fa-solid fa-book-open"></i></span><span class="font-bold">Thư Viện NBRES</span>
+                                </button>
                                 <button onclick="selectTaskFromMenu('tab-data-center')" id="nav-data-center" class="task-menu-item tab-btn w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
                                     <span class="w-9 h-9 rounded-xl bg-teal-500/10 text-teal-300 flex items-center justify-center"><i class="fa-solid fa-file-arrow-up"></i></span><span class="font-bold">Dữ Liệu / Import</span>
                                 </button>
@@ -788,6 +791,15 @@
             </div>
 
             <div id="tab-audit" class="tab-content hidden space-y-5"><div><div class="text-[10px] uppercase font-black text-violet-600">NBRES • CONTROL & RECOVERY</div><h2 class="text-2xl font-black text-slate-900">Nhật Ký & Thùng Rác</h2></div><div class="grid lg:grid-cols-2 gap-4"><div class="bg-white rounded-2xl border overflow-hidden"><div class="p-4 border-b font-black">Nhật ký gần đây</div><div id="auditList" class="divide-y max-h-[620px] overflow-y-auto"></div></div><div class="bg-white rounded-2xl border overflow-hidden"><div class="p-4 border-b font-black">Thùng rác Lead</div><div id="recycleList" class="divide-y max-h-[620px] overflow-y-auto"></div></div></div></div>
+
+            <!-- V10.1 PLATFORM SHARED LIBRARY -->
+            <div id="tab-platform-library" class="tab-content hidden space-y-5">
+                <div class="rounded-3xl bg-slate-950 text-white p-6 shadow-xl">
+                    <div class="flex justify-between gap-4 flex-wrap"><div><div class="text-[10px] uppercase tracking-[.22em] text-cyan-300 font-black">NBRES • GLOBAL CONTENT LIBRARY</div><h2 class="text-2xl font-black mt-2">Thư Viện NBRES Toàn Hệ Thống</h2><p class="text-sm text-slate-400 mt-1">Một lần cập nhật → tất cả Công Ty hiện tại và Công Ty tạo mới đều sử dụng được.</p></div><button onclick="openPlatformLibraryEditorV101()" class="px-4 py-2.5 rounded-xl bg-cyan-400 text-slate-950 text-xs font-black"><i class="fa-solid fa-plus mr-1"></i>Thêm mẫu</button></div>
+                </div>
+                <div class="bg-white border rounded-2xl p-4 flex gap-2 flex-wrap"><input id="platformLibrarySearchV101" oninput="renderPlatformLibraryV101()" placeholder="Tìm mẫu..." class="flex-1 min-w-[220px] border rounded-xl px-3 py-2.5 text-sm"><select id="platformLibraryTypeV101" onchange="renderPlatformLibraryV101()" class="border rounded-xl px-3 py-2.5 text-xs font-bold"><option value="">Tất cả</option><option value="marketing">Marketing</option><option value="crm">Kịch bản CRM</option></select></div>
+                <div id="platformLibraryListV101" class="grid md:grid-cols-2 xl:grid-cols-3 gap-3"></div>
+            </div>
 
             <!-- V10.0 DATA CENTER -->
             <div id="tab-data-center" class="tab-content hidden space-y-5">
@@ -1157,6 +1169,13 @@
 
 
     <div id="regionDetailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[70] p-4"><div class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[92vh] overflow-y-auto"><div class="p-5 border-b sticky top-0 bg-white z-10 flex justify-between items-center"><div><div class="text-[10px] font-extrabold tracking-widest text-sky-600">NBRES • KHU VỰC DETAIL</div><h3 id="regionDetailTitle" class="text-xl font-extrabold text-slate-800 mt-1">Khu Vực</h3></div><button onclick="closeRegionDetail()" class="w-9 h-9 rounded-xl bg-slate-100 text-slate-500"><i class="fa-solid fa-xmark"></i></button></div><div id="regionDetailBody" class="p-5"></div></div></div>
+
+    <div id="platformLibraryModalV101" class="fixed inset-0 z-[130] bg-slate-950/60 backdrop-blur-sm hidden items-center justify-center p-4">
+      <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto">
+        <div class="p-5 border-b flex justify-between"><div><div class="text-[10px] font-black text-cyan-600">NBRES • GLOBAL TEMPLATE</div><h3 class="text-xl font-black">Mẫu dùng chung toàn hệ thống</h3></div><button onclick="closePlatformLibraryEditorV101()" class="w-9 h-9 rounded-xl bg-slate-100"><i class="fa-solid fa-xmark"></i></button></div>
+        <div class="p-5 space-y-3"><input id="platformLibraryIdV101" type="hidden"><select id="platformLibraryEditTypeV101" class="w-full border rounded-xl p-3 text-sm"><option value="marketing">Mẫu Marketing</option><option value="crm">Kịch bản CRM</option></select><input id="platformLibraryTitleV101" maxlength="180" placeholder="Tên mẫu *" class="w-full border rounded-xl p-3 text-sm"><textarea id="platformLibraryContentV101" maxlength="12000" rows="12" placeholder="Nội dung mẫu *" class="w-full border rounded-xl p-3 text-sm"></textarea><div class="flex justify-end gap-2"><button onclick="closePlatformLibraryEditorV101()" class="px-4 py-2.5 border rounded-xl text-xs font-bold">Hủy</button><button onclick="savePlatformLibraryV101()" class="px-4 py-2.5 bg-cyan-600 text-white rounded-xl text-xs font-black">Lưu & chia sẻ toàn hệ thống</button></div></div>
+      </div>
+    </div>
 
     <div id="leadModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[85] p-4"><div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto"><div class="p-5 border-b flex justify-between"><div><div class="text-[10px] font-black text-emerald-600">NBRES • LEAD</div><h3 class="text-xl font-black">Khách Hàng / Lead</h3></div><button onclick="closeLeadModal()" class="w-9 h-9 rounded-xl bg-slate-100"><i class="fa-solid fa-xmark"></i></button></div><form onsubmit="saveLeadV9(event)" class="p-5 space-y-4"><input id="leadId" type="hidden"><div class="grid md:grid-cols-2 gap-3"><input id="leadName" required placeholder="Tên khách *" class="border rounded-xl p-3"><input id="leadPhone" placeholder="Số điện thoại" class="border rounded-xl p-3"></div><div class="grid md:grid-cols-2 gap-3"><select id="leadStage" class="border rounded-xl p-3"><option>Lead mới</option><option>Đang tư vấn</option><option>Đã liên hệ</option><option>Hẹn xem phòng</option><option>Đang thương lượng</option><option>Đã chốt</option><option>Mất khách</option></select><input id="leadSource" placeholder="Nguồn khách" class="border rounded-xl p-3"></div><div class="grid md:grid-cols-2 gap-3"><input id="leadBudget" placeholder="Ngân sách" class="border rounded-xl p-3"><input id="leadArea" placeholder="Khu vực quan tâm" class="border rounded-xl p-3"></div><textarea id="leadNeed" rows="4" placeholder="Nhu cầu / ghi chú" class="w-full border rounded-xl p-3"></textarea><div class="flex justify-end gap-2"><button type="button" onclick="closeLeadModal()" class="px-4 py-2.5 border rounded-xl font-bold">Hủy</button><button class="px-4 py-2.5 bg-emerald-600 text-white rounded-xl font-black">Lưu Lead</button></div></form></div></div>
 
@@ -3414,19 +3433,19 @@
             show(
                 'nav-inventory','nav-appointments','nav-crm','nav-leads',
                 'nav-business-report','nav-notifications','nav-data-center',
-                'nav-onboarding','nav-users','nav-regions','nav-teams'
+                'nav-onboarding','nav-users','nav-regions','nav-teams','nav-poster','nav-platform-library'
             );
 
             // 1) NHÂN VIÊN
             // Chỉ nghiệp vụ Sale cá nhân.
             if(currentUser.role === 'Nhân Viên'){
                 hide(
-                    'nav-platform-dashboard','nav-company-dashboard',
+                    'nav-platform-dashboard','nav-company-dashboard','nav-platform-library',
                     'nav-users','nav-regions','nav-teams',
                     'nav-business-report','nav-audit','nav-data-center',
                     'nav-onboarding','nav-crm'
                 );
-                show('nav-inventory','nav-appointments','nav-leads','nav-notifications');
+                show('nav-inventory','nav-poster','nav-crm','nav-appointments','nav-leads','nav-notifications');
                 return;
             }
 
@@ -3435,12 +3454,12 @@
             // Không thấy cấu trúc Công Ty/Khu Vực/Team cấp tổ chức, audit hệ thống, import toàn Công Ty.
             if(isManagerAdmin()){
                 hide(
-                    'nav-platform-dashboard','nav-company-dashboard',
+                    'nav-platform-dashboard','nav-company-dashboard','nav-platform-library',
                     'nav-regions','nav-teams',
                     'nav-audit','nav-data-center','nav-onboarding'
                 );
                 show(
-                    'nav-users','nav-inventory','nav-appointments',
+                    'nav-users','nav-inventory','nav-poster','nav-appointments',
                     'nav-crm','nav-leads','nav-business-report','nav-notifications'
                 );
                 return;
@@ -3450,11 +3469,11 @@
             // Quản lý phạm vi Khu Vực mình; không thấy chức năng cấp Công Ty/Platform.
             if(isRegionalAdmin()){
                 hide(
-                    'nav-platform-dashboard','nav-company-dashboard',
+                    'nav-platform-dashboard','nav-company-dashboard','nav-platform-library',
                     'nav-regions','nav-audit','nav-data-center','nav-onboarding'
                 );
                 show(
-                    'nav-users','nav-inventory','nav-appointments',
+                    'nav-users','nav-inventory','nav-poster','nav-appointments',
                     'nav-crm','nav-leads','nav-business-report','nav-notifications'
                 );
                 if(isTeamFeatureEnabled()) show('nav-teams');
@@ -3465,10 +3484,10 @@
             // 4) QUẢN LÍ CÔNG TY
             // Toàn quyền vận hành Công Ty của mình, nhưng tuyệt đối không thấy tác vụ Platform Admin.
             if(isCompanyAdmin()){
-                hide('nav-platform-dashboard');
+                hide('nav-platform-dashboard','nav-platform-library');
                 show(
                     'nav-company-dashboard','nav-users','nav-regions',
-                    'nav-inventory','nav-appointments','nav-crm','nav-leads',
+                    'nav-inventory','nav-poster','nav-appointments','nav-crm','nav-leads',
                     'nav-business-report','nav-notifications','nav-audit',
                     'nav-data-center','nav-onboarding'
                 );
@@ -3483,8 +3502,8 @@
             if(isSuperAdmin()){
                 hide('nav-company-dashboard');
                 show(
-                    'nav-platform-dashboard','nav-users','nav-regions',
-                    'nav-inventory','nav-appointments','nav-crm','nav-leads',
+                    'nav-platform-dashboard','nav-platform-library','nav-users','nav-regions',
+                    'nav-inventory','nav-poster','nav-appointments','nav-crm','nav-leads',
                     'nav-business-report','nav-notifications','nav-audit',
                     'nav-data-center','nav-onboarding'
                 );
@@ -3498,27 +3517,27 @@
             if(!currentUser) return false;
 
             const employeeAllowed = new Set([
-                'tab-inventory','tab-appointments','tab-leads','tab-notifications'
+                'tab-inventory','tab-poster','tab-crm','tab-appointments','tab-leads','tab-notifications'
             ]);
             const teamAdminAllowed = new Set([
-                'tab-users','tab-inventory','tab-appointments','tab-crm',
+                'tab-users','tab-inventory','tab-poster','tab-appointments','tab-crm',
                 'tab-leads','tab-business-report','tab-notifications'
             ]);
             const regionalAllowed = new Set([
-                'tab-users','tab-inventory','tab-appointments','tab-crm',
+                'tab-users','tab-inventory','tab-poster','tab-appointments','tab-crm',
                 'tab-leads','tab-business-report','tab-notifications'
             ]);
             if(isTeamFeatureEnabled()) regionalAllowed.add('tab-teams');
 
             const companyAllowed = new Set([
-                'tab-company-dashboard','tab-users','tab-regions','tab-inventory',
+                'tab-company-dashboard','tab-users','tab-regions','tab-inventory','tab-poster',
                 'tab-appointments','tab-crm','tab-leads','tab-business-report',
                 'tab-notifications','tab-audit','tab-data-center','tab-onboarding'
             ]);
             if(isTeamFeatureEnabled()) companyAllowed.add('tab-teams');
 
             const platformAllowed = new Set([
-                'tab-platform-dashboard','tab-users','tab-regions','tab-inventory',
+                'tab-platform-dashboard','tab-platform-library','tab-users','tab-regions','tab-inventory','tab-poster',
                 'tab-appointments','tab-crm','tab-leads','tab-business-report',
                 'tab-notifications','tab-audit','tab-data-center','tab-onboarding'
             ]);
@@ -3634,9 +3653,9 @@
                 'tab-platform-dashboard': 'Trung Tâm Điều Hành',
                 'tab-company-dashboard': 'Tổng Quan Công Ty',
                 'tab-rooms': 'Kho Phòng',
-                'tab-marketing': 'Mẫu Marketing',
+                'tab-poster': 'Mẫu Marketing',
                 'tab-crm': 'Kịch Bản CRM',
-                'tab-leads':'Khách Hàng / Lead','tab-business-report':'Báo Cáo Kinh Doanh','tab-notifications':'Thông Báo','tab-audit':'Nhật Ký / Thùng Rác','tab-data-center':'Dữ Liệu / Import','tab-onboarding':'Thiết Lập Công Ty',
+                'tab-leads':'Khách Hàng / Lead','tab-business-report':'Báo Cáo Kinh Doanh','tab-notifications':'Thông Báo','tab-audit':'Nhật Ký / Thùng Rác','tab-platform-library':'Thư Viện NBRES','tab-data-center':'Dữ Liệu / Import','tab-onboarding':'Thiết Lập Công Ty',
                 'tab-appointments': 'Lịch Xem Phòng',
                 'tab-regions': 'Khu Vực',
                 'tab-teams': 'Quản Lý Team',
@@ -3729,7 +3748,7 @@
                 'tab-inventory':'nav-inventory',
                 'tab-poster':'nav-poster',
                 'tab-crm':'nav-crm',
-                'tab-leads':'nav-leads','tab-business-report':'nav-business-report','tab-notifications':'nav-notifications','tab-audit':'nav-audit','tab-data-center':'nav-data-center','tab-onboarding':'nav-onboarding',
+                'tab-leads':'nav-leads','tab-business-report':'nav-business-report','tab-notifications':'nav-notifications','tab-audit':'nav-audit','tab-platform-library':'nav-platform-library','tab-data-center':'nav-data-center','tab-onboarding':'nav-onboarding',
                 'tab-appointments':'nav-appointments',
                 'tab-regions':'nav-regions',
                 'tab-teams':'nav-teams',
@@ -3807,6 +3826,7 @@
             if(tabId==='tab-business-report')renderBusinessReportV9();
             if(tabId==='tab-notifications'){renderSmartNotificationsV10();loadAnnouncementsV10();}
             if(tabId==='tab-audit')loadAuditV9();
+            if(tabId==='tab-platform-library')loadPlatformLibraryV101();
             if(tabId==='tab-data-center')renderDataCenterV10();
             if(tabId==='tab-onboarding')renderOnboardingV10();
             if (tabId === 'tab-users') {
@@ -4574,6 +4594,36 @@
         async function loadAuditV9(){if(!currentTenantId)return;const [a,r]=await Promise.all([supabaseClient.from('audit_logs').select('*').eq('tenant_id',currentTenantId).order('created_at',{ascending:false}).limit(100),supabaseClient.from('sales_leads').select('*').eq('tenant_id',currentTenantId).not('deleted_at','is',null).order('deleted_at',{ascending:false}).limit(100)]);const ab=document.getElementById('auditList');if(ab)ab.innerHTML=(a.data||[]).map(x=>`<div class="p-4"><div class="text-xs font-black">${escapeHtml(x.action)} • ${escapeHtml(x.entity_type)}</div><div class="text-[11px] text-slate-400">${new Date(x.created_at).toLocaleString('vi-VN')}</div></div>`).join('')||'<div class="p-8 text-center text-slate-400">Chưa có nhật ký.</div>';const rb=document.getElementById('recycleList');if(rb)rb.innerHTML=(r.data||[]).map(x=>`<div class="p-4 flex justify-between"><div><b class="text-xs">${escapeHtml(x.customer_name)}</b><div class="text-[11px] text-slate-400">${new Date(x.deleted_at).toLocaleString('vi-VN')}</div></div><button onclick="restoreLeadV9('${x.id}')" class="text-xs font-bold text-emerald-600">Khôi phục</button></div>`).join('')||'<div class="p-8 text-center text-slate-400">Thùng rác trống.</div>';}
         async function restoreLeadV9(id){const {error}=await supabaseClient.from('sales_leads').update({deleted_at:null,deleted_by:null}).eq('id',id);if(error)return showToast(error.message,'error');await loadAuditV9();}
 
+
+
+        // ===== V10.1 • GLOBAL MARKETING + CRM LIBRARY =====
+        let platformLibraryV101=[];
+
+        async function loadPlatformLibraryV101(){
+            if(!supabaseClient)return;
+            try{
+                const {data,error}=await supabaseClient.from('platform_content_library').select('*').eq('is_active',true).order('sort_order',{ascending:true}).order('updated_at',{ascending:false});
+                if(error)throw error;platformLibraryV101=data||[];
+                renderPlatformLibraryV101();
+            }catch(e){console.warn('Platform library:',e);if(isSuperAdmin())showToast('Cần chạy SQL V10.1 để bật Thư Viện NBRES.','error');}
+        }
+        function renderPlatformLibraryV101(){
+            const box=document.getElementById('platformLibraryListV101');if(!box)return;
+            const q=(document.getElementById('platformLibrarySearchV101')?.value||'').toLowerCase(),t=document.getElementById('platformLibraryTypeV101')?.value||'';
+            const list=platformLibraryV101.filter(x=>(!t||x.content_type===t)&&(!q||`${x.title||''} ${x.content||''}`.toLowerCase().includes(q)));
+            box.innerHTML=list.length?list.map(x=>`<div class="bg-white border rounded-2xl p-4 shadow-sm"><div class="flex justify-between gap-2"><div><span class="text-[9px] px-2 py-1 rounded-full ${x.content_type==='crm'?'bg-violet-50 text-violet-700':'bg-cyan-50 text-cyan-700'} font-black">${x.content_type==='crm'?'CRM':'MARKETING'}</span><div class="font-black text-slate-900 mt-2">${escapeHtml(x.title)}</div></div><button onclick="editPlatformLibraryV101('${x.id}')" class="text-xs font-bold text-indigo-600">Sửa</button></div><div class="text-xs text-slate-500 mt-3 line-clamp-4 whitespace-pre-wrap">${escapeHtml(x.content)}</div><div class="mt-4 pt-3 border-t flex justify-between"><button onclick="copyPlatformContentV101('${x.id}')" class="text-xs font-black text-emerald-600"><i class="fa-regular fa-copy mr-1"></i>Copy</button><button onclick="archivePlatformLibraryV101('${x.id}')" class="text-xs font-bold text-rose-600">Ẩn mẫu</button></div></div>`).join(''):'<div class="md:col-span-2 xl:col-span-3 p-10 border border-dashed rounded-2xl text-center text-slate-400">Chưa có mẫu dùng chung.</div>';
+        }
+        function openPlatformLibraryEditorV101(){if(!isSuperAdmin())return;document.getElementById('platformLibraryIdV101').value='';document.getElementById('platformLibraryEditTypeV101').value='marketing';document.getElementById('platformLibraryTitleV101').value='';document.getElementById('platformLibraryContentV101').value='';document.getElementById('platformLibraryModalV101').classList.remove('hidden');document.getElementById('platformLibraryModalV101').classList.add('flex');}
+        function closePlatformLibraryEditorV101(){document.getElementById('platformLibraryModalV101').classList.add('hidden');document.getElementById('platformLibraryModalV101').classList.remove('flex');}
+        function editPlatformLibraryV101(id){const x=platformLibraryV101.find(v=>v.id===id);if(!x||!isSuperAdmin())return;openPlatformLibraryEditorV101();document.getElementById('platformLibraryIdV101').value=x.id;document.getElementById('platformLibraryEditTypeV101').value=x.content_type;document.getElementById('platformLibraryTitleV101').value=x.title;document.getElementById('platformLibraryContentV101').value=x.content;}
+        async function savePlatformLibraryV101(){if(!isSuperAdmin())return showToast('Chỉ Admin Quản Lí được sửa thư viện NBRES.','error');const id=document.getElementById('platformLibraryIdV101').value,title=document.getElementById('platformLibraryTitleV101').value.trim(),content=document.getElementById('platformLibraryContentV101').value.trim(),content_type=document.getElementById('platformLibraryEditTypeV101').value;if(!title||!content)return showToast('Nhập tên và nội dung mẫu.','error');const p={title,content,content_type,updated_at:new Date().toISOString()};const r=id?await supabaseClient.from('platform_content_library').update(p).eq('id',id):await supabaseClient.from('platform_content_library').insert({...p,created_by:currentUser.id,is_active:true});if(r.error)return showToast(r.error.message,'error');closePlatformLibraryEditorV101();await loadPlatformLibraryV101();showToast('Đã cập nhật thư viện cho toàn hệ thống.','success');}
+        async function archivePlatformLibraryV101(id){if(!isSuperAdmin()||!confirm('Ẩn mẫu này khỏi toàn bộ Công Ty?'))return;const {error}=await supabaseClient.from('platform_content_library').update({is_active:false,updated_at:new Date().toISOString()}).eq('id',id);if(error)return showToast(error.message,'error');await loadPlatformLibraryV101();}
+        async function copyPlatformContentV101(id){const x=platformLibraryV101.find(v=>v.id===id);if(!x)return;try{await navigator.clipboard.writeText(x.content);showToast('Đã copy nội dung.','success');}catch(e){showToast('Không thể copy tự động.','error');}}
+
+        async function getGlobalTemplatesV101(type){
+            if(!platformLibraryV101.length)await loadPlatformLibraryV101();
+            return platformLibraryV101.filter(x=>x.content_type===type&&x.is_active!==false);
+        }
 
         // ===== V10.0.3 • SCOPED INTERNAL ANNOUNCEMENTS =====
         let announcementsV10=[];
