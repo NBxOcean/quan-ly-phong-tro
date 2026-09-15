@@ -846,9 +846,9 @@
                         <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
                             <i class="fa-solid fa-map-location-dot text-sky-600"></i> Quản Lý Khu Vực
                         </h2>
-                        <p class="text-xs text-slate-500 mt-1">Admin Quản Lí tạo khu vực và phân Quản Lí Khu Vực quản lý các Team trực thuộc.</p>
+                        <p class="text-xs text-slate-500 mt-1">Quản Lí Công Ty tạo Khu Vực. Admin Quản Lí có thể xem toàn bộ khi đã chọn Công Ty.</p>
                     </div>
-                    <button onclick="openRegionModal()" class="bg-gradient-to-r from-sky-600 to-blue-600 text-white font-semibold px-4 py-2 rounded-xl shadow flex items-center gap-2 text-sm">
+                    <button id="createRegionBtn" onclick="openRegionModal()" class="bg-gradient-to-r from-sky-600 to-blue-600 text-white font-semibold px-4 py-2 rounded-xl shadow flex items-center gap-2 text-sm">
                         <i class="fa-solid fa-plus"></i> Tạo Khu Vực
                     </button>
                 </div>
@@ -862,9 +862,9 @@
                         <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
                             <i class="fa-solid fa-people-group text-violet-600"></i> Quản Lý Team
                         </h2>
-                        <p class="text-xs text-slate-500 mt-1">Admin Quản Lí tạo team, phân Quản Lí Team và quản lý tài nguyên theo từng nhóm.</p>
+                        <p class="text-xs text-slate-500 mt-1">Quản Lí Khu Vực tạo Team. Quản Lí Công Ty và Admin Quản Lí có quyền xem theo phạm vi.</p>
                     </div>
-                    <button onclick="openTeamModal()" class="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-semibold px-4 py-2 rounded-xl transition shadow flex items-center gap-2 text-sm">
+                    <button id="createTeamBtn" onclick="openTeamModal()" class="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-semibold px-4 py-2 rounded-xl transition shadow flex items-center gap-2 text-sm">
                         <i class="fa-solid fa-plus"></i> Tạo Team
                     </button>
                 </div>
@@ -894,7 +894,7 @@
                         <div>
                             <div class="text-[10px] uppercase tracking-[.22em] text-[#D4AF37] font-bold">NBRES • CẤU TRÚC DOANH NGHIỆP</div>
                             <h2 class="text-lg font-bold text-white mt-1">Công Ty Trên Hệ Thống</h2>
-                            <p class="text-xs text-slate-400 mt-1">Admin Quản Lí tạo Công Ty trước, sau đó mới tạo Quản Lí Công Ty và phân quyền xuống Khu Vực → Team → Nhân Viên.</p>
+                            <p class="text-xs text-slate-400 mt-1">Admin Quản Lí tạo Công Ty và Quản Lí Công Ty. Bấm vào một Công Ty để xem toàn bộ Khu Vực → Team → Nhân Viên của Công Ty đó.</p>
                         </div>
                         <button onclick="openCompanyModal()" class="bg-[#D4AF37] hover:bg-[#e4c453] text-black font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 text-sm">
                             <i class="fa-solid fa-building-circle-check"></i> Tạo Công Ty
@@ -1794,7 +1794,7 @@
         }
 
         function openRegionModal(id=null){
-            if(!isSuperAdmin()) return showToast('Chỉ Admin Quản Lí mới quản lý khu vực!','error');
+            if(!isCompanyAdmin()) return showToast('Chỉ Quản Lí Công Ty mới được tạo hoặc chỉnh sửa Khu Vực!','error');
             const r=id?regions.find(x=>String(x.id)===String(id)):null;
             if(id && !r){
                 showToast('Không tìm thấy khu vực cần sửa. Hãy tải lại danh sách khu vực.', 'error');
@@ -1916,7 +1916,7 @@
 
         async function saveRegion(e){
             e.preventDefault();
-            if(!isSuperAdmin() || regionSaveInProgress) return;
+            if(!isCompanyAdmin() || regionSaveInProgress) return;
 
             const editId = String(document.getElementById('regionEditId')?.value || '').trim();
             const tenantId = await getCurrentTenantId();
@@ -2288,8 +2288,8 @@
         }
 
         function openTeamModal(id = null) {
-            if (!(isSuperAdmin() || isRegionalAdmin())) {
-                showToast('Bạn không có quyền quản lý Team!', 'error');
+            if (!isRegionalAdmin()) {
+                showToast('Chỉ Quản Lí Khu Vực mới được tạo hoặc chỉnh sửa Team!', 'error');
                 return;
             }
             const item = id ? teams.find(t => String(t.id) === String(id)) : null;
@@ -2316,7 +2316,7 @@
 
         async function saveTeam(e) {
             e.preventDefault();
-            if (!(isSuperAdmin() || isRegionalAdmin()) || teamSaveInProgress) return;
+            if (!isRegionalAdmin() || teamSaveInProgress) return;
             const id = document.getElementById('teamEditId').value.trim();
             const tenantId = await getCurrentTenantId();
             const row = {
@@ -2426,6 +2426,7 @@
             if (isSuperAdmin()) {
                 return activeRegionId ? teams.filter(t => String(t.region_id||'')===String(activeRegionId)) : teams;
             }
+            if (isCompanyAdmin()) return teams.filter(t => String(t.tenant_id||'')===String(currentUser.tenant_id||''));
             if (isRegionalAdmin()) return teams.filter(t => String(t.region_id||'')===String(currentUser.region_id||''));
             if (isManagerAdmin() || currentUser?.role === 'Nhân Viên') return teams.filter(t => String(t.id)===String(currentUser.team_id||''));
             return [];
@@ -2434,9 +2435,11 @@
         function getVisibleUsers() {
             if (!currentUser) return [];
             if (isSuperAdmin()) {
+                if(!currentTenantId) return users.filter(u=>u.role==='Admin Quản Lí');
                 return users.filter(u =>
-                    (!activeRegionId || String(u.region_id||'')===String(activeRegionId) || u.role==='Admin Quản Lí') &&
-                    (!activeTeamId || String(u.team_id||'')===String(activeTeamId) || ['Admin Quản Lí','Quản Lí Khu Vực'].includes(u.role))
+                    (u.role==='Admin Quản Lí' || String(u.tenant_id||'')===String(currentTenantId)) &&
+                    (!activeRegionId || String(u.region_id||'')===String(activeRegionId) || ['Admin Quản Lí','Quản Lí Công Ty'].includes(u.role)) &&
+                    (!activeTeamId || String(u.team_id||'')===String(activeTeamId) || ['Admin Quản Lí','Quản Lí Công Ty','Quản Lí Khu Vực'].includes(u.role))
                 );
             }
             if (isCompanyAdmin()) {
@@ -2559,13 +2562,38 @@
         }
 
         async function getCurrentTenantId() {
-            if (currentTenantId && isUuid(currentTenantId)) return currentTenantId;
-            if (currentUser?.tenant_id && isUuid(currentUser.tenant_id)) { currentTenantId=currentUser.tenant_id; return currentTenantId; }
+            if (currentUser?.tenant_id && isUuid(currentUser.tenant_id)) {
+                currentTenantId = currentUser.tenant_id;
+                return currentTenantId;
+            }
+            if (isSuperAdmin() && currentTenantId && isUuid(currentTenantId)) return currentTenantId;
             if (!supabaseClient) throw new Error('Supabase chưa kết nối.');
-            if (!isSuperAdmin()) throw new Error('Tài khoản chưa được gán Công ty.');
-            const {data,error}=await supabaseClient.from('tenants').select('id').eq('company_name','NBxOcean').limit(1).maybeSingle();
-            if(error || !data?.id) throw new Error('Admin Quản Lí chưa chọn Công ty làm việc.');
-            currentTenantId=data.id; return currentTenantId;
+            if (isSuperAdmin()) throw new Error('Admin Quản Lí hãy chọn một Công Ty để xem dữ liệu.');
+            throw new Error('Tài khoản chưa được gán Công Ty.');
+        }
+
+        function getActiveCompanyName(){
+            const id = isSuperAdmin() ? currentTenantId : currentUser?.tenant_id;
+            return tenants.find(t=>String(t.id)===String(id))?.company_name || '';
+        }
+
+        async function selectCompanyContext(tenantId){
+            if(!isSuperAdmin()) return;
+            if(!isUuid(tenantId)) return showToast('Công Ty không hợp lệ!','error');
+            currentTenantId = tenantId;
+            activeRegionId = '';
+            activeTeamId = '';
+            sessionStorage.setItem('NBRES_ACTIVE_TENANT', tenantId);
+            renderCompanies();
+            try{
+                regions = await loadRegionsFromDB(); if(regions===null) regions=[];
+                teams = await loadTeamsFromDB();
+                users = await loadProfilesForWorkspace();
+                populateRegionOptions(); renderRegions(); renderTeamContext(); renderTeams(); populateUserTeamOptions(); renderUsersTable();
+                roomPage=1; rooms=await loadRoomsPage(1); renderDistrictOptions(); renderRooms(rooms);
+                dbCases=await loadCrmScriptsFromDB(); currentFilteredData=[...dbCases]; renderCaseList(dbCases); if(dbCases.length) selectCase(dbCases[0].id);
+                showToast('Đang xem Công Ty: '+getActiveCompanyName(),'success');
+            }catch(err){ console.error('Company context:',err); showToast(err?.message||'Không tải được Công Ty.','error'); }
         }
 
         function mapDbRoomToApp(room) {
@@ -2925,13 +2953,24 @@
         function resetNBRESLogin(){ const c=document.getElementById('nbCover'),o=document.getElementById('authOverlay'); if(o)o.classList.remove('active'); setTimeout(()=>{if(c)c.classList.remove('zoom-out');},250); }
         async function loadSecureWorkspace(){
             try {
-                const tenantRes = await supabaseClient.from('tenants').select('id,company_name');
+                const tenantRes = await supabaseClient.from('tenants').select('id,company_name').order('company_name',{ascending:true});
                 tenants = tenantRes.error ? [] : (tenantRes.data || []);
+                if(isSuperAdmin()){
+                    const saved=sessionStorage.getItem('NBRES_ACTIVE_TENANT');
+                    currentTenantId = saved && tenants.some(t=>String(t.id)===String(saved)) ? saved : null;
+                } else {
+                    currentTenantId = currentUser?.tenant_id || null;
+                }
                 renderCompanies();
+                users = await loadProfilesForWorkspace();
+                if(!currentTenantId && isSuperAdmin()){
+                    regions=[]; teams=[]; rooms=[]; dbCases=[]; currentFilteredData=[];
+                    renderTeamContext(); renderTeams(); renderRegions(); renderUsersTable(); renderRooms([]); renderCaseList([]);
+                    return;
+                }
                 regions = await loadRegionsFromDB(); if(regions===null) regions=[];
                 teams = await loadTeamsFromDB();
-                users = await loadProfilesForWorkspace();
-                renderTeamContext(); renderTeams(); populateUserTeamOptions();
+                renderTeamContext(); renderTeams(); populateUserTeamOptions(); renderRegions(); renderUsersTable();
                 roomPage=1; rooms=await loadRoomsPage(1); renderDistrictOptions(); renderRooms(rooms);
                 dbCases=await loadCrmScriptsFromDB(); currentFilteredData=[...dbCases]; renderCaseList(dbCases); if(dbCases.length) selectCase(dbCases[0].id);
             } catch(err){ console.error('Workspace load:',err); }
@@ -2940,7 +2979,11 @@
             if(!supabaseClient || !currentUser) return currentUser?[currentUser]:[];
             const {data,error}=await supabaseClient.from('profiles').select('id,email,full_name,role,tenant_id,region_id,team_id,is_active,created_at');
             if(error){console.warn('Không tải được profiles:',error);return [currentUser];}
-            return (data||[]).map(mapDbUserToApp).filter(Boolean);
+            const mapped=(data||[]).map(mapDbUserToApp).filter(Boolean);
+            if(isSuperAdmin() && currentTenantId){
+                return mapped.filter(u=>u.role==='Admin Quản Lí' || String(u.tenant_id||'')===String(currentTenantId));
+            }
+            return mapped;
         }
 
         async function checkAuth() {
@@ -3018,6 +3061,10 @@
             const appointmentQuickAccess = document.getElementById('appointmentQuickAccess');
             const navTeamsBtn = document.getElementById('nav-teams');
             const navRegionsBtn = document.getElementById('nav-regions');
+            const createRegionBtn = document.getElementById('createRegionBtn');
+            const createTeamBtn = document.getElementById('createTeamBtn');
+            if(createRegionBtn) createRegionBtn.classList.toggle('hidden', !isCompanyAdmin());
+            if(createTeamBtn) createTeamBtn.classList.toggle('hidden', !isRegionalAdmin());
 
             if (navRegionsBtn) navRegionsBtn.classList.toggle('hidden', !(isSuperAdmin() || isCompanyAdmin()));
             if (navTeamsBtn) navTeamsBtn.classList.toggle('hidden', !(isSuperAdmin() || isCompanyAdmin() || isRegionalAdmin()));
@@ -3041,16 +3088,16 @@
             }
 
             if (isSuperAdmin()) {
-                roleBadgeHeader.innerText = 'SUPER ADMIN';
+                roleBadgeHeader.innerText = 'ADMIN QUẢN LÍ';
                 roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/30';
             } else if (isCompanyAdmin()) {
-                roleBadgeHeader.innerText = 'ADMIN CÔNG TY';
+                roleBadgeHeader.innerText = 'QUẢN LÍ CÔNG TY';
                 roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
             } else if (isRegionalAdmin()) {
-                roleBadgeHeader.innerText = 'ADMIN KHU VỰC';
+                roleBadgeHeader.innerText = 'QUẢN LÍ KHU VỰC';
                 roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30';
             } else if (isManagerAdmin()) {
-                roleBadgeHeader.innerText = 'ADMIN TEAM';
+                roleBadgeHeader.innerText = 'QUẢN LÍ TEAM';
                 roleBadgeHeader.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30';
             } else {
                 roleBadgeHeader.innerText = 'NHÂN VIÊN';
@@ -3719,7 +3766,10 @@
             if(!isSuperAdmin()){panel.classList.add('hidden');return;}
             panel.classList.remove('hidden');
             if(!tenants.length){list.innerHTML='<div class="md:col-span-2 xl:col-span-3 border border-dashed border-white/10 rounded-2xl p-6 text-center text-sm text-slate-500">Chưa có Công Ty. Hãy tạo Công Ty đầu tiên để bắt đầu phân quyền.</div>';return;}
-            list.innerHTML=tenants.map(t=>`<div class="rounded-2xl border border-white/10 bg-white/[.03] p-4"><div class="flex items-start justify-between gap-3"><div><div class="w-9 h-9 rounded-xl bg-[#D4AF37]/10 text-[#D4AF37] flex items-center justify-center mb-3"><i class="fa-solid fa-building"></i></div><div class="font-bold text-white">${escapeHtml(t.company_name||'Công Ty')}</div><div class="text-[10px] text-slate-500 mt-1 font-mono">${escapeHtml(String(t.id||''))}</div></div><span class="text-[10px] px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400">Đang hoạt động</span></div></div>`).join('');
+            list.innerHTML=tenants.map(t=>{
+                const active=String(currentTenantId||'')===String(t.id||'');
+                return `<button type="button" onclick="selectCompanyContext('${t.id}')" class="text-left rounded-2xl border ${active?'border-[#D4AF37] bg-[#D4AF37]/10':'border-white/10 bg-white/[.03] hover:border-[#D4AF37]/50'} p-4 transition"><div class="flex items-start justify-between gap-3"><div><div class="w-9 h-9 rounded-xl bg-[#D4AF37]/10 text-[#D4AF37] flex items-center justify-center mb-3"><i class="fa-solid fa-building"></i></div><div class="font-bold text-white">${escapeHtml(t.company_name||'Công Ty')}</div><div class="text-[10px] text-slate-500 mt-1">${active?'Đang xem toàn bộ dữ liệu Công Ty':'Bấm để xem Công Ty'}</div></div><span class="text-[10px] px-2 py-1 rounded-full ${active?'bg-[#D4AF37] text-black':'bg-emerald-500/10 text-emerald-400'}">${active?'ĐANG CHỌN':'Hoạt động'}</span></div></button>`;
+            }).join('');
         }
         function openCompanyModal(){
             if(!isSuperAdmin())return showToast('Chỉ Admin Quản Lí mới được tạo Công Ty!','error');
@@ -3737,7 +3787,7 @@
             try{
                 const {data,error}=await supabaseClient.from('tenants').insert({company_name}).select('id,company_name').single();
                 if(error)throw error;
-                tenants=[...tenants,data];renderCompanies();populateUserTenantOptions(data.id);closeCompanyModal();
+                tenants=[...tenants,data];currentTenantId=data.id;sessionStorage.setItem('NBRES_ACTIVE_TENANT',data.id);renderCompanies();populateUserTenantOptions(data.id);closeCompanyModal();
                 showToast('Đã tạo Công Ty. Bây giờ có thể tạo Quản Lí Công Ty!','success');
             }catch(err){console.error('Tạo công ty:',err);showToast('Không thể tạo Công Ty: '+(err?.message||err),'error');}
             finally{if(btn){btn.disabled=false;btn.innerHTML=old||'Tạo Công Ty';}}
@@ -3752,11 +3802,12 @@
             if (editId) return showToast('Bản V2 hiện tạo tài khoản qua Auth. Chỉnh sửa tài khoản sẽ được nối ở bước tiếp theo.','error');
             document.getElementById('userForm').reset(); document.getElementById('editUserId').value='';
             const roleSelect=document.getElementById('accRole'); [...roleSelect.options].forEach(o=>o.disabled=false);
-            if(isCompanyAdmin()) [...roleSelect.options].forEach(o=>o.disabled=o.value==='Quản Lí Công Ty');
-            if(isRegionalAdmin()) [...roleSelect.options].forEach(o=>o.disabled=!['Quản Lí Team','Nhân Viên'].includes(o.value));
+            if(isSuperAdmin()) [...roleSelect.options].forEach(o=>o.disabled=o.value!=='Quản Lí Công Ty');
+            if(isCompanyAdmin()) [...roleSelect.options].forEach(o=>o.disabled=o.value!=='Quản Lí Khu Vực');
+            if(isRegionalAdmin()) [...roleSelect.options].forEach(o=>o.disabled=o.value!=='Quản Lí Team');
             if(isManagerAdmin()) [...roleSelect.options].forEach(o=>o.disabled=o.value!=='Nhân Viên');
-            roleSelect.value=isManagerAdmin()?'Nhân Viên':(isRegionalAdmin()?'Nhân Viên':'Nhân Viên');
-            populateUserTenantOptions(currentUser?.tenant_id||'');
+            roleSelect.value=isSuperAdmin()?'Quản Lí Công Ty':isCompanyAdmin()?'Quản Lí Khu Vực':isRegionalAdmin()?'Quản Lí Team':'Nhân Viên';
+            populateUserTenantOptions(isSuperAdmin()?(currentTenantId||''):(currentUser?.tenant_id||''));
             const defaultRegion=isRegionalAdmin()||isManagerAdmin()?currentUser.region_id:(activeRegionId||'');
             const defaultTeam=isManagerAdmin()?currentUser.team_id:(activeTeamId||'');
             populateRegionOptions(defaultRegion); document.getElementById('accRegionId').value=defaultRegion||'';
