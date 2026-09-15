@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <!-- V7.5.2 - USERNAME AUTH + SECURE ACCOUNT DELETE -->
+    <!-- V7.6.0 - OPTIONAL TEAM BY COMPANY -->
     <meta name="theme-color" content="#0f172a">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -908,7 +908,7 @@
                         <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
                             <i class="fa-solid fa-users-gear text-orange-500"></i> Phân Quyền Nhân Sự NBRES
                         </h2>
-                        <p class="text-xs text-slate-500">Tạo tài khoản theo cấu trúc Công Ty → Khu Vực → Team → Nhân Viên</p>
+                        <p class="text-xs text-slate-500">Cấu trúc mặc định: Công Ty → Khu Vực → Nhân Viên. Team là tùy chọn.</p>
                     </div>
                     <button onclick="openUserModal()" class="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold px-4 py-2 rounded-xl transition shadow flex items-center gap-2 text-sm">
                         <i class="fa-solid fa-user-plus"></i> Thêm Tài Khoản Mới
@@ -1385,6 +1385,10 @@
             </div>
             <form id="companyForm" onsubmit="saveCompany(event)" class="p-6 space-y-5">
                 <div><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Tên Công Ty *</label><input id="companyName" required maxlength="120" placeholder="Ví dụ: NBRES - Nguyên Bảo" class="w-full border border-white/10 rounded-xl p-3.5 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"></div>
+                <label class="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[.03] p-4 cursor-pointer">
+                    <input id="companyTeamsEnabled" type="checkbox" class="mt-0.5 accent-[#D4AF37]">
+                    <span><b class="text-sm text-white">Sử dụng Team</b><span class="block text-[11px] text-slate-500 mt-1">Không bắt buộc. Chỉ bật nếu Công Ty muốn chia nhân sự thành các Team Sale.</span></span>
+                </label>
                 <div class="rounded-xl border border-white/10 bg-white/[.03] p-4 text-xs text-slate-400"><i class="fa-solid fa-shield-halved text-[#D4AF37] mr-2"></i>Sau khi tạo Công Ty, quay lại phần tài khoản để tạo <b class="text-white">Quản Lí Công Ty</b> và gán vào Công Ty này.</div>
                 <div class="flex justify-end gap-3 pt-2"><button type="button" onclick="closeCompanyModal()" class="px-4 py-2.5 rounded-xl border border-white/10 text-slate-300">Hủy</button><button type="submit" class="px-5 py-2.5 rounded-xl bg-[#D4AF37] text-black font-bold"><i class="fa-solid fa-plus mr-1"></i> Tạo Công Ty</button></div>
             </form>
@@ -1394,7 +1398,7 @@
 <div id="userModal" class="fixed inset-0 bg-[#030508]/80 backdrop-blur-md hidden items-center justify-center z-50 p-4">
         <div class="bg-[#080b10] rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-[#D4AF37]/30 text-slate-100 flex flex-col max-h-[92dvh]">
             <div class="p-5 border-b border-white/10 flex justify-between items-center bg-gradient-to-r from-[#0a0f18] to-[#030508] shrink-0">
-                <div><div class="text-[10px] uppercase tracking-[.22em] text-[#D4AF37] font-bold">NBRES • PHÂN QUYỀN NHÂN SỰ</div><h3 id="userModalTitle" class="text-lg font-semibold mt-1">Tạo Tài Khoản NBRES</h3><p class="text-[10px] text-slate-500 mt-1">Admin Quản Lí → Quản Lí Công Ty → Quản Lí Khu Vực → Quản Lí Team → Nhân Viên</p></div>
+                <div><div class="text-[10px] uppercase tracking-[.22em] text-[#D4AF37] font-bold">NBRES • PHÂN QUYỀN NHÂN SỰ</div><h3 id="userModalTitle" class="text-lg font-semibold mt-1">Tạo Tài Khoản NBRES</h3><p class="text-[10px] text-slate-500 mt-1">Công Ty → Khu Vực → Nhân Viên • Team chỉ dùng khi Công Ty bật tính năng</p></div>
                 <button onclick="closeUserModal()" class="text-slate-500 hover:text-[#D4AF37]"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             <form id="userForm" onsubmit="saveUser(event)" class="p-5 space-y-4 overflow-y-auto overscroll-contain min-h-0 flex-1 [scrollbar-gutter:stable]" style="-webkit-overflow-scrolling:touch;">
@@ -2214,8 +2218,13 @@
             const tenant=document.getElementById('accTenantId'), r=document.getElementById('accRegionId'), t=document.getElementById('accTeamId');
             const teamLabel=document.getElementById('accTeamLabel');
             const needRegion=['Quản Lí Khu Vực','Quản Lí Team','Nhân Viên'].includes(role);
-            const showTeam=['Quản Lí Team','Nhân Viên'].includes(role);
-            const needTeam=role==='Quản Lí Team';
+            const teamEnabled=isTeamFeatureEnabled();
+            const showTeam=teamEnabled && ['Quản Lí Team','Nhân Viên'].includes(role);
+            const needTeam=teamEnabled && role==='Quản Lí Team';
+            const roleSelect=document.getElementById('accRole');
+            const teamRoleOption=roleSelect ? Array.from(roleSelect.options).find(o=>o.value==='Quản Lí Team') : null;
+            if(teamRoleOption) teamRoleOption.hidden=!teamEnabled;
+            if(!teamEnabled && role==='Quản Lí Team'){roleSelect.value='Nhân Viên'; return syncUserTeamRequirement();}
             const platform=isSuperAdmin();
 
             tenantWrap?.classList.remove('hidden');
@@ -2287,8 +2296,12 @@
         }
 
         function openTeamModal(id = null) {
-            if (!isRegionalAdmin()) {
-                showToast('Chỉ Quản Lí Khu Vực mới được tạo hoặc chỉnh sửa Team!', 'error');
+            if (!isTeamFeatureEnabled()) {
+                showToast('Công Ty này chưa bật tính năng Team.','error');
+                return;
+            }
+            if (!(isCompanyAdmin() || isRegionalAdmin())) {
+                showToast('Chỉ Quản Lí Công Ty hoặc Quản Lí Khu Vực mới được quản lý Team!', 'error');
                 return;
             }
             const item = id ? teams.find(t => String(t.id) === String(id)) : null;
@@ -2315,7 +2328,7 @@
 
         async function saveTeam(e) {
             e.preventDefault();
-            if (!isRegionalAdmin() || teamSaveInProgress) return;
+            if (!(isCompanyAdmin() || isRegionalAdmin()) || !isTeamFeatureEnabled() || teamSaveInProgress) return;
             const id = document.getElementById('teamEditId').value.trim();
             const tenantId = await getCurrentTenantId();
             const row = {
@@ -2952,7 +2965,7 @@
         function resetNBRESLogin(){ const c=document.getElementById('nbCover'),o=document.getElementById('authOverlay'); if(o)o.classList.remove('active'); setTimeout(()=>{if(c)c.classList.remove('zoom-out');},250); }
         async function loadSecureWorkspace(){
             try {
-                const tenantRes = await supabaseClient.from('tenants').select('id,company_name').order('company_name',{ascending:true});
+                const tenantRes = await supabaseClient.from('tenants').select('id,company_name,teams_enabled').order('company_name',{ascending:true});
                 tenants = tenantRes.error ? [] : (tenantRes.data || []);
                 if(isSuperAdmin()){
                     const saved=sessionStorage.getItem('NBRES_ACTIVE_TENANT');
@@ -3071,10 +3084,10 @@
             const createRegionBtn = document.getElementById('createRegionBtn');
             const createTeamBtn = document.getElementById('createTeamBtn');
             if(createRegionBtn) createRegionBtn.classList.toggle('hidden', !isCompanyAdmin());
-            if(createTeamBtn) createTeamBtn.classList.toggle('hidden', !isRegionalAdmin());
+            if(createTeamBtn) createTeamBtn.classList.toggle('hidden', !isTeamFeatureEnabled() || !(isCompanyAdmin() || isRegionalAdmin()));
 
             if (navRegionsBtn) navRegionsBtn.classList.toggle('hidden', !(isSuperAdmin() || isCompanyAdmin()));
-            if (navTeamsBtn) navTeamsBtn.classList.toggle('hidden', !(isSuperAdmin() || isCompanyAdmin() || isRegionalAdmin()));
+            if (navTeamsBtn) navTeamsBtn.classList.toggle('hidden', !isTeamFeatureEnabled() || !(isSuperAdmin() || isCompanyAdmin() || isRegionalAdmin()));
             renderTeamContext();
 
             if (navAppointmentsBtn) navAppointmentsBtn.classList.remove('hidden');
@@ -3765,6 +3778,29 @@
             }
         }
 
+        function getActiveTenant(){
+            const id=isSuperAdmin()?currentTenantId:currentUser?.tenant_id;
+            return tenants.find(t=>String(t.id||'')===String(id||''))||null;
+        }
+        function isTeamFeatureEnabled(){
+            return getActiveTenant()?.teams_enabled===true;
+        }
+        async function setCompanyTeamsEnabled(tenantId, enabled){
+            if(!(isSuperAdmin()||isCompanyAdmin())) return showToast('Bạn không có quyền thay đổi cấu hình Team.','error');
+            const id=tenantId || currentUser?.tenant_id;
+            if(!id) return showToast('Không xác định được Công Ty.','error');
+            const action=enabled?'bật':'tắt';
+            if(!confirm(`Bạn muốn ${action} tính năng Team cho Công Ty này?`)) return;
+            try{
+                const {data,error}=await supabaseClient.rpc('set_company_teams_enabled',{p_tenant_id:id,p_enabled:!!enabled});
+                if(error) throw error;
+                const t=tenants.find(x=>String(x.id)===String(id)); if(t)t.teams_enabled=!!enabled;
+                if(!enabled){activeTeamId='';}
+                renderCompanies(); showApp(); renderTeamContext(); renderUsersTable();
+                showToast(`Đã ${action} tính năng Team.`,'success');
+            }catch(err){showToast('Không thể cập nhật tính năng Team: '+(err?.message||err),'error');}
+        }
+
         // 2.1 QUẢN LÍ CÔNG TY - CHỈ ADMIN QUẢN LÍ
         function renderCompanies(){
             const panel=document.getElementById('platformCompanyPanel');
@@ -3775,7 +3811,7 @@
             if(!tenants.length){list.innerHTML='<div class="md:col-span-2 xl:col-span-3 border border-dashed border-white/10 rounded-2xl p-6 text-center text-sm text-slate-500">Chưa có Công Ty. Hãy tạo Công Ty đầu tiên để bắt đầu phân quyền.</div>';return;}
             list.innerHTML=tenants.map(t=>{
                 const active=String(currentTenantId||'')===String(t.id||'');
-                return `<button type="button" onclick="selectCompanyContext('${t.id}')" class="text-left rounded-2xl border ${active?'border-[#D4AF37] bg-[#D4AF37]/10':'border-white/10 bg-white/[.03] hover:border-[#D4AF37]/50'} p-4 transition"><div class="flex items-start justify-between gap-3"><div><div class="w-9 h-9 rounded-xl bg-[#D4AF37]/10 text-[#D4AF37] flex items-center justify-center mb-3"><i class="fa-solid fa-building"></i></div><div class="font-bold text-white">${escapeHtml(t.company_name||'Công Ty')}</div><div class="text-[10px] text-slate-500 mt-1">${active?'Đang xem toàn bộ dữ liệu Công Ty':'Bấm để xem Công Ty'}</div></div><span class="text-[10px] px-2 py-1 rounded-full ${active?'bg-[#D4AF37] text-black':'bg-emerald-500/10 text-emerald-400'}">${active?'ĐANG CHỌN':'Hoạt động'}</span></div></button>`;
+                return `<div role="button" tabindex="0" onclick="selectCompanyContext('${t.id}')" class="text-left rounded-2xl border ${active?'border-[#D4AF37] bg-[#D4AF37]/10':'border-white/10 bg-white/[.03] hover:border-[#D4AF37]/50'} p-4 transition cursor-pointer"><div class="flex items-start justify-between gap-3"><div><div class="w-9 h-9 rounded-xl bg-[#D4AF37]/10 text-[#D4AF37] flex items-center justify-center mb-3"><i class="fa-solid fa-building"></i></div><div class="font-bold text-white">${escapeHtml(t.company_name||'Công Ty')}</div><div class="text-[10px] text-slate-500 mt-1">${active?'Đang xem toàn bộ dữ liệu Công Ty':'Bấm để xem Công Ty'}</div></div><span class="text-[10px] px-2 py-1 rounded-full ${active?'bg-[#D4AF37] text-black':'bg-emerald-500/10 text-emerald-400'}">${active?'ĐANG CHỌN':'Hoạt động'}</span></div><div class="mt-3 pt-3 border-t border-white/10 flex items-center justify-between gap-2"><span class="text-[10px] ${t.teams_enabled?'text-violet-300':'text-slate-500'}"><i class="fa-solid fa-people-group mr-1"></i>Team: ${t.teams_enabled?'Đang bật':'Không sử dụng'}</span><button type="button" onclick="event.stopPropagation();setCompanyTeamsEnabled('${t.id}',${t.teams_enabled?'false':'true'})" class="px-2.5 py-1.5 rounded-lg text-[10px] font-bold ${t.teams_enabled?'bg-slate-800 text-slate-300':'bg-violet-500/15 text-violet-300'}">${t.teams_enabled?'Tắt Team':'Bật Team'}</button></div></div>`;
             }).join('');
         }
         function openCompanyModal(){
@@ -3789,10 +3825,11 @@
             e.preventDefault();
             if(!isSuperAdmin())return showToast('Chỉ Admin Quản Lí mới được tạo Công Ty!','error');
             const company_name=document.getElementById('companyName')?.value.trim();
+            const teams_enabled=!!document.getElementById('companyTeamsEnabled')?.checked;
             if(!company_name)return showToast('Vui lòng nhập tên Công Ty!','error');
             const btn=document.querySelector('#companyForm button[type="submit"]');const old=btn?.innerHTML;if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang tạo...';}
             try{
-                const {data,error}=await supabaseClient.from('tenants').insert({company_name}).select('id,company_name').single();
+                const {data,error}=await supabaseClient.from('tenants').insert({company_name,teams_enabled}).select('id,company_name,teams_enabled').single();
                 if(error)throw error;
                 tenants=[...tenants,data];currentTenantId=data.id;sessionStorage.setItem('NBRES_ACTIVE_TENANT',data.id);renderCompanies();populateUserTenantOptions(data.id);closeCompanyModal();
                 showToast('Đã tạo Công Ty. Bây giờ có thể tạo Quản Lí Công Ty!','success');
@@ -3850,8 +3887,11 @@
             if(!tenant_id)return showToast('Vui lòng chọn Công Ty!','error');
             if(['regional_admin','team_admin','employee'].includes(role)&&!region_id)
                 return showToast('Vui lòng chọn Khu Vực!','error');
+            if(role==='team_admin'&&!isTeamFeatureEnabled())
+                return showToast('Công Ty chưa bật tính năng Team!','error');
             if(role==='team_admin'&&!team_id)
                 return showToast('Quản Lí Team bắt buộc phải chọn Team!','error');
+            if(!isTeamFeatureEnabled()) team_id=null;
 
             const btn=document.querySelector('#userForm button[type="submit"]'); const old=btn?.innerHTML; userSaveInProgress=true;
             if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang tạo...';}
