@@ -48,7 +48,7 @@
       }
     }
     </script>
-<title>NBRES V12.1 - Notification Center • Stable</title>
+<title>NBRES V12.1.1 - Notification Center • Delete • Stable</title>
     <!-- Tailwind CSS & FontAwesome Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link id="nbresFontAwesome" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css'">
@@ -9933,7 +9933,7 @@ function renderAnnouncementCenterV121(){
   box.innerHTML=list.length?list.map(a=>{
     const id=notificationIdV121(a),unread=isAnnouncementUnreadV121(a),p=a.priority||'normal';
     const action=a.action_tab&&NOTIF_TAB_LABELS_V121[a.action_tab]?`<button onclick="event.stopPropagation();openNotificationActionV121('${id}','${a.action_tab}')" class="nbres-notif-action-v121"><i class="fa-solid fa-arrow-up-right-from-square mr-1"></i>${NOTIF_TAB_LABELS_V121[a.action_tab]}</button>`:'';
-    const manage=canManageAnnouncementV101(a)?`<button onclick="event.stopPropagation();archiveAnnouncementV121('${id}')" class="nbres-notif-read-btn-v121 text-rose-600"><i class="fa-solid fa-box-archive mr-1"></i>Ẩn</button>`:'';
+    const manage=canManageAnnouncementV101(a)?`<button onclick="event.stopPropagation();archiveAnnouncementV121('${id}')" class="nbres-notif-read-btn-v121 text-amber-700" title="Ẩn thông báo khỏi danh sách đang hoạt động"><i class="fa-solid fa-box-archive mr-1"></i>Ẩn</button><button onclick="event.stopPropagation();deleteAnnouncementV121('${id}')" class="nbres-notif-read-btn-v121 text-rose-700" title="Xóa vĩnh viễn thông báo"><i class="fa-solid fa-trash-can mr-1"></i>Xóa</button>`:'';
     const expiry=a.expires_at?`<span class="text-[10px] text-slate-400">Hết hạn ${new Date(a.expires_at).toLocaleString('vi-VN')}</span>`:'';
     return `<article class="nbres-notif-item-v121 ${unread?'is-unread':''}" onclick="markAnnouncementReadV121('${id}')">
       <div class="flex gap-3">
@@ -10038,6 +10038,35 @@ async function archiveAnnouncementV121(id){
   renderAnnouncementCenterV121();updateNotificationBadgesV121();
   showToast('Đã ẩn thông báo.','success');
 }
+async function deleteAnnouncementV121(id){
+  id=String(id||'');
+  const a=(announcementsV10||[]).find(x=>notificationIdV121(x)===id);
+  if(!a||!canManageAnnouncementV101(a))return showToast('Bạn không có quyền xóa thông báo này.','error');
+  const label=a.title||'Thông báo';
+  if(!confirm(`Xóa vĩnh viễn thông báo "${label}"?\n\nThao tác này không thể hoàn tác và thông báo sẽ biến mất với tất cả người nhận.`))return;
+  try{
+    const {data,error}=await supabaseClient.from('system_announcements')
+      .delete()
+      .eq('announcement_id',id)
+      .select('announcement_id')
+      .maybeSingle();
+    if(error)throw error;
+    if(!data)throw new Error('Không tìm thấy thông báo hoặc RLS không cho phép xóa.');
+    announcementsV10=(announcementsV10||[]).filter(x=>notificationIdV121(x)!==id);
+    announcementReadsV121.delete(id);
+    try{localStorage.setItem('NBRES_ANNOUNCEMENTS_SEEN_V10',JSON.stringify([...announcementReadsV121].slice(-1000)));}catch(_){}
+    renderAnnouncementCenterV121();
+    renderSmartNotificationsV10();
+    updateNotificationBadgesV121();
+    showToast('Đã xóa vĩnh viễn thông báo.','success');
+  }catch(e){
+    console.error('Delete announcement V12.1.1:',e);
+    showToast('Không thể xóa thông báo: '+(e?.message||e),'error');
+  }
+}
+// Giữ tương thích với các đoạn legacy nếu còn gọi tên hàm V10.1.
+deleteAnnouncementV101 = deleteAnnouncementV121;
+
 async function openNotificationActionV121(id,tab){
   await markAnnouncementReadV121(id,false);
   if(canOpenTaskV10(tab))switchTab(tab);
@@ -10085,6 +10114,13 @@ async function subscribeNotificationsV121(){
       announcementsV10=(announcementsV10||[]).filter(x=>notificationIdV121(x)!==notificationIdV121(a));
       if(notificationVisibleToMeV121(a))announcementsV10.unshift(a);
       renderAnnouncementCenterV121();updateNotificationBadgesV121();
+    })
+    .on('postgres_changes',{event:'DELETE',schema:'public',table:'system_announcements'},payload=>{
+      const id=notificationIdV121(payload.old||{});if(!id)return;
+      const existed=(announcementsV10||[]).some(x=>notificationIdV121(x)===id);if(!existed)return;
+      announcementsV10=(announcementsV10||[]).filter(x=>notificationIdV121(x)!==id);
+      announcementReadsV121.delete(id);
+      renderAnnouncementCenterV121();renderSmartNotificationsV10();updateNotificationBadgesV121();
     }).subscribe();
 }
 
