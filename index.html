@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <!-- V7.7.0 - HIERARCHICAL MANAGEMENT RIGHTS -->
+    <!-- NBRES V12.0 STABLE • PRODUCTION HARDENING -->
     <meta name="theme-color" content="#0f172a">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -48,7 +48,7 @@
       }
     }
     </script>
-<title>NBRES V11.3 - PropTech Admin UX • Demo</title>
+<title>NBRES V12.0 Stable • Real Estate Operating System</title>
     <!-- Tailwind CSS & FontAwesome Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link id="nbresFontAwesome" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css'">
@@ -1440,7 +1440,7 @@ body{padding-bottom:0!important;background:var(--v113-bg)!important}
 
 <style id="nbres-v11-4-mobile-master">
 /* ============================================================
-   NBRES V11.4 • MOBILE MASTER UX
+   NBRES V12.0 • MOBILE MASTER UX
    Mobile-first operating shell. Desktop behavior is untouched.
    ============================================================ */
 :root{
@@ -1650,7 +1650,7 @@ body{padding-bottom:0!important;background:var(--v113-bg)!important}
 
 
 <style id="nbres-icon-resilience-v1141">
-/* NBRES V11.4.1 • ICON RESILIENCE
+/* NBRES V12.0 • ICON RESILIENCE
    Inline SVG layer removes hard dependency on icon fonts/CDNs. */
 i.nbres-inline-icon{
   display:inline-flex!important;align-items:center;justify-content:center;
@@ -1662,6 +1662,47 @@ i.nbres-inline-icon>svg{display:block;width:1em;height:1em;overflow:visible}
 i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
 @keyframes nbresIconSpin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){i.nbres-inline-icon.fa-spin>svg{animation:none}}
+</style>
+
+
+<style id="nbres-v12-stable-system">
+:root{--v12-cyan:#22d3ee;--v12-blue:#2563eb;--v12-ink:#0b1220;--v12-ok:#10b981;--v12-warn:#f59e0b;--v12-danger:#ef4444}
+.nbres-brand-mark-v12{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-family:'Space Grotesk','Be Vietnam Pro',sans-serif;font-size:13px;font-weight:800;letter-spacing:-.03em;color:#dff9ff;background:linear-gradient(145deg,#0b2536,#101827);border:1px solid rgba(34,211,238,.28);box-shadow:0 7px 24px rgba(14,165,233,.12),inset 0 1px rgba(255,255,255,.05)}
+.nbres-sync-pill-v12{display:flex;align-items:center;gap:7px;min-height:34px;padding:0 10px;border-radius:999px;border:1px solid rgba(148,163,184,.18);background:rgba(15,23,42,.7);font-size:10px;font-weight:800;color:#94a3b8;white-space:nowrap}
+.nbres-sync-pill-v12 .dot{width:7px;height:7px;border-radius:999px;background:#64748b;box-shadow:0 0 0 3px rgba(100,116,139,.12)}
+.nbres-sync-pill-v12[data-state="ready"]{color:#a7f3d0;border-color:rgba(16,185,129,.2);background:rgba(16,185,129,.07)}
+.nbres-sync-pill-v12[data-state="ready"] .dot{background:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.12)}
+.nbres-sync-pill-v12[data-state="syncing"]{color:#bae6fd;border-color:rgba(14,165,233,.22);background:rgba(14,165,233,.08)}
+.nbres-sync-pill-v12[data-state="syncing"] .dot{background:#38bdf8;animation:v12Pulse 1s ease-in-out infinite}
+.nbres-sync-pill-v12[data-state="error"]{color:#fecaca;border-color:rgba(239,68,68,.22);background:rgba(239,68,68,.08)}
+.nbres-sync-pill-v12[data-state="error"] .dot{background:#ef4444}
+.nbres-sync-pill-v12[data-state="offline"]{color:#fde68a;border-color:rgba(245,158,11,.22);background:rgba(245,158,11,.08)}
+.nbres-sync-pill-v12[data-state="offline"] .dot{background:#f59e0b}
+@keyframes v12Pulse{50%{opacity:.35;transform:scale(.8)}}
+#workspaceStateV12{position:fixed;inset:0;z-index:75;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(241,245,249,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+#workspaceStateV12.hidden{display:none!important}
+.workspace-state-card-v12{width:min(430px,100%);border:1px solid #e2e8f0;border-radius:24px;background:#fff;box-shadow:0 28px 80px rgba(15,23,42,.16);padding:26px;text-align:center}
+.workspace-state-icon-v12{width:54px;height:54px;border-radius:18px;margin:0 auto 14px;display:grid;place-items:center;background:#ecfeff;color:#0891b2;font-size:20px}
+#workspaceStateV12[data-state="error"] .workspace-state-icon-v12{background:#fff1f2;color:#e11d48}
+.workspace-state-card-v12 h3{font-size:17px;font-weight:850;color:#0f172a;margin:0}.workspace-state-card-v12 p{font-size:12px;line-height:1.65;color:#64748b;margin:8px 0 0}.workspace-state-actions-v12{display:flex;justify-content:center;gap:8px;margin-top:18px}.workspace-state-actions-v12 button{min-height:42px;padding:0 16px;border-radius:12px;font-size:12px;font-weight:800}.workspace-state-retry-v12{background:linear-gradient(100deg,#0891b2,#2563eb);color:#fff}.workspace-state-close-v12{border:1px solid #e2e8f0;background:#fff;color:#475569}
+#mobileDataManageBtnV12{display:none}
+#dataManageBackdropV12{position:fixed;inset:0;z-index:94;background:rgba(2,6,23,.56);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+#dataManageBackdropV12.hidden,#dataManageSheetV12.hidden{display:none!important}
+#dataManageSheetV12{position:fixed;z-index:95;left:50%;bottom:18px;transform:translateX(-50%);width:min(520px,calc(100% - 24px));border:1px solid #e2e8f0;border-radius:22px;background:#fff;box-shadow:0 30px 80px rgba(15,23,42,.28);overflow:hidden}
+.data-sheet-head-v12{padding:15px 16px;border-bottom:1px solid #eef2f7;display:flex;align-items:center;justify-content:space-between;gap:12px}.data-sheet-head-v12 strong{font-size:14px;color:#0f172a}.data-sheet-head-v12 span{display:block;font-size:10px;color:#94a3b8;margin-top:2px}.data-sheet-list-v12{padding:8px}.data-sheet-action-v12{width:100%;min-height:52px;border-radius:14px;padding:10px 12px;display:flex;align-items:center;gap:12px;text-align:left;font-size:12px;font-weight:800;color:#334155}.data-sheet-action-v12:hover{background:#f8fafc}.data-sheet-action-v12 i,.data-sheet-action-v12 svg{width:18px}.data-sheet-action-v12.danger{color:#be123c;background:#fff1f2}.data-sheet-action-v12 .meta{display:block;font-size:9px;font-weight:500;color:#94a3b8;margin-top:2px}
+.v12-user-mode-note{padding:10px 12px;border-radius:12px;background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.14);font-size:10px;line-height:1.6;color:#94a3b8}.v12-user-mode-note b{color:#67e8f9}
+.v12-edit-btn{background:#eff6ff!important;color:#1d4ed8!important;border-color:#bfdbfe!important}
+#mainApp[data-connection="offline"]{filter:none}
+@media(max-width:767px){
+  #adminDataControls{display:none!important}
+  #mobileDataManageBtnV12{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:8px 11px;border:1px solid #dbe3ec;border-radius:10px;background:#fff;color:#334155;font-size:11px;font-weight:800;white-space:nowrap}
+  #mobileDataManageBtnV12.hidden{display:none!important}
+  .nbres-sync-pill-v12{min-height:30px;padding:0 8px;font-size:0}.nbres-sync-pill-v12 .dot{width:8px;height:8px}.nbres-sync-pill-v12 .label{display:none}
+  #dataManageSheetV12{bottom:calc(88px + env(safe-area-inset-bottom,0px))}
+  .workspace-state-card-v12{border-radius:20px;padding:22px 18px}
+}
+@media(min-width:768px){#dataManageSheetV12,#dataManageBackdropV12{display:none!important}}
+@media(prefers-reduced-motion:reduce){.nbres-sync-pill-v12[data-state="syncing"] .dot{animation:none}}
 </style>
 
 </head>
@@ -1741,11 +1782,22 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
     <!-- MAIN APP CONTAINER -->
     <div id="mainApp" class="hidden">
         <div id="v11DemoBanner" class="v11-demo-banner hidden"><i class="fa-solid fa-flask mr-1"></i> BẠN ĐANG Ở CHẾ ĐỘ DEMO • Dữ liệu chỉ để trải nghiệm <button type="button" onclick="exitNBRESDemo()">Thoát demo</button></div>
+        <div id="workspaceStateV12" class="hidden" data-state="loading" role="status" aria-live="polite">
+            <div class="workspace-state-card-v12">
+                <div class="workspace-state-icon-v12"><i id="workspaceStateIconV12" class="fa-solid fa-cloud-arrow-down"></i></div>
+                <h3 id="workspaceStateTitleV12">Đang đồng bộ không gian làm việc</h3>
+                <p id="workspaceStateMessageV12">NBRES đang tải dữ liệu theo phạm vi tài khoản của bạn.</p>
+                <div id="workspaceStateActionsV12" class="workspace-state-actions-v12 hidden">
+                    <button type="button" class="workspace-state-retry-v12" onclick="retryWorkspaceV12()"><i class="fa-solid fa-rotate-right mr-1"></i> Thử lại</button>
+                    <button type="button" class="workspace-state-close-v12" onclick="dismissWorkspaceStateV12()">Đóng</button>
+                </div>
+            </div>
+        </div>
         <header class="bg-slate-900 text-white shadow-xl sticky top-0 z-40 border-b border-slate-800">
             <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
                 <div class="flex items-center space-x-3">
                     <button type="button" onclick="goToInventoryFromLogo()" class="shrink-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400/60" title="Về Kho phòng" aria-label="Về Kho phòng">
-                        <img src="nbres-logo-premium.png" alt="NBRES" class="nbres-logo-header">
+                        <span class="nbres-brand-mark-v12" aria-hidden="true">NB</span>
                     </button>
                     <div>
                         <h1 class="text-base md:text-lg font-bold leading-tight flex items-center gap-2">
@@ -1851,6 +1903,8 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
                         </div>
                     </div>
 
+
+                    <div id="nbresSyncPillV12" class="nbres-sync-pill-v12" data-state="syncing" title="Trạng thái đồng bộ dữ liệu"><span class="dot"></span><span class="label">Đang đồng bộ</span></div>
 
                     <div id="nbresUserChipV114" class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-2xl border border-slate-700">
                         <div class="w-7 h-7 rounded-full bg-gradient-to-r from-orange-400 to-amber-400 text-slate-900 font-bold flex items-center justify-center text-xs">
@@ -1976,6 +2030,8 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
                     <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
                         <p class="text-sm text-slate-600">Hiển thị <span id="roomCount" class="font-bold text-orange-600">0</span> phòng phù hợp</p>
                         
+                        <button id="mobileDataManageBtnV12" type="button" class="hidden" onclick="openDataManageSheetV12()"><i class="fa-solid fa-database"></i> Quản lý dữ liệu</button>
+
                         <div id="adminDataControls" class="hidden flex gap-2 flex-wrap">
                             <button onclick="clearAllData()" class="text-xs bg-rose-100 hover:bg-rose-200 text-rose-700 px-3 py-1.5 rounded-lg font-medium">
                                 <i class="fa-solid fa-broom"></i> Xóa dữ liệu
@@ -3074,17 +3130,17 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
                 <input type="hidden" id="editUserId">
                 <div><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Tên đăng nhập *</label><input type="text" id="accUsername" required minlength="3" maxlength="32" autocapitalize="none" spellcheck="false" placeholder="Ví dụ: sale.nguyenbao" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><p class="text-[10px] text-slate-500 mt-1">3–32 ký tự: chữ không dấu, số, dấu chấm, gạch dưới hoặc gạch ngang.</p></div>
                 <div><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Họ và tên *</label><input type="text" id="accFullName" required placeholder="Nguyễn Văn A" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"></div>
-                <div><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Mật khẩu ban đầu *</label><div class="relative"><input type="password" id="accPassword" required minlength="8" placeholder="Tối thiểu 8 ký tự" class="w-full border border-white/10 rounded-xl p-3 pr-11 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><button type="button" onclick="togglePasswordVisibility('accPassword','accPasswordEye')" class="absolute right-3 top-3 text-slate-500 hover:text-[#D4AF37]"><svg class="nb-auth-svg nb-eye-svg" viewBox="0 0 24 24" aria-hidden="true">
+                <div><label id="accPasswordLabel" class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Mật khẩu ban đầu *</label><div class="relative"><input type="password" id="accPassword" required minlength="8" placeholder="Tối thiểu 8 ký tự" class="w-full border border-white/10 rounded-xl p-3 pr-11 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><button type="button" onclick="togglePasswordVisibility('accPassword','accPasswordEye')" class="absolute right-3 top-3 text-slate-500 hover:text-[#D4AF37]"><svg id="accPasswordEye" class="nb-auth-svg nb-eye-svg" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/>
       <circle cx="12" cy="12" r="2.5"/>
-    </svg></button></div><p class="text-[10px] text-slate-500 mt-1">Mật khẩu được gửi trực tiếp đến Supabase Auth và không hiển thị lại trong NBRES.</p></div>
+    </svg></button></div><p id="accPasswordHint" class="text-[10px] text-slate-500 mt-1">Mật khẩu được gửi trực tiếp đến Supabase Auth và không hiển thị lại trong NBRES.</p></div>
                 <div><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Cấp quyền *</label><select id="accRole" onchange="syncUserTeamRequirement()" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><option value="Nhân viên">Nhân viên</option><option value="Quản Lí Team">Quản Lý Team</option><option value="Quản Lý Khu vực">Quản Lý Khu vực</option><option value="Quản Lí Công Ty">Quản Lý Công Ty</option></select><p class="text-[10px] text-slate-500 mt-1">Admin Quản Lý là cấp cao nhất và không được tạo từ biểu mẫu này.</p></div>
                 <div id="accTenantWrap"><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Công Ty *</label><select id="accTenantId" onchange="syncUserTenantSelection()" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><option value="">-- Chọn công ty --</option></select></div>
                 <div id="accRegionWrap"><label class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Khu vực</label><select id="accRegionId" onchange="populateUserTeamOptions(null,this.value)" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><option value="">-- Chọn khu vực --</option></select></div>
                 <div id="accTeamWrap"><label id="accTeamLabel" class="block text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider mb-2">Team</label><select id="accTeamId" class="w-full border border-white/10 rounded-xl p-3 text-sm outline-none bg-[#030508] text-white focus:border-[#D4AF37]"><option value="">-- Chọn team --</option></select></div>
-                <div class="pt-3 border-t border-white/10 flex justify-end gap-2"><button type="button" onclick="closeUserModal()" class="px-4 py-2 border border-white/10 rounded-xl text-sm text-slate-400 hover:text-white">Hủy</button><button type="submit" class="px-5 py-2.5 bg-[#D4AF37] hover:bg-[#e6c553] text-[#030508] font-bold rounded-xl text-sm shadow-lg"><svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
+                <div id="userModeNoteV12" class="v12-user-mode-note"><b>Tạo mới:</b> tài khoản được tạo bằng Supabase Auth và phân quyền theo phạm vi hiện tại.</div><div class="pt-3 border-t border-white/10 flex justify-end gap-2"><button type="button" onclick="closeUserModal()" class="px-4 py-2 border border-white/10 rounded-xl text-sm text-slate-400 hover:text-white">Hủy</button><button id="userSubmitBtn" type="submit" class="px-5 py-2.5 bg-[#D4AF37] hover:bg-[#e6c553] text-[#030508] font-bold rounded-xl text-sm shadow-lg"><svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
-    </svg> Tạo tài khoản</button></div>
+    </svg> <span id="userSubmitTextV12">Tạo tài khoản</span></button></div>
             </form>
         </div>
     </div>
@@ -3270,6 +3326,20 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
         </div>
     </div>
 
+    <!-- NBRES V12 • Mobile data management sheet -->
+    <div id="dataManageBackdropV12" class="hidden" onclick="closeDataManageSheetV12()"></div>
+    <div id="dataManageSheetV12" class="hidden" role="dialog" aria-modal="true" aria-labelledby="dataManageTitleV12">
+        <div class="data-sheet-head-v12">
+            <div><strong id="dataManageTitleV12">Quản lý dữ liệu</strong><span>Backup, import và thao tác hệ thống được gom vào một nơi.</span></div>
+            <button type="button" onclick="closeDataManageSheetV12()" class="w-9 h-9 rounded-xl bg-slate-100 text-slate-500"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="data-sheet-list-v12">
+            <button type="button" class="data-sheet-action-v12" onclick="closeDataManageSheetV12();exportData()"><i class="fa-solid fa-download"></i><span>Tải dữ liệu Backup<span class="meta">Xuất dữ liệu hiện tại để lưu trữ an toàn.</span></span></button>
+            <button type="button" class="data-sheet-action-v12" onclick="closeDataManageSheetV12();document.getElementById('importFileInput')?.click()"><i class="fa-solid fa-upload"></i><span>Nhập dữ liệu JSON<span class="meta">Khôi phục dữ liệu từ file backup.</span></span></button>
+            <button id="mobileClearDataBtnV12" type="button" class="data-sheet-action-v12 danger" onclick="closeDataManageSheetV12();clearAllData()"><i class="fa-solid fa-broom"></i><span>Xóa dữ liệu phòng<span class="meta">Chỉ Quản Lý Công Ty / Admin nền tảng được phép.</span></span></button>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-2xl text-sm shadow-2xl opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2.5 z-50 border border-slate-800">
         <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
@@ -3284,14 +3354,15 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
         let supabaseClient = null;
         const NBRES_REMEMBER_KEY = 'NBRES_REMEMBER_DEVICE';
         const NBRES_LOGIN_ID_KEY = 'NBRES_REMEMBERED_LOGIN_ID';
-
+        function nbresRememberEnabled(){
+            return localStorage.getItem(NBRES_REMEMBER_KEY) === '1';
+        }
         const nbresAuthStorage = {
             getItem(key) {
-                return sessionStorage.getItem(key) ?? localStorage.getItem(key);
+                return nbresRememberEnabled() ? localStorage.getItem(key) : sessionStorage.getItem(key);
             },
             setItem(key, value) {
-                const remember = true;
-                if (remember) {
+                if (nbresRememberEnabled()) {
                     localStorage.setItem(key, value);
                     sessionStorage.removeItem(key);
                 } else {
@@ -4100,23 +4171,7 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
             return { id:u.id, user:u.username || u.email || u.user || '', pass:'', name:u.full_name || u.name || u.username || u.email || 'NBRES User', role:appRole, tenant_id:u.tenant_id||null, region_id:u.region_id||null, team_id:u.team_id||null, is_active:u.is_active!==false };
         }
 
-        function mapAppUserToDb(userData, includeId = false) {
-            const appRole = userData.role || 'Nhân viên';
-            const dbRole = appRole === 'Admin Quản Lí' ? 'owner'
-                : appRole === 'Quản Lý Khu vực' ? 'regional_admin'
-                : appRole === 'Quản Lí Team' ? 'parent' : 'child';
-            const row = {
-                username: String(userData.user || '').trim().toLowerCase(),
-                password: String(userData.pass || '').trim(),
-                full_name: String(userData.name || '').trim(),
-                role: dbRole,
-                region_id: appRole === 'Admin Quản Lí' ? null : (userData.region_id || null),
-                team_id: (appRole === 'Quản Lí Team' || appRole === 'Nhân viên') ? (userData.team_id || null) : null
-            };
-            if (includeId && userData.id !== undefined && userData.id !== null && userData.id !== '') row.id = Number(userData.id);
-            return row;
-        }
-
+        // V12: legacy users/password mapper removed. Supabase Auth + profiles is the single source of truth.
         function isSuperAdmin() { return !!currentUser && currentUser.role === 'Admin Quản Lí'; }
         function isCompanyAdmin() { return !!currentUser && currentUser.role === 'Quản Lí Công Ty'; }
         function isRegionalAdmin() { return !!currentUser && currentUser.role === 'Quản Lý Khu vực'; }
@@ -4190,86 +4245,7 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
             }
             return users.filter(u => String(u.id)===String(currentUser.id));
         }
-        // 1. ĐỒNG BỘ DỮ LIỆU TRÊN SUPABASE
-        async function loadUsersFromDB() {
-            return await loadProfilesForWorkspace();
-        }
-
-        async function saveUserToDB(userData) {
-            if (!supabaseClient) {
-                showToast('Supabase chưa kết nối. Không thể lưu tài khoản!', 'error');
-                return null;
-            }
-
-            try {
-                const hasId = userData.id !== null && userData.id !== undefined && userData.id !== '';
-
-                if (hasId) {
-                    // UPDATE tuyệt đối theo ID hiện có. Không fallback sang INSERT.
-                    const row = mapAppUserToDb(userData, false);
-                    const { data, error } = await supabaseClient
-                        .from('users')
-                        .update(row)
-                        .eq('id', Number(userData.id))
-                        .select('id, username, password, role, full_name, region_id, team_id')
-                        .maybeSingle();
-
-                    if (error) throw error;
-                    if (!data) {
-                        throw new Error('Không tìm thấy tài khoản để cập nhật hoặc policy UPDATE đang chặn thao tác.');
-                    }
-                    return data.id;
-                }
-
-                // INSERT chỉ khi form thật sự là "Thêm tài khoản mới".
-                const row = mapAppUserToDb(userData, false);
-                const { data, error } = await supabaseClient
-                    .from('users')
-                    .insert([row])
-                    .select('id')
-                    .single();
-
-                if (error) throw error;
-                return data?.id ?? null;
-
-            } catch (err) {
-                console.error('Lỗi lưu tài khoản:', err);
-                showToast(`Không thể lưu tài khoản: ${err?.message || err?.details || err}`, 'error');
-                return null;
-            }
-        }
-
-        async function deleteUserFromDB(id) {
-            if (!supabaseClient) {
-                showToast('Supabase chưa kết nối. Không thể xóa tài khoản!', 'error');
-                return false;
-            }
-
-            const numericId = Number(id);
-            if (!Number.isFinite(numericId)) {
-                showToast('ID tài khoản không hợp lệ!', 'error');
-                return false;
-            }
-
-            try {
-                const { data, error } = await supabaseClient
-                    .from('users')
-                    .delete()
-                    .eq('id', numericId)
-                    .select('id');
-
-                if (error) throw error;
-                if (!data || data.length === 0) {
-                    throw new Error('Supabase không xóa bản ghi. Policy DELETE của users đang chặn thao tác.');
-                }
-
-                return true;
-            } catch (err) {
-                console.error('Lỗi xóa tài khoản:', err);
-                showToast(`Không thể xóa tài khoản: ${err?.message || err?.details || err}`, 'error');
-                return false;
-            }
-        }
+        // V12: legacy public.users CRUD removed. Account management is handled only by Auth + profiles + Edge Function.
 
         // ===== SUPABASE ROOMS V5 =====
         // Bảng rooms dùng UUID + tenant_id và tên cột snake_case.
@@ -4682,33 +4658,75 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
 
         function triggerNBRESLogin(){ document.getElementById('loginUsername')?.focus(); document.querySelector('.pt-auth-card')?.scrollIntoView({behavior:'smooth',block:'center'}); }
         function resetNBRESLogin(){ document.getElementById('loginUsername')?.focus(); }
+        function setSyncStateV12(state='ready', label='Đã đồng bộ'){
+            const pill=document.getElementById('nbresSyncPillV12');
+            if(!pill)return;
+            pill.dataset.state=state;
+            const el=pill.querySelector('.label'); if(el)el.textContent=label;
+            pill.title=label;
+            document.getElementById('mainApp')?.setAttribute('data-connection',state==='offline'?'offline':'online');
+        }
+        function setWorkspaceStateV12(state='hidden', title='', message=''){
+            const box=document.getElementById('workspaceStateV12'); if(!box)return;
+            if(state==='hidden'){box.classList.add('hidden');return;}
+            box.classList.remove('hidden'); box.dataset.state=state;
+            const t=document.getElementById('workspaceStateTitleV12'); const m=document.getElementById('workspaceStateMessageV12');
+            const actions=document.getElementById('workspaceStateActionsV12'); const icon=document.getElementById('workspaceStateIconV12');
+            if(t)t.textContent=title|| (state==='error'?'Không thể tải dữ liệu':'Đang đồng bộ không gian làm việc');
+            if(m)m.textContent=message|| (state==='error'?'Kiểm tra kết nối mạng hoặc quyền Supabase rồi thử lại.':'NBRES đang tải dữ liệu theo phạm vi tài khoản của bạn.');
+            actions?.classList.toggle('hidden',state!=='error');
+            if(icon) icon.className=state==='error'?'fa-solid fa-triangle-exclamation':'fa-solid fa-cloud-arrow-down';
+        }
+        function dismissWorkspaceStateV12(){setWorkspaceStateV12('hidden')}
+        async function retryWorkspaceV12(){
+            setWorkspaceStateV12('loading');
+            const ok=await loadSecureWorkspace();
+            if(ok){setWorkspaceStateV12('hidden');showToast('Đã đồng bộ lại dữ liệu.','success');}
+        }
+        function describeWorkspaceErrorV12(err){
+            const text=String(err?.message||err||'').trim();
+            if(!navigator.onLine)return 'Thiết bị đang ngoại tuyến. Kết nối Internet rồi bấm Thử lại.';
+            if(/row-level security|policy|permission|42501/i.test(text))return 'Supabase đang chặn dữ liệu theo policy/RLS. Kiểm tra quyền tài khoản hoặc migration V12.';
+            if(/fetch|network|failed to fetch|timeout/i.test(text))return 'Kết nối đến Supabase không ổn định. Kiểm tra mạng rồi thử lại.';
+            return text || 'Không xác định được nguyên nhân. Hãy thử đồng bộ lại.';
+        }
         async function loadSecureWorkspace(){
+            setSyncStateV12('syncing','Đang đồng bộ');
+            setWorkspaceStateV12('loading','Đang đồng bộ không gian làm việc','NBRES đang tải Công Ty, nhân sự, Kho phòng, CRM và lịch xem theo quyền của bạn.');
             try {
+                if(!supabaseClient) throw new Error('Supabase client chưa sẵn sàng.');
                 const tenantRes = await supabaseClient.from('tenants').select('id,company_name,teams_enabled').order('company_name',{ascending:true});
-                tenants = tenantRes.error ? [] : (tenantRes.data || []);
+                if(tenantRes.error) throw tenantRes.error;
+                tenants = tenantRes.data || [];
                 if(isSuperAdmin()){
                     const saved=sessionStorage.getItem('NBRES_ACTIVE_TENANT');
                     currentTenantId = saved && tenants.some(t=>String(t.id)===String(saved)) ? saved : null;
-                } else {
-                    currentTenantId = currentUser?.tenant_id || null;
-                }
-                renderCompanies();
-                renderOwnCompanyTeamSettings();
+                } else currentTenantId = currentUser?.tenant_id || null;
+
+                renderCompanies(); renderOwnCompanyTeamSettings();
                 users = await loadProfilesForWorkspace();
                 if(!currentTenantId && isSuperAdmin()){
-                    regions=[]; teams=[]; rooms=[]; dbCases=[]; currentFilteredData=[];
-                    renderTeamContext(); renderTeams(); renderRegions(); renderUsersTable(); renderRooms([]); renderCaseList([]);
-                    return;
+                    regions=[]; teams=[]; rooms=[]; dbCases=[]; currentFilteredData=[]; appointments=[]; leadsV9=[];
+                    renderTeamContext(); renderTeams(); renderRegions(); renderUsersTable(); renderRooms([]); renderCaseList([]); renderAppointments([]); renderCompanyDashboard(); renderPlatformAdminDashboard();
+                    setSyncStateV12('ready','Đã đồng bộ'); setWorkspaceStateV12('hidden'); return true;
                 }
+
                 regions = await loadRegionsFromDB(); if(regions===null) regions=[];
                 teams = await loadTeamsFromDB();
                 renderTeamContext(); renderTeams(); populateUserTeamOptions(); renderRegions(); renderUsersTable();
+
                 roomPage=1; rooms=await loadRoomsPage(1); renderDistrictOptions(); renderRooms(rooms);
                 dbCases=await loadCrmScriptsFromDB(); currentFilteredData=[...dbCases]; renderCaseList(dbCases); if(dbCases.length) selectCase(dbCases[0].id);
-                appointments=await loadAppointmentsFromDB();
-                renderCompanyDashboard();
-            renderPlatformAdminDashboard();
-            } catch(err){ console.error('Workspace load:',err); }
+                appointments=await loadAppointmentsFromDB(); populateAppointmentFilters(); renderAppointments(appointments);
+                try{ await loadLeadsV9(); }catch(_){ /* module can be unavailable before V9 schema */ }
+                renderCompanyDashboard(); renderPlatformAdminDashboard();
+                setSyncStateV12('ready','Đã đồng bộ'); setWorkspaceStateV12('hidden'); return true;
+            } catch(err){
+                console.error('Workspace load:',err);
+                setSyncStateV12(navigator.onLine?'error':'offline',navigator.onLine?'Lỗi đồng bộ':'Ngoại tuyến');
+                setWorkspaceStateV12('error','Không thể tải đầy đủ dữ liệu',describeWorkspaceErrorV12(err));
+                return false;
+            }
         }
         async function loadProfilesForWorkspace(){
             if(!supabaseClient || !currentUser) return currentUser?[currentUser]:[];
@@ -4730,8 +4748,8 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
                 if (profileError || !profile || profile.is_active === false) { await supabaseClient.auth.signOut(); showLogin(); return false; }
                 currentUser = mapDbUserToApp(profile);
                 currentTenantId = profile.tenant_id || null;
-                await loadSecureWorkspace();
                 showApp();
+                await loadSecureWorkspace();
                 return true;
             } catch(err) {
                 console.error('Auth session:',err);
@@ -4740,19 +4758,15 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
                 return false;
             }
         }
-
         function togglePasswordVisibility(inputId, iconId) {
             const pwdInput = document.getElementById(inputId);
-            const eyeIcon = document.getElementById(iconId);
-            if (!pwdInput || !eyeIcon) return;
-            if (pwdInput.type === 'password') {
-                pwdInput.type = 'text';
-                eyeIcon.classList.remove('fa-eye');
-                eyeIcon.classList.add('fa-eye-slash');
-            } else {
-                pwdInput.type = 'password';
-                eyeIcon.classList.remove('fa-eye-slash');
-                eyeIcon.classList.add('fa-eye');
+            if (!pwdInput) return;
+            const eyeIcon = document.getElementById(iconId) || pwdInput.parentElement?.querySelector('i,svg');
+            const reveal = pwdInput.type === 'password';
+            pwdInput.type = reveal ? 'text' : 'password';
+            if (eyeIcon?.classList?.contains('fa-eye') || eyeIcon?.classList?.contains('fa-eye-slash')) {
+                eyeIcon.classList.toggle('fa-eye', !reveal);
+                eyeIcon.classList.toggle('fa-eye-slash', reveal);
             }
         }
 
@@ -4777,7 +4791,7 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
                 currentUser = mapDbUserToApp(profile); currentTenantId = profile.tenant_id || null;
                 sessionStorage.removeItem('NBX_LOGIN_NOTICE_SHOWN');
                 showToast(`Xin chào ${currentUser.name}!`,'success');
-                await loadSecureWorkspace(); showApp();
+                showApp(); await loadSecureWorkspace();
             } catch(err) {
                 console.error(err);
                 showToast(err?.message || 'Tên đăng nhập hoặc mật khẩu không đúng!','error');
@@ -5053,6 +5067,8 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
             if(navCompanyDashboardBtn) navCompanyDashboardBtn.classList.toggle('hidden', !isCompanyAdmin());
             const adminAddRoomBtn = document.getElementById('adminAddRoomBtn');
             const adminDataControls = document.getElementById('adminDataControls');
+            const mobileDataManageBtnV12 = document.getElementById('mobileDataManageBtnV12');
+            const mobileClearDataBtnV12 = document.getElementById('mobileClearDataBtnV12');
             document.querySelectorAll('[onclick*="clearAllData"]').forEach(btn=>{
                 btn.classList.toggle('hidden', !(isCompanyAdmin() || isSuperAdmin()));
             });
@@ -5079,12 +5095,15 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
                 navUsersBtn.classList.remove('hidden');
                 adminAddRoomBtn.classList.remove('hidden');
                 adminDataControls.classList.remove('hidden');
+                mobileDataManageBtnV12?.classList.remove('hidden');
+                mobileClearDataBtnV12?.classList.toggle('hidden', !(isCompanyAdmin() || isSuperAdmin()));
                 if (crmAdminControls) crmAdminControls.classList.remove('hidden');
                 renderUsersTable();
             } else {
                 navUsersBtn.classList.add('hidden');
                 adminAddRoomBtn.classList.add('hidden');
                 adminDataControls.classList.add('hidden');
+                mobileDataManageBtnV12?.classList.add('hidden');
                 if (crmAdminControls) crmAdminControls.classList.add('hidden');
                 if (!document.getElementById('tab-users').classList.contains('hidden')) switchTab('tab-inventory');
             }
@@ -5129,11 +5148,22 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
 
         function showLogin() {
             document.getElementById('mainApp').classList.add('hidden');
+            setWorkspaceStateV12('hidden');
             const screen=document.getElementById('authScreen'); if(screen) screen.classList.remove('hidden');
-            resetNBRESLogin();
             const form=document.getElementById('loginForm'); if(form) form.reset();
+            const remember=localStorage.getItem(NBRES_REMEMBER_KEY)==='1';
+            const rememberEl=document.getElementById('rememberMe'); if(rememberEl) rememberEl.checked=remember;
+            const login=document.getElementById('loginUsername'); const saved=remember?localStorage.getItem(NBRES_LOGIN_ID_KEY):'';
+            if(login && saved) login.value=saved;
+            resetNBRESLogin();
         }
 
+
+
+        function openDataManageSheetV12(){document.getElementById('dataManageBackdropV12')?.classList.remove('hidden');document.getElementById('dataManageSheetV12')?.classList.remove('hidden');document.body.style.overflow='hidden';}
+        function closeDataManageSheetV12(){document.getElementById('dataManageBackdropV12')?.classList.add('hidden');document.getElementById('dataManageSheetV12')?.classList.add('hidden');document.body.style.overflow='';}
+        window.addEventListener('online',()=>{setSyncStateV12('syncing','Đang kết nối lại'); if(currentUser&&document.body.dataset.nbresDemo!=='true')setTimeout(()=>retryWorkspaceV12(),250);});
+        window.addEventListener('offline',()=>{setSyncStateV12('offline','Ngoại tuyến');showToast('Mất kết nối Internet. Dữ liệu mới sẽ không đồng bộ cho đến khi có mạng.','error');});
 
         function getTaskTabLabel(tabId){
             const labels = {
@@ -5962,120 +5992,110 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
             finally{if(btn){btn.disabled=false;btn.innerHTML=old||'Tạo Công Ty';}}
         }
 
-        // 3. QUẢN LÝ TÀI KHOẢN V2 - AUTH + PROFILES + EDGE FUNCTION
+        // 3. QUẢN LÝ TÀI KHOẢN V12 - AUTH + PROFILES + ONE SECURITY EDGE FUNCTION
         const APP_TO_DB_ROLE = {'Quản Lí Công Ty':'company_admin','Quản Lý Khu vực':'regional_admin','Quản Lí Team':'team_admin','Nhân viên':'employee'};
+        const DB_TO_APP_ROLE_V12 = {'company_admin':'Quản Lí Công Ty','regional_admin':'Quản Lý Khu vực','team_admin':'Quản Lí Team','employee':'Nhân viên'};
 
-        function openUserModal(editId = null) {
-            if (!hasAdminAccess()) return showToast('Chỉ Admin mới có quyền quản lý tài khoản!','error');
-            if (isSuperAdmin() && !tenants.length) return showToast('Hãy tạo Công Ty trước khi tạo tài khoản quản lý!','error');
-            if (editId) return showToast('Bản V2 hiện tạo tài khoản qua Auth. Chỉnh sửa tài khoản sẽ được nối ở bước tiếp theo.','error');
-            document.getElementById('userForm').reset(); document.getElementById('editUserId').value='';
-            const roleSelect=document.getElementById('accRole'); [...roleSelect.options].forEach(o=>o.disabled=false);
+        function allowedAccountRolesV12(){
             const teamEnabled=isTeamFeatureEnabled();
-            const allowebRoles = isSuperAdmin()
-                ? ['Quản Lí Công Ty','Quản Lý Khu vực',...(teamEnabled?['Quản Lí Team']:[]),'Nhân viên']
-                : isCompanyAdmin()
-                    ? ['Quản Lý Khu vực',...(teamEnabled?['Quản Lí Team']:[]),'Nhân viên']
-                    : isRegionalAdmin()
-                        ? [...(teamEnabled?['Quản Lí Team']:[]),'Nhân viên']
-                        : isManagerAdmin()
-                            ? ['Nhân viên']
-                            : [];
-            [...roleSelect.options].forEach(o=>o.disabled=!allowebRoles.includes(o.value));
-            const firstAlloweb=[...roleSelect.options].find(o=>!o.disabled && !o.hidden);
-            if(firstAlloweb) roleSelect.value=firstAlloweb.value;
-            populateUserTenantOptions(isSuperAdmin()?(currentTenantId||''):(currentUser?.tenant_id||''));
-            const defaultRegion=isRegionalAdmin()||isManagerAdmin()?currentUser.region_id:(activeRegionId||'');
-            const defaultTeam=isManagerAdmin()?currentUser.team_id:(activeTeamId||'');
-            populateRegionOptions(defaultRegion); document.getElementById('accRegionId').value=defaultRegion||'';
-            populateUserTeamOptions(defaultTeam,defaultRegion); document.getElementById('accTeamId').value=defaultTeam||'';
-            syncUserTeamRequirement();
-            document.getElementById('userModal').classList.remove('hidden'); document.getElementById('userModal').classList.add('flex');
+            if(isSuperAdmin()) return ['Quản Lí Công Ty','Quản Lý Khu vực',...(teamEnabled?['Quản Lí Team']:[]),'Nhân viên'];
+            if(isCompanyAdmin()) return ['Quản Lý Khu vực',...(teamEnabled?['Quản Lí Team']:[]),'Nhân viên'];
+            if(isRegionalAdmin()) return [...(teamEnabled?['Quản Lí Team']:[]),'Nhân viên'];
+            if(isManagerAdmin()) return ['Nhân viên'];
+            return [];
         }
-        function closeUserModal(){document.getElementById('userModal').classList.add('hidden');document.getElementById('userModal').classList.remove('flex');document.getElementById('userForm').reset();}
+        function configureUserRoleOptionsV12(selected=''){
+            const roleSelect=document.getElementById('accRole'); if(!roleSelect)return;
+            const allowed=allowedAccountRolesV12();
+            [...roleSelect.options].forEach(o=>{o.disabled=!allowed.includes(o.value);o.hidden=!allowed.includes(o.value)});
+            const candidate=selected && allowed.includes(selected)?selected:allowed[0]; if(candidate)roleSelect.value=candidate;
+        }
+        async function invokeAdminUserManagerV12(body){
+            if(!supabaseClient)throw new Error('Supabase chưa kết nối.');
+            const {data,error}=await supabaseClient.functions.invoke('admin-user-manager',{body});
+            if(error){
+                let detail='';
+                try{if(error.context){const payload=await error.context.json();detail=payload?.error||payload?.message||'';}}catch(_){}
+                throw new Error(detail||error.message||'Edge Function admin-user-manager trả về lỗi.');
+            }
+            if(!data?.success)throw new Error(data?.error||'Thao tác tài khoản không thành công.');
+            return data;
+        }
+        function openUserModal(editId = null) {
+            if (!hasAdminAccess()) return showToast('Bạn không có quyền quản lý tài khoản!','error');
+            if (isSuperAdmin() && !tenants.length) return showToast('Hãy tạo Công Ty trước khi tạo tài khoản quản lý!','error');
+            const target=editId?users.find(u=>String(u.id)===String(editId)):null;
+            if(editId&&!target)return showToast('Không tìm thấy tài khoản cần chỉnh sửa.','error');
+            if(target&&(target.role==='Admin Quản Lí'||String(target.id)===String(currentUser?.id)))return showToast('Tài khoản này được bảo vệ và không chỉnh sửa tại đây.','error');
+
+            const form=document.getElementById('userForm'); form?.reset();
+            document.getElementById('editUserId').value=target?.id||'';
+            configureUserRoleOptionsV12(target?.role||'');
+
+            const tenantId=target?.tenant_id || (isSuperAdmin()?(currentTenantId||''):(currentUser?.tenant_id||''));
+            populateUserTenantOptions(tenantId);
+            const regionId=target?.region_id || ((isRegionalAdmin()||isManagerAdmin())?currentUser.region_id:(activeRegionId||''));
+            populateRegionOptions(regionId); const regionSelect=document.getElementById('accRegionId'); if(regionSelect)regionSelect.value=regionId||'';
+            populateUserTeamOptions(target?.team_id||((isManagerAdmin()?currentUser.team_id:(activeTeamId||''))),regionId);
+            const teamSelect=document.getElementById('accTeamId'); if(teamSelect)teamSelect.value=target?.team_id||((isManagerAdmin()?currentUser.team_id:(activeTeamId||'')))||'';
+
+            const username=document.getElementById('accUsername'), name=document.getElementById('accFullName'), pass=document.getElementById('accPassword');
+            if(username)username.value=target?.user||''; if(name)name.value=target?.name||'';
+            if(pass){pass.value='';pass.required=!target;pass.minLength=8;pass.placeholder=target?'Để trống nếu không đổi mật khẩu':'Tối thiểu 8 ký tự';}
+            const passLabel=document.getElementById('accPasswordLabel'); if(passLabel)passLabel.textContent=target?'Mật khẩu mới (không bắt buộc)':'Mật khẩu ban đầu *';
+            const passHint=document.getElementById('accPasswordHint'); if(passHint)passHint.textContent=target?'Chỉ nhập khi muốn đặt mật khẩu mới. Mật khẩu cũ không bao giờ được đọc từ NBRES.':'Mật khẩu được gửi trực tiếp đến Supabase Auth và không hiển thị lại trong NBRES.';
+            const title=document.getElementById('userModalTitle'); if(title)title.textContent=target?'Chỉnh Sửa Tài Khoản NBRES':'Tạo Tài Khoản NBRES';
+            const note=document.getElementById('userModeNoteV12'); if(note)note.innerHTML=target?'<b>Chỉnh sửa:</b> cập nhật họ tên, quyền, khu vực/Team và có thể đổi mật khẩu qua Edge Function bảo mật.':'<b>Tạo mới:</b> tài khoản được tạo bằng Supabase Auth và phân quyền theo phạm vi hiện tại.';
+            const submitText=document.getElementById('userSubmitTextV12'); if(submitText)submitText.textContent=target?'Lưu thay đổi':'Tạo tài khoản';
+
+            syncUserTeamRequirement();
+            if(target){
+                if(regionSelect)regionSelect.value=target.region_id||'';
+                populateUserTeamOptions(target.team_id||'',target.region_id||''); if(teamSelect)teamSelect.value=target.team_id||'';
+            }
+            document.getElementById('userModal').classList.remove('hidden'); document.getElementById('userModal').classList.add('flex');
+            setTimeout(()=>document.getElementById('accFullName')?.focus(),80);
+        }
+        function closeUserModal(){const modal=document.getElementById('userModal');modal?.classList.add('hidden');modal?.classList.remove('flex');document.getElementById('userForm')?.reset();}
 
         async function saveUser(e){
             e.preventDefault(); if(userSaveInProgress)return;
+            const editId=document.getElementById('editUserId').value.trim(); const isEdit=!!editId;
             const username=document.getElementById('accUsername').value.trim().toLowerCase();
             const full_name=document.getElementById('accFullName').value.trim();
             const password=document.getElementById('accPassword').value;
             const appRole=document.getElementById('accRole').value; const role=APP_TO_DB_ROLE[appRole];
             const tenant_id=isSuperAdmin()?(document.getElementById('accTenantId').value||null):(currentUser?.tenant_id||null);
             let region_id=document.getElementById('accRegionId')?.value||null; let team_id=document.getElementById('accTeamId')?.value||null;
-
-            if(isRegionalAdmin()){region_id=currentUser.region_id;}
+            if(isRegionalAdmin())region_id=currentUser.region_id;
             if(isManagerAdmin()){region_id=currentUser.region_id;team_id=currentUser.team_id;}
-
-            // Chuẩn hóa phạm vi theo mô hình NBRES:
-            // Công Ty không thuộc Khu vực/Team; Khu vực không thuộc Team;
-            // Nhân viên có thể trực thuộc Khu vực mà không cần Team.
-            if(appRole==='Quản Lí Công Ty'){region_id=null;team_id=null;}
-            else if(appRole==='Quản Lý Khu vực'){team_id=null;}
-
-            if(!/^[a-z0-9._-]{3,32}$/.test(username))
-                return showToast('Tên đăng nhập phải có 3–32 ký tự: chữ không dấu, số, dấu chấm, gạch dưới hoặc gạch ngang.','error');
-            if(!full_name||password.length<8)
-                return showToast('Nhập họ tên và mật khẩu tối thiểu 8 ký tự!','error');
-            if(!role)return showToast('Cấp quyền không hợp lệ!','error');
+            if(appRole==='Quản Lí Công Ty'){region_id=null;team_id=null;} else if(appRole==='Quản Lý Khu vực')team_id=null;
+            if(!/^[a-z0-9._-]{3,32}$/.test(username))return showToast('Tên đăng nhập phải có 3–32 ký tự: chữ không dấu, số, dấu chấm, gạch dưới hoặc gạch ngang.','error');
+            if(!full_name)return showToast('Vui lòng nhập họ và tên.','error');
+            if((!isEdit&&password.length<8)||(isEdit&&password&&password.length<8))return showToast('Mật khẩu phải có tối thiểu 8 ký tự.','error');
+            if(!role||!allowedAccountRolesV12().includes(appRole))return showToast('Cấp quyền không hợp lệ với tài khoản của bạn.','error');
             if(!tenant_id)return showToast('Vui lòng chọn Công Ty!','error');
-            if(['regional_admin','team_admin','employee'].includes(role)&&!region_id)
-                return showToast('Vui lòng chọn Khu vực!','error');
-            if(role==='team_admin'&&!isTeamFeatureEnabled())
-                return showToast('Công Ty chưa bật tính năng Team!','error');
-            if(role==='team_admin'&&!team_id)
-                return showToast('Quản Lý Team bắt buộc phải chọn Team!','error');
-            if(!isTeamFeatureEnabled()) team_id=null;
+            if(['regional_admin','team_admin','employee'].includes(role)&&!region_id)return showToast('Vui lòng chọn Khu vực!','error');
+            if(role==='team_admin'&&!isTeamFeatureEnabled())return showToast('Công Ty chưa bật tính năng Team!','error');
+            if(role==='team_admin'&&!team_id)return showToast('Quản Lý Team bắt buộc phải chọn Team!','error');
+            if(!isTeamFeatureEnabled())team_id=null;
 
-            const btn=document.querySelector('#userForm button[type="submit"]'); const old=btn?.innerHTML; userSaveInProgress=true;
-            if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang tạo...';}
+            const btn=document.getElementById('userSubmitBtn');const old=btn?.innerHTML;userSaveInProgress=true;
+            if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang lưu...';}
             try{
-                const {data,error}=await supabaseClient.functions.invoke('admin-create-user',{
-                    body:{username,password,full_name,role,tenant_id,region_id,team_id}
-                });
-                if(error){
-                    let detail='';
-                    try{
-                        if(error.context){
-                            const payload=await error.context.json();
-                            detail=payload?.error||payload?.message||'';
-                        }
-                    }catch(_){}
-                    throw new Error(detail||error.message||'Edge Function trả về lỗi.');
-                }
-                if(!data?.success) throw new Error(data?.error||'Không thể tạo tài khoản.');
-                users=await loadProfilesForWorkspace(); renderUsersTable(); closeUserModal();
-                showToast(`Đã tạo tài khoản ${username} thành công!`,'success');
-            }catch(err){
-                console.error('admin-create-user:',err);
-                showToast('Tạo tài khoản thất bại: '+(err?.message||err),'error');
-            } finally {
-                userSaveInProgress=false;
-                if(btn){btn.disabled=false;btn.innerHTML=old||'Tạo tài khoản';}
-            }
+                const body={action:isEdit?'update':'create',user_id:isEdit?editId:undefined,username,full_name,role,tenant_id,region_id,team_id}; if(password)body.password=password;
+                await invokeAdminUserManagerV12(body);
+                users=await loadProfilesForWorkspace();renderUsersTable();renderPlatformAdminDashboard();renderCompanyDashboard();closeUserModal();
+                showToast(isEdit?`Đã cập nhật ${full_name}.`:`Đã tạo tài khoản ${username}.`,'success');
+            }catch(err){console.error('admin-user-manager:',err);showToast((isEdit?'Cập nhật':'Tạo tài khoản')+' thất bại: '+(err?.message||err),'error');}
+            finally{userSaveInProgress=false;if(btn){btn.disabled=false;btn.innerHTML=old||'<span id="userSubmitTextV12">Lưu</span>';}}
         }
-
         async function deleteUser(id){
-            const target=users.find(u=>u.id===id);
-            if(!target)return showToast('Không tìm thấy tài khoản.','error');
-            if(currentUser?.id===id)return showToast('Không thể tự xóa tài khoản đang đăng nhập.','error');
-            if(target.role==='Admin Quản Lí')return showToast('Không thể xóa Admin Quản Lý từ chức năng này.','error');
-            const label=target.name||target.user||'tài khoản này';
-            if(!confirm(`Bạn chắc chắn muốn xóa thành viên ${label} đúng không?`))return;
-            try{
-                const {data,error}=await supabaseClient.functions.invoke('admin-delete-user',{body:{user_id:id}});
-                if(error){
-                    let detail='';
-                    try{if(error.context){const payload=await error.context.json();detail=payload?.error||payload?.message||'';}}catch(_){}
-                    throw new Error(detail||error.message||'Edge Function trả về lỗi.');
-                }
-                if(!data?.success)throw new Error(data?.error||'Không thể xóa tài khoản.');
-                users=await loadProfilesForWorkspace();
-                renderUsersTable();
-                showToast(`Đã xóa tài khoản ${label}.`,'success');
-            }catch(err){
-                console.error('admin-delete-user:',err);
-                showToast('Xóa tài khoản thất bại: '+(err?.message||err),'error');
-            }
+            const target=users.find(u=>String(u.id)===String(id)); if(!target)return showToast('Không tìm thấy tài khoản.','error');
+            if(String(currentUser?.id)===String(id)||target.role==='Admin Quản Lí')return showToast('Tài khoản này được bảo vệ.','error');
+            const label=target.name||target.user||'tài khoản này'; if(!confirm(`Xóa vĩnh viễn tài khoản ${label}? Thao tác này không thể hoàn tác.`))return;
+            try{await invokeAdminUserManagerV12({action:'delete',user_id:id});users=await loadProfilesForWorkspace();renderUsersTable();renderPlatformAdminDashboard();renderCompanyDashboard();showToast(`Đã xóa tài khoản ${label}.`,'success');}
+            catch(err){console.error('admin-user-manager delete:',err);showToast('Xóa tài khoản thất bại: '+(err?.message||err),'error');}
         }
 
         function renderUsersTable(){
@@ -6117,25 +6137,18 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
                     : '<span class="text-xs font-bold text-slate-400">● Đã khóa</span>';
                 const actions=protectedUser
                     ? '<span class="text-[11px] text-slate-400"><i class="fa-solid fa-shield-halved mr-1"></i>Được bảo vệ</span>'
-                    : `<div class="flex justify-end gap-1.5"><button onclick="toggleProfileActive('${u.id}',${u.is_active===false?'true':'false'})" class="inline-flex items-center gap-1 px-2.5 py-2 rounded-xl ${u.is_active===false?'bg-emerald-50 text-emerald-700 border-emerald-200':'bg-amber-50 text-amber-700 border-amber-200'} border text-xs font-bold"><i class="fa-solid ${u.is_active===false?'fa-lock-open':'fa-lock'}"></i>${u.is_active===false?'Mở':'Khóa'}</button><button onclick="deleteUser('${u.id}')" class="inline-flex items-center gap-1 px-2.5 py-2 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold"><i class="fa-solid fa-trash-can"></i>Xóa</button></div>`;
+                    : `<div class="flex justify-end gap-1.5 flex-wrap"><button onclick="openUserModal('${u.id}')" class="v12-edit-btn inline-flex items-center gap-1 px-2.5 py-2 rounded-xl border text-xs font-bold"><i class="fa-solid fa-pen"></i>Sửa</button><button onclick="toggleProfileActive('${u.id}',${u.is_active===false?'true':'false'})" class="inline-flex items-center gap-1 px-2.5 py-2 rounded-xl ${u.is_active===false?'bg-emerald-50 text-emerald-700 border-emerald-200':'bg-amber-50 text-amber-700 border-amber-200'} border text-xs font-bold"><i class="fa-solid ${u.is_active===false?'fa-lock-open':'fa-lock'}"></i>${u.is_active===false?'Mở':'Khóa'}</button><button onclick="deleteUser('${u.id}')" class="inline-flex items-center gap-1 px-2.5 py-2 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold"><i class="fa-solid fa-trash-can"></i>Xóa</button></div>`;
                 return `<tr class="hover:bg-slate-50 transition"><td class="p-3.5 font-bold text-indigo-600">${escapeHtml(u.user||'—')}</td><td class="p-3.5"><div class="font-bold text-slate-800">${escapeHtml(u.name||'—')}</div><div class="text-[10px] ${isOnline?'text-emerald-500':'text-slate-400'} mt-1">${isOnline?'● Đang online':'● Offline'}</div></td><td class="p-3.5 text-slate-400"><span class="tracking-widest" title="Mật khẩu do Supabase Auth bảo vệ">••••••••</span></td><td class="p-3.5"><span class="text-xs font-semibold px-2.5 py-1 rounded-full ${u.role==='Admin Quản Lí'?'bg-fuchsia-100 text-fuchsia-800':u.role==='Quản Lí Công Ty'?'bg-yellow-100 text-yellow-800':u.role==='Quản Lý Khu vực'?'bg-sky-100 text-sky-800':u.role==='Quản Lí Team'?'bg-violet-100 text-violet-800':'bg-slate-100 text-slate-700'}">${escapeHtml(u.role)}</span></td><td class="p-3.5">${u.role==='Admin Quản Lí'?'<span class="text-xs text-fuchsia-600 font-semibold">Toàn hệ thống</span>':`<div class="text-xs font-semibold text-sky-700">${escapeHtml(getRegionName(u.region_id))}</div>${isTeamFeatureEnabled()?`<div class="text-[11px] text-violet-700 mt-0.5">${u.team_id?escapeHtml(getTeamName(u.team_id)):'Không gán Team'}</div>`:''}`}</td><td class="p-3.5">${statusHtml}</td><td class="p-3.5 text-right">${actions}</td></tr>`;
             }).join('');
         }
-
         async function toggleProfileActive(id,enabled){
             if(!hasAdminAccess())return showToast('Bạn không có quyền thay đổi trạng thái tài khoản.','error');
             const target=users.find(u=>String(u.id)===String(id));
             if(!target||target.role==='Admin Quản Lí'||String(id)===String(currentUser?.id))return showToast('Tài khoản này được bảo vệ.','error');
-            const verb=enabled?'mở khóa':'khóa';
-            if(!confirm(`Bạn muốn ${verb} tài khoản ${target.name||target.user}?`))return;
-            try{
-                const {data,error}=await supabaseClient.from('profiles').update({is_active:!!enabled}).eq('id',id).select('id,is_active').maybeSingle();
-                if(error)throw error;if(!data)throw new Error('Policy không cho phép cập nhật tài khoản này.');
-                target.is_active=!!enabled;renderUsersTable();renderPlatformAdminDashboard();renderCompanyDashboard();
-                showToast(`Đã ${verb} tài khoản.`,'success');
-            }catch(err){showToast(`Không thể ${verb} tài khoản: `+(err?.message||err),'error');}
+            const verb=enabled?'mở khóa':'khóa'; if(!confirm(`Bạn muốn ${verb} tài khoản ${target.name||target.user}?`))return;
+            try{await invokeAdminUserManagerV12({action:'set_active',user_id:id,is_active:!!enabled});target.is_active=!!enabled;renderUsersTable();renderPlatformAdminDashboard();renderCompanyDashboard();showToast(`Đã ${verb} tài khoản.`,'success');}
+            catch(err){showToast(`Không thể ${verb} tài khoản: `+(err?.message||err),'error');}
         }
-
 
         // ===== NBRES V10.0 BUSINESS OS =====
         let leadsV9=[];
@@ -9038,7 +9051,7 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
 /* V7.5.0 - Đăng ký Service Worker cho PWA */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js', { scope: '/' })
+    navigator.serviceWorker.register('/sw.js', { scope: '/', updateViaCache:'none' })
       .then(reg => console.log('NBRES PWA service worker:', reg.scope))
       .catch(err => console.warn('NBRES PWA service worker error:', err));
   });
@@ -9047,27 +9060,23 @@ if ('serviceWorker' in navigator) {
 
 
 <script>
-/* NBRES V10.3.7 • AUTOMATIC REMEMBER LOGIN */
+/* NBRES V12.0 • Respect the user's remember-session choice. */
 (function(){
   const KEY='NBRES_REMEMBER_DEVICE';
   const LOGIN_KEY='NBRES_REMEMBERED_LOGIN_ID';
-
-  window.nbresRememberDeviceEnabled=function(){ return true; };
-
+  window.nbresRememberDeviceEnabled=function(){return localStorage.getItem(KEY)==='1';};
   window.nbresSaveRememberPreference=function(){
-    localStorage.setItem(KEY,'1');
+    const remember=!!document.getElementById('rememberMe')?.checked;
+    localStorage.setItem(KEY,remember?'1':'0');
     const login=document.getElementById('loginUsername');
-    if(login && login.value.trim()){
-      localStorage.setItem(LOGIN_KEY,login.value.trim());
-    }
-    return true;
+    if(remember&&login?.value.trim())localStorage.setItem(LOGIN_KEY,login.value.trim());
+    else localStorage.removeItem(LOGIN_KEY);
+    return remember;
   };
-
   document.addEventListener('DOMContentLoaded',function(){
-    localStorage.setItem(KEY,'1');
-    const login=document.getElementById('loginUsername');
-    const savedLogin=localStorage.getItem(LOGIN_KEY);
-    if(login && savedLogin) login.value=savedLogin;
+    const remember=localStorage.getItem(KEY)==='1';
+    const checkbox=document.getElementById('rememberMe');if(checkbox)checkbox.checked=remember;
+    const login=document.getElementById('loginUsername');const saved=remember?localStorage.getItem(LOGIN_KEY):'';if(login&&saved)login.value=saved;
   });
 })();
 </script>
@@ -9089,6 +9098,17 @@ function nbresDemoData(){
       {id:'demo-u2',user:'sale.linh',name:'Trần Gia Linh',role:'Nhân viên',tenant_id:tenant,region_id:region1,team_id:team1,is_active:true},
       {id:'demo-u3',user:'sale.huy',name:'Phạm Quốc Huy',role:'Nhân viên',tenant_id:tenant,region_id:region2,team_id:team2,is_active:true}
     ],
+    leads:[
+      {id:'demo-l1',tenant_id:tenant,region_id:region1,team_id:team1,assigned_to:'demo-u2',customer_name:'Hoàng Nam',phone:'0901 234 567',stage:'Lead mới',source:'Facebook',budget:'8–10 triệu',interested_area:'Bình Thạnh',need:'Studio full nội thất',updated_at:new Date().toISOString()},
+      {id:'demo-l2',tenant_id:tenant,region_id:region1,team_id:team1,assigned_to:'demo-u2',customer_name:'Minh Thư',phone:'0902 111 222',stage:'Đang tư vấn',source:'TikTok',budget:'10–13 triệu',interested_area:'Bình Thạnh',need:'1PN gần Landmark 81',updated_at:new Date().toISOString()},
+      {id:'demo-l3',tenant_id:tenant,region_id:region2,team_id:team2,assigned_to:'demo-u3',customer_name:'Quốc Anh',phone:'0903 333 444',stage:'Hẹn xem phòng',source:'Referral',budget:'7–9 triệu',interested_area:'Thủ Đức',need:'Studio có cửa sổ',updated_at:new Date().toISOString()},
+      {id:'demo-l4',tenant_id:tenant,region_id:region2,team_id:team2,assigned_to:'demo-u3',customer_name:'Thu Hà',phone:'0904 555 666',stage:'Đang thương lượng',source:'Website',budget:'13–15 triệu',interested_area:'Thủ Đức',need:'2PN view thoáng',updated_at:new Date().toISOString()},
+      {id:'demo-l5',tenant_id:tenant,region_id:region1,team_id:team1,assigned_to:'demo-u2',customer_name:'Gia Bảo',phone:'0905 777 888',stage:'Đã chốt',source:'Zalo',budget:'11 triệu',interested_area:'Bình Thạnh',need:'1PN',updated_at:new Date().toISOString()}
+    ],
+    crm:[
+      {id:'demo-crm1',category:'XU_LY_TU_CHOI',categoryName:'Xử lý từ chối',type:'Mẫu demo',title:'Khách nói giá cao',tag:'Giá',actionPlan:'Làm rõ ngân sách và giá trị khách nhận được.',responseTemplate:'Em hiểu mình đang cân nhắc chi phí. Em gửi anh/chị 2 lựa chọn tương đương để so sánh rõ hơn nhé.',isGlobal:false},
+      {id:'demo-crm2',category:'CHAM_SOC',categoryName:'Chăm sóc khách hàng',type:'Mẫu demo',title:'Follow-up sau xem phòng',tag:'Chăm sóc',actionPlan:'Liên hệ trong 2 giờ sau buổi xem.',responseTemplate:'Anh/chị thấy căn vừa xem phù hợp nhất ở điểm nào? Em có thể hỗ trợ thêm phần giá hoặc thời gian vào ở.',isGlobal:false}
+    ],
     rooms:[
       {id:'demo-room-1',tenant_id:tenant,region_id:region1,team_id:team1,code:'BT-1205',price:8500000,district:'Bình Thạnh',status:'Còn trống',address:'Nguyễn Gia Trí, Bình Thạnh',amenities:'Ban công, máy giặt riêng, full nội thất',mediaUrl:'',note:'Căn demo gần Landmark 81',images:[]},
       {id:'demo-room-2',tenant_id:tenant,region_id:region1,team_id:team1,code:'BT-0802',price:11200000,district:'Bình Thạnh',status:'Đang giữ',address:'Điện Biên Phủ, Bình Thạnh',amenities:'2PN, hồ bơi, gym',mediaUrl:'',note:'Khách đang cân nhắc',images:[]},
@@ -9107,13 +9127,13 @@ function enterNBRESDemo(){
   const d=nbresDemoData();
   currentUser={id:'demo-manager',user:'demo@nbres.site',name:'Khách Trải Nghiệm',role:'Quản Lí Công Ty',tenant_id:'demo-tenant',region_id:null,team_id:null,is_active:true};
   currentTenantId='demo-tenant'; tenants=d.tenants; regions=d.regions; teams=d.teams; users=d.users; rooms=d.rooms; appointments=d.appointments;
-  try{ currentFilteredData=[...rooms]; }catch(e){}
+  try{ leadsV9=[...(d.leads||[])]; dbCases=[...(d.crm||[])]; currentFilteredData=[...dbCases]; }catch(e){}
   document.getElementById('v11DemoBanner')?.classList.remove('hidden');
   document.body.dataset.nbresDemo='true';
   showApp();
   document.getElementById('v11DemoBanner')?.classList.remove('hidden');
   setTimeout(()=>{
-    try{ renderDistrictOptions(); renderRooms(rooms); renderCompanyDashboard(); renderRegions(); renderTeams(); renderUsersTable(); populateAppointmentFilters(); renderAppointments(); }catch(e){console.debug('Demo render:',e)}
+    try{ renderDistrictOptions(); renderRooms(rooms); renderCompanyDashboard(); renderRegions(); renderTeams(); renderUsersTable(); populateAppointmentFilters(); renderAppointments(); renderLeadsV9(); renderCaseList(dbCases); if(dbCases.length)selectCase(dbCases[0].id); renderBusinessReportV9(); }catch(e){console.debug('Demo render:',e)}
     nbresApplyDemoReadonlyUI();
     showToast('Đã mở bản Demo NBRES • mọi thao tác ghi dữ liệu đều bị khóa.','success');
   },120);
@@ -9173,7 +9193,7 @@ if(typeof _nbresSwitchTab==='function'){
 </script>
 
 <script id="nbres-v11-4-mobile-engine">
-/* NBRES V11.4 • Mobile UX bridge */
+/* NBRES V12.0 • Mobile UX bridge */
 (function(){
   const mq = window.matchMedia('(max-width: 768px)');
   const panelId = 'taskMenuPanel';
