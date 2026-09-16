@@ -48,7 +48,7 @@
       }
     }
     </script>
-<title>NBRES - Quản Lý Căn Hộ & Phòng Trọ | Nguyên Bảo • V10.0</title>
+<title>NBRES V11.2 - PropTech Operating System • Demo</title>
     <!-- Tailwind CSS & FontAwesome Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -1274,400 +1274,173 @@ code,pre,kbd,samp{
 </style>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 
-<!-- NBRES V10.5.0 • EXECUTIVE SAPPHIRE + CHAMPAGNE THEME -->
-<style>
+<style id="nbres-v11-experience">
+:root{--v11-bg:#f5f7fb;--v11-ink:#101828;--v11-muted:#667085;--v11-line:#e7eaf0;--v11-brand:#9a7523;--v11-brand2:#d5b55b;--v11-dark:#080b11;--v11-card:#fff;--v11-success:#16845b}
+body{background:var(--v11-bg)}
+/* Public gateway */
+#authScreen{background:radial-gradient(circle at 72% 18%,rgba(211,178,81,.12),transparent 25%),radial-gradient(circle at 12% 82%,rgba(63,86,123,.12),transparent 28%),linear-gradient(135deg,#06080d,#0a0e16 55%,#07090d)!important}
+.nb-cover.nbres-signature{width:min(1180px,100%);max-width:1180px;align-items:stretch}
+.nb-simple-top{width:100%;max-width:none;margin-bottom:26px}.nb-signature-foot{width:100%;max-width:none}
+.nb-login-shell{width:100%;max-width:none;padding:0;background:transparent;border:0;box-shadow:none;overflow:visible}
+.nb-login-shell:before,.nb-login-shell:after{display:none}
+.v11-hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(330px,.92fr);gap:24px;align-items:stretch}
+.v11-hero-main,.v11-preview{border:1px solid rgba(255,255,255,.08);border-radius:28px;background:linear-gradient(145deg,rgba(18,22,30,.92),rgba(8,11,17,.94));box-shadow:0 30px 100px rgba(0,0,0,.28);position:relative;overflow:hidden}
+.v11-hero-main{padding:48px}.v11-hero-main:after{content:"";position:absolute;width:320px;height:320px;border-radius:50%;right:-120px;top:-140px;border:1px solid rgba(213,181,91,.12)}
+.v11-kicker{display:inline-flex;align-items:center;gap:8px;font-size:10px;letter-spacing:2.2px;text-transform:uppercase;color:#d3b65f;font-weight:800}.v11-kicker:before{content:"";width:22px;height:1px;background:#d3b65f}
+.v11-title{margin:20px 0 14px;font-size:clamp(34px,4vw,58px);line-height:1.08;letter-spacing:-.045em;font-weight:800;color:#f8fafc;max-width:720px}.v11-title span{color:#d6b95f}
+.v11-sub{font-size:14px;line-height:1.8;color:#8994a8;max-width:650px}.v11-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}.v11-primary,.v11-secondary{min-height:50px;padding:0 20px;border-radius:14px;font-size:12px;font-weight:800;letter-spacing:.02em;display:inline-flex;align-items:center;gap:10px;justify-content:center;transition:.2s}.v11-primary{background:linear-gradient(135deg,#e0c46f,#ad852d);color:#111318;border:0;box-shadow:0 13px 32px rgba(190,151,52,.16)}.v11-primary:hover{transform:translateY(-2px);box-shadow:0 18px 38px rgba(190,151,52,.25)}.v11-secondary{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#edf1f7}.v11-secondary:hover{background:rgba(255,255,255,.075)}
+.v11-feature-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:34px}.v11-feature{padding:13px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.065);background:rgba(255,255,255,.025)}.v11-feature b{display:block;color:#eef2f7;font-size:11px}.v11-feature span{display:block;color:#667085;font-size:9px;margin-top:4px}
+.v11-preview{padding:22px;display:flex;flex-direction:column;justify-content:center}.v11-browser{border:1px solid rgba(255,255,255,.085);border-radius:20px;background:#f7f8fa;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.34)}.v11-browser-top{height:38px;background:#fff;border-bottom:1px solid #e9ebef;display:flex;align-items:center;gap:5px;padding:0 12px}.v11-dot{width:7px;height:7px;border-radius:50%;background:#d8dbe1}.v11-browser-body{display:grid;grid-template-columns:74px 1fr;min-height:300px}.v11-mini-side{background:#0c1119;padding:18px 9px}.v11-mini-logo{width:30px;height:30px;border-radius:9px;margin:auto;background:linear-gradient(135deg,#d6b75d,#8b671c)}.v11-mini-nav{height:8px;border-radius:5px;background:#222b38;margin:17px 3px 0}.v11-mini-nav.active{background:#92752f}.v11-mini-content{padding:18px}.v11-mini-head{display:flex;justify-content:space-between;align-items:center}.v11-mini-title{width:110px;height:10px;border-radius:6px;background:#182131}.v11-mini-button{width:70px;height:24px;border-radius:8px;background:#b28a31}.v11-mini-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}.v11-mini-card{height:62px;border:1px solid #e5e8ed;background:#fff;border-radius:10px}.v11-mini-chart{height:110px;border:1px solid #e5e8ed;background:linear-gradient(180deg,#fff,#fafbfc);border-radius:12px;margin-top:10px;position:relative;overflow:hidden}.v11-mini-chart:after{content:"";position:absolute;left:12px;right:12px;bottom:25px;height:1px;background:#d9dde4;box-shadow:0 -28px #eef0f3,0 28px #eef0f3}.v11-preview-note{text-align:center;color:#586477;font-size:10px;line-height:1.6;margin:14px 10px 0}
+/* App shell */
+#mainApp{min-height:100dvh;background:var(--v11-bg)}#mainApp header{background:rgba(255,255,255,.94)!important;color:#121826!important;border-bottom:1px solid var(--v11-line)!important;box-shadow:0 4px 22px rgba(16,24,40,.04)!important}.nbres-logo-header{box-shadow:0 5px 18px rgba(154,117,35,.14)!important}.v11-demo-banner{position:sticky;top:0;z-index:45;background:linear-gradient(90deg,#17130b,#2c2412);color:#f8e9b7;border-bottom:1px solid rgba(213,181,91,.28);padding:8px 14px;text-align:center;font-size:11px;font-weight:700}.v11-demo-banner button{margin-left:10px;padding:5px 9px;min-height:28px;border-radius:8px;background:#d4b55b;color:#16130b;font-size:10px;font-weight:800}
+#mainApp main{max-width:1540px!important;margin:auto;padding-top:22px!important}.tab-content>.bg-white,.tab-content>section.bg-white,.tab-content .bg-white.rounded-2xl{border:1px solid var(--v11-line)!important;box-shadow:0 8px 28px rgba(16,24,40,.045)!important}.task-menu-item{border-radius:12px!important}.task-menu-item:hover{transform:none!important}.v11-demo-readonly{opacity:.55!important;filter:saturate(.7);cursor:not-allowed!important}
+@media(max-width:900px){.v11-hero{grid-template-columns:1fr}.v11-preview{display:none}.v11-hero-main{padding:34px}.v11-feature-row{grid-template-columns:1fr}.nb-cover.nbres-signature{padding:18px 10px}.v11-title{font-size:34px}}
+@media(max-width:560px){.v11-hero-main{padding:26px 20px;border-radius:20px}.v11-actions{flex-direction:column}.v11-primary,.v11-secondary{width:100%}.nb-simple-top{padding:0 3px}.v11-title{font-size:30px}.v11-sub{font-size:12px}}
+</style>\n
+
+<style id="nbres-v112-proptech-master">
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
 :root{
-  --nb-sapphire:#10213f;
-  --nb-sapphire-2:#18345f;
-  --nb-sapphire-3:#234a7a;
-  --nb-champagne:#c8a85a;
-  --nb-champagne-soft:#f4ecd8;
-  --nb-canvas:#f4f6f9;
-  --nb-surface:#ffffff;
-  --nb-ink:#182235;
-  --nb-muted:#718096;
-  --nb-line:#e2e7ee;
+  --pt-bg:#050a10;--pt-panel:rgba(9,17,27,.76);--pt-panel-strong:rgba(7,14,23,.92);
+  --pt-line:rgba(125,211,252,.16);--pt-line-soft:rgba(255,255,255,.075);
+  --pt-cyan:#38bdf8;--pt-cyan-2:#22d3ee;--pt-blue:#2563eb;--pt-indigo:#4f46e5;
+  --pt-white:#f8fafc;--pt-muted:#93a4b8;--pt-muted2:#64748b;--pt-success:#4ade80;
+  --pt-shadow:0 30px 90px rgba(0,0,0,.52);
 }
 
-/* Main business canvas */
-#appScreen,#mainApp{
-  background:
-    radial-gradient(circle at 85% 0%,rgba(200,168,90,.08),transparent 24%),
-    linear-gradient(180deg,#f8f9fb 0%,var(--nb-canvas) 100%)!important;
-  color:var(--nb-ink)!important;
+/* ---------- PUBLIC / LOGIN ---------- */
+#authScreen{
+  position:fixed;inset:0;z-index:50;overflow:auto!important;background:var(--pt-bg)!important;
+  color:var(--pt-white);font-family:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',sans-serif!important;
 }
+#authScreen *{box-sizing:border-box}
+.pt-city-bg{position:absolute;inset:0;z-index:0;background-image:url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=82&w=2200&auto=format&fit=crop');background-size:cover;background-position:center;filter:brightness(.38) saturate(.82) contrast(1.12);transform:scale(1.02)}
+.pt-city-bg:after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(2,6,12,.97) 4%,rgba(3,9,16,.90) 38%,rgba(4,13,23,.74) 63%,rgba(3,8,15,.93) 100%)}
+.pt-grid{position:absolute;inset:0;z-index:1;pointer-events:none;background-image:linear-gradient(rgba(56,189,248,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,.035) 1px,transparent 1px);background-size:72px 72px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.86),rgba(0,0,0,.18))}
+.pt-ambient{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none}
+.pt-orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.28;animation:ptFloat 10s ease-in-out infinite alternate}.pt-orb.a{width:420px;height:420px;right:-120px;top:-120px;background:#0ea5e9}.pt-orb.b{width:360px;height:360px;left:-120px;bottom:-120px;background:#1d4ed8;animation-delay:-4s}
+@keyframes ptFloat{from{transform:translate3d(-12px,-8px,0) scale(.96)}to{transform:translate3d(16px,12px,0) scale(1.08)}}
+.pt-shell{position:relative;z-index:4;min-height:100dvh;width:min(1320px,100%);margin:auto;padding:28px clamp(18px,4vw,54px);display:flex;flex-direction:column}
+.pt-topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:4px 0 28px}
+.pt-brand{display:flex;align-items:center;gap:12px}.pt-mark{width:42px;height:42px;border-radius:13px;border:1px solid rgba(56,189,248,.35);background:linear-gradient(145deg,rgba(56,189,248,.15),rgba(37,99,235,.08));display:grid;place-items:center;color:#7dd3fc;box-shadow:inset 0 1px rgba(255,255,255,.05),0 8px 28px rgba(2,132,199,.12);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:800;letter-spacing:-.04em}
+.pt-brand-copy strong{display:block;font-family:'Space Grotesk',sans-serif;font-size:14px;letter-spacing:.16em}.pt-brand-copy span{display:block;margin-top:2px;color:#6f8298;font-size:8px;letter-spacing:.16em;text-transform:uppercase}
+.pt-online{display:flex;align-items:center;gap:8px;border:1px solid rgba(74,222,128,.16);background:rgba(74,222,128,.045);padding:8px 11px;border-radius:999px;color:#a7f3d0;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.pt-online:before{content:"";width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 16px rgba(74,222,128,.7)}
+.pt-layout{flex:1;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(390px,.72fr);gap:clamp(32px,6vw,92px);align-items:center;padding:14px 0 36px}
+.pt-copy{max-width:760px}.pt-eyebrow{display:inline-flex;align-items:center;gap:9px;padding:7px 11px;border:1px solid rgba(56,189,248,.15);border-radius:999px;background:rgba(56,189,248,.045);color:#7dd3fc;font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.pt-eyebrow i{font-size:8px}
+.pt-title{margin:22px 0 18px;font-family:'Space Grotesk','Be Vietnam Pro',sans-serif;font-size:clamp(42px,5.3vw,76px);line-height:1.01;letter-spacing:-.055em;font-weight:700;color:#f8fbff;text-wrap:balance}.pt-title span{display:block;background:linear-gradient(90deg,#7dd3fc 0%,#38bdf8 34%,#60a5fa 72%,#818cf8 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pt-desc{max-width:660px;color:#9aaabd;font-size:14px;line-height:1.85}.pt-desc b{color:#d9f1ff;font-weight:600}
+.pt-pill-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:620px;margin-top:30px}.pt-pill{display:flex;gap:12px;align-items:center;padding:14px 15px;border:1px solid rgba(255,255,255,.07);border-radius:15px;background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.018));backdrop-filter:blur(12px)}.pt-pill-icon{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.12);color:#67d6ff}.pt-pill strong{display:block;font-size:10.5px;color:#eaf6ff}.pt-pill span{display:block;margin-top:3px;font-size:8.5px;color:#64778d}
+.pt-metrics{display:flex;gap:22px;flex-wrap:wrap;margin-top:28px;color:#6f8297}.pt-metric strong{display:block;font-family:'Space Grotesk',sans-serif;color:#d9e9f6;font-size:19px;line-height:1}.pt-metric span{font-size:8px;text-transform:uppercase;letter-spacing:.12em}
 
-/* Sidebar: executive navy, less neon/blue */
-#appScreen aside,#mainApp aside,
-#appScreen .sidebar,#mainApp .sidebar{
-  background:
-    radial-gradient(circle at 10% 92%,rgba(200,168,90,.10),transparent 24%),
-    linear-gradient(180deg,#10213f 0%,#0b172d 100%)!important;
-  border-color:rgba(255,255,255,.07)!important;
-}
-#appScreen aside button,#mainApp aside button,
-#appScreen .sidebar button,#mainApp .sidebar button{
-  color:#b9c5d6!important;
-}
-#appScreen aside button:hover,#mainApp aside button:hover,
-#appScreen .sidebar button:hover,#mainApp .sidebar button:hover{
-  background:rgba(255,255,255,.055)!important;
-  color:#fff!important;
-}
-#appScreen aside button.active,#mainApp aside button.active,
-#appScreen .sidebar button.active,
-#appScreen aside [aria-current="page"],#mainApp aside [aria-current="page"]{
-  background:linear-gradient(90deg,rgba(200,168,90,.19),rgba(200,168,90,.055))!important;
-  color:#f0d78f!important;
-  box-shadow:inset 3px 0 0 var(--nb-champagne)!important;
-}
+.pt-auth-card{position:relative;border:1px solid rgba(125,211,252,.18);border-radius:28px;background:linear-gradient(145deg,rgba(10,20,32,.88),rgba(6,12,21,.78));backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);box-shadow:var(--pt-shadow),inset 0 1px rgba(255,255,255,.045);padding:30px;overflow:hidden}
+.pt-auth-card:before{content:"";position:absolute;left:9%;right:9%;top:0;height:1px;background:linear-gradient(90deg,transparent,#38bdf8,transparent);opacity:.85}.pt-auth-card:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-88px;top:-98px;background:radial-gradient(circle,rgba(56,189,248,.18),transparent 66%);pointer-events:none}
+.pt-auth-head{position:relative;z-index:2;margin-bottom:24px}.pt-auth-head .mini{color:#67d6ff;font-size:8.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}.pt-auth-head h2{margin:7px 0 7px;color:#f8fafc;font-family:'Space Grotesk',sans-serif;font-size:25px;letter-spacing:-.035em}.pt-auth-head p{margin:0;color:#70859c;font-size:10.5px;line-height:1.65}
+.pt-field{margin-top:16px}.pt-field label{display:block;margin:0 0 7px;color:#9fb0c1;font-size:8.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.pt-input{position:relative}.pt-input i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#5cc8f1;font-size:13px;opacity:.82}.pt-input input{width:100%;height:49px;border:1px solid rgba(148,163,184,.18)!important;border-radius:13px!important;background:rgba(2,8,15,.54)!important;color:#eff9ff!important;padding:0 44px 0 42px!important;font-size:13px!important;outline:none!important;box-shadow:none!important;transition:border-color .2s ease,box-shadow .2s ease,background .2s ease}.pt-input input::placeholder{color:#45586d!important}.pt-input input:focus{border-color:rgba(56,189,248,.72)!important;box-shadow:0 0 0 3px rgba(56,189,248,.08),0 0 28px rgba(14,165,233,.08)!important;background:rgba(3,11,19,.75)!important}.pt-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:#64748b;min-width:34px;min-height:34px;border-radius:9px}.pt-eye:hover{color:#7dd3fc;background:rgba(56,189,248,.07)}
+.pt-options{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:16px 0 18px;color:#718499;font-size:9.5px}.pt-options label{display:flex;gap:7px;align-items:center;cursor:pointer}.pt-options input{accent-color:#38bdf8;width:14px;height:14px}.pt-options a{color:#67d6ff;cursor:pointer}.pt-options a:hover{color:#b9eaff}
+.pt-login-btn,.pt-demo-btn{width:100%;min-height:50px;border-radius:13px;font-size:10.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:9px;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}.pt-login-btn{border:0;background:linear-gradient(100deg,#06b6d4 0%,#2563eb 58%,#4f46e5 100%);color:#fff;box-shadow:0 13px 34px rgba(37,99,235,.22)}.pt-login-btn:hover{transform:translateY(-1px);box-shadow:0 17px 42px rgba(37,99,235,.32)}.pt-login-btn:disabled{opacity:.55;cursor:wait;transform:none}.pt-divider{display:flex;align-items:center;gap:10px;margin:17px 0;color:#42546a;font-size:8px;letter-spacing:.1em;text-transform:uppercase}.pt-divider:before,.pt-divider:after{content:"";height:1px;flex:1;background:rgba(255,255,255,.065)}.pt-demo-btn{border:1px solid rgba(125,211,252,.2);background:rgba(56,189,248,.045);color:#c6efff}.pt-demo-btn:hover{border-color:rgba(125,211,252,.42);background:rgba(56,189,248,.085);transform:translateY(-1px)}
+.pt-trust{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,.065)}.pt-trust span{display:flex;align-items:center;justify-content:center;gap:5px;color:#506276;font-size:7.5px;letter-spacing:.04em;text-transform:uppercase}.pt-trust i{color:#4f93b6}.pt-card-version{text-align:center;margin-top:14px;color:#35475b;font-size:7px;letter-spacing:.14em;text-transform:uppercase}
+.pt-foot{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:14px 0 0;color:#46586c;font-size:8px;letter-spacing:.08em;text-transform:uppercase}.pt-foot strong{color:#6f8ba3;font-weight:600}
 
-/* Header / navigation */
-#appScreen header,#mainApp header,
-#appScreen .topbar,#mainApp .topbar{
-  background:rgba(255,255,255,.91)!important;
-  border-color:var(--nb-line)!important;
-  backdrop-filter:blur(16px);
-}
+/* ---------- OPERATING APP: TECHNOLOGY-LUXURY BALANCE ---------- */
+#mainApp{background:radial-gradient(circle at 92% 2%,rgba(56,189,248,.065),transparent 18%),#f4f7fa!important;color:#172033!important}
+#mainApp header{background:linear-gradient(95deg,rgba(5,12,21,.985),rgba(8,18,30,.975))!important;color:#f8fafc!important;border-bottom:1px solid rgba(56,189,248,.15)!important;box-shadow:0 10px 34px rgba(3,10,18,.16)!important}
+#mainApp header h1{color:#f8fafc!important}.nbres-logo-header{border:1px solid rgba(125,211,252,.22)!important;box-shadow:0 7px 24px rgba(14,165,233,.12)!important}
+#roleBadgeHeader{background:rgba(56,189,248,.09)!important;color:#7dd3fc!important;border-color:rgba(56,189,248,.22)!important}
+#taskMenuButton{background:rgba(15,31,49,.88)!important;border-color:rgba(125,211,252,.14)!important;box-shadow:inset 0 1px rgba(255,255,255,.025)!important}
+#taskMenuButton:hover{background:rgba(18,40,62,.95)!important;border-color:rgba(125,211,252,.28)!important}
+#taskMenuPanel{background:rgba(5,14,24,.97)!important;border-color:rgba(125,211,252,.14)!important;box-shadow:0 28px 70px rgba(0,0,0,.4)!important}
+#taskMenuPanel .task-menu-item:hover{background:rgba(56,189,248,.07)!important}.task-menu-item.bg-orange-500\/15{background:linear-gradient(90deg,rgba(56,189,248,.14),rgba(37,99,235,.06))!important;border-color:rgba(56,189,248,.18)!important;box-shadow:inset 2px 0 #38bdf8!important}
+#mainApp main{padding-top:24px!important}.tab-content>.bg-white,.tab-content>section.bg-white,.tab-content .bg-white.rounded-2xl{border-color:#e2e8f0!important;border-radius:18px!important;box-shadow:0 9px 30px rgba(15,23,42,.045)!important}
+#mainApp input:not([type="checkbox"]):not([type="radio"]),#mainApp select,#mainApp textarea{border-color:#dce3ea!important;border-radius:12px!important;background:#fff!important}
+#mainApp input:focus,#mainApp select:focus,#mainApp textarea:focus{border-color:rgba(14,165,233,.55)!important;box-shadow:0 0 0 3px rgba(14,165,233,.08)!important}
+#mainApp .bg-blue-600,#mainApp .bg-indigo-600,#mainApp .bg-orange-500{background:linear-gradient(100deg,#0891b2,#2563eb)!important;color:white!important;box-shadow:0 8px 20px rgba(37,99,235,.14)!important}
+#mainApp .text-blue-600,#mainApp .text-indigo-600{color:#0369a1!important}
+#mainApp tbody tr:hover{background:#f3f9fc!important}
+.v11-demo-banner{background:linear-gradient(90deg,#031824,#08253a)!important;color:#c6f2ff!important;border-bottom-color:rgba(56,189,248,.18)!important}.v11-demo-banner button{background:#38bdf8!important;color:#052030!important}
 
-/* Cards and panels */
-#appScreen .bg-white,#mainApp .bg-white,
-#appScreen .card,#mainApp .card,
-#appScreen .glass-card,#mainApp .glass-card{
-  border-color:var(--nb-line)!important;
-  box-shadow:0 10px 30px rgba(16,33,63,.055)!important;
-}
-#appScreen .rounded-2xl,#mainApp .rounded-2xl,
-#appScreen .rounded-3xl,#mainApp .rounded-3xl{
-  border-color:var(--nb-line);
-}
-
-/* Main branded hero/header surfaces */
-#tab-users .bg-gradient-to-r,
-#tab-company-dashboard .bg-gradient-to-r,
-#tab-platform-dashboard .bg-gradient-to-r,
-#tab-inventory .bg-gradient-to-r{
-  background:linear-gradient(118deg,#10213f 0%,#18345f 65%,#244a72 100%)!important;
-}
-
-/* Primary actions: champagne gold instead of bright yellow/blue */
-#appScreen button.bg-yellow-400,#mainApp button.bg-yellow-400,
-#appScreen button.bg-yellow-500,#mainApp button.bg-yellow-500,
-#appScreen button.bg-blue-500,#mainApp button.bg-blue-500,
-#appScreen button.bg-blue-600,#mainApp button.bg-blue-600,
-#appScreen .btn-primary,#mainApp .btn-primary{
-  background:linear-gradient(135deg,#d7bd76,#b8923c)!important;
-  color:#111827!important;
-  border-color:#b8923c!important;
-  box-shadow:0 7px 18px rgba(184,146,60,.16)!important;
-}
-#appScreen button.bg-yellow-400:hover,#mainApp button.bg-yellow-400:hover,
-#appScreen button.bg-yellow-500:hover,#mainApp button.bg-yellow-500:hover,
-#appScreen button.bg-blue-500:hover,#mainApp button.bg-blue-500:hover,
-#appScreen button.bg-blue-600:hover,#mainApp button.bg-blue-600:hover,
-#appScreen .btn-primary:hover,#mainApp .btn-primary:hover{
-  filter:brightness(1.035);
-  transform:translateY(-1px);
-}
-
-/* Text accents */
-#appScreen .text-yellow-400,#mainApp .text-yellow-400,
-#appScreen .text-yellow-500,#mainApp .text-yellow-500{
-  color:#b58d32!important;
-}
-#appScreen .border-yellow-400,#mainApp .border-yellow-400,
-#appScreen .border-yellow-500,#mainApp .border-yellow-500{
-  border-color:#c5a451!important;
-}
-
-/* Inputs */
-#appScreen input,#appScreen select,#appScreen textarea,
-#mainApp input,#mainApp select,#mainApp textarea{
-  border-color:#dce2ea!important;
-}
-#appScreen input:focus,#appScreen select:focus,#appScreen textarea:focus,
-#mainApp input:focus,#mainApp select:focus,#mainApp textarea:focus{
-  border-color:#b99643!important;
-  box-shadow:0 0 0 3px rgba(200,168,90,.12)!important;
-}
-
-/* Tables */
-#appScreen thead,#mainApp thead{background:#f6f8fa!important}
-#appScreen th,#mainApp th{color:#68758a!important}
-#appScreen tbody tr:hover,#mainApp tbody tr:hover{background:#fbfaf6!important}
-
-/* Compact icon redesign: champagne + sapphire */
-.nbres-action-iconbox{
-  background:linear-gradient(145deg,#f7f0df,#efe2bd)!important;
-  border-color:#dfca8d!important;
-  color:#9a7425!important;
-}
-.nbres-compact-action svg{color:currentColor}
-
-/* Demo launcher and Demo Center */
-#nbresDemoAdminLauncher{
-  background:linear-gradient(135deg,#10213f,#18345f)!important;
-  border-color:rgba(200,168,90,.55)!important;
-  color:#e3c873!important;
-}
-#nbresDemoCenter .dmc-head{
-  background:
-    radial-gradient(circle at 88% 10%,rgba(200,168,90,.16),transparent 25%),
-    linear-gradient(120deg,#10213f,#18345f 68%,#213d62)!important;
-}
-.dmc-btn{
-  background:linear-gradient(135deg,#d7bd76,#b8923c)!important;
-  border-color:#b8923c!important;
-  color:#111827!important;
-}
-
-/* Account modal: premium navy instead of pure black */
-#userModal>div,#createUserModal>div,#accountModal>div,
-#userModal .modal-content,#createUserModal .modal-content,#accountModal .modal-content{
-  background:
-    radial-gradient(circle at 5% 0%,rgba(200,168,90,.07),transparent 23%),
-    linear-gradient(145deg,#101a2b,#0b1320)!important;
-  border-color:rgba(200,168,90,.34)!important;
-  box-shadow:0 30px 90px rgba(5,12,24,.45)!important;
-}
-
-/* Export area: calm, compact enterprise colors */
-#tab-data-center .nbres-export-redesign button{
-  background:#fff!important;
-  color:var(--nb-ink)!important;
-  border:1px solid var(--nb-line)!important;
-  box-shadow:0 7px 20px rgba(16,33,63,.045)!important;
-}
-#tab-data-center .nbres-export-redesign button:hover{
-  border-color:#cfb56f!important;
-  background:#fffdf8!important;
-}
-
-/* Avoid the oversized generic black person silhouette anywhere our compact
-   account/people/export actions are rendered. */
-.nbres-action-iconbox .fa-user,
-.nbres-compact-action .fa-user,
-#tab-data-center .fa-user{display:none!important}
-
-/* Responsive polish */
-@media(max-width:768px){
-  #appScreen,#mainApp{background:#f5f7fa!important}
-  #nbresDemoAdminLauncher{box-shadow:0 10px 26px rgba(16,33,63,.22)!important}
-}
-</style>
-
-
-<!-- NBRES V10.5.1 • LOGIN-TO-APP COLOR SYNC -->
-<style>
-:root{
-  --nb-login-black:#080b10;
-  --nb-login-charcoal:#10151d;
-  --nb-login-charcoal-2:#171d27;
-  --nb-login-gold:#c5a348;
-  --nb-login-gold-deep:#a47d25;
-  --nb-login-gold-soft:#eadba9;
-  --nb-login-ivory:#fbfaf6;
-  --nb-login-canvas:#f4f3ef;
-  --nb-login-ink:#171b23;
-  --nb-login-muted:#707887;
-  --nb-login-line:#e5e2d9;
-}
-
-/* APP CANVAS — same warm neutral family as login */
-#appScreen,#mainApp{
-  background:
-    radial-gradient(circle at 88% 0%,rgba(197,163,72,.065),transparent 24%),
-    linear-gradient(180deg,#faf9f6 0%,#f3f2ee 100%)!important;
-  color:var(--nb-login-ink)!important;
-}
-
-/* SIDEBAR — same charcoal black as login shell */
-#appScreen aside,#mainApp aside,
-#appScreen .sidebar,#mainApp .sidebar{
-  background:
-    radial-gradient(circle at 15% 95%,rgba(197,163,72,.10),transparent 24%),
-    linear-gradient(180deg,#10151d 0%,#080b10 100%)!important;
-  border-color:rgba(197,163,72,.12)!important;
-}
-#appScreen aside button,#mainApp aside button,
-#appScreen .sidebar button,#mainApp .sidebar button{color:#aeb5c1!important}
-#appScreen aside button:hover,#mainApp aside button:hover,
-#appScreen .sidebar button:hover,#mainApp .sidebar button:hover{
-  background:rgba(197,163,72,.07)!important;color:#f7f2e5!important
-}
-#appScreen aside button.active,#mainApp aside button.active,
-#appScreen .sidebar button.active,
-#appScreen aside [aria-current="page"],#mainApp aside [aria-current="page"]{
-  background:linear-gradient(90deg,rgba(197,163,72,.18),rgba(197,163,72,.035))!important;
-  color:#e4ca7c!important;
-  box-shadow:inset 3px 0 0 var(--nb-login-gold)!important;
-}
-
-/* Header */
-#appScreen header,#mainApp header,#appScreen .topbar,#mainApp .topbar{
-  background:rgba(251,250,246,.92)!important;
-  border-color:var(--nb-login-line)!important;
-}
-
-/* Branded hero areas — charcoal + subtle gold, matching auth */
-#tab-users .bg-gradient-to-r,
-#tab-company-dashboard .bg-gradient-to-r,
-#tab-platform-dashboard .bg-gradient-to-r,
-#tab-inventory .bg-gradient-to-r{
-  background:
-    radial-gradient(circle at 92% 12%,rgba(197,163,72,.14),transparent 25%),
-    linear-gradient(120deg,#10151d 0%,#0b0f15 72%,#17130b 100%)!important;
-  border-color:rgba(197,163,72,.22)!important;
-}
-
-/* Cards */
-#appScreen .bg-white,#mainApp .bg-white,
-#appScreen .card,#mainApp .card,
-#appScreen .glass-card,#mainApp .glass-card{
-  background:#fff!important;
-  border-color:var(--nb-login-line)!important;
-  box-shadow:0 10px 30px rgba(8,11,16,.055)!important;
-}
-
-/* CTA — exact login gold family */
-#appScreen button.bg-yellow-400,#mainApp button.bg-yellow-400,
-#appScreen button.bg-yellow-500,#mainApp button.bg-yellow-500,
-#appScreen button.bg-blue-500,#mainApp button.bg-blue-500,
-#appScreen button.bg-blue-600,#mainApp button.bg-blue-600,
-#appScreen .btn-primary,#mainApp .btn-primary,
-.dmc-btn{
-  background:linear-gradient(135deg,#d0b45e,#a47d25)!important;
-  color:#090b0f!important;
-  border-color:#a98632!important;
-  box-shadow:0 7px 18px rgba(164,125,37,.16)!important;
-}
-
-/* Remove residual blue/sapphire emphasis from V10.5.0 */
-#appScreen .text-blue-500,#mainApp .text-blue-500,
-#appScreen .text-blue-600,#mainApp .text-blue-600{color:#9b7729!important}
-#appScreen .border-blue-500,#mainApp .border-blue-500,
-#appScreen .border-blue-600,#mainApp .border-blue-600{border-color:#c8ad62!important}
-#appScreen .bg-blue-50,#mainApp .bg-blue-50{background:#faf6e9!important}
-#appScreen .bg-blue-100,#mainApp .bg-blue-100{background:#f4ead0!important}
-
-/* Inputs focus = login gold */
-#appScreen input:focus,#appScreen select:focus,#appScreen textarea:focus,
-#mainApp input:focus,#mainApp select:focus,#mainApp textarea:focus{
-  border-color:#b8923c!important;
-  box-shadow:0 0 0 3px rgba(197,163,72,.12)!important;
-}
-
-/* Icon boxes */
-.nbres-action-iconbox{
-  background:linear-gradient(145deg,#faf6e9,#efe2bd)!important;
-  border-color:#ddc680!important;
-  color:#947020!important;
-}
-
-/* Demo Center follows same identity */
-#nbresDemoAdminLauncher{
-  background:linear-gradient(135deg,#10151d,#080b10)!important;
-  border-color:rgba(197,163,72,.52)!important;
-  color:#dfc371!important;
-}
-#nbresDemoCenter .dmc-head{
-  background:
-    radial-gradient(circle at 88% 10%,rgba(197,163,72,.15),transparent 25%),
-    linear-gradient(120deg,#10151d,#080b10 72%,#17130b)!important;
-  border-color:rgba(197,163,72,.22)!important;
-}
-
-/* Account modal remains the visual bridge between login and app */
-#userModal>div,#createUserModal>div,#accountModal>div,
-#userModal .modal-content,#createUserModal .modal-content,#accountModal .modal-content{
-  background:
-    radial-gradient(circle at 5% 0%,rgba(197,163,72,.08),transparent 23%),
-    linear-gradient(145deg,#10151d,#080b10)!important;
-  border-color:rgba(197,163,72,.34)!important;
-}
-
-/* Export cards */
-#tab-data-center .nbres-export-redesign button{
-  background:#fffdf9!important;
-  border-color:#e7e1d2!important;
-}
-#tab-data-center .nbres-export-redesign button:hover{
-  background:#fcf7ea!important;border-color:#cdb367!important;
-}
-
-/* Preserve semantic colors: red danger / green success only */
-@media(max-width:768px){
-  #appScreen,#mainApp{background:#f5f4f0!important}
-}
+@media(max-width:1020px){.pt-layout{grid-template-columns:1fr;gap:34px}.pt-copy{max-width:820px}.pt-auth-card{width:min(620px,100%)}.pt-title{font-size:clamp(40px,8vw,64px)}}
+@media(max-width:680px){.pt-shell{padding:18px 14px}.pt-topbar{padding-bottom:18px}.pt-online{font-size:7px;padding:7px 9px}.pt-layout{padding-top:0}.pt-title{font-size:39px;margin-top:16px}.pt-desc{font-size:12px}.pt-pill-grid{grid-template-columns:1fr}.pt-metrics{display:none}.pt-auth-card{padding:24px 18px;border-radius:22px}.pt-trust{grid-template-columns:1fr 1fr 1fr}.pt-trust span{font-size:6.5px}.pt-foot{flex-direction:column;align-items:flex-start;gap:6px;padding-bottom:8px}}
+@media(max-width:420px){.pt-brand-copy span{display:none}.pt-mark{width:38px;height:38px}.pt-title{font-size:34px}.pt-pill{padding:12px}.pt-options{align-items:flex-start;flex-direction:column}.pt-trust{display:none}}
+@media(prefers-reduced-motion:reduce){.pt-orb{animation:none}}
 </style>
 
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 min-h-screen pb-12 antialiased">
 
-    <!-- 0. NBRES ARCHITECTURAL GATEWAY + SUPABASE AUTH -->
-    <div id="authScreen" class="fixed inset-0 z-50 overflow-hidden flex items-center justify-center">
-      <div class="nb-grid"></div><div class="nb-glow"></div>
-      <div class="nb-arch-line a"></div><div class="nb-arch-line b"></div><div class="nb-arch-line c"></div>
-      <div class="nb-corner-mark tl"></div><div class="nb-corner-mark br"></div>
-      <div class="nb-ambient-copy left">NBRES • Real Estate Intelligence</div>
-      <div class="nb-ambient-copy right">Private Business Workspace • 2026</div>
-      <div class="nb-platform-points" aria-hidden="true">
-        <div class="nb-platform-point">Property Data</div>
-        <div class="nb-platform-point">Sales CRM</div>
-        <div class="nb-platform-point">Team Operations</div>
-      </div>
-      <section class="nb-cover nbres-signature" id="nbCover">
-        <div class="nb-simple-top">
-          <div class="nb-simple-brand">NBRES</div>
-          <div class="nb-simple-status">Hệ thống trực tuyến</div>
-        </div>
+    <!-- 0. NBRES V11.2 • PROPTECH MASTER GATEWAY + SUPABASE AUTH -->
+    <div id="authScreen">
+      <div class="pt-city-bg" aria-hidden="true"></div>
+      <div class="pt-grid" aria-hidden="true"></div>
+      <div class="pt-ambient" aria-hidden="true"><span class="pt-orb a"></span><span class="pt-orb b"></span></div>
 
-        <div class="nb-login-shell">
-          <div class="nb-login-eyebrow">Real Estate Management Platform</div>
-          <h1 class="nb-login-title">Không gian quản trị dành cho doanh nghiệp bất động sản.</h1>
-          <p class="nb-login-copy">Quản lý Kho phòng, đội ngũ Sale, CRM và hoạt động vận hành trong một hệ thống thống nhất.</p>
-
-          <div class="nb-access-coin-wrap">
-            <button type="button" class="nb-access-coin" onclick="triggerNBRESLogin()" aria-label="Truy cập hệ thống NBRES" title="Truy cập hệ thống">
-              <span>NB</span>
-            </button>
-            <div class="nb-coin-label">Chạm để truy cập hệ thống</div>
+      <div class="pt-shell">
+        <div class="pt-topbar">
+          <div class="pt-brand">
+            <div class="pt-mark">NB</div>
+            <div class="pt-brand-copy"><strong>NBRES</strong><span>Real Estate Operating System</span></div>
           </div>
-
-          <div class="nb-login-note">
-            <i class="fa-solid fa-shield-halved"></i>
-            <span>Khu vực dành cho tài khoản đã được doanh nghiệp hoặc NBRES cấp quyền truy cập.</span>
-          </div>
+          <div class="pt-online">Supabase Online</div>
         </div>
 
-        <div class="nb-signature-foot">© 2026 <strong>NBRES</strong> • Nguyên Bảo Real Estate System</div>
-      </section>
-      <div class="nb-auth-overlay" id="authOverlay">
-        <div class="nb-auth-panel">
-          <div><div class="nb-auth-title">Xác Thực Truy Cập</div><div class="nb-auth-sub">NBRES • Hệ thống quản trị & Sale bất động sản</div></div>
-          <form id="loginForm" onsubmit="handleLogin(event)">
-            <div class="nb-field"><label>Tên đăng nhập</label><div class="nb-input-wrap"><svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
-    </svg><input type="text" id="loginUsername" autocomplete="username" required autocapitalize="none" spellcheck="false" placeholder="Ví dụ: ql.uniliving"></div></div>
-            <div class="nb-field"><label>Mật khẩu bảo mật</label><div class="nb-input-wrap"><svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="5" y="10" width="14" height="10" rx="2"/>
-      <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
-    </svg><input type="password" id="loginPassword" autocomplete="current-password" required placeholder="••••••••••••"><button class="nb-eye" type="button" onclick="togglePasswordVisibility('loginPassword','eyeIcon')"><svg class="nb-auth-svg nb-eye-svg" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/>
-      <circle cx="12" cy="12" r="2.5"/>
-    </svg></button></div></div>
-            <div class="nb-options"><label><input type="checkbox" id="rememberMe" checked> Ghi nhớ đăng nhập</label><a onclick="showToast('Vui lòng liên hệ Admin để được hỗ trợ đặt lại mật khẩu.','error')">Quên mật khẩu?</a></div>
-<button id="loginSubmitBtn" type="submit" class="nb-submit">Truy Cập Hệ Thống</button>
-          </form>
-          <div class="nb-notice">Tài khoản mới được cấp trực tiếp bởi <strong>Admin NBRES</strong>.</div>
-          <div class="nb-auth-foot">© 2026 NBRES • Nguyên Bảo Real Estate System</div>
-          <a class="nb-back" onclick="resetNBRESLogin()">← TRỞ VỀ MÀN HÌNH CHÍNH</a>
+        <div class="pt-layout">
+          <section class="pt-copy">
+            <div class="pt-eyebrow"><i class="fa-solid fa-wave-square"></i> PropTech Workspace • 2026</div>
+            <h1 class="pt-title">Điều hành bất động sản <span>trên một hệ thống.</span></h1>
+            <p class="pt-desc">NBRES kết nối <b>Kho phòng, Sale, CRM, lịch xem phòng, đội ngũ và dữ liệu vận hành</b> trong một không gian thống nhất. Thiết kế cho doanh nghiệp cần tốc độ, phân quyền rõ ràng và dữ liệu tập trung.</p>
+
+            <div class="pt-pill-grid">
+              <div class="pt-pill"><div class="pt-pill-icon"><i class="fa-solid fa-building"></i></div><div><strong>Kho phòng tập trung</strong><span>Phòng, hình ảnh, trạng thái và giá theo thời gian thực.</span></div></div>
+              <div class="pt-pill"><div class="pt-pill-icon"><i class="fa-solid fa-user-group"></i></div><div><strong>Đội ngũ & phân quyền</strong><span>Công ty • khu vực • team • nhân viên trên Supabase.</span></div></div>
+              <div class="pt-pill"><div class="pt-pill-icon"><i class="fa-solid fa-filter-circle-dollar"></i></div><div><strong>CRM & Sale Pipeline</strong><span>Theo dõi khách hàng, nhu cầu và kịch bản tư vấn.</span></div></div>
+              <div class="pt-pill"><div class="pt-pill-icon"><i class="fa-solid fa-calendar-check"></i></div><div><strong>Lịch xem phòng</strong><span>Điều phối lịch dẫn khách rõ ràng cho từng đội ngũ.</span></div></div>
+            </div>
+
+            <div class="pt-metrics" aria-hidden="true">
+              <div class="pt-metric"><strong>01</strong><span>Nền tảng</span></div>
+              <div class="pt-metric"><strong>04</strong><span>Tầng phân quyền</span></div>
+              <div class="pt-metric"><strong>24/7</strong><span>Cloud workspace</span></div>
+            </div>
+          </section>
+
+          <aside class="pt-auth-card" aria-label="Đăng nhập NBRES">
+            <div class="pt-auth-head">
+              <div class="mini">Secure Workspace</div>
+              <h2>Truy cập NBRES</h2>
+              <p>Đăng nhập bằng tài khoản do doanh nghiệp hoặc quản trị viên NBRES cấp.</p>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+              <div class="pt-field">
+                <label for="loginUsername">Tên đăng nhập / Email</label>
+                <div class="pt-input"><i class="fa-regular fa-user"></i><input type="text" id="loginUsername" autocomplete="username" required autocapitalize="none" spellcheck="false" placeholder="Ví dụ: ql.uniliving"></div>
+              </div>
+              <div class="pt-field">
+                <label for="loginPassword">Mật khẩu bảo mật</label>
+                <div class="pt-input"><i class="fa-solid fa-shield-halved"></i><input type="password" id="loginPassword" autocomplete="current-password" required placeholder="••••••••••••"><button class="pt-eye" type="button" onclick="togglePasswordVisibility('loginPassword','eyeIcon')" aria-label="Hiện hoặc ẩn mật khẩu"><i class="fa-regular fa-eye"></i></button></div>
+              </div>
+              <div class="pt-options"><label><input type="checkbox" id="rememberMe" checked> Duy trì phiên đăng nhập</label><a onclick="showToast('Vui lòng liên hệ Admin để được hỗ trợ đặt lại mật khẩu.','error')">Khôi phục truy cập?</a></div>
+              <button id="loginSubmitBtn" type="submit" class="pt-login-btn"><span>Truy cập hệ thống</span><i class="fa-solid fa-arrow-right-long"></i></button>
+            </form>
+
+            <div class="pt-divider">hoặc trải nghiệm sản phẩm</div>
+            <button type="button" class="pt-demo-btn" onclick="enterNBRESDemo()"><i class="fa-solid fa-play"></i><span>Mở Demo khách hàng</span></button>
+
+            <div class="pt-trust">
+              <span><i class="fa-solid fa-database"></i> Supabase</span>
+              <span><i class="fa-solid fa-shield-halved"></i> Phân quyền</span>
+              <span><i class="fa-solid fa-flask"></i> Demo an toàn</span>
+            </div>
+            <div class="pt-card-version">NBRES V11.2 • PropTech Master Experience</div>
+          </aside>
         </div>
+
+        <div class="pt-foot"><span>© 2026 <strong>NBRES • Nguyên Bảo Real Estate System</strong></span><span>Private Business Workspace</span></div>
       </div>
     </div>
 
     <!-- MAIN APP CONTAINER -->
     <div id="mainApp" class="hidden">
+        <div id="v11DemoBanner" class="v11-demo-banner hidden"><i class="fa-solid fa-flask mr-1"></i> BẠN ĐANG Ở CHẾ ĐỘ DEMO • Dữ liệu chỉ để trải nghiệm <button type="button" onclick="exitNBRESDemo()">Thoát demo</button></div>
         <header class="bg-slate-900 text-white shadow-xl sticky top-0 z-40 border-b border-slate-800">
             <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
                 <div class="flex items-center space-x-3">
@@ -4558,8 +4331,8 @@ code,pre,kbd,samp{
             triggerNBRESLogin();
         }
 
-        function triggerNBRESLogin(){ const c=document.getElementById('nbCover'),o=document.getElementById('authOverlay'); if(c)c.classList.add('zoom-out'); setTimeout(()=>{if(o)o.classList.add('active'); document.getElementById('loginUsername')?.focus();},420); }
-        function resetNBRESLogin(){ const c=document.getElementById('nbCover'),o=document.getElementById('authOverlay'); if(o)o.classList.remove('active'); setTimeout(()=>{if(c)c.classList.remove('zoom-out');},250); }
+        function triggerNBRESLogin(){ document.getElementById('loginUsername')?.focus(); document.querySelector('.pt-auth-card')?.scrollIntoView({behavior:'smooth',block:'center'}); }
+        function resetNBRESLogin(){ document.getElementById('loginUsername')?.focus(); }
         async function loadSecureWorkspace(){
             try {
                 const tenantRes = await supabaseClient.from('tenants').select('id,company_name,teams_enabled').order('company_name',{ascending:true});
@@ -8870,937 +8643,103 @@ if ('serviceWorker' in navigator) {
 </script>
 
 
-<!-- NBRES V10.4.0 • DEMO MODE -->
-<style>
-#nbresDemoBadge{position:fixed;right:18px;bottom:18px;z-index:9998;background:#17130b;color:#d7bb67;border:1px solid #806822;border-radius:12px;padding:10px 13px;font:700 11px/1.35 "Be Vietnam Pro",sans-serif;box-shadow:0 12px 35px #0003;display:none}
-#nbresDemoExpired{position:fixed;inset:0;z-index:10000;background:rgba(7,9,13,.94);display:none;align-items:center;justify-content:center;padding:22px;font-family:"Be Vietnam Pro",sans-serif}
-#nbresDemoExpired .box{width:min(520px,100%);background:#10151d;border:1px solid #6f5a24;border-radius:20px;padding:34px;text-align:center;color:#f5f6f8}
-#nbresDemoExpired h2{margin:8px 0 10px;font-size:25px}#nbresDemoExpired p{color:#9da7b7;line-height:1.7;font-size:13px}
-#nbresDemoExpired button{margin-top:10px;border:0;border-radius:10px;padding:12px 18px;background:linear-gradient(135deg,#d0b45e,#a47d25);font-weight:800;cursor:pointer}
-body.nbres-demo-mode [data-demo-blocked="1"]{display:none!important}
-</style>
-<div id="nbresDemoBadge">NBRES DEMO<br><span id="nbresDemoTime" style="font-weight:500;color:#a99a70"></span></div>
-<div id="nbresDemoExpired"><div class="box"><div style="color:#c7a64d;font-size:11px;letter-spacing:1.5px;font-weight:800">NBRES TRIAL</div><h2>Thời gian trải nghiệm đã kết thúc</h2><p>Tài khoản Demo này đã hết thời hạn sử dụng. Vui lòng liên hệ NBRES để gia hạn hoặc kích hoạt doanh nghiệp chính thức.</p><button type="button" onclick="location.reload()">Quay lại đăng nhập</button></div></div>
-<script>
-/* Demo account contract:
-   profile.is_demo = true
-   profile.demo_expires_at = timestamptz
-*/
-(function(){
-  window.NBRES_DEMO_ALLOWED_TABS = new Set([
-    'tab-dashboard','tab-company-dashboard','tab-inventory','tab-poster',
-    'tab-crm','tab-appointments','tab-leads','tab-notifications'
-  ]);
+<script id="nbres-v11-demo-engine">
+/* NBRES V11 Demo Engine — read-only, isolated from production Supabase data. */
+let NBRES_DEMO_MODE = false;
+const NBRES_DEMO_MUTATION_RE = /(save|delete|remove|clear|create|openUserModal|openRegionModal|openTeamModal|openCompanyModal|openModal\(false|editRoom|editLead|toggleUser|setCompany|import|restore|purge)/i;
 
-  window.nbresIsDemoUser = function(){
-    return !!(window.currentUser && (currentUser.is_demo === true || currentUser.is_demo === 'true'));
+function nbresDemoData(){
+  const tenant='demo-tenant', region1='demo-r1', region2='demo-r2', team1='demo-t1', team2='demo-t2';
+  return {
+    tenants:[{id:tenant,company_name:'NBRES Demo Company',teams_enabled:true}],
+    regions:[{id:region1,tenant_id:tenant,name:'Bình Thạnh',code:'BT',is_active:true},{id:region2,tenant_id:tenant,name:'Thủ Đức',code:'TD',is_active:true}],
+    teams:[{id:team1,tenant_id:tenant,region_id:region1,name:'Team Central',code:'CENTRAL',is_active:true},{id:team2,tenant_id:tenant,region_id:region2,name:'Team East',code:'EAST',is_active:true}],
+    users:[
+      {id:'demo-u1',user:'demo.manager',name:'Nguyễn Minh Anh',role:'Quản Lí Công Ty',tenant_id:tenant,is_active:true},
+      {id:'demo-u2',user:'sale.linh',name:'Trần Gia Linh',role:'Nhân viên',tenant_id:tenant,region_id:region1,team_id:team1,is_active:true},
+      {id:'demo-u3',user:'sale.huy',name:'Phạm Quốc Huy',role:'Nhân viên',tenant_id:tenant,region_id:region2,team_id:team2,is_active:true}
+    ],
+    rooms:[
+      {id:'demo-room-1',tenant_id:tenant,region_id:region1,team_id:team1,code:'BT-1205',price:8500000,district:'Bình Thạnh',status:'Còn trống',address:'Nguyễn Gia Trí, Bình Thạnh',amenities:'Ban công, máy giặt riêng, full nội thất',mediaUrl:'',note:'Căn demo gần Landmark 81',images:[]},
+      {id:'demo-room-2',tenant_id:tenant,region_id:region1,team_id:team1,code:'BT-0802',price:11200000,district:'Bình Thạnh',status:'Đang giữ',address:'Điện Biên Phủ, Bình Thạnh',amenities:'2PN, hồ bơi, gym',mediaUrl:'',note:'Khách đang cân nhắc',images:[]},
+      {id:'demo-room-3',tenant_id:tenant,region_id:region2,team_id:team2,code:'TD-1608',price:7200000,district:'Thủ Đức',status:'Còn trống',address:'Võ Nguyên Giáp, Thủ Đức',amenities:'Studio, cửa sổ lớn, bảo vệ 24/7',mediaUrl:'',note:'Có thể vào ở ngay',images:[]},
+      {id:'demo-room-4',tenant_id:tenant,region_id:region2,team_id:team2,code:'TD-2301',price:14800000,district:'Thủ Đức',status:'Đã thuê',address:'Mai Chí Thọ, Thủ Đức',amenities:'2PN, view sông, nội thất cao cấp',mediaUrl:'',note:'Dữ liệu mẫu',images:[]}
+    ],
+    appointments:[
+      {id:'demo-a1',tenant_id:tenant,region_id:region1,team_id:team1,customer_name:'Anh Khoa',customer_phone:'0900000001',room_code:'BT-1205',appointment_time:new Date(Date.now()+86400000).toISOString(),status:'Đã xác nhận',note:'Khách quan tâm studio'},
+      {id:'demo-a2',tenant_id:tenant,region_id:region2,team_id:team2,customer_name:'Chị Mai',customer_phone:'0900000002',room_code:'TD-1608',appointment_time:new Date(Date.now()+172800000).toISOString(),status:'Chờ xác nhận',note:'Xem sau giờ làm'}
+    ]
   };
-
-  window.nbresDemoExpired = function(){
-    if(!window.nbresIsDemoUser()) return false;
-    const raw = currentUser.demo_expires_at;
-    return !raw || new Date(raw).getTime() <= Date.now();
-  };
-
-  window.nbresApplyDemoMode = function(){
-    const badge=document.getElementById('nbresDemoBadge');
-    const expired=document.getElementById('nbresDemoExpired');
-    if(!window.nbresIsDemoUser()){
-      document.body.classList.remove('nbres-demo-mode');
-      if(badge) badge.style.display='none';
-      if(expired) expired.style.display='none';
-      return;
-    }
-    document.body.classList.add('nbres-demo-mode');
-    if(badge) badge.style.display='block';
-    const time=document.getElementById('nbresDemoTime');
-    if(time && currentUser.demo_expires_at){
-      time.textContent='Hết hạn: '+new Date(currentUser.demo_expires_at).toLocaleString('vi-VN');
-    }
-    if(window.nbresDemoExpired()){
-      if(expired) expired.style.display='flex';
-    }
-  };
-
-  // Extra client-side UX guard. RLS/SQL remains the actual security boundary.
-  const oldSwitch = window.switchTab;
-  if(typeof oldSwitch === 'function'){
-    window.switchTab = function(tabId){
-      if(window.nbresIsDemoUser()){
-        if(window.nbresDemoExpired()){
-          window.nbresApplyDemoMode(); return;
-        }
-        if(!window.NBRES_DEMO_ALLOWED_TABS.has(tabId)){
-          if(typeof showToast==='function') showToast('Tài khoản Demo không có quyền truy cập mục này.');
-          return;
-        }
-      }
-      return oldSwitch.apply(this, arguments);
-    };
-  }
-
-  // Re-apply after auth/profile state changes without coupling to app internals.
-  setInterval(function(){
-    if(window.currentUser) window.nbresApplyDemoMode();
-  },1500);
-})();
-</script>
-
-
-<!-- NBRES V10.4.1 • COMPACT ACTION ICON REDESIGN -->
-<style>
-.nbres-action-svg{width:20px;height:20px;display:block;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
-.nbres-action-svg.sm{width:17px;height:17px}
-.nbres-action-svg.lg{width:23px;height:23px}
-.nbres-action-iconbox{width:38px;height:38px;border-radius:11px;display:inline-grid;place-items:center;background:rgba(194,158,61,.12);border:1px solid rgba(194,158,61,.28);color:#c7a23f;flex:0 0 auto}
-.nbres-compact-action{min-height:42px!important;padding:9px 14px!important;border-radius:11px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:9px!important;font-size:12px!important;font-weight:750!important;line-height:1.2!important}
-.nbres-compact-action .fa,.nbres-compact-action .fas,.nbres-compact-action .far{display:none!important}
-
-/* Create account modal */
-#userModal button[type="submit"],#createUserModal button[type="submit"],#accountModal button[type="submit"]{min-height:46px!important;padding:10px 16px!important}
-#userModal button[type="submit"] i,#createUserModal button[type="submit"] i,#accountModal button[type="submit"] i{display:none!important}
-
-/* People header: keep action elegant and compact */
-#tab-users button[onclick*="openUser"],#tab-users button[onclick*="UserModal"],
-#tab-users button[onclick*="userModal"]{min-width:0!important;width:auto!important;height:auto!important;padding:10px 14px!important;border-radius:11px!important}
-
-/* Export cards: remove giant glyph footprint */
-#tab-data-center .nbres-export-redesign{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-#tab-data-center .nbres-export-redesign button{min-height:88px!important;padding:16px!important;border-radius:14px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:12px!important;text-align:left!important}
-@media(max-width:640px){#tab-data-center .nbres-export-redesign{grid-template-columns:1fr}.nbres-compact-action{padding:9px 11px!important}}
-</style>
-<script>
-(function(){
- const ICONS={
-  userPlus:`<svg class="nbres-action-svg lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 19v-1.5A4.5 4.5 0 0 0 10.5 13h-4A4.5 4.5 0 0 0 2 17.5V19"/><circle cx="8.5" cy="6.5" r="3.5"/><path d="M18 8v6M15 11h6"/></svg>`,
-  account:`<svg class="nbres-action-svg lg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7" r="3.5"/><path d="M2.5 19v-1.5A4.5 4.5 0 0 1 7 13h4a4.5 4.5 0 0 1 4.5 4.5V19M18 9v6M15 12h6"/></svg>`,
-  leads:`<svg class="nbres-action-svg lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M16 11h6"/></svg>`,
-  building:`<svg class="nbres-action-svg lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V4h10v17M14 9h6v12M7 8h3M7 12h3M7 16h3M17 13h1M17 17h1M2 21h20"/></svg>`
- };
- function iconBox(icon){return `<span class="nbres-action-iconbox">${icon}</span>`}
-
- function enhance(){
-   // Create-account submit button.
-   document.querySelectorAll('button').forEach(btn=>{
-     const label=(btn.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
-     if(label==='tạo tài khoản'){
-       btn.classList.add('nbres-compact-action');
-       if(!btn.querySelector('.nbres-action-svg')){
-         btn.querySelectorAll('i').forEach(i=>i.remove());
-         btn.insertAdjacentHTML('afterbegin', ICONS.account);
-       }
-     }
-     if(label==='thêm nhân sự'||label.includes('thêm nhân sự')){
-       btn.classList.add('nbres-compact-action');
-       if(!btn.querySelector('.nbres-action-svg')){
-         btn.querySelectorAll('i').forEach(i=>i.remove());
-         btn.insertAdjacentHTML('afterbegin', ICONS.userPlus);
-       }
-     }
-   });
-
-   // Data Center export: replace oversized icon-font glyphs with compact SVG.
-   const dc=document.getElementById('tab-data-center');
-   if(dc){
-     const heading=[...dc.querySelectorAll('h1,h2,h3,h4')].find(x=>(x.textContent||'').toLowerCase().includes('export doanh nghiệp'));
-     if(heading){
-       const scope=heading.closest('section,div') || dc;
-       const buttons=[...scope.querySelectorAll('button')].filter(b=>{
-         const t=(b.textContent||'').toLowerCase();
-         return t.includes('lead')||t.includes('khách hàng')||t.includes('kho phòng');
-       });
-       if(buttons.length>=2){
-         const parent=buttons[0].parentElement;
-         if(parent && buttons.every(b=>b.parentElement===parent)) parent.classList.add('nbres-export-redesign');
-         buttons.forEach(b=>{
-           b.querySelectorAll('i').forEach(i=>i.remove());
-           if(!b.querySelector('.nbres-action-iconbox')){
-             const t=(b.textContent||'').toLowerCase();
-             b.insertAdjacentHTML('afterbegin', iconBox(t.includes('kho')?ICONS.building:ICONS.leads));
-           }
-         });
-       }
-     }
-   }
- }
- document.addEventListener('DOMContentLoaded',enhance);
- new MutationObserver(()=>{clearTimeout(window.__nbresIconTimer);window.__nbresIconTimer=setTimeout(enhance,80)}).observe(document.documentElement,{childList:true,subtree:true});
-})();
-</script>
-
-
-<!-- NBRES V10.4.2 • DEMO MANAGEMENT CENTER -->
-<style>
-#nbresDemoCenter{display:none;padding:24px}
-#nbresDemoCenter .dmc-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding:24px;border-radius:18px;background:linear-gradient(135deg,#0a1020,#161944);color:white;border:1px solid #ffffff12}
-#nbresDemoCenter .dmc-head small{color:#d0ad4e;font-weight:800;letter-spacing:1.5px}
-#nbresDemoCenter .dmc-head h2{margin:7px 0 5px;font-size:25px}
-#nbresDemoCenter .dmc-head p{margin:0;color:#9eabc0;font-size:12px}
-.dmc-btn{border:1px solid #d2ad45;background:linear-gradient(135deg,#d7bb63,#ae8528);color:#0a0c11;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer}
-.dmc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:15px 0}
-.dmc-kpi,.dmc-panel{background:#fff;border:1px solid #e5e8ee;border-radius:15px;padding:17px}
-.dmc-kpi span{font-size:10px;color:#788396;font-weight:700}.dmc-kpi b{display:block;font-size:25px;margin-top:6px}
-.dmc-panel{overflow:auto}.dmc-table{width:100%;border-collapse:collapse;font-size:11px}.dmc-table th,.dmc-table td{padding:11px 9px;border-bottom:1px solid #edf0f4;text-align:left}.dmc-table th{font-size:9px;color:#7a8494;text-transform:uppercase}
-.dmc-status{display:inline-flex;padding:5px 8px;border-radius:999px;font-size:9px;font-weight:800}.dmc-status.ok{background:#e8f6ef;color:#14704f}.dmc-status.exp{background:#fbecec;color:#a53e3e}.dmc-status.lock{background:#eef0f4;color:#667085}
-.dmc-action{border:1px solid #dfe3e9;background:#fff;border-radius:8px;padding:6px 8px;font-size:9px;font-weight:700;cursor:pointer;margin:2px}
-#dmcModal{position:fixed;inset:0;z-index:10020;background:#0009;display:none;align-items:center;justify-content:center;padding:18px}
-#dmcModal .dmc-modalbox{width:min(500px,100%);background:#0d121a;color:#f4f6f8;border:1px solid #6d5822;border-radius:18px;padding:22px}
-#dmcModal label{display:block;font-size:10px;color:#c8a64a;font-weight:800;margin:13px 0 6px}
-#dmcModal input,#dmcModal select{width:100%;padding:11px;border-radius:9px;border:1px solid #29313e;background:#080c12;color:#fff}
-@media(max-width:800px){.dmc-grid{grid-template-columns:repeat(2,1fr)}#nbresDemoCenter .dmc-head{align-items:flex-start;flex-direction:column}}
-</style>
-
-<section id="nbresDemoCenter">
- <div class="dmc-head">
-  <div><small>NBRES • DEMO MANAGEMENT</small><h2>Trung tâm Quản lý Demo</h2><p>Cấp tài khoản trải nghiệm, kiểm tra thời hạn và quản lý khách hàng Demo.</p></div>
-  <button class="dmc-btn" onclick="nbresOpenDemoCreate()">＋ Tạo tài khoản Demo</button>
- </div>
- <div class="dmc-grid">
-  <div class="dmc-kpi"><span>TỔNG DEMO</span><b id="dmcTotal">0</b></div>
-  <div class="dmc-kpi"><span>ĐANG HOẠT ĐỘNG</span><b id="dmcActive">0</b></div>
-  <div class="dmc-kpi"><span>SẮP HẾT HẠN</span><b id="dmcSoon">0</b></div>
-  <div class="dmc-kpi"><span>ĐÃ HẾT HẠN</span><b id="dmcExpired">0</b></div>
- </div>
- <div class="dmc-panel">
-  <table class="dmc-table"><thead><tr><th>Tài khoản</th><th>Họ tên</th><th>Công ty Demo</th><th>Hết hạn</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="dmcRows"><tr><td colspan="6">Đang tải...</td></tr></tbody></table>
- </div>
-</section>
-
-<div id="dmcModal">
- <div class="dmc-modalbox">
-  <div style="display:flex;justify-content:space-between;gap:10px"><div><div style="font-size:9px;color:#c8a64a;font-weight:800;letter-spacing:1px">NBRES DEMO</div><h3 style="margin:5px 0">Tạo tài khoản Demo</h3></div><button onclick="nbresCloseDemoCreate()" style="background:none;border:0;color:#9aa5b5;font-size:22px;cursor:pointer">×</button></div>
-  <label>Tên đăng nhập</label><input id="dmcUsername" placeholder="demo.client01">
-  <label>Họ và tên</label><input id="dmcFullName" placeholder="Khách hàng Demo">
-  <label>Mật khẩu ban đầu</label><input id="dmcPassword" type="password" minlength="8" placeholder="Tối thiểu 8 ký tự">
-  <label>Thời hạn trải nghiệm</label><select id="dmcDays"><option value="1">1 ngày</option><option value="3">3 ngày</option><option value="7" selected>7 ngày</option><option value="14">14 ngày</option></select>
-  <div style="display:flex;justify-content:flex-end;gap:9px;margin-top:18px"><button class="dmc-action" onclick="nbresCloseDemoCreate()">Hủy</button><button class="dmc-btn" onclick="nbresCreateDemoAccount()">Tạo Demo</button></div>
- </div>
-</div>
-
-<script>
-(function(){
- window.nbresOpenDemoCenter=async function(){
-   if(typeof isSuperAdmin==='function' && !isSuperAdmin()){ if(typeof showToast==='function')showToast('Chỉ Admin Quản Lí được quản lý Demo.'); return; }
-   document.querySelectorAll('[id^="tab-"]').forEach(x=>x.classList.add('hidden'));
-   const c=document.getElementById('nbresDemoCenter'); c.style.display='block'; c.classList.remove('hidden');
-   await nbresLoadDemoAccounts();
- };
- window.nbresOpenDemoCreate=function(){document.getElementById('dmcModal').style.display='flex'};
- window.nbresCloseDemoCreate=function(){document.getElementById('dmcModal').style.display='none'};
-
- async function getDemoTenant(){
-   const {data,error}=await supabaseClient.from('tenants').select('id,company_name').ilike('company_name','%NBRES Demo%').limit(1);
-   if(error) throw error;
-   if(!data||!data.length) throw new Error('Chưa tìm thấy Công ty NBRES Demo.');
-   return data[0];
- }
- window.nbresLoadDemoAccounts=async function(){
-   const body=document.getElementById('dmcRows');
-   try{
-    const tenant=await getDemoTenant();
-    const {data,error}=await supabaseClient.from('profiles').select('id,username,full_name,tenant_id,is_demo,demo_expires_at').eq('tenant_id',tenant.id).eq('is_demo',true).order('demo_expires_at',{ascending:false});
-    if(error) throw error;
-    const rows=data||[], now=Date.now(), day=86400000;
-    document.getElementById('dmcTotal').textContent=rows.length;
-    document.getElementById('dmcActive').textContent=rows.filter(x=>new Date(x.demo_expires_at).getTime()>now).length;
-    document.getElementById('dmcSoon').textContent=rows.filter(x=>{const t=new Date(x.demo_expires_at).getTime();return t>now&&t-now<=day}).length;
-    document.getElementById('dmcExpired').textContent=rows.filter(x=>!x.demo_expires_at||new Date(x.demo_expires_at).getTime()<=now).length;
-    body.innerHTML=rows.length?rows.map(x=>{
-      const exp=x.demo_expires_at?new Date(x.demo_expires_at):null, active=exp&&exp.getTime()>now;
-      return `<tr><td><b>${escapeHtmlV10(x.username||'—')}</b></td><td>${escapeHtmlV10(x.full_name||'—')}</td><td>${escapeHtmlV10(tenant.company_name)}</td><td>${exp?exp.toLocaleString('vi-VN'):'—'}</td><td><span class="dmc-status ${active?'ok':'exp'}">${active?'Đang dùng':'Hết hạn'}</span></td><td><button class="dmc-action" onclick="nbresExtendDemo('${x.id}',7)">+7 ngày</button><button class="dmc-action" onclick="nbresExpireDemo('${x.id}')">Khóa</button></td></tr>`;
-    }).join(''):'<tr><td colspan="6">Chưa có tài khoản Demo.</td></tr>';
-   }catch(e){body.innerHTML=`<tr><td colspan="6">${escapeHtmlV10(e.message||String(e))}</td></tr>`}
- };
- function escapeHtmlV10(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
- window.escapeHtmlV10=window.escapeHtmlV10||escapeHtmlV10;
-
- window.nbresCreateDemoAccount=async function(){
-   try{
-    const username=document.getElementById('dmcUsername').value.trim().toLowerCase();
-    const fullName=document.getElementById('dmcFullName').value.trim();
-    const password=document.getElementById('dmcPassword').value;
-    const days=parseInt(document.getElementById('dmcDays').value,10);
-    if(!username||!fullName||password.length<8) throw new Error('Vui lòng nhập đủ thông tin và mật khẩu tối thiểu 8 ký tự.');
-    const tenant=await getDemoTenant();
-
-    // Uses the existing deployed admin-create-user Edge Function.
-    const {data,error}=await supabaseClient.functions.invoke('admin-create-user',{body:{
-      username, password, full_name:fullName, role:'employee', tenant_id:tenant.id, region_id:null, team_id:null
-    }});
-    if(error) throw error;
-    const userId=data?.user?.id||data?.id||data?.user_id;
-    if(!userId) throw new Error('Đã gọi tạo user nhưng không nhận được user_id. Kiểm tra Edge Function.');
-    const expires=new Date(Date.now()+days*86400000).toISOString();
-    const {error:upErr}=await supabaseClient.from('profiles').update({is_demo:true,demo_expires_at:expires}).eq('id',userId);
-    if(upErr) throw upErr;
-    nbresCloseDemoCreate(); await nbresLoadDemoAccounts();
-    if(typeof showToast==='function')showToast('Đã tạo tài khoản Demo.');
-   }catch(e){if(typeof showToast==='function')showToast(e.message||String(e));else alert(e.message||e)}
- };
- window.nbresExtendDemo=async function(id,days){
-   const {data,error}=await supabaseClient.from('profiles').select('demo_expires_at').eq('id',id).single();
-   if(error){alert(error.message);return}
-   const base=Math.max(Date.now(),data.demo_expires_at?new Date(data.demo_expires_at).getTime():0);
-   const {error:e2}=await supabaseClient.from('profiles').update({is_demo:true,demo_expires_at:new Date(base+days*86400000).toISOString()}).eq('id',id);
-   if(e2){alert(e2.message);return} nbresLoadDemoAccounts();
- };
- window.nbresExpireDemo=async function(id){
-   if(!confirm('Khóa tài khoản Demo này ngay?'))return;
-   const {error}=await supabaseClient.from('profiles').update({demo_expires_at:new Date().toISOString()}).eq('id',id);
-   if(error){alert(error.message);return} nbresLoadDemoAccounts();
- };
-
- // Add navigation only for Platform Admin.
- function installDemoNav(){
-   if(!(typeof isSuperAdmin==='function'&&isSuperAdmin()))return;
-   if(document.getElementById('nav-demo-management'))return;
-   const navCandidates=[...document.querySelectorAll('nav,aside,.sidebar')];
-   const host=navCandidates.find(n=>n.querySelector('button,[onclick*="switchTab"]'))||document.querySelector('.sidebar');
-   if(!host)return;
-   const ref=[...host.querySelectorAll('button')].find(b=>(b.textContent||'').includes('Thư Viện NBRES'));
-   const btn=document.createElement('button');
-   btn.id='nav-demo-management'; btn.type='button'; btn.onclick=nbresOpenDemoCenter;
-   btn.innerHTML='<span style="font-weight:800">◈</span><span>Quản lý Demo</span>';
-   btn.className=ref?.className||'';
-   (ref?.parentNode||host).appendChild(btn);
- }
- setInterval(installDemoNav,1800);
-})();
-</script>
-
-
-<!-- NBRES V10.4.3 • DEMO CENTER ACCESS FIX -->
-<style>
-#nbresDemoAdminLauncher{
- position:fixed;right:18px;top:92px;z-index:9900;
- display:none;align-items:center;gap:9px;
- padding:10px 13px;border-radius:11px;
- border:1px solid rgba(190,153,52,.45);
- background:linear-gradient(135deg,#111827,#171a2e);
- color:#e2c266;box-shadow:0 10px 30px #0002;
- font:750 11px/1.2 "Be Vietnam Pro",sans-serif;cursor:pointer
-}
-#nbresDemoAdminLauncher svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8}
-@media(max-width:700px){#nbresDemoAdminLauncher{top:auto;bottom:18px;right:14px}}
-</style>
-<button id="nbresDemoAdminLauncher" type="button" onclick="nbresOpenDemoCenter()" title="Quản lý tài khoản Demo">
-<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 9h8M8 13h5M17 13h.01"/></svg>
-<span>Quản lý Demo</span>
-</button>
-<script>
-(function(){
- function demoAdminVisible(){
-   const b=document.getElementById('nbresDemoAdminLauncher');
-   if(!b)return;
-   let ok=false;
-   try{
-     ok=(typeof isSuperAdmin==='function' && isSuperAdmin()) ||
-        (window.currentUser && (currentUser.role==='Admin Quản Lí'||currentUser.role==='platform_admin'));
-   }catch(e){}
-   b.style.display=ok?'inline-flex':'none';
- }
- document.addEventListener('DOMContentLoaded',demoAdminVisible);
- setInterval(demoAdminVisible,900);
-
- // Make center opening independent of existing tab markup.
- const oldOpen=window.nbresOpenDemoCenter;
- window.nbresOpenDemoCenter=async function(){
-   let ok=false;
-   try{
-     ok=(typeof isSuperAdmin==='function' && isSuperAdmin()) ||
-        (window.currentUser && (currentUser.role==='Admin Quản Lí'||currentUser.role==='platform_admin'));
-   }catch(e){}
-   if(!ok){
-     if(typeof showToast==='function') showToast('Chỉ Admin Quản Lí được quản lý Demo.');
-     return;
-   }
-   // Hide known operational screens without depending on one specific class.
-   document.querySelectorAll('[id^="tab-"]').forEach(x=>{
-     x.dataset.demoPrevDisplay=x.style.display||'';
-     x.style.display='none';
-   });
-   const c=document.getElementById('nbresDemoCenter');
-   if(c){
-     c.classList.remove('hidden');
-     c.style.display='block';
-     c.scrollIntoView({behavior:'smooth',block:'start'});
-   }
-   if(typeof nbresLoadDemoAccounts==='function') await nbresLoadDemoAccounts();
- };
-})();
-</script>
-
-
-<!-- NBRES V10.5.2 • DEMO EXIT / RETURN FLOW -->
-<style>
-#nbresDemoExitBar{
- position:fixed;left:50%;top:14px;transform:translateX(-50%);
- z-index:9999;display:none;align-items:center;gap:12px;
- max-width:calc(100vw - 28px);padding:8px 9px 8px 14px;
- border:1px solid rgba(197,163,72,.38);border-radius:999px;
- background:rgba(10,13,18,.94);color:#e8edf4;
- box-shadow:0 12px 34px rgba(0,0,0,.24);backdrop-filter:blur(16px);
- font:600 10px/1.25 "Be Vietnam Pro",sans-serif
-}
-#nbresDemoExitBar .demo-dot{width:7px;height:7px;border-radius:50%;background:#c5a348;box-shadow:0 0 0 4px rgba(197,163,72,.10)}
-#nbresDemoExitBar strong{color:#e1c36e}
-#nbresDemoExitBar button{
- border:1px solid rgba(197,163,72,.42);border-radius:999px;
- padding:7px 11px;background:linear-gradient(135deg,#d0b45e,#a47d25);
- color:#090b0f;font-weight:800;cursor:pointer;white-space:nowrap
-}
-#nbresDemoExitBar button svg{width:14px;height:14px;vertical-align:-2px;margin-right:4px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-@media(max-width:620px){
- #nbresDemoExitBar{left:10px;right:10px;top:8px;transform:none;border-radius:14px;justify-content:space-between}
- #nbresDemoExitBar .demo-copy span{display:none}
-}
-</style>
-<div id="nbresDemoExitBar">
- <span class="demo-dot"></span>
- <div class="demo-copy"><strong>Chế độ Demo</strong> <span>• Bạn đang trải nghiệm NBRES bằng dữ liệu mẫu</span></div>
- <button type="button" onclick="nbresExitDemo()">
-  <svg viewBox="0 0 24 24"><path d="M9 6 3 12l6 6"/><path d="M3 12h12a6 6 0 0 1 6 6"/></svg>
-  Thoát Demo
- </button>
-</div>
-<script>
-(function(){
- function isDemo(){
-   try{return typeof nbresIsDemoUser==='function' && nbresIsDemoUser()}catch(e){return false}
- }
- window.nbresExitDemo=async function(){
-   if(!isDemo()) return;
-   const ok=confirm('Thoát chế độ Demo và quay lại màn hình đăng nhập NBRES?');
-   if(!ok)return;
-   try{
-     // Explicit sign-out prevents the remembered Demo session from auto-opening again.
-     if(window.supabaseClient && supabaseClient.auth){
-       await supabaseClient.auth.signOut();
-     }
-   }catch(e){console.warn('Demo sign-out:',e)}
-   try{
-     localStorage.removeItem('NBRES_REMEMBERED_LOGIN_ID');
-     sessionStorage.removeItem('NBRES_ACTIVE_TENANT');
-     sessionStorage.removeItem('NBRES_SESSION_ONLY');
-   }catch(e){}
-   location.reload();
- };
- function sync(){
-   const bar=document.getElementById('nbresDemoExitBar');
-   if(!bar)return;
-   bar.style.display=isDemo()?'flex':'none';
-   // Old floating badge becomes redundant when the logical exit bar is present.
-   const old=document.getElementById('nbresDemoBadge');
-   if(old && isDemo()) old.style.display='none';
- }
- document.addEventListener('DOMContentLoaded',sync);
- setInterval(sync,800);
-})();
-</script>
-
-
-<!-- NBRES V11.0.0 • MARKET RC UX SYSTEM -->
-<style>
-/* ---------- Universal usability ---------- */
-html{scroll-behavior:smooth}
-body{font-family:"Be Vietnam Pro","Segoe UI",Arial,sans-serif!important;text-rendering:optimizeLegibility}
-button,a,input,select,textarea{font:inherit}
-button,a,[onclick]{-webkit-tap-highlight-color:transparent}
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
-  outline:3px solid rgba(197,163,72,.30)!important;outline-offset:2px!important
-}
-button{min-height:40px}
-input,select,textarea{min-height:42px}
-::selection{background:#dfc778;color:#111}
-
-/* ---------- Consistent content width / rhythm ---------- */
-#appScreen .main-content,#mainApp .main-content{
-  width:100%;max-width:1600px;margin-inline:auto
-}
-#appScreen h1,#mainApp h1{letter-spacing:-.035em;line-height:1.16}
-#appScreen h2,#mainApp h2{letter-spacing:-.02em;line-height:1.25}
-#appScreen p,#mainApp p{line-height:1.62}
-
-/* ---------- Cards ---------- */
-#appScreen .card,#mainApp .card,
-#appScreen .bg-white,#mainApp .bg-white{
-  border-radius:16px!important
-}
-#appScreen table,#mainApp table{font-variant-numeric:tabular-nums}
-#appScreen tbody tr,#mainApp tbody tr{transition:background .15s ease}
-
-/* ---------- Buttons: compact, never giant icon tiles ---------- */
-#appScreen button,#mainApp button{transition:transform .14s ease,box-shadow .14s ease,filter .14s ease}
-#appScreen button:active,#mainApp button:active{transform:translateY(0)!important}
-.nbres-compact-action{min-height:42px!important;max-width:100%!important}
-.nbres-action-iconbox{width:36px!important;height:36px!important;border-radius:10px!important}
-.nbres-action-svg{max-width:22px!important;max-height:22px!important}
-
-/* Never allow the old oversized generic user silhouette to dominate action cards */
-#tab-users button i.fa-user,
-#tab-users button i.fa-user-plus,
-#tab-data-center button i.fa-user,
-#tab-data-center button i.fa-users{
-  font-size:18px!important;width:auto!important;height:auto!important
 }
 
-/* ---------- Modal usability ---------- */
-[id$="Modal"]:not(#dmcModal),[class*="modal"]{
-  overscroll-behavior:contain
-}
-#userModal>div,#createUserModal>div,#accountModal>div,
-#userModal .modal-content,#createUserModal .modal-content,#accountModal .modal-content,
-#dmcModal .dmc-modalbox{
-  max-height:min(88dvh,850px)!important;overflow:auto!important;
-  scrollbar-width:thin;scrollbar-color:#6e5a28 #11151d
-}
-#userModal button[type="submit"],#createUserModal button[type="submit"],#accountModal button[type="submit"]{
-  min-width:140px!important
-}
-
-/* ---------- Demo: clear but unobtrusive ---------- */
-#nbresDemoExitBar{top:10px!important}
-body.nbres-demo-mode #nbresDemoAdminLauncher{display:none!important}
-
-/* ---------- Empty/loading/error helpers ---------- */
-.nbres-ui-state{padding:30px 18px;text-align:center;color:#727b89;font-size:12px}
-.nbres-ui-state strong{display:block;color:#252b35;font-size:14px;margin-bottom:5px}
-
-/* ---------- Responsive: tablet ---------- */
-@media(max-width:1024px){
-  #appScreen .main-content,#mainApp .main-content{padding-left:18px!important;padding-right:18px!important}
-  #appScreen table,#mainApp table{min-width:720px}
-  #appScreen .overflow-x-auto,#mainApp .overflow-x-auto{overscroll-behavior-inline:contain}
+function enterNBRESDemo(){
+  NBRES_DEMO_MODE=true;
+  const d=nbresDemoData();
+  currentUser={id:'demo-manager',user:'demo@nbres.site',name:'Khách Trải Nghiệm',role:'Quản Lí Công Ty',tenant_id:'demo-tenant',region_id:null,team_id:null,is_active:true};
+  currentTenantId='demo-tenant'; tenants=d.tenants; regions=d.regions; teams=d.teams; users=d.users; rooms=d.rooms; appointments=d.appointments;
+  try{ currentFilteredData=[...rooms]; }catch(e){}
+  document.getElementById('v11DemoBanner')?.classList.remove('hidden');
+  document.body.dataset.nbresDemo='true';
+  showApp();
+  document.getElementById('v11DemoBanner')?.classList.remove('hidden');
+  setTimeout(()=>{
+    try{ renderDistrictOptions(); renderRooms(rooms); renderCompanyDashboard(); renderRegions(); renderTeams(); renderUsersTable(); populateAppointmentFilters(); renderAppointments(); }catch(e){console.debug('Demo render:',e)}
+    nbresApplyDemoReadonlyUI();
+    showToast('Đã mở bản Demo NBRES • mọi thao tác ghi dữ liệu đều bị khóa.','success');
+  },120);
 }
 
-/* ---------- Responsive: phone ---------- */
-@media(max-width:700px){
-  #appScreen .main-content,#mainApp .main-content{padding:14px 11px 90px!important}
-  #appScreen h1,#mainApp h1{font-size:clamp(22px,7vw,29px)!important}
-  #appScreen h2,#mainApp h2{font-size:18px!important}
-  #appScreen .grid,#mainApp .grid{gap:10px!important}
-  #appScreen button,#mainApp button{min-height:44px}
-  #appScreen input,#appScreen select,#appScreen textarea,
-  #mainApp input,#mainApp select,#mainApp textarea{font-size:16px!important}
-  #userModal>div,#createUserModal>div,#accountModal>div,
-  #userModal .modal-content,#createUserModal .modal-content,#accountModal .modal-content,
-  #dmcModal .dmc-modalbox{
-    width:calc(100vw - 18px)!important;max-height:92dvh!important;border-radius:16px!important
-  }
-  #nbresDemoExitBar{font-size:9px!important}
+function exitNBRESDemo(){
+  NBRES_DEMO_MODE=false; document.body.dataset.nbresDemo='false';
+  document.getElementById('v11DemoBanner')?.classList.add('hidden');
+  currentUser=null; currentTenantId=null; rooms=[]; users=[]; teams=[]; regions=[]; appointments=[]; tenants=[];
+  showLogin();
 }
 
-/* ---------- Small phone ---------- */
-@media(max-width:390px){
-  #appScreen .main-content,#mainApp .main-content{padding-inline:9px!important}
-  .nbres-compact-action{padding-inline:10px!important;gap:7px!important}
-}
-
-/* ---------- Accessibility ---------- */
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
-}
-@media(prefers-contrast:more){
-  #appScreen .card,#mainApp .card,#appScreen input,#mainApp input,#appScreen select,#mainApp select{border-color:#b7b2a5!important}
-}
-</style>
-<script>
-/* Market RC safety + UX guards */
-(function(){
-  // Demo users must never reach high-risk actions from the client UI.
-  function isDemo(){ try{return typeof nbresIsDemoUser==='function' && nbresIsDemoUser()}catch(e){return false} }
-  const dangerousNames=['clearAllData','clearAllFromDB','deleteTenant','deleteCompany','deleteRegion'];
-  dangerousNames.forEach(function(name){
-    const fn=window[name];
-    if(typeof fn==='function' && !fn.__nbresMarketGuard){
-      const wrapped=function(){
-        if(isDemo()){
-          if(typeof showToast==='function') showToast('Chế độ Demo không cho phép thao tác quản trị hoặc xóa dữ liệu.');
-          return;
-        }
-        return fn.apply(this,arguments);
-      };
-      wrapped.__nbresMarketGuard=true; window[name]=wrapped;
+function nbresApplyDemoReadonlyUI(){
+  if(!NBRES_DEMO_MODE)return;
+  document.querySelectorAll('button[onclick],a[onclick]').forEach(el=>{
+    const action=el.getAttribute('onclick')||'';
+    if(NBRES_DEMO_MUTATION_RE.test(action) && !/switchTab|selectTaskFromMenu|filter|openRoomDetail|view|show|close|toggleTaskMenu/i.test(action)){
+      el.classList.add('v11-demo-readonly'); el.title='Chế độ Demo: thao tác ghi dữ liệu đã bị khóa';
     }
   });
+}
 
-  // Improve icon-only button accessibility without changing visible UI.
-  function accessibilityPass(){
-    document.querySelectorAll('button').forEach(function(b){
-      if(!b.getAttribute('aria-label')){
-        const t=(b.textContent||'').replace(/\s+/g,' ').trim();
-        if(t) b.setAttribute('aria-label',t.slice(0,100));
-        else if(b.title) b.setAttribute('aria-label',b.title);
-      }
-    });
-    document.querySelectorAll('img').forEach(function(img){
-      if(!img.hasAttribute('alt')) img.alt='';
-      img.decoding='async';
-    });
+// Prevent all accidental writes while keeping browsing/filtering/navigation available.
+document.addEventListener('click',function(e){
+  if(!NBRES_DEMO_MODE)return;
+  const target=e.target.closest('[onclick]'); if(!target)return;
+  const action=target.getAttribute('onclick')||'';
+  if(NBRES_DEMO_MUTATION_RE.test(action) && !/switchTab|selectTaskFromMenu|filter|openRoomDetail|view|showNextImage|showPrevImage|close|toggleTaskMenu/i.test(action)){
+    e.preventDefault(); e.stopImmediatePropagation();
+    showToast('Bản Demo chỉ cho phép xem và trải nghiệm. Hãy đăng nhập doanh nghiệp để thay đổi dữ liệu.','error');
   }
-  document.addEventListener('DOMContentLoaded',accessibilityPass);
-  setTimeout(accessibilityPass,1200);
-})();
-</script>
+},true);
 
+document.addEventListener('submit',function(e){
+  if(!NBRES_DEMO_MODE)return;
+  if(e.target?.id==='loginForm')return;
+  e.preventDefault(); e.stopImmediatePropagation(); showToast('Demo đang ở chế độ chỉ xem.','error');
+},true);
 
-<!-- NBRES V11.1.0 • ADMIN DEMO PREVIEW + HUMAN-CENTERED UI -->
-<style>
-/* Human-centered visual system: calm, predictable, low cognitive load */
-:root{
- --nb11-black:#0b0e13;--nb11-panel:#11161e;--nb11-gold:#c5a348;
- --nb11-gold2:#a47d25;--nb11-ivory:#fbfaf7;--nb11-canvas:#f4f3ef;
- --nb11-ink:#1b2029;--nb11-muted:#737b88;--nb11-line:#e6e2d8;
+// Supabase presence must never be written by anonymous demo mode.
+const _nbresStartPresence=window.startPresence;
+if(typeof _nbresStartPresence==='function'){ window.startPresence=function(){ if(NBRES_DEMO_MODE)return; return _nbresStartPresence.apply(this,arguments); }; }
+
+// Avoid network-backed list refreshes while demo is active.
+const _nbresSwitchTab=window.switchTab;
+if(typeof _nbresSwitchTab==='function'){
+  window.switchTab=function(tabId){
+    if(NBRES_DEMO_MODE){
+      // temporarily intercept refresh functions that would query Supabase
+      const oldRefresh=window.refreshAppointments, oldLeads=window.loadLeadsV9, oldAnn=window.loadAnnouncementsV10, oldAudit=window.loadAuditV9;
+      window.refreshAppointments=async()=>{try{renderAppointments();}catch(e){}}; window.loadLeadsV9=async()=>{}; window.loadAnnouncementsV10=async()=>{}; window.loadAuditV9=async()=>{};
+      try{return _nbresSwitchTab.call(this,tabId);} finally{window.refreshAppointments=oldRefresh;window.loadLeadsV9=oldLeads;window.loadAnnouncementsV10=oldAnn;window.loadAuditV9=oldAudit;setTimeout(nbresApplyDemoReadonlyUI,30)}
+    }
+    return _nbresSwitchTab.apply(this,arguments);
+  };
 }
-#appScreen,#mainApp{background:var(--nb11-canvas)!important}
-#appScreen .main-content,#mainApp .main-content{max-width:1500px!important}
-#appScreen .bg-white,#mainApp .bg-white,#appScreen .card,#mainApp .card{
- border:1px solid var(--nb11-line)!important;box-shadow:0 7px 22px rgba(12,15,20,.045)!important
-}
-#appScreen button,#mainApp button{border-radius:10px}
-#appScreen input,#appScreen select,#appScreen textarea,
-#mainApp input,#mainApp select,#mainApp textarea{border-radius:10px!important;background:#fff!important}
-#appScreen table,#mainApp table{background:#fff}
-#appScreen thead,#mainApp thead{background:#f8f7f3!important}
-#appScreen th,#mainApp th{font-size:10px!important;letter-spacing:.025em!important}
-#appScreen td,#mainApp td{vertical-align:middle}
-
-/* Admin preview bar: persistent orientation + obvious way back */
-#nbresAdminPreviewBar{
- position:fixed;left:50%;top:10px;transform:translateX(-50%);
- z-index:10010;display:none;align-items:center;gap:12px;
- max-width:calc(100vw - 28px);padding:8px 9px 8px 13px;border-radius:999px;
- border:1px solid rgba(197,163,72,.42);background:rgba(11,14,19,.96);
- color:#e9edf2;box-shadow:0 14px 38px rgba(0,0,0,.24);backdrop-filter:blur(16px);
- font:600 10px/1.25 "Be Vietnam Pro",sans-serif
-}
-#nbresAdminPreviewBar .nbp-dot{width:7px;height:7px;border-radius:50%;background:#c5a348;box-shadow:0 0 0 4px rgba(197,163,72,.12)}
-#nbresAdminPreviewBar strong{color:#e1c36e}
-#nbresAdminPreviewBar button{
- min-height:34px!important;border:1px solid rgba(197,163,72,.45);border-radius:999px!important;
- padding:7px 12px;background:linear-gradient(135deg,#d0b45e,#a47d25);color:#090b0f;font-weight:800;cursor:pointer
-}
-
-/* Demo center becomes a true control center */
-#nbresDemoCenter{max-width:1500px;margin:0 auto}
-#nbresDemoCenter .dmc-head{box-shadow:0 18px 45px rgba(8,11,16,.13)}
-#nbresDemoCenter .dmc-kpi{box-shadow:none!important}
-#nbresDemoCenter .dmc-panel{box-shadow:none!important}
-#dmcPreviewBtn{margin-left:8px;background:#fff!important;color:#1b2029!important;border:1px solid #ded8c9!important}
-#dmcPreviewBtn:hover{background:#fbf7ea!important;border-color:#c9ae61!important}
-
-/* Reduce visual noise in operational pages */
-#appScreen .shadow-xl,#mainApp .shadow-xl{box-shadow:0 12px 32px rgba(10,13,18,.08)!important}
-#appScreen .shadow-lg,#mainApp .shadow-lg{box-shadow:0 9px 25px rgba(10,13,18,.065)!important}
-#appScreen .shadow-md,#mainApp .shadow-md{box-shadow:0 6px 18px rgba(10,13,18,.05)!important}
-
-/* Mobile: orientation remains clear */
-@media(max-width:700px){
- #nbresAdminPreviewBar{left:9px;right:9px;top:8px;transform:none;border-radius:14px;justify-content:space-between}
- #nbresAdminPreviewBar .nbp-copy span{display:none}
- #nbresDemoCenter{padding:14px!important}
- #nbresDemoCenter .dmc-head{padding:19px!important}
-}
-</style>
-
-<div id="nbresAdminPreviewBar">
- <span class="nbp-dot"></span>
- <div class="nbp-copy"><strong>Đang xem Demo</strong> <span id="nbresAdminPreviewCompany">• NBRES Demo</span></div>
- <button type="button" onclick="nbresReturnToDemoCenter()">← Trung tâm quản lý</button>
-</div>
-
-<script>
-/* Admin Preview keeps Platform Admin authenticated.
-   It changes only tenant context; it never signs the Admin into a Demo user's auth session. */
-(function(){
- const PREVIEW_KEY='NBRES_ADMIN_DEMO_PREVIEW';
- const ORIGIN_KEY='NBRES_ADMIN_DEMO_ORIGIN_TENANT';
-
- function isPlatformAdmin(){
-   try{return (typeof isSuperAdmin==='function'&&isSuperAdmin()) ||
-     (window.currentUser&&(currentUser.role==='Admin Quản Lí'||currentUser.role==='platform_admin'))}catch(e){return false}
- }
- async function findDemoTenant(){
-   if(Array.isArray(window.tenants)){
-     const t=tenants.find(x=>/nbres\s*demo/i.test(String(x.company_name||'')));
-     if(t)return t;
-   }
-   const {data,error}=await supabaseClient.from('tenants').select('id,company_name,teams_enabled').ilike('company_name','%NBRES Demo%').limit(1);
-   if(error)throw error;
-   if(!data||!data.length)throw new Error('Chưa tìm thấy Công ty NBRES Demo.');
-   return data[0];
- }
-
- window.nbresPreviewDemoAsAdmin=async function(){
-   if(!isPlatformAdmin())return;
-   try{
-     const demo=await findDemoTenant();
-     if(!sessionStorage.getItem(PREVIEW_KEY)){
-       sessionStorage.setItem(ORIGIN_KEY,window.currentTenantId||'');
-     }
-     sessionStorage.setItem(PREVIEW_KEY,'1');
-     await selectCompanyContext(demo.id);
-     const center=document.getElementById('nbresDemoCenter');
-     if(center)center.style.display='none';
-     document.getElementById('nbresAdminPreviewCompany').textContent='• '+(demo.company_name||'NBRES Demo');
-     document.getElementById('nbresAdminPreviewBar').style.display='flex';
-     // Use the actual product screen, not a fake duplicate.
-     switchTab('tab-inventory');
-     if(typeof showToast==='function')showToast('Đang xem trải nghiệm NBRES Demo. Admin vẫn giữ nguyên phiên quản trị.','success');
-   }catch(e){
-     if(typeof showToast==='function')showToast(e.message||String(e),'error'); else alert(e.message||e);
-   }
- };
-
- window.nbresReturnToDemoCenter=async function(){
-   if(!isPlatformAdmin())return;
-   try{
-     sessionStorage.removeItem(PREVIEW_KEY);
-     const origin=sessionStorage.getItem(ORIGIN_KEY);
-     sessionStorage.removeItem(ORIGIN_KEY);
-     document.getElementById('nbresAdminPreviewBar').style.display='none';
-
-     // Restore the Admin's prior company context when possible.
-     if(origin && typeof isUuid==='function' && isUuid(origin)){
-       try{await selectCompanyContext(origin)}catch(e){console.warn('Restore context:',e)}
-     }
-     // Return to the management center without logging out.
-     if(typeof nbresOpenDemoCenter==='function')await nbresOpenDemoCenter();
-   }catch(e){
-     console.error(e);
-     if(typeof nbresOpenDemoCenter==='function')await nbresOpenDemoCenter();
-   }
- };
-
- function installPreviewAction(){
-   const head=document.querySelector('#nbresDemoCenter .dmc-head');
-   if(!head||document.getElementById('dmcPreviewBtn'))return;
-   const create=head.querySelector('.dmc-btn');
-   if(!create)return;
-   const wrap=document.createElement('div');
-   wrap.style.cssText='display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end';
-   create.parentNode.insertBefore(wrap,create);
-   wrap.appendChild(create);
-   const b=document.createElement('button');
-   b.id='dmcPreviewBtn';b.type='button';b.className='dmc-btn';
-   b.textContent='Xem trải nghiệm Demo';
-   b.onclick=window.nbresPreviewDemoAsAdmin;
-   wrap.appendChild(b);
- }
-
- function syncPreview(){
-   installPreviewAction();
-   const bar=document.getElementById('nbresAdminPreviewBar');
-   if(!bar)return;
-   const active=isPlatformAdmin()&&sessionStorage.getItem(PREVIEW_KEY)==='1';
-   bar.style.display=active?'flex':'none';
-   // Platform Admin preview must not show the client "Thoát Demo" control.
-   const clientBar=document.getElementById('nbresDemoExitBar');
-   if(clientBar&&active)clientBar.style.display='none';
- }
- document.addEventListener('DOMContentLoaded',syncPreview);
- setInterval(syncPreview,800);
-})();
-</script>
-
-
-<!-- NBRES V11.2.0 • PLATFORM OPERATIONS HUB -->
-<style>
-#nbresPlatformOpsHub{
- display:none;max-width:1500px;margin:0 auto;padding:24px;
- font-family:"Be Vietnam Pro",sans-serif;color:#1b2029
-}
-.npo-hero{
- display:flex;align-items:center;justify-content:space-between;gap:18px;
- padding:24px;border:1px solid rgba(197,163,72,.25);border-radius:18px;
- background:radial-gradient(circle at 90% 10%,rgba(197,163,72,.13),transparent 28%),
- linear-gradient(120deg,#10151d,#090c11 75%,#17130b);color:#fff;
- box-shadow:0 18px 42px rgba(8,11,16,.12)
-}
-.npo-hero h2{margin:0;font-size:22px;font-weight:850;letter-spacing:-.025em}
-.npo-hero p{margin:7px 0 0;color:#aeb6c2;font-size:11px}
-.npo-actions{display:flex;gap:8px;flex-wrap:wrap}
-.npo-btn{
- min-height:40px;border-radius:10px;border:1px solid #ded8c9;padding:9px 13px;
- background:#fff;color:#1b2029;font-size:11px;font-weight:800;cursor:pointer
-}
-.npo-btn.primary{border-color:#aa8531;background:linear-gradient(135deg,#d3b861,#a47d25);color:#0b0d11}
-.npo-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}
-.npo-stat{padding:17px;background:#fff;border:1px solid #e6e2d8;border-radius:14px}
-.npo-stat small{display:block;color:#7a818d;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.07em}
-.npo-stat strong{display:block;margin-top:7px;font-size:22px;color:#1b2029}
-.npo-panel{background:#fff;border:1px solid #e6e2d8;border-radius:16px;overflow:hidden}
-.npo-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;border-bottom:1px solid #ece9e1}
-.npo-toolbar h3{margin:0;font-size:14px}
-.npo-search{width:min(360px,100%);min-height:40px;border:1px solid #ddd9cf;border-radius:10px;padding:0 12px}
-.npo-company-list{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px;background:#faf9f6}
-.npo-company{
- background:#fff;border:1px solid #e5e1d8;border-radius:14px;padding:16px;
- transition:.15s ease;min-width:0
-}
-.npo-company:hover{border-color:#c9ae61;box-shadow:0 9px 24px rgba(10,13,18,.06);transform:translateY(-1px)}
-.npo-company-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-.npo-company h4{margin:0;font-size:13px;color:#1b2029;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.npo-company p{margin:5px 0 0;color:#858c97;font-size:9px}
-.npo-badge{padding:5px 7px;border-radius:999px;background:#f5edd6;color:#88681e;font-size:8px;font-weight:850;white-space:nowrap}
-.npo-company-actions{display:flex;gap:7px;margin-top:14px}
-.npo-company-actions button{flex:1;min-height:37px;border-radius:9px;border:1px solid #e0dcd2;background:#fff;font-size:9px;font-weight:850;cursor:pointer}
-.npo-company-actions button:first-child{background:#11161e;color:#e2c46d;border-color:#2b2f35}
-#nbresCompanySupportBar{
- position:fixed;left:50%;top:10px;transform:translateX(-50%);z-index:10020;
- display:none;align-items:center;gap:11px;max-width:calc(100vw - 26px);
- padding:8px 9px 8px 13px;border:1px solid rgba(197,163,72,.42);border-radius:999px;
- background:rgba(11,14,19,.96);color:#e9edf2;box-shadow:0 14px 38px rgba(0,0,0,.24);
- backdrop-filter:blur(16px);font:600 10px/1.25 "Be Vietnam Pro",sans-serif
-}
-#nbresCompanySupportBar strong{color:#e1c36e}
-#nbresCompanySupportBar button{min-height:34px;border:1px solid rgba(197,163,72,.45);border-radius:999px;padding:7px 12px;background:linear-gradient(135deg,#d0b45e,#a47d25);color:#090b0f;font-weight:850}
-@media(max-width:1050px){.npo-company-list{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:700px){
- #nbresPlatformOpsHub{padding:12px 9px 88px}.npo-hero{align-items:flex-start;flex-direction:column;padding:18px}
- .npo-stats{grid-template-columns:repeat(2,1fr)}.npo-company-list{grid-template-columns:1fr}
- .npo-toolbar{align-items:stretch;flex-direction:column}.npo-search{width:100%}
- #nbresCompanySupportBar{left:9px;right:9px;transform:none;border-radius:14px;justify-content:space-between}
-}
-</style>
-
-<section id="nbresPlatformOpsHub">
- <div class="npo-hero">
-  <div>
-   <h2>Trung tâm Điều hành NBRES</h2>
-   <p>Quản lý doanh nghiệp, vào không gian hỗ trợ và kiểm tra trải nghiệm khách hàng từ một nơi.</p>
-  </div>
-  <div class="npo-actions">
-   <button class="npo-btn" type="button" onclick="nbresOpenDemoCenter()">Quản lý Demo</button>
-   <button class="npo-btn primary" type="button" onclick="nbresOpsRefresh()">Làm mới dữ liệu</button>
-  </div>
- </div>
- <div class="npo-stats">
-  <div class="npo-stat"><small>Tổng doanh nghiệp</small><strong id="npoTotal">—</strong></div>
-  <div class="npo-stat"><small>Đang hoạt động</small><strong id="npoActive">—</strong></div>
-  <div class="npo-stat"><small>Demo</small><strong id="npoDemo">—</strong></div>
-  <div class="npo-stat"><small>Ngữ cảnh hiện tại</small><strong id="npoContext" style="font-size:12px">Nền tảng</strong></div>
- </div>
- <div class="npo-panel">
-  <div class="npo-toolbar">
-   <div><h3>Doanh nghiệp trên hệ thống</h3><div style="margin-top:4px;color:#858c97;font-size:9px">Chọn “Vào quản lý” để thao tác trong đúng dữ liệu và giao diện mà doanh nghiệp đang sử dụng.</div></div>
-   <input id="npoSearch" class="npo-search" type="search" placeholder="Tìm tên doanh nghiệp..." oninput="nbresRenderOpsCompanies()">
-  </div>
-  <div id="npoCompanyList" class="npo-company-list"></div>
- </div>
-</section>
-
-<div id="nbresCompanySupportBar">
- <span>Đang quản lý: <strong id="nbresSupportCompanyName">Doanh nghiệp</strong></span>
- <button type="button" onclick="nbresReturnToOperationsHub()">← Trung tâm điều hành</button>
-</div>
-
-<script>
-(function(){
- const OPS_MODE='NBRES_PLATFORM_COMPANY_SUPPORT';
- const OPS_ORIGIN='NBRES_PLATFORM_OPS_ORIGIN';
- let opsTenants=[];
-
- function platformAdmin(){
-  try{return (typeof isSuperAdmin==='function'&&isSuperAdmin()) ||
-   (window.currentUser&&(currentUser.role==='Admin Quản Lí'||currentUser.role==='platform_admin'))}catch(e){return false}
- }
- function hideTabs(){
-  document.querySelectorAll('[id^="tab-"]').forEach(el=>el.style.display='none');
-  const dc=document.getElementById('nbresDemoCenter'); if(dc)dc.style.display='none';
- }
- window.nbresOpenOperationsHub=async function(){
-  if(!platformAdmin())return;
-  sessionStorage.removeItem(OPS_MODE);
-  document.getElementById('nbresCompanySupportBar').style.display='none';
-  hideTabs();
-  const hub=document.getElementById('nbresPlatformOpsHub'); hub.style.display='block';
-  await window.nbresOpsRefresh();
-  window.scrollTo({top:0,behavior:'smooth'});
- };
- window.nbresOpsRefresh=async function(){
-  if(!platformAdmin())return;
-  try{
-   let data=[];
-   if(window.supabaseClient){
-    const r=await supabaseClient.from('tenants').select('*').order('company_name',{ascending:true});
-    if(r.error)throw r.error; data=r.data||[];
-   }else if(Array.isArray(window.tenants)) data=window.tenants;
-   opsTenants=data;
-   document.getElementById('npoTotal').textContent=data.length;
-   document.getElementById('npoDemo').textContent=data.filter(x=>/demo/i.test(String(x.company_name||''))).length;
-   document.getElementById('npoActive').textContent=data.filter(x=>x.is_active!==false).length;
-   document.getElementById('npoContext').textContent='Nền tảng';
-   window.nbresRenderOpsCompanies();
-  }catch(e){
-   document.getElementById('npoCompanyList').innerHTML='<div class="nbres-ui-state"><strong>Không tải được doanh nghiệp</strong>'+String(e.message||e)+'</div>';
-  }
- };
- window.nbresRenderOpsCompanies=function(){
-  const box=document.getElementById('npoCompanyList'); if(!box)return;
-  const q=(document.getElementById('npoSearch')?.value||'').trim().toLowerCase();
-  const arr=opsTenants.filter(t=>String(t.company_name||'').toLowerCase().includes(q));
-  if(!arr.length){box.innerHTML='<div class="nbres-ui-state"><strong>Không có kết quả</strong>Thử tên doanh nghiệp khác.</div>';return}
-  box.innerHTML=arr.map(t=>{
-   const name=String(t.company_name||'Doanh nghiệp').replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
-   const demo=/demo/i.test(name);
-   return `<article class="npo-company">
-    <div class="npo-company-top"><div style="min-width:0"><h4>${name}</h4><p>${demo?'Môi trường trải nghiệm':'Khách hàng NBRES'}</p></div><span class="npo-badge">${demo?'DEMO':'DOANH NGHIỆP'}</span></div>
-    <div class="npo-company-actions">
-     <button type="button" onclick="nbresEnterCompanySupport('${t.id}')">Vào quản lý</button>
-     ${demo?`<button type="button" onclick="nbresOpenDemoCenter()">Tài khoản Demo</button>`:''}
-    </div>
-   </article>`;
-  }).join('');
- };
- window.nbresEnterCompanySupport=async function(id){
-  if(!platformAdmin())return;
-  const t=opsTenants.find(x=>String(x.id)===String(id)); if(!t)return;
-  try{
-   sessionStorage.setItem(OPS_ORIGIN,window.currentTenantId||'');
-   sessionStorage.setItem(OPS_MODE,String(id));
-   await selectCompanyContext(id);
-   document.getElementById('nbresPlatformOpsHub').style.display='none';
-   document.getElementById('nbresSupportCompanyName').textContent=t.company_name||'Doanh nghiệp';
-   document.getElementById('nbresCompanySupportBar').style.display='flex';
-   // Platform Admin has full operational UI inside selected company context.
-   if(typeof applyRoleTaskVisibilityV10==='function')applyRoleTaskVisibilityV10();
-   switchTab('tab-inventory');
-   if(typeof showToast==='function')showToast('Đã vào không gian quản lý '+(t.company_name||''),'success');
-  }catch(e){if(typeof showToast==='function')showToast(e.message||String(e),'error');else alert(e.message||e)}
- };
- window.nbresReturnToOperationsHub=async function(){
-  if(!platformAdmin())return;
-  sessionStorage.removeItem(OPS_MODE);
-  document.getElementById('nbresCompanySupportBar').style.display='none';
-  await window.nbresOpenOperationsHub();
- };
- // Admin Demo preview now uses the same operational model.
- const oldPreview=window.nbresPreviewDemoAsAdmin;
- window.nbresPreviewDemoAsAdmin=async function(){
-  if(!platformAdmin())return;
-  try{
-   let r=await supabaseClient.from('tenants').select('*').ilike('company_name','%NBRES Demo%').limit(1);
-   if(r.error)throw r.error;if(!r.data?.length)throw new Error('Chưa tìm thấy công ty NBRES Demo.');
-   opsTenants = opsTenants.length ? opsTenants : r.data;
-   if(!opsTenants.find(x=>x.id===r.data[0].id))opsTenants.push(r.data[0]);
-   await window.nbresEnterCompanySupport(r.data[0].id);
-  }catch(e){if(typeof showToast==='function')showToast(e.message||String(e),'error')}
- };
- // Old return target now correctly returns to platform operations, not Demo Center.
- window.nbresReturnToDemoCenter=window.nbresReturnToOperationsHub;
-
- function installLauncher(){
-  if(!platformAdmin()||document.getElementById('nbresOpsLauncher'))return;
-  const b=document.createElement('button');b.id='nbresOpsLauncher';b.type='button';
-  b.textContent='Điều hành';
-  b.style.cssText='position:fixed;right:18px;top:145px;z-index:9900;min-height:38px;padding:8px 12px;border-radius:10px;border:1px solid rgba(197,163,72,.48);background:#10151d;color:#dfc371;font:800 10px "Be Vietnam Pro",sans-serif;box-shadow:0 9px 25px rgba(0,0,0,.16);cursor:pointer';
-  b.onclick=window.nbresOpenOperationsHub;document.body.appendChild(b);
- }
- document.addEventListener('DOMContentLoaded',()=>setTimeout(installLauncher,900));
- setInterval(installLauncher,1400);
-})();
-</script>
-
+</script>\n
 </body>
 </html>
