@@ -9603,5 +9603,204 @@ body.nbres-demo-mode #nbresDemoAdminLauncher{display:none!important}
 })();
 </script>
 
+
+<!-- NBRES V11.2.0 • PLATFORM OPERATIONS HUB -->
+<style>
+#nbresPlatformOpsHub{
+ display:none;max-width:1500px;margin:0 auto;padding:24px;
+ font-family:"Be Vietnam Pro",sans-serif;color:#1b2029
+}
+.npo-hero{
+ display:flex;align-items:center;justify-content:space-between;gap:18px;
+ padding:24px;border:1px solid rgba(197,163,72,.25);border-radius:18px;
+ background:radial-gradient(circle at 90% 10%,rgba(197,163,72,.13),transparent 28%),
+ linear-gradient(120deg,#10151d,#090c11 75%,#17130b);color:#fff;
+ box-shadow:0 18px 42px rgba(8,11,16,.12)
+}
+.npo-hero h2{margin:0;font-size:22px;font-weight:850;letter-spacing:-.025em}
+.npo-hero p{margin:7px 0 0;color:#aeb6c2;font-size:11px}
+.npo-actions{display:flex;gap:8px;flex-wrap:wrap}
+.npo-btn{
+ min-height:40px;border-radius:10px;border:1px solid #ded8c9;padding:9px 13px;
+ background:#fff;color:#1b2029;font-size:11px;font-weight:800;cursor:pointer
+}
+.npo-btn.primary{border-color:#aa8531;background:linear-gradient(135deg,#d3b861,#a47d25);color:#0b0d11}
+.npo-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}
+.npo-stat{padding:17px;background:#fff;border:1px solid #e6e2d8;border-radius:14px}
+.npo-stat small{display:block;color:#7a818d;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.07em}
+.npo-stat strong{display:block;margin-top:7px;font-size:22px;color:#1b2029}
+.npo-panel{background:#fff;border:1px solid #e6e2d8;border-radius:16px;overflow:hidden}
+.npo-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;border-bottom:1px solid #ece9e1}
+.npo-toolbar h3{margin:0;font-size:14px}
+.npo-search{width:min(360px,100%);min-height:40px;border:1px solid #ddd9cf;border-radius:10px;padding:0 12px}
+.npo-company-list{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px;background:#faf9f6}
+.npo-company{
+ background:#fff;border:1px solid #e5e1d8;border-radius:14px;padding:16px;
+ transition:.15s ease;min-width:0
+}
+.npo-company:hover{border-color:#c9ae61;box-shadow:0 9px 24px rgba(10,13,18,.06);transform:translateY(-1px)}
+.npo-company-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.npo-company h4{margin:0;font-size:13px;color:#1b2029;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.npo-company p{margin:5px 0 0;color:#858c97;font-size:9px}
+.npo-badge{padding:5px 7px;border-radius:999px;background:#f5edd6;color:#88681e;font-size:8px;font-weight:850;white-space:nowrap}
+.npo-company-actions{display:flex;gap:7px;margin-top:14px}
+.npo-company-actions button{flex:1;min-height:37px;border-radius:9px;border:1px solid #e0dcd2;background:#fff;font-size:9px;font-weight:850;cursor:pointer}
+.npo-company-actions button:first-child{background:#11161e;color:#e2c46d;border-color:#2b2f35}
+#nbresCompanySupportBar{
+ position:fixed;left:50%;top:10px;transform:translateX(-50%);z-index:10020;
+ display:none;align-items:center;gap:11px;max-width:calc(100vw - 26px);
+ padding:8px 9px 8px 13px;border:1px solid rgba(197,163,72,.42);border-radius:999px;
+ background:rgba(11,14,19,.96);color:#e9edf2;box-shadow:0 14px 38px rgba(0,0,0,.24);
+ backdrop-filter:blur(16px);font:600 10px/1.25 "Be Vietnam Pro",sans-serif
+}
+#nbresCompanySupportBar strong{color:#e1c36e}
+#nbresCompanySupportBar button{min-height:34px;border:1px solid rgba(197,163,72,.45);border-radius:999px;padding:7px 12px;background:linear-gradient(135deg,#d0b45e,#a47d25);color:#090b0f;font-weight:850}
+@media(max-width:1050px){.npo-company-list{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){
+ #nbresPlatformOpsHub{padding:12px 9px 88px}.npo-hero{align-items:flex-start;flex-direction:column;padding:18px}
+ .npo-stats{grid-template-columns:repeat(2,1fr)}.npo-company-list{grid-template-columns:1fr}
+ .npo-toolbar{align-items:stretch;flex-direction:column}.npo-search{width:100%}
+ #nbresCompanySupportBar{left:9px;right:9px;transform:none;border-radius:14px;justify-content:space-between}
+}
+</style>
+
+<section id="nbresPlatformOpsHub">
+ <div class="npo-hero">
+  <div>
+   <h2>Trung tâm Điều hành NBRES</h2>
+   <p>Quản lý doanh nghiệp, vào không gian hỗ trợ và kiểm tra trải nghiệm khách hàng từ một nơi.</p>
+  </div>
+  <div class="npo-actions">
+   <button class="npo-btn" type="button" onclick="nbresOpenDemoCenter()">Quản lý Demo</button>
+   <button class="npo-btn primary" type="button" onclick="nbresOpsRefresh()">Làm mới dữ liệu</button>
+  </div>
+ </div>
+ <div class="npo-stats">
+  <div class="npo-stat"><small>Tổng doanh nghiệp</small><strong id="npoTotal">—</strong></div>
+  <div class="npo-stat"><small>Đang hoạt động</small><strong id="npoActive">—</strong></div>
+  <div class="npo-stat"><small>Demo</small><strong id="npoDemo">—</strong></div>
+  <div class="npo-stat"><small>Ngữ cảnh hiện tại</small><strong id="npoContext" style="font-size:12px">Nền tảng</strong></div>
+ </div>
+ <div class="npo-panel">
+  <div class="npo-toolbar">
+   <div><h3>Doanh nghiệp trên hệ thống</h3><div style="margin-top:4px;color:#858c97;font-size:9px">Chọn “Vào quản lý” để thao tác trong đúng dữ liệu và giao diện mà doanh nghiệp đang sử dụng.</div></div>
+   <input id="npoSearch" class="npo-search" type="search" placeholder="Tìm tên doanh nghiệp..." oninput="nbresRenderOpsCompanies()">
+  </div>
+  <div id="npoCompanyList" class="npo-company-list"></div>
+ </div>
+</section>
+
+<div id="nbresCompanySupportBar">
+ <span>Đang quản lý: <strong id="nbresSupportCompanyName">Doanh nghiệp</strong></span>
+ <button type="button" onclick="nbresReturnToOperationsHub()">← Trung tâm điều hành</button>
+</div>
+
+<script>
+(function(){
+ const OPS_MODE='NBRES_PLATFORM_COMPANY_SUPPORT';
+ const OPS_ORIGIN='NBRES_PLATFORM_OPS_ORIGIN';
+ let opsTenants=[];
+
+ function platformAdmin(){
+  try{return (typeof isSuperAdmin==='function'&&isSuperAdmin()) ||
+   (window.currentUser&&(currentUser.role==='Admin Quản Lí'||currentUser.role==='platform_admin'))}catch(e){return false}
+ }
+ function hideTabs(){
+  document.querySelectorAll('[id^="tab-"]').forEach(el=>el.style.display='none');
+  const dc=document.getElementById('nbresDemoCenter'); if(dc)dc.style.display='none';
+ }
+ window.nbresOpenOperationsHub=async function(){
+  if(!platformAdmin())return;
+  sessionStorage.removeItem(OPS_MODE);
+  document.getElementById('nbresCompanySupportBar').style.display='none';
+  hideTabs();
+  const hub=document.getElementById('nbresPlatformOpsHub'); hub.style.display='block';
+  await window.nbresOpsRefresh();
+  window.scrollTo({top:0,behavior:'smooth'});
+ };
+ window.nbresOpsRefresh=async function(){
+  if(!platformAdmin())return;
+  try{
+   let data=[];
+   if(window.supabaseClient){
+    const r=await supabaseClient.from('tenants').select('*').order('company_name',{ascending:true});
+    if(r.error)throw r.error; data=r.data||[];
+   }else if(Array.isArray(window.tenants)) data=window.tenants;
+   opsTenants=data;
+   document.getElementById('npoTotal').textContent=data.length;
+   document.getElementById('npoDemo').textContent=data.filter(x=>/demo/i.test(String(x.company_name||''))).length;
+   document.getElementById('npoActive').textContent=data.filter(x=>x.is_active!==false).length;
+   document.getElementById('npoContext').textContent='Nền tảng';
+   window.nbresRenderOpsCompanies();
+  }catch(e){
+   document.getElementById('npoCompanyList').innerHTML='<div class="nbres-ui-state"><strong>Không tải được doanh nghiệp</strong>'+String(e.message||e)+'</div>';
+  }
+ };
+ window.nbresRenderOpsCompanies=function(){
+  const box=document.getElementById('npoCompanyList'); if(!box)return;
+  const q=(document.getElementById('npoSearch')?.value||'').trim().toLowerCase();
+  const arr=opsTenants.filter(t=>String(t.company_name||'').toLowerCase().includes(q));
+  if(!arr.length){box.innerHTML='<div class="nbres-ui-state"><strong>Không có kết quả</strong>Thử tên doanh nghiệp khác.</div>';return}
+  box.innerHTML=arr.map(t=>{
+   const name=String(t.company_name||'Doanh nghiệp').replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+   const demo=/demo/i.test(name);
+   return `<article class="npo-company">
+    <div class="npo-company-top"><div style="min-width:0"><h4>${name}</h4><p>${demo?'Môi trường trải nghiệm':'Khách hàng NBRES'}</p></div><span class="npo-badge">${demo?'DEMO':'DOANH NGHIỆP'}</span></div>
+    <div class="npo-company-actions">
+     <button type="button" onclick="nbresEnterCompanySupport('${t.id}')">Vào quản lý</button>
+     ${demo?`<button type="button" onclick="nbresOpenDemoCenter()">Tài khoản Demo</button>`:''}
+    </div>
+   </article>`;
+  }).join('');
+ };
+ window.nbresEnterCompanySupport=async function(id){
+  if(!platformAdmin())return;
+  const t=opsTenants.find(x=>String(x.id)===String(id)); if(!t)return;
+  try{
+   sessionStorage.setItem(OPS_ORIGIN,window.currentTenantId||'');
+   sessionStorage.setItem(OPS_MODE,String(id));
+   await selectCompanyContext(id);
+   document.getElementById('nbresPlatformOpsHub').style.display='none';
+   document.getElementById('nbresSupportCompanyName').textContent=t.company_name||'Doanh nghiệp';
+   document.getElementById('nbresCompanySupportBar').style.display='flex';
+   // Platform Admin has full operational UI inside selected company context.
+   if(typeof applyRoleTaskVisibilityV10==='function')applyRoleTaskVisibilityV10();
+   switchTab('tab-inventory');
+   if(typeof showToast==='function')showToast('Đã vào không gian quản lý '+(t.company_name||''),'success');
+  }catch(e){if(typeof showToast==='function')showToast(e.message||String(e),'error');else alert(e.message||e)}
+ };
+ window.nbresReturnToOperationsHub=async function(){
+  if(!platformAdmin())return;
+  sessionStorage.removeItem(OPS_MODE);
+  document.getElementById('nbresCompanySupportBar').style.display='none';
+  await window.nbresOpenOperationsHub();
+ };
+ // Admin Demo preview now uses the same operational model.
+ const oldPreview=window.nbresPreviewDemoAsAdmin;
+ window.nbresPreviewDemoAsAdmin=async function(){
+  if(!platformAdmin())return;
+  try{
+   let r=await supabaseClient.from('tenants').select('*').ilike('company_name','%NBRES Demo%').limit(1);
+   if(r.error)throw r.error;if(!r.data?.length)throw new Error('Chưa tìm thấy công ty NBRES Demo.');
+   opsTenants = opsTenants.length ? opsTenants : r.data;
+   if(!opsTenants.find(x=>x.id===r.data[0].id))opsTenants.push(r.data[0]);
+   await window.nbresEnterCompanySupport(r.data[0].id);
+  }catch(e){if(typeof showToast==='function')showToast(e.message||String(e),'error')}
+ };
+ // Old return target now correctly returns to platform operations, not Demo Center.
+ window.nbresReturnToDemoCenter=window.nbresReturnToOperationsHub;
+
+ function installLauncher(){
+  if(!platformAdmin()||document.getElementById('nbresOpsLauncher'))return;
+  const b=document.createElement('button');b.id='nbresOpsLauncher';b.type='button';
+  b.textContent='Điều hành';
+  b.style.cssText='position:fixed;right:18px;top:145px;z-index:9900;min-height:38px;padding:8px 12px;border-radius:10px;border:1px solid rgba(197,163,72,.48);background:#10151d;color:#dfc371;font:800 10px "Be Vietnam Pro",sans-serif;box-shadow:0 9px 25px rgba(0,0,0,.16);cursor:pointer';
+  b.onclick=window.nbresOpenOperationsHub;document.body.appendChild(b);
+ }
+ document.addEventListener('DOMContentLoaded',()=>setTimeout(installLauncher,900));
+ setInterval(installLauncher,1400);
+})();
+</script>
+
 </body>
 </html>
