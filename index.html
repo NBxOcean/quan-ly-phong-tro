@@ -8541,5 +8541,82 @@ if ('serviceWorker' in navigator) {
 })();
 </script>
 
+
+<!-- NBRES V10.4.0 • DEMO MODE -->
+<style>
+#nbresDemoBadge{position:fixed;right:18px;bottom:18px;z-index:9998;background:#17130b;color:#d7bb67;border:1px solid #806822;border-radius:12px;padding:10px 13px;font:700 11px/1.35 "Be Vietnam Pro",sans-serif;box-shadow:0 12px 35px #0003;display:none}
+#nbresDemoExpired{position:fixed;inset:0;z-index:10000;background:rgba(7,9,13,.94);display:none;align-items:center;justify-content:center;padding:22px;font-family:"Be Vietnam Pro",sans-serif}
+#nbresDemoExpired .box{width:min(520px,100%);background:#10151d;border:1px solid #6f5a24;border-radius:20px;padding:34px;text-align:center;color:#f5f6f8}
+#nbresDemoExpired h2{margin:8px 0 10px;font-size:25px}#nbresDemoExpired p{color:#9da7b7;line-height:1.7;font-size:13px}
+#nbresDemoExpired button{margin-top:10px;border:0;border-radius:10px;padding:12px 18px;background:linear-gradient(135deg,#d0b45e,#a47d25);font-weight:800;cursor:pointer}
+body.nbres-demo-mode [data-demo-blocked="1"]{display:none!important}
+</style>
+<div id="nbresDemoBadge">NBRES DEMO<br><span id="nbresDemoTime" style="font-weight:500;color:#a99a70"></span></div>
+<div id="nbresDemoExpired"><div class="box"><div style="color:#c7a64d;font-size:11px;letter-spacing:1.5px;font-weight:800">NBRES TRIAL</div><h2>Thời gian trải nghiệm đã kết thúc</h2><p>Tài khoản Demo này đã hết thời hạn sử dụng. Vui lòng liên hệ NBRES để gia hạn hoặc kích hoạt doanh nghiệp chính thức.</p><button type="button" onclick="location.reload()">Quay lại đăng nhập</button></div></div>
+<script>
+/* Demo account contract:
+   profile.is_demo = true
+   profile.demo_expires_at = timestamptz
+*/
+(function(){
+  window.NBRES_DEMO_ALLOWED_TABS = new Set([
+    'tab-dashboard','tab-company-dashboard','tab-inventory','tab-poster',
+    'tab-crm','tab-appointments','tab-leads','tab-notifications'
+  ]);
+
+  window.nbresIsDemoUser = function(){
+    return !!(window.currentUser && (currentUser.is_demo === true || currentUser.is_demo === 'true'));
+  };
+
+  window.nbresDemoExpired = function(){
+    if(!window.nbresIsDemoUser()) return false;
+    const raw = currentUser.demo_expires_at;
+    return !raw || new Date(raw).getTime() <= Date.now();
+  };
+
+  window.nbresApplyDemoMode = function(){
+    const badge=document.getElementById('nbresDemoBadge');
+    const expired=document.getElementById('nbresDemoExpired');
+    if(!window.nbresIsDemoUser()){
+      document.body.classList.remove('nbres-demo-mode');
+      if(badge) badge.style.display='none';
+      if(expired) expired.style.display='none';
+      return;
+    }
+    document.body.classList.add('nbres-demo-mode');
+    if(badge) badge.style.display='block';
+    const time=document.getElementById('nbresDemoTime');
+    if(time && currentUser.demo_expires_at){
+      time.textContent='Hết hạn: '+new Date(currentUser.demo_expires_at).toLocaleString('vi-VN');
+    }
+    if(window.nbresDemoExpired()){
+      if(expired) expired.style.display='flex';
+    }
+  };
+
+  // Extra client-side UX guard. RLS/SQL remains the actual security boundary.
+  const oldSwitch = window.switchTab;
+  if(typeof oldSwitch === 'function'){
+    window.switchTab = function(tabId){
+      if(window.nbresIsDemoUser()){
+        if(window.nbresDemoExpired()){
+          window.nbresApplyDemoMode(); return;
+        }
+        if(!window.NBRES_DEMO_ALLOWED_TABS.has(tabId)){
+          if(typeof showToast==='function') showToast('Tài khoản Demo không có quyền truy cập mục này.');
+          return;
+        }
+      }
+      return oldSwitch.apply(this, arguments);
+    };
+  }
+
+  // Re-apply after auth/profile state changes without coupling to app internals.
+  setInterval(function(){
+    if(window.currentUser) window.nbresApplyDemoMode();
+  },1500);
+})();
+</script>
+
 </body>
 </html>
