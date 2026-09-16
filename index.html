@@ -51,7 +51,7 @@
 <title>NBRES V11.3 - PropTech Admin UX • Demo</title>
     <!-- Tailwind CSS & FontAwesome Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link id="nbresFontAwesome" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css'">
     
     <!-- Supabase JS Client Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1437,6 +1437,233 @@ body{padding-bottom:0!important;background:var(--v113-bg)!important}
 @media(prefers-reduced-motion:reduce){.tab-content:not(.hidden){animation:none}}
 </style>
 
+
+<style id="nbres-v11-4-mobile-master">
+/* ============================================================
+   NBRES V11.4 • MOBILE MASTER UX
+   Mobile-first operating shell. Desktop behavior is untouched.
+   ============================================================ */
+:root{
+  --nbm-nav-h:72px;
+  --nbm-safe-b:env(safe-area-inset-bottom,0px);
+  --nbm-safe-t:env(safe-area-inset-top,0px);
+  --nbm-cyan:#22d3ee;
+  --nbm-blue:#2563eb;
+  --nbm-ink:#0b1422;
+}
+#nbresMobileBottomNavV114,#nbresMobileMenuBackdropV114,.nbres-mobile-filter-trigger{display:none}
+
+@media(max-width:768px){
+  html{overflow-x:hidden;background:#f4f7fb}
+  body{overflow-x:hidden!important;background:#f4f7fb!important;padding-bottom:calc(var(--nbm-nav-h) + var(--nbm-safe-b) + 8px)!important}
+  body.modal-open{overflow:hidden!important}
+  #mainApp{min-height:100svh!important;background:#f4f7fb!important}
+
+  /* Compact one-row app bar */
+  #mainApp>header{
+    min-height:60px!important;top:0!important;z-index:70!important;
+    padding-top:var(--nbm-safe-t);background:rgba(5,13,23,.975)!important;
+    -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)
+  }
+  body[data-nbres-demo="true"] #mainApp>header{top:36px!important}
+  #mainApp>header>div{
+    min-height:60px!important;padding:8px 10px!important;
+    display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;
+    align-items:center!important;gap:8px!important;flex-wrap:nowrap!important
+  }
+  #mainApp>header>div>div:first-child{min-width:0!important;gap:8px!important;margin:0!important}
+  .nbres-logo-header{width:38px!important;height:38px!important;border-radius:11px!important}
+  #mainApp header h1{font-size:13px!important;line-height:1.15!important;gap:5px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #mainApp header h1 #roleBadgeHeader{font-size:7px!important;line-height:1!important;padding:3px 5px!important;max-width:84px;overflow:hidden;text-overflow:ellipsis}
+  #mainApp header h1 + p{font-size:8.5px!important;line-height:1.3!important;margin-top:3px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:210px}
+  #mainApp>header>div>div:last-child{width:auto!important;min-width:0!important;gap:6px!important;flex-wrap:nowrap!important;justify-content:flex-end!important}
+  #taskMenuButton{width:40px!important;height:40px!important;min-height:40px!important;padding:0!important;border-radius:12px!important;justify-content:center!important;gap:0!important}
+  #taskMenuButton #taskMenuCurrentLabel,#taskMenuButton #taskMenuChevron,#taskMenuButton>span{display:none!important}
+  #taskMenuButton>i:first-child{font-size:15px!important}
+  #nbresUserChipV114{height:40px!important;min-height:40px!important;padding:4px 5px!important;gap:3px!important;border-radius:12px!important}
+  #nbresUserChipV114>div:first-child{width:30px!important;height:30px!important;font-size:11px!important;flex:0 0 30px}
+  #nbresUserChipV114>div.hidden{display:none!important}
+  #nbresUserChipV114 button{width:30px!important;height:30px!important;min-height:30px!important;padding:0!important;margin:0!important;display:grid!important;place-items:center!important}
+
+  /* Demo banner participates in sticky stack instead of overlapping header */
+  .v11-demo-banner{min-height:36px!important;padding:6px 8px!important;font-size:8.5px!important;line-height:1.3!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;flex-wrap:nowrap!important;white-space:nowrap;overflow:hidden}
+  .v11-demo-banner.hidden{display:none!important}
+  .v11-demo-banner button{margin-left:0!important;min-height:26px!important;padding:4px 7px!important;flex:0 0 auto}
+
+  /* Workspace */
+  .nbres-app-body{display:block!important;max-width:none!important;min-height:auto!important}
+  .nbres-workspace{width:100%!important;min-width:0!important;padding:0 0 86px!important}
+  .nbres-workspace>main{width:100%!important;min-height:auto!important;padding:10px 10px 104px!important;margin:0!important}
+  #actionBackBar,#appointmentQuickAccess{padding-left:10px!important;padding-right:10px!important;padding-top:8px!important}
+  #actionBackBar button{min-height:36px!important;padding:7px 10px!important;border-radius:11px!important;font-size:11px!important}
+  #appointmentQuickAccess button{min-height:52px!important;padding:9px 12px!important;border-radius:14px!important}
+  #appointmentQuickAccess .w-9.h-9{width:32px!important;height:32px!important;border-radius:10px!important}
+  #appointmentQuickAccess .text-sm{font-size:12px!important}
+  .tab-content{gap:10px!important;row-gap:10px!important}
+  .tab-content.space-y-6>:not([hidden])~:not([hidden]){margin-top:10px!important}
+  .tab-content .rounded-2xl{border-radius:14px!important}
+  .tab-content .rounded-3xl{border-radius:18px!important}
+  .tab-content>.bg-white,.tab-content>section.bg-white{padding:12px!important;box-shadow:0 5px 18px rgba(15,23,42,.045)!important}
+  .tab-content h2{font-size:14px!important;line-height:1.35!important}
+  .tab-content h3{line-height:1.4!important}
+  .tab-content p{line-height:1.55!important}
+
+  /* Inventory: thumb-friendly primary workflow */
+  #tab-inventory>div:first-child{padding:12px!important;gap:10px!important}
+  #tab-inventory>div:first-child>div:first-child{width:100%!important;min-width:0}
+  #tab-inventory>div:first-child p{font-size:10px!important;margin-top:3px!important}
+  .nbres-mobile-filter-trigger{
+    display:flex!important;align-items:center;justify-content:center;gap:7px;
+    width:100%;min-height:43px;padding:0 12px;border:1px solid #d9e2ec;border-radius:12px;
+    background:#fff;color:#334155;font-size:12px;font-weight:800;box-shadow:0 3px 10px rgba(15,23,42,.035)
+  }
+  .nbres-mobile-filter-trigger[aria-expanded="true"]{border-color:rgba(34,211,238,.5);background:#ecfeff;color:#0e7490}
+  .nbres-mobile-filter-count{min-width:19px;height:19px;border-radius:999px;background:#0891b2;color:#fff;display:inline-grid;place-items:center;font-size:9px;padding:0 5px}
+  .nbres-mobile-filter-count.hidden{display:none!important}
+  #adminAddRoomBtn{width:100%!important;min-height:43px!important;justify-content:center!important;margin:0!important;border-radius:12px!important}
+  #inventoryFiltersV114{display:none!important;padding:12px!important;border-radius:14px!important}
+  #inventoryFiltersV114.is-open{display:block!important;animation:nbmFilterIn .16s ease-out}
+  @keyframes nbmFilterIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  #inventoryFiltersV114>div:first-child{margin-bottom:10px!important}
+  #inventoryFiltersV114 .grid{gap:8px!important}
+  #inventoryFiltersV114 input,#inventoryFiltersV114 select{min-height:44px!important;border-radius:11px!important;background:#f8fafc!important}
+  #adminDataControls{width:100%!important;display:flex;flex-wrap:nowrap!important;overflow-x:auto!important;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:3px}
+  #adminDataControls.hidden{display:none!important}
+  #adminDataControls::-webkit-scrollbar{display:none}
+  #adminDataControls button{flex:0 0 auto!important;white-space:nowrap!important;min-height:38px!important;padding:8px 10px!important;border-radius:10px!important}
+  #roomList{gap:10px!important}
+  #roomList>.col-span-full{border-radius:14px!important;box-shadow:0 4px 16px rgba(15,23,42,.045)!important}
+  #roomList>.col-span-full>button{padding:11px!important}
+  #roomList h3{font-size:13px!important;white-space:normal!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  #roomList .w-9.h-9{width:34px!important;height:34px!important;border-radius:10px!important}
+  #roomList .w-20.h-20{width:70px!important;height:70px!important;border-radius:11px!important}
+  #roomList .bg-white.rounded-xl.border{padding:10px!important;gap:9px!important;border-radius:12px!important}
+  #roomList .text-orange-600.font-extrabold{font-size:12px!important}
+  #roomList .flex.flex-wrap.gap-1\.5.mt-2{gap:5px!important}
+  #roomList .flex.flex-wrap.gap-1\.5.mt-2 button{min-height:34px!important;padding:6px 9px!important;border-radius:9px!important;font-size:10px!important}
+  #roomPagination{
+    position:sticky!important;bottom:calc(var(--nbm-nav-h) + var(--nbm-safe-b) + 8px)!important;z-index:28;
+    margin:12px 0 0!important;padding:7px!important;gap:6px!important;border:1px solid #dfe7ef;
+    border-radius:14px;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);box-shadow:0 10px 28px rgba(15,23,42,.11)
+  }
+  #roomPagination button{flex:1 1 0;min-width:0!important;min-height:39px!important;padding:7px 8px!important;border-radius:10px!important;font-size:10px!important;white-space:nowrap}
+  #pageInfo{flex:0 0 auto;font-size:10px!important;white-space:nowrap}
+
+  /* Forms: one column where two-column entry is cramped */
+  form .grid.grid-cols-2,[id$="Modal"] .grid.grid-cols-2,[id$="Modal"] .grid.grid-cols-3{grid-template-columns:1fr!important}
+  form .grid{gap:9px!important}
+  input,select,textarea{font-size:16px!important;max-width:100%!important}
+  textarea{line-height:1.5!important}
+  label{line-height:1.35!important}
+
+  /* Tables scroll naturally instead of crushing columns */
+  .tab-content .overflow-x-auto{margin-left:-2px;margin-right:-2px;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+  #tab-users table{min-width:760px!important}
+  table th,table td{padding-top:10px!important;padding-bottom:10px!important}
+
+  /* Bottom-sheet modals */
+  [id$="Modal"]{align-items:flex-end!important;padding:0!important}
+  [id$="Modal"]>div{
+    width:100%!important;max-width:100%!important;max-height:calc(100dvh - var(--nbm-safe-t) - 8px)!important;
+    border-radius:22px 22px 0 0!important;margin:0!important;padding-bottom:var(--nbm-safe-b)!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch
+  }
+  [id$="Modal"]>div>.sticky.top-0,[id$="Modal"]>div>div:first-child{border-top-left-radius:22px;border-top-right-radius:22px}
+  #imageViewerModal{align-items:center!important}
+  #imageViewerModal>div{border-radius:0!important;max-height:100dvh!important;padding-bottom:0!important}
+
+  /* Toast / utilities above bottom navigation */
+  #toast{left:10px!important;right:10px!important;bottom:calc(var(--nbm-nav-h) + var(--nbm-safe-b) + 12px)!important;max-width:none!important;width:auto!important;border-radius:13px!important;font-size:11px!important;padding:10px 12px!important}
+  #mobileBackTop{right:12px!important;bottom:calc(var(--nbm-nav-h) + var(--nbm-safe-b) + 14px)!important;width:40px!important;height:40px!important}
+  .nbres-workspace-error{margin:8px 10px 0!important;padding:10px!important;border-radius:12px!important;gap:8px!important}
+  .nbres-error-retry{margin-left:0!important;width:100%!important;min-height:38px!important}
+
+  /* Mobile task drawer = bottom sheet */
+  #taskMenuPanel{
+    position:fixed!important;left:8px!important;right:8px!important;top:auto!important;
+    bottom:calc(var(--nbm-nav-h) + var(--nbm-safe-b) + 8px)!important;width:auto!important;
+    max-height:min(72dvh,590px)!important;border-radius:20px!important;z-index:92!important;
+    box-shadow:0 28px 80px rgba(2,8,23,.55)!important;transform-origin:bottom center
+  }
+  #taskMenuPanel:not(.hidden){animation:nbmSheetIn .2s cubic-bezier(.16,1,.3,1)!important}
+  @keyframes nbmSheetIn{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:none}}
+  #taskMenuPanel>div:first-child{padding:12px 13px!important}
+  #taskMenuPanel .task-menu-item{min-height:54px!important;padding:9px 10px!important;border-radius:12px!important}
+  #taskMenuPanel .task-menu-item .w-9.h-9{width:34px!important;height:34px!important;border-radius:10px!important}
+  #nbresMobileMenuBackdropV114{
+    display:none;position:fixed;inset:0;z-index:85;background:rgba(2,8,23,.48);backdrop-filter:blur(2px)
+  }
+  #nbresMobileMenuBackdropV114.is-open{display:block}
+
+  /* Fixed bottom navigation for the four most-used mobile workflows */
+  #nbresMobileBottomNavV114{
+    position:fixed;z-index:88;left:8px;right:8px;bottom:calc(8px + var(--nbm-safe-b));height:64px;
+    display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;padding:5px;
+    border:1px solid rgba(148,163,184,.2);border-radius:20px;background:rgba(5,14,24,.955);
+    -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 16px 45px rgba(2,8,23,.28)
+  }
+  .nbm-nav-btn{
+    position:relative;min-width:0!important;min-height:52px!important;border:0!important;border-radius:14px!important;background:transparent!important;
+    color:#7f91a7!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;
+    padding:3px!important;font-size:9px!important;font-weight:700!important;line-height:1!important
+  }
+  .nbm-nav-btn i{font-size:16px!important;line-height:1!important}
+  .nbm-nav-btn span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .nbm-nav-btn.active{color:#e6fbff!important;background:linear-gradient(180deg,rgba(34,211,238,.16),rgba(37,99,235,.10))!important;box-shadow:inset 0 0 0 1px rgba(34,211,238,.14)}
+  .nbm-nav-btn.active i{color:#67e8f9!important;filter:drop-shadow(0 0 8px rgba(34,211,238,.28))}
+  .nbm-nav-dot{position:absolute;top:5px;right:calc(50% - 17px);width:5px;height:5px;border-radius:50%;background:#22d3ee;box-shadow:0 0 8px #22d3ee;opacity:0}
+  .nbm-nav-btn.active .nbm-nav-dot{opacity:1}
+
+  /* Better touch behavior */
+  #mainApp button,#mainApp a{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+  #mainApp button:active{transform:scale(.985)}
+  #mainApp img{max-width:100%}
+}
+
+@media(max-width:420px){
+  #mainApp header h1 #roleBadgeHeader{display:none!important}
+  #mainApp header h1 + p{max-width:170px}
+  .tab-content>.bg-white,.tab-content>section.bg-white{padding:11px!important}
+  #roomList .w-20.h-20{width:64px!important;height:64px!important}
+  .nbm-nav-btn{font-size:8px!important}
+  .nbm-nav-btn i{font-size:15px!important}
+}
+
+@media(max-width:350px){
+  #mainApp header h1 + p{display:none!important}
+  #mainApp>header>div{padding-left:8px!important;padding-right:8px!important}
+  #nbresMobileBottomNavV114{left:5px;right:5px;bottom:calc(5px + var(--nbm-safe-b));border-radius:17px}
+  .nbm-nav-btn span{font-size:7.5px}
+}
+
+@media(max-height:520px) and (orientation:landscape) and (max-width:950px){
+  #nbresMobileBottomNavV114{height:52px;grid-template-columns:repeat(5,1fr)}
+  .nbm-nav-btn{min-height:42px!important;flex-direction:row!important;font-size:8px!important}
+  .nbm-nav-btn i{font-size:13px!important}
+  :root{--nbm-nav-h:60px}
+  #taskMenuPanel{max-height:68dvh!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  #taskMenuPanel:not(.hidden),#inventoryFiltersV114.is-open{animation:none!important}
+}
+</style>
+
+
+<style id="nbres-icon-resilience-v1141">
+/* NBRES V11.4.1 • ICON RESILIENCE
+   Inline SVG layer removes hard dependency on icon fonts/CDNs. */
+i.nbres-inline-icon{
+  display:inline-flex!important;align-items:center;justify-content:center;
+  width:1em;height:1em;line-height:1;vertical-align:-.125em;
+  font-style:normal!important;flex:0 0 auto;
+}
+i.nbres-inline-icon::before{content:none!important;display:none!important}
+i.nbres-inline-icon>svg{display:block;width:1em;height:1em;overflow:visible}
+i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
+@keyframes nbresIconSpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){i.nbres-inline-icon.fa-spin>svg{animation:none}}
+</style>
+
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 min-h-screen pb-12 antialiased">
 
@@ -1489,7 +1716,7 @@ body{padding-bottom:0!important;background:var(--v113-bg)!important}
               </div>
               <div class="pt-field">
                 <label for="loginPassword">Mật khẩu bảo mật</label>
-                <div class="pt-input"><i class="fa-solid fa-shield-halved"></i><input type="password" id="loginPassword" autocomplete="current-password" required placeholder="••••••••••••"><button class="pt-eye" type="button" onclick="togglePasswordVisibility('loginPassword','eyeIcon')" aria-label="Hiện hoặc ẩn mật khẩu"><i class="fa-regular fa-eye"></i></button></div>
+                <div class="pt-input"><i class="fa-solid fa-shield-halved"></i><input type="password" id="loginPassword" autocomplete="current-password" required placeholder="••••••••••••"><button class="pt-eye" type="button" onclick="togglePasswordVisibility('loginPassword','eyeIcon')" aria-label="Hiện hoặc ẩn mật khẩu"><i id="eyeIcon" class="fa-regular fa-eye"></i></button></div>
               </div>
               <div class="pt-options"><label><input type="checkbox" id="rememberMe" checked> Duy trì phiên đăng nhập</label><a onclick="showToast('Vui lòng liên hệ Admin để được hỗ trợ đặt lại mật khẩu.','error')">Khôi phục truy cập?</a></div>
               <button id="loginSubmitBtn" type="submit" class="pt-login-btn"><span>Truy cập hệ thống</span><i class="fa-solid fa-arrow-right-long"></i></button>
@@ -1625,7 +1852,7 @@ body{padding-bottom:0!important;background:var(--v113-bg)!important}
                     </div>
 
 
-                    <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-2xl border border-slate-700">
+                    <div id="nbresUserChipV114" class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-2xl border border-slate-700">
                         <div class="w-7 h-7 rounded-full bg-gradient-to-r from-orange-400 to-amber-400 text-slate-900 font-bold flex items-center justify-center text-xs">
                             <svg class="nb-auth-svg" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
@@ -1699,12 +1926,16 @@ body{padding-bottom:0!important;background:var(--v113-bg)!important}
                         <p class="text-xs text-slate-500">Xem nhanh phòng trống, hình ảnh và sao chép thông tin gửi khách</p>
                     </div>
                     
+                    <button id="mobileFilterToggleV114" type="button" onclick="toggleMobileInventoryFiltersV114()" class="nbres-mobile-filter-trigger" aria-expanded="false">
+                        <i class="fa-solid fa-sliders"></i><span>Bộ lọc</span><span id="mobileFilterCountV114" class="nbres-mobile-filter-count hidden">0</span>
+                    </button>
+
                     <button id="adminAddRoomBtn" onclick="openModal()" class="hidden bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold px-4 py-2 rounded-xl transition shadow flex items-center gap-2 text-sm">
                         <i class="fa-solid fa-plus"></i> Thêm Phòng Mới
                     </button>
                 </div>
 
-                <section class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+                <section id="inventoryFiltersV114" class="nbres-mobile-filter-panel bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
                     <div class="flex items-center justify-between mb-3">
                         <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider flex items-center gap-2">
                             <i class="fa-solid fa-filter text-orange-500"></i> Bộ Lọc Tìm Kiếm Nhanh
@@ -2340,6 +2571,25 @@ body{padding-bottom:0!important;background:var(--v113-bg)!important}
         </main>
             </div><!-- /.nbres-workspace -->
         </div><!-- /.nbres-app-body -->
+
+        <div id="nbresMobileMenuBackdropV114" aria-hidden="true" onclick="closeTaskMenu()"></div>
+        <nav id="nbresMobileBottomNavV114" aria-label="Điều hướng nhanh trên điện thoại">
+            <button type="button" class="nbm-nav-btn" data-mobile-nav="home" onclick="mobileGoDashboardV114()" aria-label="Tổng quan">
+                <span class="nbm-nav-dot"></span><i class="fa-solid fa-house"></i><span>Tổng quan</span>
+            </button>
+            <button type="button" class="nbm-nav-btn" data-mobile-nav="inventory" onclick="switchTab('tab-inventory')" aria-label="Kho phòng">
+                <span class="nbm-nav-dot"></span><i class="fa-solid fa-building"></i><span>Kho phòng</span>
+            </button>
+            <button type="button" class="nbm-nav-btn" data-mobile-nav="leads" onclick="switchTab('tab-leads')" aria-label="Khách hàng">
+                <span class="nbm-nav-dot"></span><i class="fa-solid fa-user-group"></i><span>Khách hàng</span>
+            </button>
+            <button type="button" class="nbm-nav-btn" data-mobile-nav="appointments" onclick="switchTab('tab-appointments')" aria-label="Lịch xem">
+                <span class="nbm-nav-dot"></span><i class="fa-solid fa-calendar-check"></i><span>Lịch xem</span>
+            </button>
+            <button type="button" class="nbm-nav-btn" data-mobile-nav="more" onclick="toggleTaskMenu()" aria-label="Mở tất cả tác vụ">
+                <span class="nbm-nav-dot"></span><i class="fa-solid fa-grip"></i><span>Thêm</span>
+            </button>
+        </nav>
     </div><!-- /#mainApp -->
 
 
@@ -4494,6 +4744,7 @@ body{padding-bottom:0!important;background:var(--v113-bg)!important}
         function togglePasswordVisibility(inputId, iconId) {
             const pwdInput = document.getElementById(inputId);
             const eyeIcon = document.getElementById(iconId);
+            if (!pwdInput || !eyeIcon) return;
             if (pwdInput.type === 'password') {
                 pwdInput.type = 'text';
                 eyeIcon.classList.remove('fa-eye');
@@ -8920,5 +9171,284 @@ if(typeof _nbresSwitchTab==='function'){
   };
 }
 </script>\n
+
+<script id="nbres-v11-4-mobile-engine">
+/* NBRES V11.4 • Mobile UX bridge */
+(function(){
+  const mq = window.matchMedia('(max-width: 768px)');
+  const panelId = 'taskMenuPanel';
+
+  function isMobileV114(){ return mq.matches; }
+  function dashboardTabV114(){
+    try{
+      if(typeof isSuperAdmin === 'function' && isSuperAdmin()) return 'tab-platform-dashboard';
+      if(typeof isCompanyAdmin === 'function' && isCompanyAdmin()) return 'tab-company-dashboard';
+    }catch(e){}
+    return 'tab-inventory';
+  }
+  window.mobileGoDashboardV114 = function(){
+    const tab = dashboardTabV114();
+    if(typeof window.switchTab === 'function') window.switchTab(tab);
+  };
+
+  function getCurrentTabV114(){
+    const visible = document.querySelector('.tab-content:not(.hidden)');
+    return visible?.id || window.currentTaskTab || '';
+  }
+
+  function updateMobileNavV114(tabId){
+    const tab = tabId || getCurrentTabV114();
+    const home = dashboardTabV114();
+    let key = 'more';
+    if(tab === home) key = 'home';
+    if(tab === 'tab-inventory') key = home === 'tab-inventory' ? 'inventory' : 'inventory';
+    if(tab === 'tab-leads') key = 'leads';
+    if(tab === 'tab-appointments') key = 'appointments';
+    document.querySelectorAll('#nbresMobileBottomNavV114 .nbm-nav-btn').forEach(btn=>{
+      const active = btn.dataset.mobileNav === key;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-current', active ? 'page' : 'false');
+    });
+  }
+  window.updateMobileNavV114 = updateMobileNavV114;
+
+  function syncTaskBackdropV114(){
+    const panel = document.getElementById(panelId);
+    const backdrop = document.getElementById('nbresMobileMenuBackdropV114');
+    const open = !!(isMobileV114() && panel && !panel.classList.contains('hidden'));
+    backdrop?.classList.toggle('is-open', open);
+    backdrop?.setAttribute('aria-hidden', open ? 'false' : 'true');
+    document.querySelector('[data-mobile-nav="more"]')?.classList.toggle('active', open || (!['tab-inventory','tab-leads','tab-appointments',dashboardTabV114()].includes(getCurrentTabV114())));
+  }
+
+  window.toggleMobileInventoryFiltersV114 = function(force){
+    const panel = document.getElementById('inventoryFiltersV114');
+    const btn = document.getElementById('mobileFilterToggleV114');
+    if(!panel || !btn) return;
+    const open = typeof force === 'boolean' ? force : !panel.classList.contains('is-open');
+    panel.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if(open && isMobileV114()) setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),40);
+  };
+
+  function updateFilterCountV114(){
+    const values = [
+      document.getElementById('filterKeyword')?.value,
+      document.getElementById('filterDistrict')?.value,
+      document.getElementById('filterPrice')?.value,
+      document.getElementById('filterStatus')?.value
+    ];
+    const count = values.filter(v=>String(v||'').trim()).length;
+    const badge = document.getElementById('mobileFilterCountV114');
+    if(badge){
+      badge.textContent = String(count);
+      badge.classList.toggle('hidden', count === 0);
+    }
+  }
+
+  // Keep existing app logic intact; add mobile state after every tab change.
+  const previousSwitch = window.switchTab;
+  if(typeof previousSwitch === 'function'){
+    window.switchTab = function(tabId){
+      const result = previousSwitch.apply(this, arguments);
+      requestAnimationFrame(()=>{
+        updateMobileNavV114(tabId);
+        if(isMobileV114()){
+          window.scrollTo({top:0,behavior:'auto'});
+          window.toggleMobileInventoryFiltersV114(false);
+        }
+        syncTaskBackdropV114();
+      });
+      return result;
+    };
+  }
+
+  const previousToggleTask = window.toggleTaskMenu;
+  if(typeof previousToggleTask === 'function'){
+    window.toggleTaskMenu = function(){
+      const result = previousToggleTask.apply(this, arguments);
+      requestAnimationFrame(syncTaskBackdropV114);
+      return result;
+    };
+  }
+  const previousCloseTask = window.closeTaskMenu;
+  if(typeof previousCloseTask === 'function'){
+    window.closeTaskMenu = function(){
+      const result = previousCloseTask.apply(this, arguments);
+      requestAnimationFrame(syncTaskBackdropV114);
+      return result;
+    };
+  }
+
+  // The existing filter routine remains authoritative; this only updates the mobile badge.
+  ['filterKeyword','filterDistrict','filterPrice','filterStatus'].forEach(id=>{
+    document.getElementById(id)?.addEventListener(id === 'filterKeyword' ? 'input' : 'change', updateFilterCountV114);
+  });
+  const previousReset = window.resetFilters;
+  if(typeof previousReset === 'function'){
+    window.resetFilters = function(){
+      const result = previousReset.apply(this, arguments);
+      setTimeout(updateFilterCountV114,0);
+      return result;
+    };
+  }
+
+  // Close the bottom sheet on swipe-down / Escape without interfering with normal scroll.
+  let startY = null;
+  document.getElementById(panelId)?.addEventListener('touchstart',e=>{ startY = e.touches?.[0]?.clientY ?? null; },{passive:true});
+  document.getElementById(panelId)?.addEventListener('touchend',e=>{
+    if(startY == null) return;
+    const endY = e.changedTouches?.[0]?.clientY ?? startY;
+    if(endY - startY > 80 && typeof window.closeTaskMenu === 'function') window.closeTaskMenu();
+    startY = null;
+  },{passive:true});
+  document.addEventListener('keydown',e=>{ if(e.key === 'Escape') window.closeTaskMenu?.(); });
+
+  mq.addEventListener?.('change',()=>{
+    if(!isMobileV114()){
+      document.getElementById('inventoryFiltersV114')?.classList.remove('is-open');
+      document.getElementById('nbresMobileMenuBackdropV114')?.classList.remove('is-open');
+    }
+    updateMobileNavV114();
+  });
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    updateMobileNavV114();
+    updateFilterCountV114();
+    syncTaskBackdropV114();
+  });
+  window.addEventListener('load',()=>setTimeout(()=>updateMobileNavV114(),80));
+})();
+</script>
+
+
+<script id="nbres-icon-engine-v1141">
+(() => {
+  'use strict';
+  const NS='http://www.w3.org/2000/svg';
+  const A='stroke-linecap="round" stroke-linejoin="round"';
+  const wrap=(body, fill='none') => `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="${fill}" stroke="currentColor" stroke-width="1.9" ${A}>${body}</svg>`;
+
+  const P={
+    menu:()=>wrap('<path d="M4 7h16M4 12h16M4 17h16"/>'),
+    plus:()=>wrap('<path d="M12 5v14M5 12h14"/>'),
+    close:()=>wrap('<path d="M6 6l12 12M18 6L6 18"/>'),
+    check:()=>wrap('<path d="M5 12.5l4.2 4.2L19 7"/>'),
+    alert:()=>wrap('<path d="M12 3l9 17H3L12 3z"/><path d="M12 9v4M12 17h.01"/>'),
+    info:()=>wrap('<circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/>'),
+    arrowR:()=>wrap('<path d="M5 12h14M14 7l5 5-5 5"/>'),
+    arrowL:()=>wrap('<path d="M19 12H5M10 7l-5 5 5 5"/>'),
+    arrowU:()=>wrap('<path d="M12 19V5M7 10l5-5 5 5"/>'),
+    chevR:()=>wrap('<path d="M9 6l6 6-6 6"/>'),
+    chevL:()=>wrap('<path d="M15 6l-6 6 6 6"/>'),
+    chevD:()=>wrap('<path d="M6 9l6 6 6-6"/>'),
+    chevU:()=>wrap('<path d="M6 15l6-6 6 6"/>'),
+    search:()=>wrap('<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/>'),
+    user:()=>wrap('<circle cx="12" cy="8" r="3.4"/><path d="M5 20c.7-4 3.1-6 7-6s6.3 2 7 6"/>'),
+    users:()=>wrap('<circle cx="9" cy="8.5" r="3"/><path d="M3.5 19c.5-3.4 2.4-5.2 5.5-5.2s5 1.8 5.5 5.2"/><path d="M15.2 6.2a3 3 0 010 5.6M16.2 14c2.5.4 3.9 2.1 4.3 5"/>'),
+    building:()=>wrap('<path d="M5 21V5l7-2 7 2v16M9 8h2M13 8h2M9 12h2M13 12h2M9 16h2M13 16h2M3 21h18"/>'),
+    home:()=>wrap('<path d="M3 11.5L12 4l9 7.5M5.5 10.5V21h13V10.5M9.5 21v-6h5v6"/>'),
+    calendar:()=>wrap('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 9h18M8 13h.01M12 13h.01M16 13h.01M8 17h.01M12 17h.01"/>'),
+    chart:()=>wrap('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'),
+    pie:()=>wrap('<path d="M11 3a9 9 0 109 9h-9V3z"/><path d="M14 3.6A9 9 0 0120.4 10H14V3.6z"/>'),
+    database:()=>wrap('<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>'),
+    shield:()=>wrap('<path d="M12 3l7 3v5c0 4.8-2.9 8.2-7 10-4.1-1.8-7-5.2-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/>'),
+    bell:()=>wrap('<path d="M6 9a6 6 0 0112 0c0 6 2 6 2 8H4c0-2 2-2 2-8M10 20h4"/>'),
+    filter:()=>wrap('<path d="M4 5h16l-6 7v6l-4 2v-8L4 5z"/>'),
+    sliders:()=>wrap('<path d="M4 6h7M15 6h5M4 12h3M11 12h9M4 18h10M18 18h2"/><circle cx="13" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="16" cy="18" r="2"/>'),
+    upload:()=>wrap('<path d="M12 16V4M7 9l5-5 5 5M5 20h14"/>'),
+    download:()=>wrap('<path d="M12 4v12M7 11l5 5 5-5M5 20h14"/>'),
+    edit:()=>wrap('<path d="M4 20l4.5-1 10-10-3.5-3.5-10 10L4 20zM13.5 7l3.5 3.5"/>'),
+    trash:()=>wrap('<path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>'),
+    copy:()=>wrap('<rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V5a2 2 0 00-2-2H5a2 2 0 00-2 2v9a2 2 0 002 2h3"/>'),
+    share:()=>wrap('<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.5-4.3M8.2 13.2l7.5 4.3"/>'),
+    image:()=>wrap('<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.5"/><path d="M4 18l5-5 3.2 3.2 2.3-2.3L20 19"/>'),
+    message:()=>wrap('<path d="M4 5h16v12H9l-5 4V5z"/><path d="M8 9h8M8 13h5"/>'),
+    phone:()=>wrap('<path d="M7 3l3 4-2 2c1.2 3 3 4.8 6 6l2-2 5 3c-1 3-3 5-6 5C8.4 21 3 15.6 3 9c0-3 1-5 4-6z"/>'),
+    location:()=>wrap('<path d="M12 21s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.2"/>'),
+    book:()=>wrap('<path d="M4 5c3-1 5-.6 8 1v14c-3-1.6-5-2-8-1V5zM20 5c-3-1-5-.6-8 1v14c3-1.6 5-2 8-1V5z"/>'),
+    clipboard:()=>wrap('<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 9h6M9 13h6M9 17h4"/>'),
+    clock:()=>wrap('<circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/>'),
+    tag:()=>wrap('<path d="M3 12l9 9 9-9-9-9H5a2 2 0 00-2 2v7z"/><circle cx="8" cy="8" r="1"/>'),
+    link:()=>wrap('<path d="M9 15l6-6M7 17l-2 2a4 4 0 01-6-6l4-4a4 4 0 016 0M17 7l2-2a4 4 0 016 6l-4 4a4 4 0 01-6 0"/>'),
+    eye:()=>wrap('<path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.5"/>'),
+    eyeOff:()=>wrap('<path d="M3 3l18 18M9.2 6.5A9.8 9.8 0 0112 6c6 0 9.5 6 9.5 6a16 16 0 01-3 3.6M6.3 7.4A16.6 16.6 0 002.5 12s3.5 6 9.5 6c1.2 0 2.3-.2 3.3-.6"/>'),
+    power:()=>wrap('<path d="M12 3v8M7.2 5.7A8 8 0 1016.8 5.7"/>'),
+    play:()=>wrap('<path d="M8 5l11 7-11 7V5z"/>'),
+    sparkle:()=>wrap('<path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15z"/>'),
+    broom:()=>wrap('<path d="M14 4l6 6M13 5l2-2 6 6-2 2M4 20c2-5 5-8 9-11l3 3c-3 4-6 7-11 9L4 20z"/>'),
+    headset:()=>wrap('<path d="M4 13v-2a8 8 0 0116 0v2M4 13h3v6H4v-6zM17 13h3v6h-3v-6zM17 20c-1 1-2.7 1-5 1"/>'),
+    wave:()=>wrap('<path d="M3 12h3l2-6 4 12 3-9 2 3h4"/>'),
+    grid:()=>wrap('<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>'),
+    bolt:()=>wrap('<path d="M13 2L5 13h6l-1 9 8-12h-6l1-8z"/>'),
+    circleCheck:()=>wrap('<circle cx="12" cy="12" r="9"/><path d="M8 12l2.5 2.5L16 9"/>'),
+    circleX:()=>wrap('<circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/>'),
+    generic:()=>wrap('<circle cx="12" cy="12" r="8"/><path d="M9 12h6"/>')
+  };
+
+  const alias = new Map();
+  const group=(arr,key)=>arr.forEach(n=>alias.set(n,key));
+  group(['bars','grip'],'menu');
+  group(['plus'],'plus');
+  group(['xmark'],'close');
+  group(['check'],'check');
+  group(['triangle-exclamation','circle-exclamation','house-circle-exclamation'],'alert');
+  group(['arrow-right','arrow-right-long'],'arrowR');
+  group(['arrow-left'],'arrowL');
+  group(['arrow-up'],'arrowU');
+  group(['chevron-right'],'chevR'); group(['chevron-left'],'chevL'); group(['chevron-down'],'chevD'); group(['chevron-up'],'chevU');
+  group(['magnifying-glass'],'search');
+  group(['user'],'user'); group(['user-group','people-group','building-user'],'users');
+  group(['building','building-circle-check','building-shield'],'building');
+  group(['house','house-circle-plus'],'home');
+  group(['calendar','calendar-check','calendar-plus'],'calendar');
+  group(['chart-line','gauge-high'],'chart'); group(['chart-pie'],'pie');
+  group(['database'],'database'); group(['shield-halved'],'shield'); group(['bell'],'bell');
+  group(['filter','filter-circle-dollar'],'filter'); group(['sliders'],'sliders');
+  group(['upload','file-arrow-up'],'upload'); group(['download'],'download');
+  group(['pen','pen-to-square'],'edit'); group(['trash','trash-can'],'trash'); group(['copy'],'copy'); group(['share-nodes'],'share');
+  group(['image','images','folder-open'],'image'); group(['message','comment-dots','comments'],'message'); group(['phone','mobile-screen-button'],'phone');
+  group(['location-dot','map-location-dot'],'location'); group(['book-open'],'book'); group(['clipboard','list-check'],'clipboard');
+  group(['clock','clock-rotate-left'],'clock'); group(['tag'],'tag'); group(['link'],'link');
+  group(['eye'],'eye'); group(['eye-slash'],'eyeOff'); group(['power-off'],'power'); group(['play'],'play'); group(['spinner'],'generic');
+  group(['wand-magic-sparkles','lightbulb','flask','bullhorn'],'sparkle'); group(['broom'],'broom'); group(['headset'],'headset');
+  group(['wave-square'],'wave'); group(['boxes-stacked'],'grid'); group(['bolt'],'bolt'); group(['circle-check'],'circleCheck'); group(['circle-xmark'],'circleX');
+  group(['paper-plane'],'arrowR'); group(['shuffle'],'wave');
+
+  function iconName(el){
+    const c=[...el.classList].find(x=>/^fa-(?!solid$|regular$|brands$|spin$|fw$|xs$|sm$|lg$|xl$|2xl$)[a-z0-9-]+$/.test(x));
+    return c ? c.slice(3) : '';
+  }
+  function decorate(el){
+    if(!(el instanceof Element) || el.tagName!=='I') return;
+    if(![...el.classList].some(c=>c==='fa-solid'||c==='fa-regular'||c==='fa-brands')) return;
+    const name=iconName(el);
+    const key=alias.get(name)||'generic';
+    const html=(P[key]||P.generic)();
+    if(el.dataset.nbresIcon===name && el.classList.contains('nbres-inline-icon')) return;
+    el.dataset.nbresIcon=name;
+    el.classList.add('nbres-inline-icon');
+    el.setAttribute('aria-hidden','true');
+    el.innerHTML=html;
+  }
+  function scan(root=document){
+    if(root.matches?.('i.fa-solid,i.fa-regular,i.fa-brands')) decorate(root);
+    root.querySelectorAll?.('i.fa-solid,i.fa-regular,i.fa-brands').forEach(decorate);
+  }
+  function boot(){
+    scan(document);
+    const mo=new MutationObserver(muts=>{
+      for(const m of muts){
+        if(m.type==='attributes'){ decorate(m.target); continue; }
+        m.addedNodes.forEach(n=>{ if(n.nodeType===1) scan(n); });
+      }
+    });
+    mo.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
+    window.NBRESIcons={refresh:()=>scan(document)};
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot,{once:true}); else boot();
+})();
+</script>
+
 </body>
 </html>
