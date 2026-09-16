@@ -48,7 +48,7 @@
       }
     }
     </script>
-<title>NBRES V11.2 - PropTech Operating System • Demo</title>
+<title>NBRES V11.3 - PropTech Admin UX • Demo</title>
     <!-- Tailwind CSS & FontAwesome Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -1364,6 +1364,79 @@ body{background:var(--v11-bg)}
 @media(prefers-reduced-motion:reduce){.pt-orb{animation:none}}
 </style>
 
+
+<style id="nbres-v113-admin-ux-fix">
+/* ============================================================
+   NBRES V11.3 • ADMIN UX FIX
+   Structural repair + persistent navigation + blank-screen guard
+   ============================================================ */
+:root{
+  --v113-navy:#07111d;
+  --v113-navy-2:#0b1928;
+  --v113-cyan:#0891b2;
+  --v113-blue:#2563eb;
+  --v113-line:#e2e8f0;
+  --v113-bg:#f4f7fa;
+  --v113-text:#172033;
+}
+body{padding-bottom:0!important;background:var(--v113-bg)!important}
+#mainApp{min-height:100dvh;background:var(--v113-bg)!important}
+#mainApp>header>div{max-width:1600px!important;padding-left:22px!important;padding-right:22px!important}
+.nbres-app-body{display:flex;align-items:flex-start;gap:0;max-width:1600px;margin:0 auto;min-height:calc(100dvh - 74px)}
+.nbres-workspace{flex:1;min-width:0;padding-bottom:32px}
+.nbres-workspace>main,.nbres-workspace>#actionBackBar,.nbres-workspace>#appointmentQuickAccess{max-width:1320px!important}
+.nbres-workspace>main{min-height:calc(100dvh - 118px);padding-top:22px!important}
+
+/* Persistent desktop navigation */
+.nbres-desktop-sidebar{width:248px;flex:0 0 248px;position:sticky;top:76px;height:calc(100dvh - 76px);padding:16px 12px 14px;border-right:1px solid #dfe7ef;background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(248,251,253,.98));overflow-y:auto;overscroll-behavior:contain;z-index:20}
+.nbres-desktop-sidebar::-webkit-scrollbar{width:5px}.nbres-desktop-sidebar::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:999px}
+.nbres-side-head{display:flex;align-items:center;gap:10px;padding:7px 8px 14px;margin-bottom:8px;border-bottom:1px solid #e7edf3}
+.nbres-side-mark{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(145deg,#071827,#0d2a40);color:#7dd3fc;border:1px solid rgba(14,165,233,.22);font:800 11px 'Space Grotesk','Be Vietnam Pro',sans-serif;box-shadow:0 7px 18px rgba(15,23,42,.10)}
+.nbres-side-title{font-size:11px;font-weight:900;color:#172033;letter-spacing:.02em}.nbres-side-scope{font-size:9px;color:#7b8796;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:164px}
+.nbres-side-nav{display:flex;flex-direction:column;gap:4px}
+.nbres-side-section{padding:13px 9px 5px;color:#94a3b8;font-size:8px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
+.nbres-side-btn{width:100%;min-height:43px;display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid transparent;border-radius:12px;background:transparent;color:#536174;text-align:left;transition:.16s ease}
+.nbres-side-btn:hover{background:#eef7fb;color:#0f4f6b;border-color:#d9edf5;transform:translateX(1px)}
+.nbres-side-btn .ico{width:29px;height:29px;border-radius:9px;display:grid;place-items:center;background:#eef3f7;color:#607087;font-size:11px;flex:0 0 auto}
+.nbres-side-btn .copy{min-width:0;flex:1}.nbres-side-btn strong{display:block;font-size:10.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.nbres-side-btn small{display:block;font-size:8px;color:#94a3b8;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nbres-side-btn.active{background:linear-gradient(90deg,#e7f7fc,#edf4ff);color:#075985;border-color:#cbe8f3;box-shadow:inset 3px 0 0 #0ea5e9}
+.nbres-side-btn.active .ico{background:linear-gradient(135deg,#0891b2,#2563eb);color:#fff;box-shadow:0 5px 14px rgba(37,99,235,.16)}
+.nbres-side-btn.active small{color:#5f7d8e}
+.nbres-side-foot{display:flex;gap:8px;align-items:flex-start;margin:14px 5px 0;padding:12px 10px;border-radius:12px;background:#f1f5f9;color:#7b8796;font-size:8px;line-height:1.55}.nbres-side-foot i{color:#0891b2;margin-top:1px}
+
+/* Error boundary: never leave the admin staring at an empty page */
+.nbres-workspace-error{max-width:1320px;margin:16px auto 0;padding:13px 14px;border:1px solid #fecaca;border-radius:14px;background:#fff7f7;display:flex;align-items:center;gap:11px;box-shadow:0 8px 24px rgba(127,29,29,.05)}
+.nbres-workspace-error.hidden{display:none!important}.nbres-workspace-error-icon{width:35px;height:35px;border-radius:10px;display:grid;place-items:center;background:#fee2e2;color:#dc2626;flex:0 0 auto}.nbres-error-retry{border:1px solid #fecaca;background:#fff;color:#b91c1c;border-radius:10px;padding:8px 11px;font-size:10px;font-weight:800;white-space:nowrap}
+
+/* Make the content surface feel deliberate instead of floating in empty space */
+.tab-content:not(.hidden){animation:v113PageIn .18s ease-out}
+@keyframes v113PageIn{from{opacity:.55;transform:translateY(4px)}to{opacity:1;transform:none}}
+#mainApp .tab-content>div:first-child,#mainApp .tab-content>section:first-child{scroll-margin-top:92px}
+#mainApp .tab-content.hidden{display:none!important}
+
+/* Header refinements */
+#mainApp header{min-height:74px}
+#mainApp header h1{letter-spacing:-.02em!important}
+#mainApp #currentUserDisplay{max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* Better density on large monitors */
+@media(min-width:1440px){
+  .nbres-workspace>main{padding-left:24px!important;padding-right:24px!important}
+}
+@media(max-width:1100px){
+  .nbres-desktop-sidebar{display:none!important}
+  .nbres-app-body{display:block;max-width:none}
+  .nbres-workspace>main{min-height:calc(100dvh - 104px)}
+}
+@media(max-width:768px){
+  #mainApp>header>div{padding-left:12px!important;padding-right:12px!important}
+  .nbres-workspace-error{margin:10px 12px 0;align-items:flex-start;flex-wrap:wrap}
+  .nbres-error-retry{margin-left:46px}
+  .nbres-workspace>main{padding-top:14px!important}
+}
+@media(prefers-reduced-motion:reduce){.tab-content:not(.hidden){animation:none}}
+</style>
+
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 min-h-screen pb-12 antialiased">
 
@@ -1430,7 +1503,7 @@ body{background:var(--v11-bg)}
               <span><i class="fa-solid fa-shield-halved"></i> Phân quyền</span>
               <span><i class="fa-solid fa-flask"></i> Demo an toàn</span>
             </div>
-            <div class="pt-card-version">NBRES V11.2 • PropTech Master Experience</div>
+            <div class="pt-card-version">NBRES V11.3 • Admin UX Fixed</div>
           </aside>
         </div>
 
@@ -1449,10 +1522,10 @@ body{background:var(--v11-bg)}
                     </button>
                     <div>
                         <h1 class="text-base md:text-lg font-bold leading-tight flex items-center gap-2">
-                            Quản Lý Cho Thuê Căn Hộ
+                            NBRES Workspace
                             <span id="roleBadgeHeader" class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30">SALE</span>
                         </h1>
-                        <p class="text-[11px] text-slate-400">Hệ thống đồng bộ dữ liệu • Nguyên Bảo</p>
+                        <p class="text-[11px] text-slate-400">Real Estate Operating System • Nguyên Bảo</p>
                     </div>
                 </div>
 
@@ -1569,9 +1642,33 @@ body{background:var(--v11-bg)}
                 </div>
             </div>
         </header>
-        </div>
 
-    
+        <div class="nbres-app-body">
+            <aside id="nbresDesktopSidebarV113" class="nbres-desktop-sidebar" aria-label="Điều hướng chính">
+                <div class="nbres-side-head">
+                    <div class="nbres-side-mark">NB</div>
+                    <div class="min-w-0">
+                        <div class="nbres-side-title">NBRES Control</div>
+                        <div id="nbresSideScopeV113" class="nbres-side-scope">Không gian vận hành</div>
+                    </div>
+                </div>
+                <div id="nbresDesktopNavV113" class="nbres-side-nav"></div>
+                <div class="nbres-side-foot">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Dữ liệu được giới hạn theo quyền Supabase & phạm vi tài khoản.</span>
+                </div>
+            </aside>
+
+            <div class="nbres-workspace">
+                <div id="workspaceErrorV113" class="nbres-workspace-error hidden" role="alert">
+                    <div class="nbres-workspace-error-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <div class="min-w-0 flex-1">
+                        <div class="font-extrabold text-slate-900">Không thể hiển thị tác vụ</div>
+                        <div id="workspaceErrorTextV113" class="text-xs text-slate-500 mt-1">Hệ thống đã chặn màn hình trắng và ghi nhận lỗi hiển thị.</div>
+                    </div>
+                    <button type="button" onclick="retryCurrentTaskV113()" class="nbres-error-retry">Thử lại</button>
+                </div>
+
     <!-- V7.3.4: QUAY LẠI TÁC VỤ TRƯỚC -->
     <div id="actionBackBar" class="max-w-7xl mx-auto px-3 sm:px-4 pt-3 hidden">
         <button onclick="goBackTask()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-200 shadow-sm text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition">
@@ -2241,7 +2338,9 @@ body{background:var(--v11-bg)}
                 </div>
             </div>
         </main>
-    </div>
+            </div><!-- /.nbres-workspace -->
+        </div><!-- /.nbres-app-body -->
+    </div><!-- /#mainApp -->
 
 
     <div id="regionDetailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[70] p-4"><div class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[92vh] overflow-y-auto"><div class="p-5 border-b sticky top-0 bg-white z-10 flex justify-between items-center"><div><div class="text-[10px] font-extrabold tracking-widest text-sky-600">NBRES • KHU VỰC DETAIL</div><h3 id="regionDetailTitle" class="text-xl font-extrabold text-slate-800 mt-1">Khu vực</h3></div><button onclick="closeRegionDetail()" class="w-9 h-9 rounded-xl bg-slate-100 text-slate-500"><i class="fa-solid fa-xmark"></i></button></div><div id="regionDetailBody" class="p-5"></div></div></div>
@@ -4359,8 +4458,6 @@ body{background:var(--v11-bg)}
                 appointments=await loadAppointmentsFromDB();
                 renderCompanyDashboard();
             renderPlatformAdminDashboard();
-                if(isSuperAdmin()) switchTab('tab-platform-dashboard');
-                else if(isCompanyAdmin()) switchTab('tab-company-dashboard');
             } catch(err){ console.error('Workspace load:',err); }
         }
         async function loadProfilesForWorkspace(){
@@ -4383,8 +4480,15 @@ body{background:var(--v11-bg)}
                 if (profileError || !profile || profile.is_active === false) { await supabaseClient.auth.signOut(); showLogin(); return false; }
                 currentUser = mapDbUserToApp(profile);
                 currentTenantId = profile.tenant_id || null;
-                showApp(); return true;
-            } catch(err) { console.error('Auth session:',err); showLogin(); return false; }
+                await loadSecureWorkspace();
+                showApp();
+                return true;
+            } catch(err) {
+                console.error('Auth session:',err);
+                showLogin();
+                showToast('Không thể khôi phục phiên đăng nhập. Vui lòng đăng nhập lại.','error');
+                return false;
+            }
         }
 
         function togglePasswordVisibility(inputId, iconId) {
@@ -4679,7 +4783,7 @@ body{background:var(--v11-bg)}
             requestAnimationFrame(()=>applyRoleTaskVisibilityV10());
             setTimeout(()=>initAnnouncementsRealtimeV10(),700);
             taskHistory = [];
-            currentTaskTab = 'tab-rooms';
+            currentTaskTab = null;
             updateTaskBackButton();
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
@@ -4763,6 +4867,13 @@ body{background:var(--v11-bg)}
             }
             setTimeout(() => populateAppointmentFilters(), 0);
             setTimeout(() => showLoginNoticeIfNeeded(), 250);
+
+            // V11.3: always land on a valid, visible task. Restore the last task only when allowed.
+            const defaultTab = isSuperAdmin() ? 'tab-platform-dashboard' : (isCompanyAdmin() ? 'tab-company-dashboard' : 'tab-inventory');
+            const savedTab = sessionStorage.getItem('NBRES_LAST_TAB');
+            const startTab = savedTab && canOpenTaskV10(savedTab) && document.getElementById(savedTab) ? savedTab : defaultTab;
+            renderDesktopNavV113();
+            setTimeout(() => switchTab(startTab), 0);
         }
 
         function showLogin() {
@@ -4919,17 +5030,72 @@ body{background:var(--v11-bg)}
             }
         });
 
+
+        const NBRES_NAV_V113 = [
+            {section:'Điều hành'},
+            {id:'tab-platform-dashboard',label:'Trung Tâm Điều Hành',sub:'Toàn hệ thống NBRES',icon:'fa-gauge-high'},
+            {id:'tab-company-dashboard',label:'Tổng Quan Công Ty',sub:'KPI & hoạt động',icon:'fa-chart-line'},
+            {id:'tab-inventory',label:'Kho phòng',sub:'Phòng & tài nguyên',icon:'fa-building'},
+            {id:'tab-appointments',label:'Lịch xem Phòng',sub:'Điều phối khách xem',icon:'fa-calendar-check'},
+            {section:'Kinh doanh'},
+            {id:'tab-leads',label:'Khách Hàng / Lead',sub:'Pipeline bán hàng',icon:'fa-users-viewfinder'},
+            {id:'tab-crm',label:'Kịch bản CRM',sub:'Kịch bản tư vấn',icon:'fa-comments'},
+            {id:'tab-poster',label:'Mẫu Marketing',sub:'Nội dung gửi khách',icon:'fa-pen-to-square'},
+            {id:'tab-business-report',label:'Báo Cáo Kinh Doanh',sub:'Hiệu suất & phễu',icon:'fa-chart-column'},
+            {section:'Tổ chức'},
+            {id:'tab-regions',label:'Khu vực',sub:'Cấu trúc địa bàn',icon:'fa-map-location-dot'},
+            {id:'tab-teams',label:'Quản Lý Team',sub:'Đội ngũ & phân nhóm',icon:'fa-people-group'},
+            {id:'tab-users',label:'Quản Lý Tài Khoản',sub:'Nhân sự & phân quyền',icon:'fa-user-shield'},
+            {section:'Hệ thống'},
+            {id:'tab-notifications',label:'Thông báo',sub:'Cảnh báo vận hành',icon:'fa-bell'},
+            {id:'tab-audit',label:'Nhật Ký / Thùng Rác',sub:'Kiểm soát & khôi phục',icon:'fa-clock-rotate-left'},
+            {id:'tab-data-center',label:'Dữ liệu / Import',sub:'Nhập & quản trị dữ liệu',icon:'fa-file-arrow-up'},
+            {id:'tab-onboarding',label:'Thiết Lập Công Ty',sub:'Cấu hình ban đầu',icon:'fa-list-check'},
+            {id:'tab-platform-library',label:'Thư viện NBRES',sub:'Mẫu dùng chung',icon:'fa-book-open'}
+        ];
+        function renderDesktopNavV113(){
+            const nav=document.getElementById('nbresDesktopNavV113');
+            if(!nav || !currentUser) return;
+            let html='';
+            let sectionHasItems=false;
+            let pendingSection='';
+            for(const item of NBRES_NAV_V113){
+                if(item.section){pendingSection=item.section;sectionHasItems=false;continue;}
+                if(!document.getElementById(item.id) || !canOpenTaskV10(item.id)) continue;
+                if(pendingSection && !sectionHasItems){html+=`<div class="nbres-side-section">${pendingSection}</div>`;sectionHasItems=true;}
+                const active=currentTaskTab===item.id?' active':'';
+                html+=`<button type="button" class="nbres-side-btn${active}" onclick="switchTab('${item.id}')"><span class="ico"><i class="fa-solid ${item.icon}"></i></span><span class="copy"><strong>${item.label}</strong><small>${item.sub}</small></span></button>`;
+            }
+            nav.innerHTML=html;
+            const scope=document.getElementById('nbresSideScopeV113');
+            if(scope){
+                const company=(typeof getActiveCompanyName==='function' ? getActiveCompanyName() : '') || '';
+                scope.textContent=company ? `${currentUser.role} • ${company}` : currentUser.role;
+                scope.title=scope.textContent;
+            }
+        }
+
+        function reportWorkspaceErrorV113(err, tabId){
+            console.error('NBRES task render error:', tabId, err);
+            const box=document.getElementById('workspaceErrorV113');
+            const text=document.getElementById('workspaceErrorTextV113');
+            if(text) text.textContent=`Tác vụ “${getTaskTabLabel(tabId)}” gặp lỗi hiển thị: ${err?.message || err || 'Không xác định'}. Nội dung được giữ lại để bạn có thể thử lại.`;
+            box?.classList.remove('hidden');
+        }
+        function clearWorkspaceErrorV113(){document.getElementById('workspaceErrorV113')?.classList.add('hidden');}
+        function retryCurrentTaskV113(){if(currentTaskTab) switchTab(currentTaskTab);}
+
         function switchTab(tabId) {
             applyRoleTaskVisibilityV10();
-            if(!canOpenTaskV10(tabId)){ showToast('Bạn không có quyền truy cập tác vụ này.','error'); return; }
-            if(!taskHistoryLocked && currentTaskTab && currentTaskTab !== tabId){
-                taskHistory.push(currentTaskTab);
-                if(taskHistory.length > 15) taskHistory.shift();
-            }
-            currentTaskTab = tabId;
-            updateTaskBackButton();
-            updateTaskMenuCurrent(tabId);
 
+            if(!tabId || !document.getElementById(tabId)){
+                reportWorkspaceErrorV113(new Error('Không tìm thấy màn hình tác vụ.'), tabId || '');
+                return;
+            }
+            if(!canOpenTaskV10(tabId)){
+                showToast('Bạn không có quyền truy cập tác vụ này.','error');
+                return;
+            }
             if (tabId === 'tab-users' && !hasAdminAccess()) {
                 showToast('Chỉ Admin mới có quyền truy cập trang này!', 'error');
                 return;
@@ -4941,34 +5107,47 @@ body{background:var(--v11-bg)}
                 showToast('Bạn không có quyền quản lý Team hoặc Công Ty chưa bật tính năng Team!', 'error'); return;
             }
 
-            if (tabId === 'tab-platform-dashboard') {
-                renderPlatformAdminDashboard();
-            }
-            if (tabId === 'tab-company-dashboard') {
-                renderCompanyDashboard();
-            }
-            if(tabId==='tab-leads')loadLeadsV9();
-            if(tabId==='tab-business-report')renderBusinessReportV9();
-            if(tabId==='tab-notifications'){renderSmartNotificationsV10();loadAnnouncementsV10();}
-            if(tabId==='tab-audit')loadAuditV9();
-            if(tabId==='tab-platform-library')loadPlatformLibraryV101();
-            if(tabId==='tab-data-center')renderDataCenterV10();
-            if(tabId==='tab-onboarding')renderOnboardingV10();
-            if (tabId === 'tab-users') {
-                renderUsersTable();
-            }
-            if (tabId === 'tab-appointments') {
-                setTimeout(() => refreshAppointments(), 0);
+            if(!taskHistoryLocked && currentTaskTab && currentTaskTab !== tabId){
+                taskHistory.push(currentTaskTab);
+                if(taskHistory.length > 15) taskHistory.shift();
             }
 
+            // V11.3: show the target FIRST. A renderer failure can no longer leave a blank page.
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            
+            const target=document.getElementById(tabId);
+            target.classList.remove('hidden');
+            currentTaskTab = tabId;
+            sessionStorage.setItem('NBRES_LAST_TAB',tabId);
+            clearWorkspaceErrorV113();
+            updateTaskBackButton();
             updateTaskMenuCurrent(tabId);
+            renderDesktopNavV113();
 
-            document.getElementById(tabId).classList.remove('hidden');
+            const asyncGuard=(value)=>{
+                if(value && typeof value.then==='function') value.catch(err=>reportWorkspaceErrorV113(err,tabId));
+                return value;
+            };
+            try {
+                if (tabId === 'tab-platform-dashboard') renderPlatformAdminDashboard();
+                else if (tabId === 'tab-company-dashboard') renderCompanyDashboard();
+                else if(tabId==='tab-leads') asyncGuard(loadLeadsV9());
+                else if(tabId==='tab-business-report') renderBusinessReportV9();
+                else if(tabId==='tab-notifications'){renderSmartNotificationsV10();asyncGuard(loadAnnouncementsV10());}
+                else if(tabId==='tab-audit') asyncGuard(loadAuditV9());
+                else if(tabId==='tab-platform-library') asyncGuard(loadPlatformLibraryV101());
+                else if(tabId==='tab-data-center') renderDataCenterV10();
+                else if(tabId==='tab-onboarding') renderOnboardingV10();
+                else if (tabId === 'tab-users') renderUsersTable();
+                else if (tabId === 'tab-appointments') asyncGuard(refreshAppointments());
+                else if (tabId === 'tab-regions') renderRegions();
+                else if (tabId === 'tab-teams') renderTeams();
+                else if (tabId === 'tab-inventory') { renderDistrictOptions(); renderRooms(rooms||[]); }
+            } catch(err) {
+                reportWorkspaceErrorV113(err,tabId);
+            }
 
-            // Chỉ update trạng thái màu trong menu; không ghi đè className của button.
-            updateTaskMenuCurrent(tabId);
+            closeTaskMenu();
+            window.scrollTo({top:0,behavior:'smooth'});
         }
 
 
