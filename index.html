@@ -1273,6 +1273,334 @@ code,pre,kbd,samp{
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+<!-- NBRES V10.5.0 • EXECUTIVE SAPPHIRE + CHAMPAGNE THEME -->
+<style>
+:root{
+  --nb-sapphire:#10213f;
+  --nb-sapphire-2:#18345f;
+  --nb-sapphire-3:#234a7a;
+  --nb-champagne:#c8a85a;
+  --nb-champagne-soft:#f4ecd8;
+  --nb-canvas:#f4f6f9;
+  --nb-surface:#ffffff;
+  --nb-ink:#182235;
+  --nb-muted:#718096;
+  --nb-line:#e2e7ee;
+}
+
+/* Main business canvas */
+#appScreen,#mainApp{
+  background:
+    radial-gradient(circle at 85% 0%,rgba(200,168,90,.08),transparent 24%),
+    linear-gradient(180deg,#f8f9fb 0%,var(--nb-canvas) 100%)!important;
+  color:var(--nb-ink)!important;
+}
+
+/* Sidebar: executive navy, less neon/blue */
+#appScreen aside,#mainApp aside,
+#appScreen .sidebar,#mainApp .sidebar{
+  background:
+    radial-gradient(circle at 10% 92%,rgba(200,168,90,.10),transparent 24%),
+    linear-gradient(180deg,#10213f 0%,#0b172d 100%)!important;
+  border-color:rgba(255,255,255,.07)!important;
+}
+#appScreen aside button,#mainApp aside button,
+#appScreen .sidebar button,#mainApp .sidebar button{
+  color:#b9c5d6!important;
+}
+#appScreen aside button:hover,#mainApp aside button:hover,
+#appScreen .sidebar button:hover,#mainApp .sidebar button:hover{
+  background:rgba(255,255,255,.055)!important;
+  color:#fff!important;
+}
+#appScreen aside button.active,#mainApp aside button.active,
+#appScreen .sidebar button.active,
+#appScreen aside [aria-current="page"],#mainApp aside [aria-current="page"]{
+  background:linear-gradient(90deg,rgba(200,168,90,.19),rgba(200,168,90,.055))!important;
+  color:#f0d78f!important;
+  box-shadow:inset 3px 0 0 var(--nb-champagne)!important;
+}
+
+/* Header / navigation */
+#appScreen header,#mainApp header,
+#appScreen .topbar,#mainApp .topbar{
+  background:rgba(255,255,255,.91)!important;
+  border-color:var(--nb-line)!important;
+  backdrop-filter:blur(16px);
+}
+
+/* Cards and panels */
+#appScreen .bg-white,#mainApp .bg-white,
+#appScreen .card,#mainApp .card,
+#appScreen .glass-card,#mainApp .glass-card{
+  border-color:var(--nb-line)!important;
+  box-shadow:0 10px 30px rgba(16,33,63,.055)!important;
+}
+#appScreen .rounded-2xl,#mainApp .rounded-2xl,
+#appScreen .rounded-3xl,#mainApp .rounded-3xl{
+  border-color:var(--nb-line);
+}
+
+/* Main branded hero/header surfaces */
+#tab-users .bg-gradient-to-r,
+#tab-company-dashboard .bg-gradient-to-r,
+#tab-platform-dashboard .bg-gradient-to-r,
+#tab-inventory .bg-gradient-to-r{
+  background:linear-gradient(118deg,#10213f 0%,#18345f 65%,#244a72 100%)!important;
+}
+
+/* Primary actions: champagne gold instead of bright yellow/blue */
+#appScreen button.bg-yellow-400,#mainApp button.bg-yellow-400,
+#appScreen button.bg-yellow-500,#mainApp button.bg-yellow-500,
+#appScreen button.bg-blue-500,#mainApp button.bg-blue-500,
+#appScreen button.bg-blue-600,#mainApp button.bg-blue-600,
+#appScreen .btn-primary,#mainApp .btn-primary{
+  background:linear-gradient(135deg,#d7bd76,#b8923c)!important;
+  color:#111827!important;
+  border-color:#b8923c!important;
+  box-shadow:0 7px 18px rgba(184,146,60,.16)!important;
+}
+#appScreen button.bg-yellow-400:hover,#mainApp button.bg-yellow-400:hover,
+#appScreen button.bg-yellow-500:hover,#mainApp button.bg-yellow-500:hover,
+#appScreen button.bg-blue-500:hover,#mainApp button.bg-blue-500:hover,
+#appScreen button.bg-blue-600:hover,#mainApp button.bg-blue-600:hover,
+#appScreen .btn-primary:hover,#mainApp .btn-primary:hover{
+  filter:brightness(1.035);
+  transform:translateY(-1px);
+}
+
+/* Text accents */
+#appScreen .text-yellow-400,#mainApp .text-yellow-400,
+#appScreen .text-yellow-500,#mainApp .text-yellow-500{
+  color:#b58d32!important;
+}
+#appScreen .border-yellow-400,#mainApp .border-yellow-400,
+#appScreen .border-yellow-500,#mainApp .border-yellow-500{
+  border-color:#c5a451!important;
+}
+
+/* Inputs */
+#appScreen input,#appScreen select,#appScreen textarea,
+#mainApp input,#mainApp select,#mainApp textarea{
+  border-color:#dce2ea!important;
+}
+#appScreen input:focus,#appScreen select:focus,#appScreen textarea:focus,
+#mainApp input:focus,#mainApp select:focus,#mainApp textarea:focus{
+  border-color:#b99643!important;
+  box-shadow:0 0 0 3px rgba(200,168,90,.12)!important;
+}
+
+/* Tables */
+#appScreen thead,#mainApp thead{background:#f6f8fa!important}
+#appScreen th,#mainApp th{color:#68758a!important}
+#appScreen tbody tr:hover,#mainApp tbody tr:hover{background:#fbfaf6!important}
+
+/* Compact icon redesign: champagne + sapphire */
+.nbres-action-iconbox{
+  background:linear-gradient(145deg,#f7f0df,#efe2bd)!important;
+  border-color:#dfca8d!important;
+  color:#9a7425!important;
+}
+.nbres-compact-action svg{color:currentColor}
+
+/* Demo launcher and Demo Center */
+#nbresDemoAdminLauncher{
+  background:linear-gradient(135deg,#10213f,#18345f)!important;
+  border-color:rgba(200,168,90,.55)!important;
+  color:#e3c873!important;
+}
+#nbresDemoCenter .dmc-head{
+  background:
+    radial-gradient(circle at 88% 10%,rgba(200,168,90,.16),transparent 25%),
+    linear-gradient(120deg,#10213f,#18345f 68%,#213d62)!important;
+}
+.dmc-btn{
+  background:linear-gradient(135deg,#d7bd76,#b8923c)!important;
+  border-color:#b8923c!important;
+  color:#111827!important;
+}
+
+/* Account modal: premium navy instead of pure black */
+#userModal>div,#createUserModal>div,#accountModal>div,
+#userModal .modal-content,#createUserModal .modal-content,#accountModal .modal-content{
+  background:
+    radial-gradient(circle at 5% 0%,rgba(200,168,90,.07),transparent 23%),
+    linear-gradient(145deg,#101a2b,#0b1320)!important;
+  border-color:rgba(200,168,90,.34)!important;
+  box-shadow:0 30px 90px rgba(5,12,24,.45)!important;
+}
+
+/* Export area: calm, compact enterprise colors */
+#tab-data-center .nbres-export-redesign button{
+  background:#fff!important;
+  color:var(--nb-ink)!important;
+  border:1px solid var(--nb-line)!important;
+  box-shadow:0 7px 20px rgba(16,33,63,.045)!important;
+}
+#tab-data-center .nbres-export-redesign button:hover{
+  border-color:#cfb56f!important;
+  background:#fffdf8!important;
+}
+
+/* Avoid the oversized generic black person silhouette anywhere our compact
+   account/people/export actions are rendered. */
+.nbres-action-iconbox .fa-user,
+.nbres-compact-action .fa-user,
+#tab-data-center .fa-user{display:none!important}
+
+/* Responsive polish */
+@media(max-width:768px){
+  #appScreen,#mainApp{background:#f5f7fa!important}
+  #nbresDemoAdminLauncher{box-shadow:0 10px 26px rgba(16,33,63,.22)!important}
+}
+</style>
+
+
+<!-- NBRES V10.5.1 • LOGIN-TO-APP COLOR SYNC -->
+<style>
+:root{
+  --nb-login-black:#080b10;
+  --nb-login-charcoal:#10151d;
+  --nb-login-charcoal-2:#171d27;
+  --nb-login-gold:#c5a348;
+  --nb-login-gold-deep:#a47d25;
+  --nb-login-gold-soft:#eadba9;
+  --nb-login-ivory:#fbfaf6;
+  --nb-login-canvas:#f4f3ef;
+  --nb-login-ink:#171b23;
+  --nb-login-muted:#707887;
+  --nb-login-line:#e5e2d9;
+}
+
+/* APP CANVAS — same warm neutral family as login */
+#appScreen,#mainApp{
+  background:
+    radial-gradient(circle at 88% 0%,rgba(197,163,72,.065),transparent 24%),
+    linear-gradient(180deg,#faf9f6 0%,#f3f2ee 100%)!important;
+  color:var(--nb-login-ink)!important;
+}
+
+/* SIDEBAR — same charcoal black as login shell */
+#appScreen aside,#mainApp aside,
+#appScreen .sidebar,#mainApp .sidebar{
+  background:
+    radial-gradient(circle at 15% 95%,rgba(197,163,72,.10),transparent 24%),
+    linear-gradient(180deg,#10151d 0%,#080b10 100%)!important;
+  border-color:rgba(197,163,72,.12)!important;
+}
+#appScreen aside button,#mainApp aside button,
+#appScreen .sidebar button,#mainApp .sidebar button{color:#aeb5c1!important}
+#appScreen aside button:hover,#mainApp aside button:hover,
+#appScreen .sidebar button:hover,#mainApp .sidebar button:hover{
+  background:rgba(197,163,72,.07)!important;color:#f7f2e5!important
+}
+#appScreen aside button.active,#mainApp aside button.active,
+#appScreen .sidebar button.active,
+#appScreen aside [aria-current="page"],#mainApp aside [aria-current="page"]{
+  background:linear-gradient(90deg,rgba(197,163,72,.18),rgba(197,163,72,.035))!important;
+  color:#e4ca7c!important;
+  box-shadow:inset 3px 0 0 var(--nb-login-gold)!important;
+}
+
+/* Header */
+#appScreen header,#mainApp header,#appScreen .topbar,#mainApp .topbar{
+  background:rgba(251,250,246,.92)!important;
+  border-color:var(--nb-login-line)!important;
+}
+
+/* Branded hero areas — charcoal + subtle gold, matching auth */
+#tab-users .bg-gradient-to-r,
+#tab-company-dashboard .bg-gradient-to-r,
+#tab-platform-dashboard .bg-gradient-to-r,
+#tab-inventory .bg-gradient-to-r{
+  background:
+    radial-gradient(circle at 92% 12%,rgba(197,163,72,.14),transparent 25%),
+    linear-gradient(120deg,#10151d 0%,#0b0f15 72%,#17130b 100%)!important;
+  border-color:rgba(197,163,72,.22)!important;
+}
+
+/* Cards */
+#appScreen .bg-white,#mainApp .bg-white,
+#appScreen .card,#mainApp .card,
+#appScreen .glass-card,#mainApp .glass-card{
+  background:#fff!important;
+  border-color:var(--nb-login-line)!important;
+  box-shadow:0 10px 30px rgba(8,11,16,.055)!important;
+}
+
+/* CTA — exact login gold family */
+#appScreen button.bg-yellow-400,#mainApp button.bg-yellow-400,
+#appScreen button.bg-yellow-500,#mainApp button.bg-yellow-500,
+#appScreen button.bg-blue-500,#mainApp button.bg-blue-500,
+#appScreen button.bg-blue-600,#mainApp button.bg-blue-600,
+#appScreen .btn-primary,#mainApp .btn-primary,
+.dmc-btn{
+  background:linear-gradient(135deg,#d0b45e,#a47d25)!important;
+  color:#090b0f!important;
+  border-color:#a98632!important;
+  box-shadow:0 7px 18px rgba(164,125,37,.16)!important;
+}
+
+/* Remove residual blue/sapphire emphasis from V10.5.0 */
+#appScreen .text-blue-500,#mainApp .text-blue-500,
+#appScreen .text-blue-600,#mainApp .text-blue-600{color:#9b7729!important}
+#appScreen .border-blue-500,#mainApp .border-blue-500,
+#appScreen .border-blue-600,#mainApp .border-blue-600{border-color:#c8ad62!important}
+#appScreen .bg-blue-50,#mainApp .bg-blue-50{background:#faf6e9!important}
+#appScreen .bg-blue-100,#mainApp .bg-blue-100{background:#f4ead0!important}
+
+/* Inputs focus = login gold */
+#appScreen input:focus,#appScreen select:focus,#appScreen textarea:focus,
+#mainApp input:focus,#mainApp select:focus,#mainApp textarea:focus{
+  border-color:#b8923c!important;
+  box-shadow:0 0 0 3px rgba(197,163,72,.12)!important;
+}
+
+/* Icon boxes */
+.nbres-action-iconbox{
+  background:linear-gradient(145deg,#faf6e9,#efe2bd)!important;
+  border-color:#ddc680!important;
+  color:#947020!important;
+}
+
+/* Demo Center follows same identity */
+#nbresDemoAdminLauncher{
+  background:linear-gradient(135deg,#10151d,#080b10)!important;
+  border-color:rgba(197,163,72,.52)!important;
+  color:#dfc371!important;
+}
+#nbresDemoCenter .dmc-head{
+  background:
+    radial-gradient(circle at 88% 10%,rgba(197,163,72,.15),transparent 25%),
+    linear-gradient(120deg,#10151d,#080b10 72%,#17130b)!important;
+  border-color:rgba(197,163,72,.22)!important;
+}
+
+/* Account modal remains the visual bridge between login and app */
+#userModal>div,#createUserModal>div,#accountModal>div,
+#userModal .modal-content,#createUserModal .modal-content,#accountModal .modal-content{
+  background:
+    radial-gradient(circle at 5% 0%,rgba(197,163,72,.08),transparent 23%),
+    linear-gradient(145deg,#10151d,#080b10)!important;
+  border-color:rgba(197,163,72,.34)!important;
+}
+
+/* Export cards */
+#tab-data-center .nbres-export-redesign button{
+  background:#fffdf9!important;
+  border-color:#e7e1d2!important;
+}
+#tab-data-center .nbres-export-redesign button:hover{
+  background:#fcf7ea!important;border-color:#cdb367!important;
+}
+
+/* Preserve semantic colors: red danger / green success only */
+@media(max-width:768px){
+  #appScreen,#mainApp{background:#f5f4f0!important}
+}
+</style>
+
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 min-h-screen pb-12 antialiased">
 
@@ -8837,6 +9165,68 @@ body.nbres-demo-mode [data-demo-blocked="1"]{display:none!important}
    (ref?.parentNode||host).appendChild(btn);
  }
  setInterval(installDemoNav,1800);
+})();
+</script>
+
+
+<!-- NBRES V10.4.3 • DEMO CENTER ACCESS FIX -->
+<style>
+#nbresDemoAdminLauncher{
+ position:fixed;right:18px;top:92px;z-index:9900;
+ display:none;align-items:center;gap:9px;
+ padding:10px 13px;border-radius:11px;
+ border:1px solid rgba(190,153,52,.45);
+ background:linear-gradient(135deg,#111827,#171a2e);
+ color:#e2c266;box-shadow:0 10px 30px #0002;
+ font:750 11px/1.2 "Be Vietnam Pro",sans-serif;cursor:pointer
+}
+#nbresDemoAdminLauncher svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8}
+@media(max-width:700px){#nbresDemoAdminLauncher{top:auto;bottom:18px;right:14px}}
+</style>
+<button id="nbresDemoAdminLauncher" type="button" onclick="nbresOpenDemoCenter()" title="Quản lý tài khoản Demo">
+<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 9h8M8 13h5M17 13h.01"/></svg>
+<span>Quản lý Demo</span>
+</button>
+<script>
+(function(){
+ function demoAdminVisible(){
+   const b=document.getElementById('nbresDemoAdminLauncher');
+   if(!b)return;
+   let ok=false;
+   try{
+     ok=(typeof isSuperAdmin==='function' && isSuperAdmin()) ||
+        (window.currentUser && (currentUser.role==='Admin Quản Lí'||currentUser.role==='platform_admin'));
+   }catch(e){}
+   b.style.display=ok?'inline-flex':'none';
+ }
+ document.addEventListener('DOMContentLoaded',demoAdminVisible);
+ setInterval(demoAdminVisible,900);
+
+ // Make center opening independent of existing tab markup.
+ const oldOpen=window.nbresOpenDemoCenter;
+ window.nbresOpenDemoCenter=async function(){
+   let ok=false;
+   try{
+     ok=(typeof isSuperAdmin==='function' && isSuperAdmin()) ||
+        (window.currentUser && (currentUser.role==='Admin Quản Lí'||currentUser.role==='platform_admin'));
+   }catch(e){}
+   if(!ok){
+     if(typeof showToast==='function') showToast('Chỉ Admin Quản Lí được quản lý Demo.');
+     return;
+   }
+   // Hide known operational screens without depending on one specific class.
+   document.querySelectorAll('[id^="tab-"]').forEach(x=>{
+     x.dataset.demoPrevDisplay=x.style.display||'';
+     x.style.display='none';
+   });
+   const c=document.getElementById('nbresDemoCenter');
+   if(c){
+     c.classList.remove('hidden');
+     c.style.display='block';
+     c.scrollIntoView({behavior:'smooth',block:'start'});
+   }
+   if(typeof nbresLoadDemoAccounts==='function') await nbresLoadDemoAccounts();
+ };
 })();
 </script>
 
