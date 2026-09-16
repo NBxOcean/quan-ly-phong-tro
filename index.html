@@ -9443,5 +9443,165 @@ body.nbres-demo-mode #nbresDemoAdminLauncher{display:none!important}
 })();
 </script>
 
+
+<!-- NBRES V11.1.0 • ADMIN DEMO PREVIEW + HUMAN-CENTERED UI -->
+<style>
+/* Human-centered visual system: calm, predictable, low cognitive load */
+:root{
+ --nb11-black:#0b0e13;--nb11-panel:#11161e;--nb11-gold:#c5a348;
+ --nb11-gold2:#a47d25;--nb11-ivory:#fbfaf7;--nb11-canvas:#f4f3ef;
+ --nb11-ink:#1b2029;--nb11-muted:#737b88;--nb11-line:#e6e2d8;
+}
+#appScreen,#mainApp{background:var(--nb11-canvas)!important}
+#appScreen .main-content,#mainApp .main-content{max-width:1500px!important}
+#appScreen .bg-white,#mainApp .bg-white,#appScreen .card,#mainApp .card{
+ border:1px solid var(--nb11-line)!important;box-shadow:0 7px 22px rgba(12,15,20,.045)!important
+}
+#appScreen button,#mainApp button{border-radius:10px}
+#appScreen input,#appScreen select,#appScreen textarea,
+#mainApp input,#mainApp select,#mainApp textarea{border-radius:10px!important;background:#fff!important}
+#appScreen table,#mainApp table{background:#fff}
+#appScreen thead,#mainApp thead{background:#f8f7f3!important}
+#appScreen th,#mainApp th{font-size:10px!important;letter-spacing:.025em!important}
+#appScreen td,#mainApp td{vertical-align:middle}
+
+/* Admin preview bar: persistent orientation + obvious way back */
+#nbresAdminPreviewBar{
+ position:fixed;left:50%;top:10px;transform:translateX(-50%);
+ z-index:10010;display:none;align-items:center;gap:12px;
+ max-width:calc(100vw - 28px);padding:8px 9px 8px 13px;border-radius:999px;
+ border:1px solid rgba(197,163,72,.42);background:rgba(11,14,19,.96);
+ color:#e9edf2;box-shadow:0 14px 38px rgba(0,0,0,.24);backdrop-filter:blur(16px);
+ font:600 10px/1.25 "Be Vietnam Pro",sans-serif
+}
+#nbresAdminPreviewBar .nbp-dot{width:7px;height:7px;border-radius:50%;background:#c5a348;box-shadow:0 0 0 4px rgba(197,163,72,.12)}
+#nbresAdminPreviewBar strong{color:#e1c36e}
+#nbresAdminPreviewBar button{
+ min-height:34px!important;border:1px solid rgba(197,163,72,.45);border-radius:999px!important;
+ padding:7px 12px;background:linear-gradient(135deg,#d0b45e,#a47d25);color:#090b0f;font-weight:800;cursor:pointer
+}
+
+/* Demo center becomes a true control center */
+#nbresDemoCenter{max-width:1500px;margin:0 auto}
+#nbresDemoCenter .dmc-head{box-shadow:0 18px 45px rgba(8,11,16,.13)}
+#nbresDemoCenter .dmc-kpi{box-shadow:none!important}
+#nbresDemoCenter .dmc-panel{box-shadow:none!important}
+#dmcPreviewBtn{margin-left:8px;background:#fff!important;color:#1b2029!important;border:1px solid #ded8c9!important}
+#dmcPreviewBtn:hover{background:#fbf7ea!important;border-color:#c9ae61!important}
+
+/* Reduce visual noise in operational pages */
+#appScreen .shadow-xl,#mainApp .shadow-xl{box-shadow:0 12px 32px rgba(10,13,18,.08)!important}
+#appScreen .shadow-lg,#mainApp .shadow-lg{box-shadow:0 9px 25px rgba(10,13,18,.065)!important}
+#appScreen .shadow-md,#mainApp .shadow-md{box-shadow:0 6px 18px rgba(10,13,18,.05)!important}
+
+/* Mobile: orientation remains clear */
+@media(max-width:700px){
+ #nbresAdminPreviewBar{left:9px;right:9px;top:8px;transform:none;border-radius:14px;justify-content:space-between}
+ #nbresAdminPreviewBar .nbp-copy span{display:none}
+ #nbresDemoCenter{padding:14px!important}
+ #nbresDemoCenter .dmc-head{padding:19px!important}
+}
+</style>
+
+<div id="nbresAdminPreviewBar">
+ <span class="nbp-dot"></span>
+ <div class="nbp-copy"><strong>Đang xem Demo</strong> <span id="nbresAdminPreviewCompany">• NBRES Demo</span></div>
+ <button type="button" onclick="nbresReturnToDemoCenter()">← Trung tâm quản lý</button>
+</div>
+
+<script>
+/* Admin Preview keeps Platform Admin authenticated.
+   It changes only tenant context; it never signs the Admin into a Demo user's auth session. */
+(function(){
+ const PREVIEW_KEY='NBRES_ADMIN_DEMO_PREVIEW';
+ const ORIGIN_KEY='NBRES_ADMIN_DEMO_ORIGIN_TENANT';
+
+ function isPlatformAdmin(){
+   try{return (typeof isSuperAdmin==='function'&&isSuperAdmin()) ||
+     (window.currentUser&&(currentUser.role==='Admin Quản Lí'||currentUser.role==='platform_admin'))}catch(e){return false}
+ }
+ async function findDemoTenant(){
+   if(Array.isArray(window.tenants)){
+     const t=tenants.find(x=>/nbres\s*demo/i.test(String(x.company_name||'')));
+     if(t)return t;
+   }
+   const {data,error}=await supabaseClient.from('tenants').select('id,company_name,teams_enabled').ilike('company_name','%NBRES Demo%').limit(1);
+   if(error)throw error;
+   if(!data||!data.length)throw new Error('Chưa tìm thấy Công ty NBRES Demo.');
+   return data[0];
+ }
+
+ window.nbresPreviewDemoAsAdmin=async function(){
+   if(!isPlatformAdmin())return;
+   try{
+     const demo=await findDemoTenant();
+     if(!sessionStorage.getItem(PREVIEW_KEY)){
+       sessionStorage.setItem(ORIGIN_KEY,window.currentTenantId||'');
+     }
+     sessionStorage.setItem(PREVIEW_KEY,'1');
+     await selectCompanyContext(demo.id);
+     const center=document.getElementById('nbresDemoCenter');
+     if(center)center.style.display='none';
+     document.getElementById('nbresAdminPreviewCompany').textContent='• '+(demo.company_name||'NBRES Demo');
+     document.getElementById('nbresAdminPreviewBar').style.display='flex';
+     // Use the actual product screen, not a fake duplicate.
+     switchTab('tab-inventory');
+     if(typeof showToast==='function')showToast('Đang xem trải nghiệm NBRES Demo. Admin vẫn giữ nguyên phiên quản trị.','success');
+   }catch(e){
+     if(typeof showToast==='function')showToast(e.message||String(e),'error'); else alert(e.message||e);
+   }
+ };
+
+ window.nbresReturnToDemoCenter=async function(){
+   if(!isPlatformAdmin())return;
+   try{
+     sessionStorage.removeItem(PREVIEW_KEY);
+     const origin=sessionStorage.getItem(ORIGIN_KEY);
+     sessionStorage.removeItem(ORIGIN_KEY);
+     document.getElementById('nbresAdminPreviewBar').style.display='none';
+
+     // Restore the Admin's prior company context when possible.
+     if(origin && typeof isUuid==='function' && isUuid(origin)){
+       try{await selectCompanyContext(origin)}catch(e){console.warn('Restore context:',e)}
+     }
+     // Return to the management center without logging out.
+     if(typeof nbresOpenDemoCenter==='function')await nbresOpenDemoCenter();
+   }catch(e){
+     console.error(e);
+     if(typeof nbresOpenDemoCenter==='function')await nbresOpenDemoCenter();
+   }
+ };
+
+ function installPreviewAction(){
+   const head=document.querySelector('#nbresDemoCenter .dmc-head');
+   if(!head||document.getElementById('dmcPreviewBtn'))return;
+   const create=head.querySelector('.dmc-btn');
+   if(!create)return;
+   const wrap=document.createElement('div');
+   wrap.style.cssText='display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end';
+   create.parentNode.insertBefore(wrap,create);
+   wrap.appendChild(create);
+   const b=document.createElement('button');
+   b.id='dmcPreviewBtn';b.type='button';b.className='dmc-btn';
+   b.textContent='Xem trải nghiệm Demo';
+   b.onclick=window.nbresPreviewDemoAsAdmin;
+   wrap.appendChild(b);
+ }
+
+ function syncPreview(){
+   installPreviewAction();
+   const bar=document.getElementById('nbresAdminPreviewBar');
+   if(!bar)return;
+   const active=isPlatformAdmin()&&sessionStorage.getItem(PREVIEW_KEY)==='1';
+   bar.style.display=active?'flex':'none';
+   // Platform Admin preview must not show the client "Thoát Demo" control.
+   const clientBar=document.getElementById('nbresDemoExitBar');
+   if(clientBar&&active)clientBar.style.display='none';
+ }
+ document.addEventListener('DOMContentLoaded',syncPreview);
+ setInterval(syncPreview,800);
+})();
+</script>
+
 </body>
 </html>
