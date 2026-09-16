@@ -48,7 +48,7 @@
       }
     }
     </script>
-<title>NBRES V12.0 Stable • Real Estate Operating System</title>
+<title>NBRES V12.1 - Notification Center • Stable</title>
     <!-- Tailwind CSS & FontAwesome Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link id="nbresFontAwesome" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css'">
@@ -1705,6 +1705,56 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
 @media(prefers-reduced-motion:reduce){.nbres-sync-pill-v12[data-state="syncing"] .dot{animation:none}}
 </style>
 
+
+<style id="nbres-v121-notification-center">
+.nbres-notif-bell-v121{width:42px;height:42px;border-radius:14px;border:1px solid #334155;background:rgba(30,41,59,.92);display:grid;place-items:center;color:#cbd5e1;transition:.18s ease;position:relative}
+.nbres-notif-bell-v121:hover{background:#1e293b;color:#67e8f9;border-color:#475569;transform:translateY(-1px)}
+.nbres-notif-badge-v121,.nbres-notif-menu-badge-v121,.nbres-notif-mobile-badge-v121{background:#ef4444;color:white;font-weight:900;line-height:1;border-radius:999px;display:grid;place-items:center;box-shadow:0 0 0 2px #0f172a}
+.nbres-notif-badge-v121{position:absolute;right:-5px;top:-5px;min-width:19px;height:19px;padding:0 5px;font-size:9px}
+.nbres-notif-menu-badge-v121{min-width:20px;height:20px;padding:0 6px;font-size:9px;box-shadow:none}
+.nbres-notif-mobile-badge-v121{position:absolute;right:14%;top:5px;min-width:18px;height:18px;padding:0 5px;font-size:8px;box-shadow:0 0 0 2px #0b1018}
+.nbres-notif-hero-v121{border-radius:24px;padding:22px;background:radial-gradient(circle at 92% 8%,rgba(34,211,238,.16),transparent 26%),linear-gradient(135deg,#07111f,#0b1727 55%,#0d2430);border:1px solid rgba(103,232,249,.10);box-shadow:0 16px 45px rgba(15,23,42,.10)}
+.nbres-notif-hero-count-v121{padding:6px 10px;border-radius:999px;background:rgba(34,211,238,.10);border:1px solid rgba(103,232,249,.18);color:#a5f3fc;font-size:10px;font-weight:900}
+.nbres-notif-hero-btn-v121{display:inline-flex;align-items:center;gap:7px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);color:#e2e8f0;font-size:11px;font-weight:800}
+.nbres-notif-hero-btn-v121:hover{background:rgba(255,255,255,.10)}
+.nbres-notif-stat-v121{padding:13px 14px;border-radius:15px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.07);display:flex;align-items:end;justify-content:space-between;gap:8px}
+.nbres-notif-stat-v121 span{font-size:10px;color:#94a3b8;font-weight:700}
+.nbres-notif-stat-v121 strong{font-size:23px;color:#f8fafc;letter-spacing:-.04em}
+.nbres-notif-composer-v121{background:#fff;border:1px solid #e2e8f0;border-radius:20px;padding:18px;box-shadow:0 8px 28px rgba(15,23,42,.05)}
+.nbres-notif-label-v121{display:block;font-size:10px;font-weight:800;color:#64748b;margin:0 0 6px;text-transform:uppercase;letter-spacing:.04em}
+.nbres-notif-input-v121,.nbres-notif-filter-v121{width:100%;border:1px solid #dfe5ec!important;border-radius:12px!important;background:#f8fafc!important;color:#0f172a;outline:none;transition:.16s ease}
+.nbres-notif-input-v121{min-height:44px;padding:10px 12px;font-size:13px}
+textarea.nbres-notif-input-v121{min-height:108px}
+.nbres-notif-filter-v121{min-height:40px;padding:9px 11px;font-size:12px}
+.nbres-notif-input-v121:focus,.nbres-notif-filter-v121:focus{border-color:#22d3ee!important;box-shadow:0 0 0 3px rgba(34,211,238,.11)!important;background:#fff!important}
+.nbres-notif-pin-v121{border:1px solid #e2e8f0;border-radius:12px;background:#f8fafc;padding:9px 11px;display:flex;align-items:center;gap:10px;min-height:44px;cursor:pointer}
+.nbres-notif-pin-v121 input{width:16px;height:16px;accent-color:#0891b2}
+.nbres-notif-pin-v121 span{display:flex;flex-direction:column}.nbres-notif-pin-v121 b{font-size:11px;color:#334155}.nbres-notif-pin-v121 small{font-size:9px;color:#94a3b8}
+.nbres-notif-publish-v121{min-height:42px;padding:0 16px;border-radius:12px;background:linear-gradient(135deg,#06b6d4,#0284c7);color:white;display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:900;box-shadow:0 8px 20px rgba(8,145,178,.16)}
+.nbres-notif-item-v121{position:relative;padding:16px 18px;background:#fff;transition:.16s ease}
+.nbres-notif-item-v121:hover{background:#fbfdff}
+.nbres-notif-item-v121.is-unread{background:linear-gradient(90deg,rgba(236,254,255,.70),#fff 38%)}
+.nbres-notif-item-v121.is-unread:before{content:"";position:absolute;left:0;top:13px;bottom:13px;width:3px;border-radius:0 99px 99px 0;background:#06b6d4}
+.nbres-notif-dot-v121{width:8px;height:8px;border-radius:999px;background:#06b6d4;box-shadow:0 0 0 4px rgba(6,182,212,.10)}
+.nbres-notif-chip-v121{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:999px;font-size:9px;font-weight:900;white-space:nowrap}
+.nbres-notif-chip-v121.normal{background:#eef2ff;color:#4338ca}.nbres-notif-chip-v121.important{background:#fffbeb;color:#b45309}.nbres-notif-chip-v121.urgent{background:#fff1f2;color:#be123c}
+.nbres-notif-scope-v121{background:#f1f5f9;color:#64748b}
+.nbres-notif-action-v121{padding:8px 10px;border-radius:10px;background:#ecfeff;color:#0e7490;font-size:10px;font-weight:900}
+.nbres-notif-read-btn-v121{padding:8px 10px;border-radius:10px;background:#f8fafc;color:#64748b;border:1px solid #e2e8f0;font-size:10px;font-weight:800}
+.nbres-smart-card-v121{background:white;border:1px solid #e2e8f0;border-radius:16px;padding:14px;display:flex;gap:12px;align-items:flex-start;box-shadow:0 4px 16px rgba(15,23,42,.035)}
+.nbres-smart-icon-v121{width:40px;height:40px;border-radius:12px;background:#fffbeb;color:#d97706;display:grid;place-items:center;flex:0 0 auto}
+.nbres-smart-action-v121{margin-top:8px;color:#0891b2;font-size:10px;font-weight:900}
+.nbres-notif-empty-v121{padding:40px 18px;text-align:center;color:#94a3b8;font-size:12px}
+@media(max-width:767px){
+  .nbres-notif-bell-v121{width:40px;height:40px;border-radius:12px}
+  .nbres-notif-hero-v121{border-radius:18px;padding:17px}
+  .nbres-notif-hero-v121 h2{font-size:21px!important}
+  .nbres-notif-composer-v121{border-radius:16px;padding:14px}
+  .nbres-notif-item-v121{padding:14px}
+  .nbres-notif-mobile-badge-v121{right:12%;top:3px}
+}
+</style>
+
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 min-h-screen pb-12 antialiased">
 
@@ -1810,6 +1860,11 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
 
                 <div class="flex items-center gap-2 sm:gap-3 flex-wrap w-full lg:w-auto">
                     
+                    <button id="notificationBellV121" type="button" onclick="switchTab('tab-notifications')" class="nbres-notif-bell-v121 relative shrink-0" title="Trung tâm thông báo" aria-label="Mở trung tâm thông báo">
+                        <i class="fa-solid fa-bell"></i>
+                        <span id="notificationHeaderBadgeV121" class="nbres-notif-badge-v121 hidden">0</span>
+                    </button>
+
                     <div class="relative">
                         <button id="taskMenuButton" onclick="toggleTaskMenu()" class="flex items-center gap-2 bg-slate-800/90 hover:bg-slate-700 text-white px-3.5 py-2 rounded-2xl border border-slate-700 shadow-sm text-sm font-bold transition">
                             <i class="fa-solid fa-bars"></i>
@@ -1860,7 +1915,9 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
                                     <span class="w-9 h-9 rounded-xl bg-sky-500/10 text-sky-300 flex items-center justify-center"><i class="fa-solid fa-chart-line"></i></span><span class="font-bold">Báo Cáo Kinh Doanh</span>
                                 </button>
                                 <button onclick="selectTaskFromMenu('tab-notifications')" id="nav-notifications" class="task-menu-item tab-btn w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
-                                    <span class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-300 flex items-center justify-center"><i class="fa-solid fa-bell"></i></span><span class="font-bold">Thông báo</span>
+                                    <span class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-300 flex items-center justify-center"><i class="fa-solid fa-bell"></i></span>
+                                    <span class="font-bold flex-1">Thông báo</span>
+                                    <span id="notificationNavBadgeV121" class="nbres-notif-menu-badge-v121 hidden">0</span>
                                 </button>
                                 <button onclick="selectTaskFromMenu('tab-audit')" id="nav-audit" class="task-menu-item tab-btn w-full px-3 py-3 rounded-xl text-sm font-semibold transition flex items-center gap-3 text-left text-slate-200 hover:bg-slate-800">
                                     <span class="w-9 h-9 rounded-xl bg-violet-500/10 text-violet-300 flex items-center justify-center"><i class="fa-solid fa-clock-rotate-left"></i></span><span class="font-bold">Nhật Ký / Thùng Rác</span>
@@ -2225,15 +2282,151 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
             <div id="tab-business-report" class="tab-content hidden space-y-5"><div><div class="text-[10px] uppercase font-black text-sky-600">NBRES • BUSINESS INTELLIGENCE</div><h2 class="text-2xl font-black text-slate-900">Báo Cáo Kinh Doanh</h2></div><div id="businessReportStats" class="grid grid-cols-2 lg:grid-cols-4 gap-3"></div><div class="grid lg:grid-cols-2 gap-4"><div class="bg-white rounded-2xl border p-5"><h3 class="font-black">Phễu Sale</h3><div id="reportFunnel" class="mt-4 space-y-3"></div></div><div class="bg-white rounded-2xl border p-5"><h3 class="font-black">Hiệu suất vận hành</h3><div id="reportOps" class="mt-4 space-y-3"></div></div></div></div>
 
             <div id="tab-notifications" class="tab-content hidden space-y-5">
-                <div><h2 class="text-2xl font-black text-slate-900"><i class="fa-solid fa-bell text-amber-500 mr-2"></i>Trung Tâm Thông báo <span id="notifCountV10" class="ml-2 text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-700">0</span></h2><p class="text-xs text-slate-500">Thông báo nội bộ theo đúng phạm vi Công Ty / Khu vực.</p></div>
-                <div id="announcementComposerV10" class="hidden bg-white rounded-2xl border shadow-sm p-5">
-                    <div class="flex items-center justify-between gap-3"><div><div class="text-[10px] uppercase tracking-wider font-black text-indigo-600">NBRES • ANNOUNCEMENT</div><h3 class="font-black text-slate-900 mt-1">Tạo thông báo</h3></div><span id="announcementScopeBadgeV10" class="text-[10px] px-2.5 py-1.5 rounded-full bg-indigo-50 text-indigo-700 font-black"></span></div>
-                    <div class="grid md:grid-cols-2 gap-3 mt-4"><input id="announcementTitleV10" maxlength="160" placeholder="Tiêu đề thông báo *" class="border rounded-xl p-3 text-sm"><select id="announcementPriorityV10" class="border rounded-xl p-3 text-sm"><option value="normal">Thông thường</option><option value="important">Quan trọng</option><option value="urgent">Khẩn cấp</option></select></div>
-                    <textarea id="announcementBodyV10" maxlength="3000" rows="4" placeholder="Nội dung thông báo *" class="w-full border rounded-xl p-3 text-sm mt-3"></textarea>
-                    <div class="flex justify-between items-center gap-3 mt-3"><div id="announcementScopeHelpV10" class="text-[11px] text-slate-500"></div><button onclick="publishAnnouncementV10()" class="px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-black"><i class="fa-solid fa-paper-plane mr-1"></i>Đăng thông báo</button></div>
-                </div>
-                <div><div class="flex justify-between items-center"><h3 class="font-black text-slate-800">Thông báo nội bộ</h3><button onclick="loadAnnouncementsV10()" class="text-xs font-bold text-indigo-600">Làm mới</button></div><div id="companyAnnouncementListV10" class="space-y-3 mt-3"></div></div>
-                <div><h3 class="font-black text-slate-800">Nhắc việc thông minh</h3><div id="smartNotificationList" class="space-y-3 mt-3"></div></div>
+                <section class="nbres-notif-hero-v121">
+                    <div class="flex items-start justify-between gap-4 flex-wrap">
+                        <div>
+                            <div class="text-[10px] uppercase tracking-[.22em] text-cyan-300 font-black">NBRES • NOTIFICATION COMMAND CENTER</div>
+                            <div class="flex items-center gap-3 mt-2 flex-wrap">
+                                <h2 class="text-2xl md:text-3xl font-black text-white">Trung tâm Thông báo</h2>
+                                <span id="notifCountV10" class="nbres-notif-hero-count-v121">0 chưa đọc</span>
+                            </div>
+                            <p class="text-sm text-slate-400 mt-2 max-w-2xl">Thông báo nội bộ, cảnh báo vận hành và nhắc việc được gom vào một nơi — đúng Công Ty, Khu vực và Team.</p>
+                        </div>
+                        <div class="flex gap-2 flex-wrap">
+                            <button onclick="markAllAnnouncementsReadV121()" class="nbres-notif-hero-btn-v121"><i class="fa-solid fa-check-double"></i><span>Đọc tất cả</span></button>
+                            <button onclick="refreshNotificationCenterV121()" class="nbres-notif-hero-btn-v121"><i class="fa-solid fa-rotate"></i><span>Làm mới</span></button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-5">
+                        <div class="nbres-notif-stat-v121"><span>Chưa đọc</span><strong id="notifStatUnreadV121">0</strong></div>
+                        <div class="nbres-notif-stat-v121"><span>Khẩn cấp</span><strong id="notifStatUrgentV121">0</strong></div>
+                        <div class="nbres-notif-stat-v121"><span>Hôm nay</span><strong id="notifStatTodayV121">0</strong></div>
+                        <div class="nbres-notif-stat-v121"><span>Nhắc việc</span><strong id="notifStatSmartV121">0</strong></div>
+                    </div>
+                </section>
+
+                <section id="announcementComposerV10" class="hidden nbres-notif-composer-v121">
+                    <div class="flex items-start justify-between gap-3 flex-wrap">
+                        <div>
+                            <div class="text-[10px] uppercase tracking-[.18em] font-black text-cyan-700">TẠO THÔNG BÁO NỘI BỘ</div>
+                            <h3 class="text-lg font-black text-slate-900 mt-1">Gửi đúng người, đúng phạm vi</h3>
+                            <p id="announcementScopeHelpV10" class="text-xs text-slate-500 mt-1"></p>
+                        </div>
+                        <span id="announcementScopeBadgeV10" class="text-[10px] px-3 py-1.5 rounded-full bg-cyan-50 text-cyan-800 border border-cyan-100 font-black"></span>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-3 mt-4">
+                        <div class="xl:col-span-2">
+                            <label class="nbres-notif-label-v121">Tiêu đề *</label>
+                            <input id="announcementTitleV10" maxlength="160" placeholder="VD: Họp Sale lúc 17:30 hôm nay" class="nbres-notif-input-v121">
+                        </div>
+                        <div>
+                            <label class="nbres-notif-label-v121">Mức độ</label>
+                            <select id="announcementPriorityV10" class="nbres-notif-input-v121">
+                                <option value="normal">Thông thường</option>
+                                <option value="important">Quan trọng</option>
+                                <option value="urgent">Khẩn cấp</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="nbres-notif-label-v121">Nhóm</label>
+                            <select id="announcementCategoryV121" class="nbres-notif-input-v121">
+                                <option value="general">Thông báo chung</option>
+                                <option value="sales">Kinh doanh / Sale</option>
+                                <option value="operations">Vận hành</option>
+                                <option value="schedule">Lịch / Công việc</option>
+                                <option value="system">Hệ thống</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-3 mt-3">
+                        <div>
+                            <label class="nbres-notif-label-v121">Phạm vi gửi</label>
+                            <select id="announcementScopeTypeV121" onchange="syncAnnouncementScopeV121()" class="nbres-notif-input-v121"></select>
+                        </div>
+                        <div id="announcementRegionWrapV121" class="hidden">
+                            <label class="nbres-notif-label-v121">Khu vực</label>
+                            <select id="announcementRegionV121" onchange="syncAnnouncementTeamsV121()" class="nbres-notif-input-v121"></select>
+                        </div>
+                        <div id="announcementTeamWrapV121" class="hidden">
+                            <label class="nbres-notif-label-v121">Team</label>
+                            <select id="announcementTeamV121" class="nbres-notif-input-v121"></select>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <label class="nbres-notif-label-v121">Nội dung *</label>
+                        <textarea id="announcementBodyV10" maxlength="3000" rows="4" placeholder="Viết nội dung ngắn gọn, rõ hành động cần thực hiện..." class="nbres-notif-input-v121 resize-y"></textarea>
+                        <div class="text-right text-[10px] text-slate-400 mt-1"><span id="announcementBodyCountV121">0</span>/3000</div>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-3 mt-3">
+                        <div>
+                            <label class="nbres-notif-label-v121">Liên kết nhanh</label>
+                            <select id="announcementActionTabV121" class="nbres-notif-input-v121">
+                                <option value="">Không có</option>
+                                <option value="tab-inventory">Kho phòng</option>
+                                <option value="tab-leads">Khách hàng / Lead</option>
+                                <option value="tab-appointments">Lịch xem phòng</option>
+                                <option value="tab-crm">Kịch bản CRM</option>
+                                <option value="tab-business-report">Báo cáo kinh doanh</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="nbres-notif-label-v121">Tự hết hạn</label>
+                            <input id="announcementExpiresV121" type="datetime-local" class="nbres-notif-input-v121">
+                        </div>
+                        <label class="nbres-notif-pin-v121">
+                            <input id="announcementPinnedV121" type="checkbox">
+                            <span><b>Ghim thông báo</b><small>Luôn ưu tiên ở đầu danh sách</small></span>
+                        </label>
+                    </div>
+
+                    <div class="flex justify-end mt-4">
+                        <button id="publishAnnouncementBtnV121" onclick="publishAnnouncementV10()" class="nbres-notif-publish-v121"><i class="fa-solid fa-paper-plane"></i><span>Đăng thông báo</span></button>
+                    </div>
+                </section>
+
+                <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-4 border-b border-slate-100">
+                        <div class="flex items-center justify-between gap-3 flex-wrap">
+                            <div>
+                                <h3 class="font-black text-slate-900">Hộp thư nội bộ</h3>
+                                <p class="text-[11px] text-slate-500 mt-1">Trạng thái đã đọc được đồng bộ theo tài khoản, kể cả khi đổi thiết bị.</p>
+                            </div>
+                            <div class="text-[10px] text-slate-400"><span id="announcementVisibleCountV121">0</span> thông báo</div>
+                        </div>
+                        <div class="grid md:grid-cols-4 gap-2 mt-4">
+                            <div class="md:col-span-2 relative">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                                <input id="announcementSearchV121" oninput="renderAnnouncementCenterV121()" placeholder="Tìm tiêu đề hoặc nội dung..." class="nbres-notif-filter-v121 pl-9">
+                            </div>
+                            <select id="announcementStatusFilterV121" onchange="renderAnnouncementCenterV121()" class="nbres-notif-filter-v121">
+                                <option value="">Tất cả trạng thái</option>
+                                <option value="unread">Chưa đọc</option>
+                                <option value="read">Đã đọc</option>
+                            </select>
+                            <select id="announcementPriorityFilterV121" onchange="renderAnnouncementCenterV121()" class="nbres-notif-filter-v121">
+                                <option value="">Mọi mức độ</option>
+                                <option value="urgent">Khẩn cấp</option>
+                                <option value="important">Quan trọng</option>
+                                <option value="normal">Thông thường</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="companyAnnouncementListV10" class="divide-y divide-slate-100"></div>
+                </section>
+
+                <section>
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <h3 class="font-black text-slate-900">Nhắc việc thông minh</h3>
+                            <p class="text-[11px] text-slate-500 mt-1">Tự động phát hiện Lead cần chăm sóc và lịch xem sắp tới.</p>
+                        </div>
+                    </div>
+                    <div id="smartNotificationList" class="grid md:grid-cols-2 gap-3 mt-3"></div>
+                </section>
             </div>
 
             <div id="tab-audit" class="tab-content hidden space-y-5"><div><div class="text-[10px] uppercase font-black text-violet-600">NBRES • CONTROL & RECOVERY</div><h2 class="text-2xl font-black text-slate-900">Nhật Ký & Thùng Rác</h2></div><div class="grid lg:grid-cols-2 gap-4"><div class="bg-white rounded-2xl border overflow-hidden"><div class="p-4 border-b font-black">Nhật ký gần đây</div><div id="auditList" class="divide-y max-h-[620px] overflow-y-auto"></div></div><div class="bg-white rounded-2xl border overflow-hidden"><div class="p-4 border-b font-black">Thùng rác Lead</div><div id="recycleList" class="divide-y max-h-[620px] overflow-y-auto"></div></div></div></div>
@@ -2642,8 +2835,9 @@ i.nbres-inline-icon.fa-spin>svg{animation:nbresIconSpin .8s linear infinite}
             <button type="button" class="nbm-nav-btn" data-mobile-nav="appointments" onclick="switchTab('tab-appointments')" aria-label="Lịch xem">
                 <span class="nbm-nav-dot"></span><i class="fa-solid fa-calendar-check"></i><span>Lịch xem</span>
             </button>
-            <button type="button" class="nbm-nav-btn" data-mobile-nav="more" onclick="toggleTaskMenu()" aria-label="Mở tất cả tác vụ">
+            <button type="button" class="nbm-nav-btn relative" data-mobile-nav="more" onclick="toggleTaskMenu()" aria-label="Mở tất cả tác vụ">
                 <span class="nbm-nav-dot"></span><i class="fa-solid fa-grip"></i><span>Thêm</span>
+                <span id="notificationMobileBadgeV121" class="nbres-notif-mobile-badge-v121 hidden">0</span>
             </button>
         </nav>
     </div><!-- /#mainApp -->
@@ -9468,6 +9662,452 @@ if(typeof _nbresSwitchTab==='function'){
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot,{once:true}); else boot();
 })();
+</script>
+
+
+<script id="nbres-v121-notification-center-js">
+let announcementReadsV121 = new Set();
+let announcementReadSyncAvailableV121 = true;
+
+const NOTIF_TAB_LABELS_V121 = {
+  'tab-inventory':'Kho phòng',
+  'tab-leads':'Khách hàng / Lead',
+  'tab-appointments':'Lịch xem phòng',
+  'tab-crm':'Kịch bản CRM',
+  'tab-business-report':'Báo cáo kinh doanh'
+};
+
+function notificationIdV121(a){ return String(a?.announcement_id || a?.id || ''); }
+function isAnnouncementExpiredV121(a){
+  return !!a?.expires_at && new Date(a.expires_at).getTime() <= Date.now();
+}
+function isAnnouncementUnreadV121(a){
+  const id=notificationIdV121(a);
+  return !!id && !announcementReadsV121.has(id);
+}
+function notificationVisibleToMeV121(a){
+  if(!a||!currentUser||!currentTenantId)return false;
+  if(String(a.tenant_id)!==String(currentTenantId))return false;
+  if(a.is_active===false||isAnnouncementExpiredV121(a))return false;
+  const scope=String(a.scope_type||'company');
+  if(scope==='company')return true;
+  if(isSuperAdmin()||isCompanyAdmin())return true;
+  if(scope==='region')return !!currentUser.region_id && String(a.region_id||'')===String(currentUser.region_id);
+  if(scope==='team'){
+    if(isRegionalAdmin())return !!currentUser.region_id && String(a.region_id||'')===String(currentUser.region_id);
+    return !!currentUser.team_id && String(a.team_id||'')===String(currentUser.team_id);
+  }
+  return false;
+}
+announcementVisibleToMeV10 = notificationVisibleToMeV121;
+
+function notificationScopeNameV121(a){
+  if(a.scope_type==='team') return `Team • ${getTeamName(a.team_id)}`;
+  if(a.scope_type==='region') return `Khu vực • ${getRegionName(a.region_id)}`;
+  return 'Toàn Công Ty';
+}
+function notificationPriorityLabelV121(p){
+  return p==='urgent'?'KHẨN CẤP':p==='important'?'QUAN TRỌNG':'THÔNG BÁO';
+}
+function notificationRelativeTimeV121(value){
+  const t=new Date(value||Date.now()).getTime(),diff=Math.max(0,Date.now()-t);
+  const min=Math.floor(diff/60000);
+  if(min<1)return 'Vừa xong';
+  if(min<60)return `${min} phút trước`;
+  const h=Math.floor(min/60);if(h<24)return `${h} giờ trước`;
+  const d=Math.floor(h/24);if(d<7)return `${d} ngày trước`;
+  return new Date(t).toLocaleString('vi-VN');
+}
+function visibleNotificationRegionsV121(){
+  const list=(regions||[]);
+  if(isSuperAdmin()||isCompanyAdmin())return list;
+  return list.filter(r=>String(r.id)===String(currentUser?.region_id||''));
+}
+function visibleNotificationTeamsV121(regionId=''){
+  let list=(teams||[]);
+  if(regionId)list=list.filter(t=>String(t.region_id||'')===String(regionId));
+  if(isSuperAdmin()||isCompanyAdmin())return list;
+  if(isRegionalAdmin())return list.filter(t=>String(t.region_id||'')===String(currentUser?.region_id||''));
+  return list.filter(t=>String(t.id)===String(currentUser?.team_id||''));
+}
+
+canPublishAnnouncementV10 = function(){
+  return isSuperAdmin()||isCompanyAdmin()||isRegionalAdmin()||isManagerAdmin();
+};
+
+canManageAnnouncementV101 = function(a){
+  if(!a||!currentUser||!currentTenantId)return false;
+  if(isSuperAdmin())return true;
+  if(String(a.tenant_id||'')!==String(currentTenantId))return false;
+  if(isCompanyAdmin())return true;
+  if(isRegionalAdmin())return ['region','team'].includes(a.scope_type) && String(a.region_id||'')===String(currentUser.region_id||'');
+  if(isManagerAdmin())return a.scope_type==='team' && String(a.team_id||'')===String(currentUser.team_id||'');
+  return false;
+};
+
+setupAnnouncementComposerV10 = function(){
+  const box=document.getElementById('announcementComposerV10');
+  if(!box)return;
+  if(!canPublishAnnouncementV10()){box.classList.add('hidden');return;}
+  box.classList.remove('hidden');
+
+  const scope=document.getElementById('announcementScopeTypeV121');
+  if(scope){
+    let opts=[];
+    if(isSuperAdmin()||isCompanyAdmin())opts=[['company','Toàn Công Ty'],['region','Một Khu vực'],['team','Một Team']];
+    else if(isRegionalAdmin())opts=[['region','Khu vực của bạn'],['team','Một Team trong Khu vực']];
+    else if(isManagerAdmin())opts=[['team','Team của bạn']];
+    scope.innerHTML=opts.map(x=>`<option value="${x[0]}">${x[1]}</option>`).join('');
+  }
+  syncAnnouncementScopeV121();
+};
+
+function syncAnnouncementScopeV121(){
+  const type=document.getElementById('announcementScopeTypeV121')?.value || (isManagerAdmin()?'team':isRegionalAdmin()?'region':'company');
+  document.getElementById('announcementRegionWrapV121')?.classList.toggle('hidden',type==='company');
+  document.getElementById('announcementTeamWrapV121')?.classList.toggle('hidden',type!=='team');
+
+  const regionSel=document.getElementById('announcementRegionV121');
+  const rs=visibleNotificationRegionsV121();
+  if(regionSel){
+    regionSel.innerHTML=rs.map(r=>`<option value="${r.id}">${escapeHtml(r.name||r.code||'Khu vực')}</option>`).join('');
+    if(currentUser?.region_id && rs.some(r=>String(r.id)===String(currentUser.region_id)))regionSel.value=currentUser.region_id;
+    regionSel.disabled=isRegionalAdmin()||isManagerAdmin();
+  }
+  syncAnnouncementTeamsV121();
+
+  const badge=document.getElementById('announcementScopeBadgeV10');
+  const help=document.getElementById('announcementScopeHelpV10');
+  if(type==='company'){
+    if(badge)badge.textContent='Phạm vi: Toàn Công Ty';
+    if(help)help.textContent='Tất cả tài khoản đang hoạt động trong Công Ty sẽ nhận được thông báo.';
+  }else if(type==='region'){
+    if(badge)badge.textContent='Phạm vi: Khu vực';
+    if(help)help.textContent='Chỉ tài khoản thuộc Khu vực đã chọn nhận được thông báo.';
+  }else{
+    if(badge)badge.textContent='Phạm vi: Team';
+    if(help)help.textContent='Thông báo chỉ đến đúng Team được chọn.';
+  }
+}
+
+function syncAnnouncementTeamsV121(){
+  const regionId=document.getElementById('announcementRegionV121')?.value || currentUser?.region_id || '';
+  const teamSel=document.getElementById('announcementTeamV121');
+  if(!teamSel)return;
+  const list=visibleNotificationTeamsV121(regionId);
+  teamSel.innerHTML=list.map(t=>`<option value="${t.id}">${escapeHtml(t.name||t.code||'Team')}</option>`).join('');
+  if(currentUser?.team_id && list.some(t=>String(t.id)===String(currentUser.team_id)))teamSel.value=currentUser.team_id;
+  teamSel.disabled=isManagerAdmin();
+}
+
+async function loadAnnouncementReadStateV121(){
+  announcementReadsV121=new Set();
+  if(!supabaseClient||!currentUser?.id)return announcementReadsV121;
+  try{
+    const {data,error}=await supabaseClient.from('announcement_reads')
+      .select('announcement_id')
+      .eq('user_id',currentUser.id);
+    if(error)throw error;
+    announcementReadSyncAvailableV121=true;
+    announcementReadsV121=new Set((data||[]).map(x=>String(x.announcement_id)));
+  }catch(e){
+    announcementReadSyncAvailableV121=false;
+    try{
+      const legacy=JSON.parse(localStorage.getItem('NBRES_ANNOUNCEMENTS_SEEN_V10')||'[]');
+      announcementReadsV121=new Set(legacy.map(String));
+    }catch(_){}
+    console.warn('Notification read sync unavailable:',e);
+  }
+  return announcementReadsV121;
+}
+
+async function markAnnouncementReadV121(id,rerender=true){
+  id=String(id||'');if(!id||!currentUser)return;
+  announcementReadsV121.add(id);
+  try{localStorage.setItem('NBRES_ANNOUNCEMENTS_SEEN_V10',JSON.stringify([...announcementReadsV121].slice(-1000)));}catch(_){}
+  if(announcementReadSyncAvailableV121&&supabaseClient){
+    const row={announcement_id:id,user_id:currentUser.id,tenant_id:currentTenantId,read_at:new Date().toISOString()};
+    const {error}=await supabaseClient.from('announcement_reads').upsert(row,{onConflict:'announcement_id,user_id'});
+    if(error){console.warn('Mark read sync:',error);announcementReadSyncAvailableV121=false;}
+  }
+  if(rerender)renderAnnouncementCenterV121();
+  updateNotificationBadgesV121();
+}
+markAnnouncementSeenV10 = function(id){ markAnnouncementReadV121(id,false); };
+
+async function markAllAnnouncementsReadV121(){
+  const visible=(announcementsV10||[]).filter(notificationVisibleToMeV121);
+  const unread=visible.filter(isAnnouncementUnreadV121);
+  if(!unread.length)return showToast('Bạn đã đọc tất cả thông báo.','success');
+  unread.forEach(a=>announcementReadsV121.add(notificationIdV121(a)));
+  try{localStorage.setItem('NBRES_ANNOUNCEMENTS_SEEN_V10',JSON.stringify([...announcementReadsV121].slice(-1000)));}catch(_){}
+  if(announcementReadSyncAvailableV121&&supabaseClient){
+    const rows=unread.map(a=>({announcement_id:notificationIdV121(a),user_id:currentUser.id,tenant_id:currentTenantId,read_at:new Date().toISOString()}));
+    const {error}=await supabaseClient.from('announcement_reads').upsert(rows,{onConflict:'announcement_id,user_id'});
+    if(error){console.warn('Mark all read:',error);announcementReadSyncAvailableV121=false;}
+  }
+  renderAnnouncementCenterV121();
+  updateNotificationBadgesV121();
+  showToast(`Đã đánh dấu ${unread.length} thông báo là đã đọc.`,'success');
+}
+
+function getSmartNotificationsV121(){
+  const items=[],now=Date.now();
+  const stale=(leadsV9||[]).filter(x=>{
+    const t=new Date(x.updated_at||x.created_at||0).getTime();
+    return !['Đã chốt','Mất khách'].includes(x.stage)&&t&&now-t>259200000;
+  });
+  if(stale.length)items.push({title:`${stale.length} Lead cần chăm sóc`,body:'Không cập nhật trong hơn 3 ngày.',icon:'fa-user-clock',tab:'tab-leads'});
+
+  const soon=(appointments||[]).filter(a=>{
+    const raw=a.appointment_at||a.viewing_time||a.datetime||a.date_time;
+    const d=raw?new Date(raw).getTime():0;
+    return d>now&&d-now<86400000;
+  });
+  if(soon.length){
+    const nearest=[...soon].sort((a,b)=>new Date(a.appointment_at||a.viewing_time||a.datetime||a.date_time)-new Date(b.appointment_at||b.viewing_time||b.datetime||b.date_time))[0];
+    const raw=nearest.appointment_at||nearest.viewing_time||nearest.datetime||nearest.date_time;
+    items.push({title:`${soon.length} lịch xem trong 24 giờ`,body:`Gần nhất: ${nearest.customer_name||'Khách hàng'} • ${new Date(raw).toLocaleString('vi-VN')}`,icon:'fa-calendar-check',tab:'tab-appointments'});
+  }
+  const held=(rooms||[]).filter(r=>{
+    const status=String(r.status||'').toLowerCase();
+    const t=new Date(r.updated_at||0).getTime();
+    return status.includes('giữ') && t && now-t>86400000;
+  });
+  if(held.length)items.push({title:`${held.length} phòng đang giữ quá 24 giờ`,body:'Nên xác nhận lại tình trạng để Kho phòng luôn chính xác.',icon:'fa-building-circle-exclamation',tab:'tab-inventory'});
+  return items;
+}
+
+renderSmartNotificationsV10 = function(){
+  const items=getSmartNotificationsV121();
+  const stat=document.getElementById('notifStatSmartV121');if(stat)stat.textContent=items.length;
+  const b=document.getElementById('smartNotificationList');
+  if(!b)return;
+  b.innerHTML=items.length?items.map(x=>`<div class="nbres-smart-card-v121">
+    <span class="nbres-smart-icon-v121"><i class="fa-solid ${x.icon}"></i></span>
+    <div class="min-w-0 flex-1"><div class="font-black text-slate-900 text-sm">${escapeHtml(x.title)}</div><div class="text-xs text-slate-500 mt-1">${escapeHtml(x.body)}</div>
+    <button onclick="switchTab('${x.tab}')" class="nbres-smart-action-v121">Xem ngay <i class="fa-solid fa-arrow-right ml-1"></i></button></div>
+  </div>`).join(''):'<div class="md:col-span-2 nbres-notif-empty-v121 bg-white border rounded-2xl"><i class="fa-solid fa-circle-check text-emerald-500 text-xl"></i><div class="mt-2">Không có nhắc việc cần xử lý.</div></div>';
+  updateNotificationBadgesV121();
+};
+
+function updateNotificationBadgesV121(){
+  const unread=(announcementsV10||[]).filter(a=>notificationVisibleToMeV121(a)&&isAnnouncementUnreadV121(a)).length;
+  const smart=getSmartNotificationsV121().length;
+  const total=unread+smart;
+  const count=document.getElementById('notifCountV10');if(count)count.textContent=`${unread} chưa đọc`;
+  const setBadge=(id,n)=>{
+    const el=document.getElementById(id);if(!el)return;
+    el.textContent=n>99?'99+':String(n);
+    el.classList.toggle('hidden',!n);
+  };
+  setBadge('notificationHeaderBadgeV121',unread);
+  setBadge('notificationNavBadgeV121',unread);
+  setBadge('notificationMobileBadgeV121',total);
+  const s=document.getElementById('notifStatUnreadV121');if(s)s.textContent=unread;
+  const u=document.getElementById('notifStatUrgentV121');if(u)u.textContent=(announcementsV10||[]).filter(a=>notificationVisibleToMeV121(a)&&a.priority==='urgent'&&isAnnouncementUnreadV121(a)).length;
+  const todayStart=new Date();todayStart.setHours(0,0,0,0);
+  const td=document.getElementById('notifStatTodayV121');if(td)td.textContent=(announcementsV10||[]).filter(a=>notificationVisibleToMeV121(a)&&new Date(a.created_at||0)>=todayStart).length;
+}
+
+function renderAnnouncementCenterV121(){
+  const box=document.getElementById('companyAnnouncementListV10');if(!box)return;
+  const q=(document.getElementById('announcementSearchV121')?.value||'').trim().toLowerCase();
+  const status=document.getElementById('announcementStatusFilterV121')?.value||'';
+  const priority=document.getElementById('announcementPriorityFilterV121')?.value||'';
+  let list=(announcementsV10||[]).filter(notificationVisibleToMeV121).filter(a=>{
+    const unread=isAnnouncementUnreadV121(a);
+    if(status==='unread'&&!unread)return false;
+    if(status==='read'&&unread)return false;
+    if(priority&&a.priority!==priority)return false;
+    if(q&&!`${a.title||''} ${a.body||''}`.toLowerCase().includes(q))return false;
+    return true;
+  });
+  list.sort((a,b)=>{
+    const pin=(b.pinned===true)-(a.pinned===true);if(pin)return pin;
+    const unread=(isAnnouncementUnreadV121(b)?1:0)-(isAnnouncementUnreadV121(a)?1:0);if(unread)return unread;
+    return new Date(b.created_at||0)-new Date(a.created_at||0);
+  });
+  const vc=document.getElementById('announcementVisibleCountV121');if(vc)vc.textContent=list.length;
+
+  box.innerHTML=list.length?list.map(a=>{
+    const id=notificationIdV121(a),unread=isAnnouncementUnreadV121(a),p=a.priority||'normal';
+    const action=a.action_tab&&NOTIF_TAB_LABELS_V121[a.action_tab]?`<button onclick="event.stopPropagation();openNotificationActionV121('${id}','${a.action_tab}')" class="nbres-notif-action-v121"><i class="fa-solid fa-arrow-up-right-from-square mr-1"></i>${NOTIF_TAB_LABELS_V121[a.action_tab]}</button>`:'';
+    const manage=canManageAnnouncementV101(a)?`<button onclick="event.stopPropagation();archiveAnnouncementV121('${id}')" class="nbres-notif-read-btn-v121 text-rose-600"><i class="fa-solid fa-box-archive mr-1"></i>Ẩn</button>`:'';
+    const expiry=a.expires_at?`<span class="text-[10px] text-slate-400">Hết hạn ${new Date(a.expires_at).toLocaleString('vi-VN')}</span>`:'';
+    return `<article class="nbres-notif-item-v121 ${unread?'is-unread':''}" onclick="markAnnouncementReadV121('${id}')">
+      <div class="flex gap-3">
+        <div class="pt-2">${unread?'<span class="nbres-notif-dot-v121 block"></span>':'<i class="fa-solid fa-check text-emerald-400 text-xs"></i>'}</div>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-start justify-between gap-3 flex-wrap">
+            <div class="min-w-0">
+              <div class="flex gap-1.5 items-center flex-wrap">
+                <span class="nbres-notif-chip-v121 ${p}">${notificationPriorityLabelV121(p)}</span>
+                <span class="nbres-notif-chip-v121 nbres-notif-scope-v121">${escapeHtml(notificationScopeNameV121(a))}</span>
+                ${a.pinned?'<span class="nbres-notif-chip-v121 nbres-notif-scope-v121"><i class="fa-solid fa-thumbtack"></i>Đã ghim</span>':''}
+              </div>
+              <h4 class="font-black text-slate-900 mt-2 text-[15px]">${escapeHtml(a.title||'Thông báo')}</h4>
+            </div>
+            <span class="text-[10px] text-slate-400 whitespace-nowrap" title="${new Date(a.created_at||Date.now()).toLocaleString('vi-VN')}">${notificationRelativeTimeV121(a.created_at)}</span>
+          </div>
+          <div class="text-sm text-slate-600 mt-2 whitespace-pre-wrap leading-6">${escapeHtml(a.body||'')}</div>
+          <div class="mt-3 flex items-center justify-between gap-2 flex-wrap">
+            <div class="flex gap-2 items-center">${expiry}</div>
+            <div class="flex gap-2 flex-wrap">
+              ${unread?`<button onclick="event.stopPropagation();markAnnouncementReadV121('${id}')" class="nbres-notif-read-btn-v121"><i class="fa-solid fa-check mr-1"></i>Đã đọc</button>`:''}
+              ${action}${manage}
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>`;
+  }).join(''):'<div class="nbres-notif-empty-v121"><i class="fa-regular fa-bell-slash text-2xl"></i><div class="mt-2">Không có thông báo phù hợp với bộ lọc.</div></div>';
+  updateNotificationBadgesV121();
+}
+
+loadAnnouncementsV10 = async function(){
+  setupAnnouncementComposerV10();
+  const box=document.getElementById('companyAnnouncementListV10');
+  if(!supabaseClient||!currentTenantId){announcementsV10=[];renderAnnouncementCenterV121();return;}
+  try{
+    const {data,error}=await supabaseClient.from('system_announcements').select('*')
+      .eq('tenant_id',currentTenantId)
+      .eq('is_active',true)
+      .order('created_at',{ascending:false})
+      .limit(200);
+    if(error)throw error;
+    announcementsV10=(data||[]).filter(notificationVisibleToMeV121);
+    await loadAnnouncementReadStateV121();
+    renderAnnouncementCenterV121();
+    renderSmartNotificationsV10();
+  }catch(e){
+    console.warn('Announcements V12.1:',e);
+    if(box)box.innerHTML='<div class="p-5 rounded-xl bg-amber-50 text-amber-800 text-xs">Không tải được Trung tâm Thông báo. Hãy kiểm tra migration V12.1 hoặc kết nối Supabase.</div>';
+  }
+};
+
+publishAnnouncementV10 = async function(){
+  if(!canPublishAnnouncementV10())return showToast('Bạn không có quyền đăng thông báo.','error');
+  if(!currentTenantId)return showToast('Hãy chọn Công Ty trước.','error');
+  const title=document.getElementById('announcementTitleV10')?.value.trim();
+  const body=document.getElementById('announcementBodyV10')?.value.trim();
+  const priority=document.getElementById('announcementPriorityV10')?.value||'normal';
+  const category=document.getElementById('announcementCategoryV121')?.value||'general';
+  const scope_type=document.getElementById('announcementScopeTypeV121')?.value||'company';
+  let region_id=document.getElementById('announcementRegionV121')?.value||null;
+  let team_id=document.getElementById('announcementTeamV121')?.value||null;
+  const action_tab=document.getElementById('announcementActionTabV121')?.value||null;
+  const expiryRaw=document.getElementById('announcementExpiresV121')?.value||'';
+  const expires_at=expiryRaw?new Date(expiryRaw).toISOString():null;
+  const pinned=!!document.getElementById('announcementPinnedV121')?.checked;
+  if(!title||!body)return showToast('Vui lòng nhập tiêu đề và nội dung.','error');
+
+  if(scope_type==='company'){region_id=null;team_id=null;}
+  if(scope_type==='region'){team_id=null;if(!region_id)return showToast('Vui lòng chọn Khu vực.','error');}
+  if(scope_type==='team'&&!team_id)return showToast('Vui lòng chọn Team.','error');
+  if(isRegionalAdmin())region_id=currentUser.region_id;
+  if(isManagerAdmin()){region_id=currentUser.region_id;team_id=currentUser.team_id;}
+
+  const btn=document.getElementById('publishAnnouncementBtnV121');
+  const old=btn?.innerHTML;if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i><span>Đang gửi...</span>';}
+  try{
+    const payload={tenant_id:currentTenantId,title,body,priority,category,scope_type,region_id,team_id,action_tab,expires_at,pinned,created_by:currentUser.id,is_active:true,updated_at:new Date().toISOString()};
+    const {error}=await supabaseClient.from('system_announcements').insert(payload);
+    if(error)throw error;
+    document.getElementById('announcementTitleV10').value='';
+    document.getElementById('announcementBodyV10').value='';
+    document.getElementById('announcementPriorityV10').value='normal';
+    document.getElementById('announcementCategoryV121').value='general';
+    document.getElementById('announcementActionTabV121').value='';
+    document.getElementById('announcementExpiresV121').value='';
+    document.getElementById('announcementPinnedV121').checked=false;
+    const count=document.getElementById('announcementBodyCountV121');if(count)count.textContent='0';
+    await loadAnnouncementsV10();
+    showToast('Thông báo đã được gửi đúng phạm vi.','success');
+  }catch(e){showToast('Không thể đăng thông báo: '+(e?.message||e),'error');}
+  finally{if(btn){btn.disabled=false;btn.innerHTML=old||'<i class="fa-solid fa-paper-plane"></i><span>Đăng thông báo</span>';}}
+};
+
+async function archiveAnnouncementV121(id){
+  const a=(announcementsV10||[]).find(x=>notificationIdV121(x)===String(id));
+  if(!a||!canManageAnnouncementV101(a))return showToast('Bạn không có quyền ẩn thông báo này.','error');
+  if(!confirm(`Ẩn thông báo "${a.title||'Thông báo'}"?`))return;
+  const {error}=await supabaseClient.from('system_announcements').update({is_active:false,updated_at:new Date().toISOString()}).eq('announcement_id',id);
+  if(error)return showToast('Không thể ẩn thông báo: '+error.message,'error');
+  announcementsV10=announcementsV10.filter(x=>notificationIdV121(x)!==String(id));
+  renderAnnouncementCenterV121();updateNotificationBadgesV121();
+  showToast('Đã ẩn thông báo.','success');
+}
+async function openNotificationActionV121(id,tab){
+  await markAnnouncementReadV121(id,false);
+  if(canOpenTaskV10(tab))switchTab(tab);
+  else showToast('Tài khoản hiện tại không có quyền mở tác vụ này.','error');
+}
+async function refreshNotificationCenterV121(){
+  await loadAnnouncementsV10();
+  showToast('Đã làm mới Trung tâm Thông báo.','success');
+}
+
+function showAnnouncementPopupV121(a){
+  if(!notificationVisibleToMeV121(a)||!isAnnouncementUnreadV121(a))return;
+  document.getElementById('announcementPopupV121')?.remove();
+  const id=notificationIdV121(a),p=a.priority||'normal';
+  const el=document.createElement('div');el.id='announcementPopupV121';
+  el.className='fixed inset-0 z-[125] bg-slate-950/55 backdrop-blur-sm flex items-end sm:items-center justify-center p-2 sm:p-4';
+  const action=a.action_tab&&NOTIF_TAB_LABELS_V121[a.action_tab]?`<button onclick="openNotificationActionV121('${id}','${a.action_tab}');document.getElementById('announcementPopupV121')?.remove()" class="px-4 py-2.5 rounded-xl bg-cyan-500 text-slate-950 text-xs font-black">${NOTIF_TAB_LABELS_V121[a.action_tab]}</button>`:'';
+  el.innerHTML=`<div class="w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden">
+    <div class="p-5 bg-slate-950 text-white flex justify-between gap-3">
+      <div><div class="text-[10px] uppercase tracking-[.18em] text-cyan-300 font-black">${notificationPriorityLabelV121(p)}</div><div class="text-xl font-black mt-1">${escapeHtml(a.title||'Thông báo')}</div></div>
+      <button onclick="document.getElementById('announcementPopupV121')?.remove()" class="w-9 h-9 rounded-xl bg-white/10" title="Để sau"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="p-5"><div class="text-sm text-slate-700 whitespace-pre-wrap leading-6">${escapeHtml(a.body||'')}</div>
+      <div class="mt-4 pt-4 border-t flex justify-between items-center gap-2 flex-wrap"><span class="text-[10px] text-slate-400">${escapeHtml(notificationScopeNameV121(a))} • ${new Date(a.created_at||Date.now()).toLocaleString('vi-VN')}</span>
+        <div class="flex gap-2">${action}<button onclick="markAnnouncementReadV121('${id}');document.getElementById('announcementPopupV121')?.remove()" class="px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-black">Đã đọc</button></div>
+      </div>
+    </div>
+  </div>`;
+  document.body.appendChild(el);
+}
+
+async function subscribeNotificationsV121(){
+  if(!supabaseClient||!currentTenantId||!currentUser)return;
+  if(announcementRealtimeChannelV10){try{await supabaseClient.removeChannel(announcementRealtimeChannelV10);}catch(_){}}
+  announcementRealtimeChannelV10=supabaseClient.channel('nbres-v121-announcements-'+currentTenantId+'-'+currentUser.id)
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'system_announcements',filter:`tenant_id=eq.${currentTenantId}`},payload=>{
+      const a=payload.new;if(!notificationVisibleToMeV121(a))return;
+      announcementsV10=[a,...(announcementsV10||[]).filter(x=>notificationIdV121(x)!==notificationIdV121(a))];
+      renderAnnouncementCenterV121();updateNotificationBadgesV121();
+      if(a.priority==='urgent'||a.priority==='important')showAnnouncementPopupV121(a);
+      else showToast(`Thông báo mới: ${a.title||'NBRES'}`,'success');
+    })
+    .on('postgres_changes',{event:'UPDATE',schema:'public',table:'system_announcements',filter:`tenant_id=eq.${currentTenantId}`},payload=>{
+      const a=payload.new;
+      announcementsV10=(announcementsV10||[]).filter(x=>notificationIdV121(x)!==notificationIdV121(a));
+      if(notificationVisibleToMeV121(a))announcementsV10.unshift(a);
+      renderAnnouncementCenterV121();updateNotificationBadgesV121();
+    }).subscribe();
+}
+
+async function showUnreadAnnouncementsOnLoginV121(){
+  await loadAnnouncementsV10();
+  const unread=(announcementsV10||[]).filter(a=>notificationVisibleToMeV121(a)&&isAnnouncementUnreadV121(a));
+  const important=unread.find(a=>a.priority==='urgent')||unread.find(a=>a.priority==='important');
+  if(important)showAnnouncementPopupV121(important);
+  else if(unread.length)showToast(`Bạn có ${unread.length} thông báo chưa đọc.`,'success');
+}
+
+initAnnouncementsRealtimeV10 = async function(){
+  await subscribeNotificationsV121();
+  await showUnreadAnnouncementsOnLoginV121();
+};
+
+showLoginNoticeIfNeeded = async function(){ return; };
+
+document.addEventListener('input',e=>{
+  if(e.target?.id==='announcementBodyV10'){
+    const c=document.getElementById('announcementBodyCountV121');if(c)c.textContent=String(e.target.value.length);
+  }
+});
 </script>
 
 </body>
