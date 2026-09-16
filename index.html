@@ -8618,5 +8618,227 @@ body.nbres-demo-mode [data-demo-blocked="1"]{display:none!important}
 })();
 </script>
 
+
+<!-- NBRES V10.4.1 • COMPACT ACTION ICON REDESIGN -->
+<style>
+.nbres-action-svg{width:20px;height:20px;display:block;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+.nbres-action-svg.sm{width:17px;height:17px}
+.nbres-action-svg.lg{width:23px;height:23px}
+.nbres-action-iconbox{width:38px;height:38px;border-radius:11px;display:inline-grid;place-items:center;background:rgba(194,158,61,.12);border:1px solid rgba(194,158,61,.28);color:#c7a23f;flex:0 0 auto}
+.nbres-compact-action{min-height:42px!important;padding:9px 14px!important;border-radius:11px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:9px!important;font-size:12px!important;font-weight:750!important;line-height:1.2!important}
+.nbres-compact-action .fa,.nbres-compact-action .fas,.nbres-compact-action .far{display:none!important}
+
+/* Create account modal */
+#userModal button[type="submit"],#createUserModal button[type="submit"],#accountModal button[type="submit"]{min-height:46px!important;padding:10px 16px!important}
+#userModal button[type="submit"] i,#createUserModal button[type="submit"] i,#accountModal button[type="submit"] i{display:none!important}
+
+/* People header: keep action elegant and compact */
+#tab-users button[onclick*="openUser"],#tab-users button[onclick*="UserModal"],
+#tab-users button[onclick*="userModal"]{min-width:0!important;width:auto!important;height:auto!important;padding:10px 14px!important;border-radius:11px!important}
+
+/* Export cards: remove giant glyph footprint */
+#tab-data-center .nbres-export-redesign{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#tab-data-center .nbres-export-redesign button{min-height:88px!important;padding:16px!important;border-radius:14px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:12px!important;text-align:left!important}
+@media(max-width:640px){#tab-data-center .nbres-export-redesign{grid-template-columns:1fr}.nbres-compact-action{padding:9px 11px!important}}
+</style>
+<script>
+(function(){
+ const ICONS={
+  userPlus:`<svg class="nbres-action-svg lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 19v-1.5A4.5 4.5 0 0 0 10.5 13h-4A4.5 4.5 0 0 0 2 17.5V19"/><circle cx="8.5" cy="6.5" r="3.5"/><path d="M18 8v6M15 11h6"/></svg>`,
+  account:`<svg class="nbres-action-svg lg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7" r="3.5"/><path d="M2.5 19v-1.5A4.5 4.5 0 0 1 7 13h4a4.5 4.5 0 0 1 4.5 4.5V19M18 9v6M15 12h6"/></svg>`,
+  leads:`<svg class="nbres-action-svg lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M16 11h6"/></svg>`,
+  building:`<svg class="nbres-action-svg lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V4h10v17M14 9h6v12M7 8h3M7 12h3M7 16h3M17 13h1M17 17h1M2 21h20"/></svg>`
+ };
+ function iconBox(icon){return `<span class="nbres-action-iconbox">${icon}</span>`}
+
+ function enhance(){
+   // Create-account submit button.
+   document.querySelectorAll('button').forEach(btn=>{
+     const label=(btn.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+     if(label==='tạo tài khoản'){
+       btn.classList.add('nbres-compact-action');
+       if(!btn.querySelector('.nbres-action-svg')){
+         btn.querySelectorAll('i').forEach(i=>i.remove());
+         btn.insertAdjacentHTML('afterbegin', ICONS.account);
+       }
+     }
+     if(label==='thêm nhân sự'||label.includes('thêm nhân sự')){
+       btn.classList.add('nbres-compact-action');
+       if(!btn.querySelector('.nbres-action-svg')){
+         btn.querySelectorAll('i').forEach(i=>i.remove());
+         btn.insertAdjacentHTML('afterbegin', ICONS.userPlus);
+       }
+     }
+   });
+
+   // Data Center export: replace oversized icon-font glyphs with compact SVG.
+   const dc=document.getElementById('tab-data-center');
+   if(dc){
+     const heading=[...dc.querySelectorAll('h1,h2,h3,h4')].find(x=>(x.textContent||'').toLowerCase().includes('export doanh nghiệp'));
+     if(heading){
+       const scope=heading.closest('section,div') || dc;
+       const buttons=[...scope.querySelectorAll('button')].filter(b=>{
+         const t=(b.textContent||'').toLowerCase();
+         return t.includes('lead')||t.includes('khách hàng')||t.includes('kho phòng');
+       });
+       if(buttons.length>=2){
+         const parent=buttons[0].parentElement;
+         if(parent && buttons.every(b=>b.parentElement===parent)) parent.classList.add('nbres-export-redesign');
+         buttons.forEach(b=>{
+           b.querySelectorAll('i').forEach(i=>i.remove());
+           if(!b.querySelector('.nbres-action-iconbox')){
+             const t=(b.textContent||'').toLowerCase();
+             b.insertAdjacentHTML('afterbegin', iconBox(t.includes('kho')?ICONS.building:ICONS.leads));
+           }
+         });
+       }
+     }
+   }
+ }
+ document.addEventListener('DOMContentLoaded',enhance);
+ new MutationObserver(()=>{clearTimeout(window.__nbresIconTimer);window.__nbresIconTimer=setTimeout(enhance,80)}).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
+
+
+<!-- NBRES V10.4.2 • DEMO MANAGEMENT CENTER -->
+<style>
+#nbresDemoCenter{display:none;padding:24px}
+#nbresDemoCenter .dmc-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding:24px;border-radius:18px;background:linear-gradient(135deg,#0a1020,#161944);color:white;border:1px solid #ffffff12}
+#nbresDemoCenter .dmc-head small{color:#d0ad4e;font-weight:800;letter-spacing:1.5px}
+#nbresDemoCenter .dmc-head h2{margin:7px 0 5px;font-size:25px}
+#nbresDemoCenter .dmc-head p{margin:0;color:#9eabc0;font-size:12px}
+.dmc-btn{border:1px solid #d2ad45;background:linear-gradient(135deg,#d7bb63,#ae8528);color:#0a0c11;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer}
+.dmc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:15px 0}
+.dmc-kpi,.dmc-panel{background:#fff;border:1px solid #e5e8ee;border-radius:15px;padding:17px}
+.dmc-kpi span{font-size:10px;color:#788396;font-weight:700}.dmc-kpi b{display:block;font-size:25px;margin-top:6px}
+.dmc-panel{overflow:auto}.dmc-table{width:100%;border-collapse:collapse;font-size:11px}.dmc-table th,.dmc-table td{padding:11px 9px;border-bottom:1px solid #edf0f4;text-align:left}.dmc-table th{font-size:9px;color:#7a8494;text-transform:uppercase}
+.dmc-status{display:inline-flex;padding:5px 8px;border-radius:999px;font-size:9px;font-weight:800}.dmc-status.ok{background:#e8f6ef;color:#14704f}.dmc-status.exp{background:#fbecec;color:#a53e3e}.dmc-status.lock{background:#eef0f4;color:#667085}
+.dmc-action{border:1px solid #dfe3e9;background:#fff;border-radius:8px;padding:6px 8px;font-size:9px;font-weight:700;cursor:pointer;margin:2px}
+#dmcModal{position:fixed;inset:0;z-index:10020;background:#0009;display:none;align-items:center;justify-content:center;padding:18px}
+#dmcModal .dmc-modalbox{width:min(500px,100%);background:#0d121a;color:#f4f6f8;border:1px solid #6d5822;border-radius:18px;padding:22px}
+#dmcModal label{display:block;font-size:10px;color:#c8a64a;font-weight:800;margin:13px 0 6px}
+#dmcModal input,#dmcModal select{width:100%;padding:11px;border-radius:9px;border:1px solid #29313e;background:#080c12;color:#fff}
+@media(max-width:800px){.dmc-grid{grid-template-columns:repeat(2,1fr)}#nbresDemoCenter .dmc-head{align-items:flex-start;flex-direction:column}}
+</style>
+
+<section id="nbresDemoCenter">
+ <div class="dmc-head">
+  <div><small>NBRES • DEMO MANAGEMENT</small><h2>Trung tâm Quản lý Demo</h2><p>Cấp tài khoản trải nghiệm, kiểm tra thời hạn và quản lý khách hàng Demo.</p></div>
+  <button class="dmc-btn" onclick="nbresOpenDemoCreate()">＋ Tạo tài khoản Demo</button>
+ </div>
+ <div class="dmc-grid">
+  <div class="dmc-kpi"><span>TỔNG DEMO</span><b id="dmcTotal">0</b></div>
+  <div class="dmc-kpi"><span>ĐANG HOẠT ĐỘNG</span><b id="dmcActive">0</b></div>
+  <div class="dmc-kpi"><span>SẮP HẾT HẠN</span><b id="dmcSoon">0</b></div>
+  <div class="dmc-kpi"><span>ĐÃ HẾT HẠN</span><b id="dmcExpired">0</b></div>
+ </div>
+ <div class="dmc-panel">
+  <table class="dmc-table"><thead><tr><th>Tài khoản</th><th>Họ tên</th><th>Công ty Demo</th><th>Hết hạn</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="dmcRows"><tr><td colspan="6">Đang tải...</td></tr></tbody></table>
+ </div>
+</section>
+
+<div id="dmcModal">
+ <div class="dmc-modalbox">
+  <div style="display:flex;justify-content:space-between;gap:10px"><div><div style="font-size:9px;color:#c8a64a;font-weight:800;letter-spacing:1px">NBRES DEMO</div><h3 style="margin:5px 0">Tạo tài khoản Demo</h3></div><button onclick="nbresCloseDemoCreate()" style="background:none;border:0;color:#9aa5b5;font-size:22px;cursor:pointer">×</button></div>
+  <label>Tên đăng nhập</label><input id="dmcUsername" placeholder="demo.client01">
+  <label>Họ và tên</label><input id="dmcFullName" placeholder="Khách hàng Demo">
+  <label>Mật khẩu ban đầu</label><input id="dmcPassword" type="password" minlength="8" placeholder="Tối thiểu 8 ký tự">
+  <label>Thời hạn trải nghiệm</label><select id="dmcDays"><option value="1">1 ngày</option><option value="3">3 ngày</option><option value="7" selected>7 ngày</option><option value="14">14 ngày</option></select>
+  <div style="display:flex;justify-content:flex-end;gap:9px;margin-top:18px"><button class="dmc-action" onclick="nbresCloseDemoCreate()">Hủy</button><button class="dmc-btn" onclick="nbresCreateDemoAccount()">Tạo Demo</button></div>
+ </div>
+</div>
+
+<script>
+(function(){
+ window.nbresOpenDemoCenter=async function(){
+   if(typeof isSuperAdmin==='function' && !isSuperAdmin()){ if(typeof showToast==='function')showToast('Chỉ Admin Quản Lí được quản lý Demo.'); return; }
+   document.querySelectorAll('[id^="tab-"]').forEach(x=>x.classList.add('hidden'));
+   const c=document.getElementById('nbresDemoCenter'); c.style.display='block'; c.classList.remove('hidden');
+   await nbresLoadDemoAccounts();
+ };
+ window.nbresOpenDemoCreate=function(){document.getElementById('dmcModal').style.display='flex'};
+ window.nbresCloseDemoCreate=function(){document.getElementById('dmcModal').style.display='none'};
+
+ async function getDemoTenant(){
+   const {data,error}=await supabaseClient.from('tenants').select('id,company_name').ilike('company_name','%NBRES Demo%').limit(1);
+   if(error) throw error;
+   if(!data||!data.length) throw new Error('Chưa tìm thấy Công ty NBRES Demo.');
+   return data[0];
+ }
+ window.nbresLoadDemoAccounts=async function(){
+   const body=document.getElementById('dmcRows');
+   try{
+    const tenant=await getDemoTenant();
+    const {data,error}=await supabaseClient.from('profiles').select('id,username,full_name,tenant_id,is_demo,demo_expires_at').eq('tenant_id',tenant.id).eq('is_demo',true).order('demo_expires_at',{ascending:false});
+    if(error) throw error;
+    const rows=data||[], now=Date.now(), day=86400000;
+    document.getElementById('dmcTotal').textContent=rows.length;
+    document.getElementById('dmcActive').textContent=rows.filter(x=>new Date(x.demo_expires_at).getTime()>now).length;
+    document.getElementById('dmcSoon').textContent=rows.filter(x=>{const t=new Date(x.demo_expires_at).getTime();return t>now&&t-now<=day}).length;
+    document.getElementById('dmcExpired').textContent=rows.filter(x=>!x.demo_expires_at||new Date(x.demo_expires_at).getTime()<=now).length;
+    body.innerHTML=rows.length?rows.map(x=>{
+      const exp=x.demo_expires_at?new Date(x.demo_expires_at):null, active=exp&&exp.getTime()>now;
+      return `<tr><td><b>${escapeHtmlV10(x.username||'—')}</b></td><td>${escapeHtmlV10(x.full_name||'—')}</td><td>${escapeHtmlV10(tenant.company_name)}</td><td>${exp?exp.toLocaleString('vi-VN'):'—'}</td><td><span class="dmc-status ${active?'ok':'exp'}">${active?'Đang dùng':'Hết hạn'}</span></td><td><button class="dmc-action" onclick="nbresExtendDemo('${x.id}',7)">+7 ngày</button><button class="dmc-action" onclick="nbresExpireDemo('${x.id}')">Khóa</button></td></tr>`;
+    }).join(''):'<tr><td colspan="6">Chưa có tài khoản Demo.</td></tr>';
+   }catch(e){body.innerHTML=`<tr><td colspan="6">${escapeHtmlV10(e.message||String(e))}</td></tr>`}
+ };
+ function escapeHtmlV10(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+ window.escapeHtmlV10=window.escapeHtmlV10||escapeHtmlV10;
+
+ window.nbresCreateDemoAccount=async function(){
+   try{
+    const username=document.getElementById('dmcUsername').value.trim().toLowerCase();
+    const fullName=document.getElementById('dmcFullName').value.trim();
+    const password=document.getElementById('dmcPassword').value;
+    const days=parseInt(document.getElementById('dmcDays').value,10);
+    if(!username||!fullName||password.length<8) throw new Error('Vui lòng nhập đủ thông tin và mật khẩu tối thiểu 8 ký tự.');
+    const tenant=await getDemoTenant();
+
+    // Uses the existing deployed admin-create-user Edge Function.
+    const {data,error}=await supabaseClient.functions.invoke('admin-create-user',{body:{
+      username, password, full_name:fullName, role:'employee', tenant_id:tenant.id, region_id:null, team_id:null
+    }});
+    if(error) throw error;
+    const userId=data?.user?.id||data?.id||data?.user_id;
+    if(!userId) throw new Error('Đã gọi tạo user nhưng không nhận được user_id. Kiểm tra Edge Function.');
+    const expires=new Date(Date.now()+days*86400000).toISOString();
+    const {error:upErr}=await supabaseClient.from('profiles').update({is_demo:true,demo_expires_at:expires}).eq('id',userId);
+    if(upErr) throw upErr;
+    nbresCloseDemoCreate(); await nbresLoadDemoAccounts();
+    if(typeof showToast==='function')showToast('Đã tạo tài khoản Demo.');
+   }catch(e){if(typeof showToast==='function')showToast(e.message||String(e));else alert(e.message||e)}
+ };
+ window.nbresExtendDemo=async function(id,days){
+   const {data,error}=await supabaseClient.from('profiles').select('demo_expires_at').eq('id',id).single();
+   if(error){alert(error.message);return}
+   const base=Math.max(Date.now(),data.demo_expires_at?new Date(data.demo_expires_at).getTime():0);
+   const {error:e2}=await supabaseClient.from('profiles').update({is_demo:true,demo_expires_at:new Date(base+days*86400000).toISOString()}).eq('id',id);
+   if(e2){alert(e2.message);return} nbresLoadDemoAccounts();
+ };
+ window.nbresExpireDemo=async function(id){
+   if(!confirm('Khóa tài khoản Demo này ngay?'))return;
+   const {error}=await supabaseClient.from('profiles').update({demo_expires_at:new Date().toISOString()}).eq('id',id);
+   if(error){alert(error.message);return} nbresLoadDemoAccounts();
+ };
+
+ // Add navigation only for Platform Admin.
+ function installDemoNav(){
+   if(!(typeof isSuperAdmin==='function'&&isSuperAdmin()))return;
+   if(document.getElementById('nav-demo-management'))return;
+   const navCandidates=[...document.querySelectorAll('nav,aside,.sidebar')];
+   const host=navCandidates.find(n=>n.querySelector('button,[onclick*="switchTab"]'))||document.querySelector('.sidebar');
+   if(!host)return;
+   const ref=[...host.querySelectorAll('button')].find(b=>(b.textContent||'').includes('Thư Viện NBRES'));
+   const btn=document.createElement('button');
+   btn.id='nav-demo-management'; btn.type='button'; btn.onclick=nbresOpenDemoCenter;
+   btn.innerHTML='<span style="font-weight:800">◈</span><span>Quản lý Demo</span>';
+   btn.className=ref?.className||'';
+   (ref?.parentNode||host).appendChild(btn);
+ }
+ setInterval(installDemoNav,1800);
+})();
+</script>
+
 </body>
 </html>
