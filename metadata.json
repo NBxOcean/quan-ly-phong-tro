@@ -1,0 +1,6 @@
+{
+  "name": "Kakeibo Anime - Quản Lý Doanh Thu & Tài Chính",
+  "description": "Ứng dụng quản lý, theo dõi và cập nhật doanh thu theo ngày, tháng, năm với biểu đồ tăng trưởng trực quan, phân bổ quỹ Tích trữ - Đầu tư - Sử dụng và giao diện anime sống động.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
